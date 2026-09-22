@@ -223,6 +223,16 @@ class AdoptTapeViewTests(FixtureConfigMixin, TestCase):
         super().setUp()
         (self.media / 'E01099L8').mkdir()
         (self.media / 'E01099L8' / 'data.0').write_bytes(b'')
+        # media.list_media runs `sudo find` - real, unfaked, it passed only on
+        # a host with password-free sudo and found nothing anywhere else. The
+        # listing is faked from the directory this test made, like every
+        # other external command in the suite.
+        listing = mock.patch.object(
+            media, 'list_media',
+            side_effect=lambda base=None: sorted(
+                p.name for p in (Path(base) if base else self.media).iterdir() if p.is_dir()))
+        listing.start()
+        self.addCleanup(listing.stop)
 
     def test_the_inventory_lists_a_tape_no_library_claims(self):
         with mock.patch.object(views, 'get_live_libraries', return_value=[]), \

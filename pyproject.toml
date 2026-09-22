@@ -8,7 +8,7 @@ version = "2.1.1"
 description = "Web-based GUI for MHVTL (Virtual Tape Library)"
 readme = "README.md"
 license = {text = "GPL-2.0-only"}
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [
     {name = "Ahmed Abdelhaleem Ahmed", email = "ahmedhal@gmail.com"},
 ]

@@ -196,7 +196,10 @@ class LtoMediaSourceTests(TestCase):
         from apps.libraries.services.tapes.compatibility import LTO_COMPATIBILITY
 
         def generation(name):                   # LTO10P is an LTO-10 cartridge
-            return f"LTO-{int(re.match(r'LTO(\d+)', name).group(1))}"
+            # Not inside the f-string: a backslash in an f-string's expression
+            # is a SyntaxError before Python 3.12, and the suite runs on 3.11.
+            number = int(re.match(r'LTO(\d+)', name).group(1))
+            return f'LTO-{number}'
 
         for number, (read_write, read_only) in self._from_source().items():
             with self.subTest(generation=number):

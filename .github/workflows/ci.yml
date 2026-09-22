@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.12 is what the RPM runs on; the others are what pyproject.toml
+        # and the README promise.
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      # Every external tool - mtx, mt, lsscsi, vtlcmd, targetcli, systemctl -
+      # is faked, so the suite needs no MHVTL, no tape library and no root.
+      # Not --parallel: its workers cannot send a failing test's traceback
+      # back, so a failure shows only "cannot pickle 'traceback' object".
+      - name: Run the tests
+        run: python manage.py test --settings=mhvtl_system.settings.testing
+
+  docs:
+    name: build docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # The docs Makefiles use ./venv, and the API reference imports the
+      # application, so the application's requirements are needed too.
+      - name: Install the application and the docs toolchain
+        run: |
+          python -m venv venv
+          venv/bin/pip install -r requirements.txt -r docs/requirements.txt
+      - name: Build every tree, English, warnings fail the build
+        run: make -C docs strict
