@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MHVTL Console documentation</title>
+<meta name="description" content="Documentation for MHVTL Console, a web console and command line for MHVTL, the Linux virtual tape library.">
+<style>
+  :root {
+    --bg: #eef2f7; --surface: #ffffff; --border: #d1d5db;
+    --text: #111827; --dim: #6b7280; --accent: #0277bd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a2e; --surface: #1f2937; --border: #374151;
+      --text: #e5e7eb; --dim: #9ca3af; --accent: #4fc3f7;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 48px 16px; }
+  h1 { margin: 0 0 8px; font-size: 32px; }
+  .lead { color: var(--dim); margin: 0 0 32px; }
+  .guides { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .guide {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px 24px;
+  }
+  .guide h2 { margin: 0 0 6px; font-size: 20px; }
+  .guide p { margin: 0 0 16px; color: var(--dim); font-size: 15px; }
+  .guide a { color: var(--accent); font-weight: 600; text-decoration: none; margin-right: 18px; }
+  .guide a:hover, footer a:hover { text-decoration: underline; }
+  .guide a[lang="ar"] { font-weight: 600; }
+  footer { margin-top: 36px; color: var(--dim); font-size: 14px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>MHVTL Console</h1>
+  <p class="lead">A web console and a command line for
+    <a href="https://github.com/markh794/mhvtl" style="color: var(--accent)">MHVTL</a>,
+    the Linux virtual tape library.</p>
+
+  <div class="guides">
+    <section class="guide">
+      <h2>User Guide</h2>
+      <p>What the console does, page by page, with the <code>mhvtl</code>
+        command for every task.</p>
+      <a href="user/html/">English</a>
+      <a href="user/html-ar/" lang="ar" dir="rtl">العربية</a>
+    </section>
+    <section class="guide">
+      <h2>API Reference</h2>
+      <p>The Python services, generated from their docstrings.</p>
+      <a href="api/html/">English</a>
+      <a href="api/html-ar/" lang="ar" dir="rtl">العربية</a>
+    </section>
+  </div>
+
+  <footer>
+    <a href="https://github.com/abdelhaleemahmed/mhvtl-console">Source on GitHub</a> ·
+    <a href="https://github.com/abdelhaleemahmed/mhvtl-console/releases/latest">Download the latest release</a> ·
+    GPL-2.0-only
+  </footer>
+</main>
+</body>
+</html>

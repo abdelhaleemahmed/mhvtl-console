@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watching a drive while it works &mdash; MHVTL GUI User Guide 2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/lang-switch.css?v=16e3750c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=841abef3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/lang-switch.js?v=8f8661c5"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exporting a library over iSCSI" href="iscsi.html" />
+    <link rel="prev" title="Writing a backup to a tape" href="backup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MHVTL GUI User Guide
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/what-it-is.html">What this is</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#what-you-can-do-with-it">What you can do with it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#what-it-is-not">What it is not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#why-a-virtual-library">Why a virtual library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#the-words-used-here">The words used here</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../start/first-look.html">A first look</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#log-in">Log in</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#is-mhvtl-running">Is MHVTL running?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#what-you-see-first">What you see first</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#the-same-thing-from-the-terminal">The same thing from the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#if-there-are-no-libraries-yet">If there are no libraries yet</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../start/the-console.html">Finding your way around</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#the-header">The header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#dashboard">Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#libraries">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#operator">Operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#console">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#themes">Themes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#the-command-line">The command line</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Libraries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/create.html">Creating a library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#which-combinations-exist">Which combinations exist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#what-it-wrote">What it wrote</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#afterwards">Afterwards</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/the-library-page.html">The library page</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#what-is-on-it">What is on it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#the-same-thing-from-the-terminal">The same thing from the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#the-buttons-and-what-they-run">The buttons, and what they run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#if-the-page-says-404">If the page says 404</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/drives.html">Adding and removing drives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#adding-a-drive">Adding a drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#removing-a-drive">Removing a drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#what-it-does-to-the-running-library">What it does to the running library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#seeing-the-drives">Seeing the drives</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/remove.html">Removing a library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#before-you-do">Before you do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#what-is-left-behind">What is left behind</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tapes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/create.html">Creating tapes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#the-barcode-decides-the-generation">The barcode decides the generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#one-tape">One tape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#a-run-of-tapes">A run of tapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#size-and-why-it-matters">Size, and why it matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#room-for-more-tapes">Room for more tapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#deleting-a-tape">Deleting a tape</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/inventory.html">The tape inventory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#where-the-numbers-come-from">Where the numbers come from</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#compression">Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#tapes-that-are-not-in-a-library">Tapes that are not in a library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/move.html">Moving a tape: mount, unmount, move</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#mount-slot-into-drive">Mount: slot into drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#unmount-drive-back-to-a-slot">Unmount: drive back to a slot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#move-slot-to-slot">Move: slot to slot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#online-and-offline">Online and offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#the-map">The MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#what-the-robot-says-is-where">What the robot says is where</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/adopt.html">Adopting a tape that is already on disk</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#when-this-comes-up">When this comes up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#finding-them">Finding them</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#adopting-one">Adopting one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#what-it-does-and-what-it-does-not">What it does, and what it does not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#restart-the-library-afterwards">Restart the library afterwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#checking-the-data-survived">Checking the data survived</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using a library</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="backup.html">Writing a backup to a tape</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#find-the-drive-s-device">1. Find the drive’s device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#put-a-cartridge-in-the-drive">2. Put a cartridge in the drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#write">3. Write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#read-it-back">4. Read it back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#put-the-cartridge-away">5. Put the cartridge away</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#several-backups-on-one-tape">Several backups on one tape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#why-the-tape-says-it-used-no-megabytes">Why the tape says it used no megabytes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Watching a drive while it works</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#on-the-library-page">On the library page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#on-the-command-line">On the command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-the-states-mean">What the states mean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-the-numbers-come-from">Where the numbers come from</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#two-readings-not-one">Two readings, not one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#if-it-says-holding-while-a-backup-is-running">If it says <code class="docutils literal notranslate"><span class="pre">holding</span></code> while a backup is running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#if-mt-and-the-panel-disagree">If <code class="docutils literal notranslate"><span class="pre">mt</span></code> and the panel disagree</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iscsi.html">Exporting a library over iSCSI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#what-gets-exported">What gets exported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#what-it-made">What it made</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#connecting-from-another-machine">Connecting from another machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#after-a-reboot-or-after-recreating-a-library">After a reboot, or after recreating a library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#removing-an-export">Removing an export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#is-the-service-even-running">Is the service even running?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keeping it running</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../running/console.html">The system console</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#console">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#devices">Devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#modules">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#logs">Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#disk">Disk</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../running/password.html">The password, and who can reach this</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#the-warning">The warning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#changing-it">Changing it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#if-you-lose-it">If you lose it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#who-can-reach-the-console">Who can reach the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#what-the-password-does-not-cover">What the password does not cover</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../running/when-something-is-wrong.html">When something is wrong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#three-answers-that-disagree">Three answers that disagree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#restart-the-library-for-its-robot-to-see-this">“Restart the library for its robot to see this”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-drive-says-silent">A drive says <code class="docutils literal notranslate"><span class="pre">silent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-library-page-that-answers-404">A library page that answers 404</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#an-export-that-points-at-the-wrong-device">An export that points at the wrong device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#tapes-that-belong-to-no-library">Tapes that belong to no library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-drive-that-will-not-take-a-cartridge">A drive that will not take a cartridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#the-disk-is-full">The disk is full</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#removing-a-library-and-rebooting">Removing a library and rebooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#nothing-here-helped">Nothing here helped</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MHVTL GUI User Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Watching a drive while it works</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/using/watching.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="watching-a-drive-while-it-works">
+<h1>Watching a drive while it works<a class="headerlink" href="#watching-a-drive-while-it-works" title="Link to this heading"></a></h1>
+<p>A tape drive is least willing to talk exactly when it is most interesting.
+The kernel gives the SCSI reservation to whoever is writing, so for the whole
+of a backup <code class="docutils literal notranslate"><span class="pre">mt</span></code> and <code class="docutils literal notranslate"><span class="pre">mtx</span></code> answer <em>device busy</em>, and every tool built on
+them goes quiet.</p>
+<p>This console shows the drive working anyway.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#on-the-library-page" id="id1">On the library page</a></p></li>
+<li><p><a class="reference internal" href="#on-the-command-line" id="id2">On the command line</a></p></li>
+<li><p><a class="reference internal" href="#what-the-states-mean" id="id3">What the states mean</a></p></li>
+<li><p><a class="reference internal" href="#where-the-numbers-come-from" id="id4">Where the numbers come from</a></p></li>
+<li><p><a class="reference internal" href="#two-readings-not-one" id="id5">Two readings, not one</a></p></li>
+<li><p><a class="reference internal" href="#if-it-says-holding-while-a-backup-is-running" id="id6">If it says <code class="docutils literal notranslate"><span class="pre">holding</span></code> while a backup is running</a></p></li>
+<li><p><a class="reference internal" href="#if-mt-and-the-panel-disagree" id="id7">If <code class="docutils literal notranslate"><span class="pre">mt</span></code> and the panel disagree</a></p></li>
+</ul>
+</nav>
+<section id="on-the-library-page">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">On the library page</a><a class="headerlink" href="#on-the-library-page" title="Link to this heading"></a></h2>
+<p>The <strong>Tape Drives</strong> card has a line per drive, refreshed every five seconds:</p>
+<a class="reference internal image-reference" href="../_images/drive-writing.png"><img alt="Drive 31 writing G03001TA, 173.8 MB written, 14.8% of the tape" src="../_images/drive-writing.png" style="width: 100%;" />
+</a>
+<p>That is library 30 during a real backup. The bar is how full the cartridge
+is; it turns amber past 75% and red past 90%.</p>
+<p>The same panel is on the monitor page, at <code class="docutils literal notranslate"><span class="pre">/libraries/monitor/&lt;id&gt;/</span></code>.</p>
+<a class="reference internal image-reference" href="../_images/monitor.png"><img alt="The monitor page, with what the drives are doing" src="../_images/monitor.png" style="width: 100%;" />
+</a>
+</section>
+<section id="on-the-command-line">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">On the command line</a><a class="headerlink" href="#on-the-command-line" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>activity<span class="w"> </span><span class="m">30</span>
+
+<span class="go">Library 30: 1 of 4 drive(s) hold a tape, 1 working</span>
+
+<span class="go">DRIVE  STATE    BARCODE   COUNTERS</span>
+<span class="go">-----  -------  --------  ----------------------------------------------------</span>
+<span class="go">31     writing  G03001TA  190.7 MB written - 15.8% of the tape, 2.41x compression</span>
+<span class="go">32     empty    -         -</span>
+<span class="go">33     empty    -         -</span>
+<span class="go">34     empty    -         -</span>
+</pre></div>
+</div>
+<p>The same sentence the page shows, because both ask one service. Nothing is
+worked out in the browser.</p>
+</section>
+<section id="what-the-states-mean">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">What the states mean</a><a class="headerlink" href="#what-the-states-mean" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">writing</span></code> / <code class="docutils literal notranslate"><span class="pre">reading</span></code></dt><dd><p>The counters grew since the previous reading.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">holding</span></code></dt><dd><p>A cartridge is loaded and the counters did not move.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">empty</span></code></dt><dd><p>No cartridge in the drive.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">silent</span></code></dt><dd><p>The drive daemon did not answer - usually one that is stopped. Check with
+<code class="docutils literal notranslate"><span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">vtltape&#64;31</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="where-the-numbers-come-from">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Where the numbers come from</a><a class="headerlink" href="#where-the-numbers-come-from" title="Link to this heading"></a></h2>
+<p>MHVTL’s drive daemon keeps its own counters and reports them over the message
+queue it already listens on, which the SCSI reservation does not touch. The
+command that asks is our own addition to MHVTL.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">written</span></code></dt><dd><p>Bytes the backup handed the drive.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">%</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">tape</span></code></dt><dd><p>How much of the cartridge is used - measured in what actually went to the
+medium, which is less than <em>written</em> when the data compresses.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">compression</span></code></dt><dd><p>Bytes in over bytes on the medium. Ordinary files compress about two to
+one; a ratio of 1.0 is not shown, because most test data does not compress
+and a clause saying so on every line is noise.</p>
+</dd>
+</dl>
+</section>
+<section id="two-readings-not-one">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Two readings, not one</a><a class="headerlink" href="#two-readings-not-one" title="Link to this heading"></a></h2>
+<p>MHVTL reports totals, not a rate, so <em>writing</em> means the number grew since
+the last reading. A command run once has nothing to compare with and waits a
+second to read again:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>activity<span class="w"> </span><span class="m">30</span><span class="w"> </span>--settle<span class="w"> </span><span class="m">2</span><span class="w">     </span><span class="c1"># two readings, 2s apart</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>activity<span class="w"> </span><span class="m">30</span><span class="w"> </span>--settle<span class="w"> </span><span class="m">0</span><span class="w">     </span><span class="c1"># one reading; never "writing"</span>
+</pre></div>
+</div>
+<p>The web page uses the second form, because it polls: the next refresh is a
+better answer than a request that blocks.</p>
+</section>
+<section id="if-it-says-holding-while-a-backup-is-running">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">If it says <code class="docutils literal notranslate"><span class="pre">holding</span></code> while a backup is running</a><a class="headerlink" href="#if-it-says-holding-while-a-backup-is-running" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>The backup may be writing to a <strong>different drive</strong>. <code class="docutils literal notranslate"><span class="pre">mhvtl</span> <span class="pre">status</span> <span class="pre">library</span>
+<span class="pre">30</span></code> says which drive holds which cartridge.</p></li>
+<li><p>The two readings may have been more than two minutes apart, which makes the
+older one useless. Ask again.</p></li>
+</ul>
+</section>
+<section id="if-mt-and-the-panel-disagree">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">If <code class="docutils literal notranslate"><span class="pre">mt</span></code> and the panel disagree</a><a class="headerlink" href="#if-mt-and-the-panel-disagree" title="Link to this heading"></a></h2>
+<p>They can, and the panel is usually right. <code class="docutils literal notranslate"><span class="pre">mt</span></code> reports what the kernel’s
+tape driver believes, which can be stale:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>drive<span class="w"> </span><span class="m">31</span><span class="w">      </span><span class="c1"># through mt</span>
+<span class="go">tape loaded       no</span>
+
+<span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>activity<span class="w"> </span><span class="m">30</span><span class="w">   </span><span class="c1"># through the drive daemon</span>
+<span class="go">31     holding  G03001TA  0 B written - 0.0% of the tape</span>
+
+<span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>library<span class="w"> </span><span class="m">30</span><span class="w">    </span><span class="c1"># through the robot</span>
+<span class="go">0      yes     G03001TA  1</span>
+</pre></div>
+</div>
+<p>Two of the three agree that the cartridge is in the drive, and they are the
+two that matter: the robot moved it there and the daemon holds it. See
+<a class="reference internal" href="../running/when-something-is-wrong.html"><span class="doc">When something is wrong</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="backup.html" class="btn btn-neutral float-left" title="Writing a backup to a tape" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="iscsi.html" class="btn btn-neutral float-right" title="Exporting a library over iSCSI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ahmed Abdelhaleem Ahmed.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

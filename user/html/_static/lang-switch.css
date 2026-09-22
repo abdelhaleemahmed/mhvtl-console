@@ -1,0 +1,43 @@
+/* Language switcher — sits below the project title in the RTD sidebar */
+
+.lang-switcher {
+    padding: 6px 16px 10px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 4px;
+}
+
+.lang-switcher a {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.82em;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: color 0.15s;
+}
+
+.lang-switcher a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.lang-switcher-icon {
+    font-size: 1em;
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+/* RTL: icon on the left (visually right in RTL flow) */
+[lang="ar"] .lang-switcher-icon {
+    margin-right: 0;
+    margin-left: 3px;
+}
+
+/* Tables of prose rather than values. sphinx_rtd_theme keeps table cells on one
+   line and lets a wide table scroll sideways, which is right for tables of
+   numbers and identifiers but cuts a sentence off at the edge of the page. A
+   list-table given `:class: wrap` wraps its cells instead. */
+.wy-table-responsive table.wrap td,
+.wy-table-responsive table.wrap th {
+    white-space: normal;
+}
