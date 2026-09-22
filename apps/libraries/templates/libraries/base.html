@@ -1,0 +1,61 @@
+{% load static %}
+{% comment %}
+The page frame every libraries page uses: the stylesheet, the theme picker,
+the header with its breadcrumb and actions, the messages and the content.
+
+Before this, each page carried its own copy - and its own <style> restating
+what css/mhvtl-console.css defines, including a `.card { background: white }`
+that no theme could override, because the shared rules are scoped to
+body.mhvtl-console and only a base template sets that class.
+
+    {% block header_title %}   the title beside the icon
+    {% block breadcrumb %}     where the page sits
+    {% block header_actions %} buttons at the right of the header
+    {% block extra_css %}      rules the shared stylesheet has no equivalent for
+    {% block content %}        the page
+    {% block extra_js %}       the page's own script
+{% endcomment %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title }} - MHVTL{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
+    <script src="{% static 'js/theme.js' %}"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="mhvtl-console">
+    <header class="header">
+        <div class="header-content">
+            <div>
+                <h1 class="header-title">{% block header_title %}{{ title }}{% endblock %}</h1>
+                {% block breadcrumb %}{% endblock %}
+            </div>
+            <nav class="header-actions">
+                {% block header_actions %}{% endblock %}
+                <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'libraries:list' %}" class="nav-link">Libraries</a>
+                <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Operator</a>
+                <a href="{% url 'libraries:console_dashboard' %}" class="nav-link">Console</a>
+                <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
+                <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
+            </nav>
+        </div>
+    </header>
+
+    <div class="content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% include 'includes/_default_password_warning.html' %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="{% static 'js/csrf.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,62 @@
+{% load static %}
+{% comment %}
+The frame every console page uses.
+
+Each page used to carry its own <head>, header and navigation, and no two
+navigations agreed: the console dashboard offered Logs, Service and Devices,
+the service page offered Console and Logs, and nothing anywhere linked to the
+kernel modules or the disk usage - both reachable only by typing the address.
+One nav here, and every console page can be left from every other.
+
+    {% block header_title %}   the title beside the navigation
+    {% block extra_css %}      rules the shared stylesheet has no equivalent for
+    {% block content %}        the page
+    {% block extra_js %}       the page's own script
+{% endcomment %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title }} - MHVTL{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
+    <script src="{% static 'js/theme.js' %}"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="mhvtl-console">
+    <div class="header">
+        <div class="header-content">
+            <div class="header-title">{% block header_title %}{{ title }}{% endblock %}</div>
+            <nav>
+                <a href="{% url 'libraries:console_dashboard' %}" class="nav-link">Console</a>
+                <a href="{% url 'libraries:console_logs' %}" class="nav-link">Logs</a>
+                <a href="{% url 'libraries:console_service_status' %}" class="nav-link">Services</a>
+                <a href="{% url 'libraries:console_scsi_devices' %}" class="nav-link">Devices</a>
+                <a href="{% url 'libraries:console_kernel_modules' %}" class="nav-link">Modules</a>
+                <a href="{% url 'libraries:console_disk_usage' %}" class="nav-link">Disk</a>
+                <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
+                <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
+            </nav>
+        </div>
+    </div>
+
+    <div class="content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        {% include 'includes/_default_password_warning.html' %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="{% static 'js/csrf.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

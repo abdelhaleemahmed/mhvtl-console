@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title|default:"Dashboard" }} - MHVTL</title>
+    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
+    <script src="{% static 'js/theme.js' %}"></script>
+</head>
+<body class="mhvtl-console">
+
+<div class="header">
+    <div class="header-content">
+        <div>
+            <div class="header-title">MHVTL Console</div>
+            <div class="header-subtitle">{{ system_name }}</div>
+        </div>
+        <nav>
+            <a href="{% url 'libraries:list' %}" class="nav-link">Libraries</a>
+            <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Tape Operations</a>
+            <a href="{% url 'libraries:console_dashboard' %}" class="nav-link">System Console</a>
+            <a href="{% url 'authentication:change_password' %}" class="nav-link">Password</a>
+            <a href="{% url 'authentication:logout' %}" class="nav-link">Log out</a>
+            <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
+        </nav>
+    </div>
+</div>
+
+<div class="content">
+
+    {% include 'includes/_default_password_warning.html' %}
+
+    <div id="alerts"></div>
+
+    <!-- Tiles start as placeholders and are filled in by fetchSummary(), so a
+         slow systemctl or lsmod call delays one tile, not the page. -->
+    <div class="stats-grid">
+        <div class="stat-card" id="tile-service">
+            <div class="stat-value"><span class="skeleton" style="width:6ch"></span></div>
+            <div class="stat-label">MHVTL Service</div>
+            <div class="stat-detail" data-detail>checking…</div>
+        </div>
+        <a class="stat-card neutral" id="tile-libraries" href="{% url 'libraries:list' %}">
+            <div class="stat-value"><span class="skeleton" style="width:2ch"></span></div>
+            <div class="stat-label">Libraries</div>
+            <div class="stat-detail" data-detail>&nbsp;</div>
+        </a>
+        <a class="stat-card neutral" id="tile-drives" href="{% url 'libraries:drive_list' %}">
+            <div class="stat-value"><span class="skeleton" style="width:2ch"></span></div>
+            <div class="stat-label">Drives</div>
+            <div class="stat-detail" data-detail>&nbsp;</div>
+        </a>
+        <a class="stat-card neutral" id="tile-tapes" href="{% url 'libraries:tape_list' %}">
+            <div class="stat-value"><span class="skeleton" style="width:3ch"></span></div>
+            <div class="stat-label">Tapes</div>
+            <div class="stat-detail" data-detail>&nbsp;</div>
+        </a>
+        <div class="stat-card neutral" id="tile-storage">
+            <div class="stat-value"><span class="skeleton" style="width:4ch"></span></div>
+            <div class="stat-label">Media Storage</div>
+            <div class="stat-detail" data-detail>/opt/mhvtl</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-heading">
+            <h2>Libraries</h2>
+            <a href="{% url 'libraries:list' %}">Manage libraries →</a>
+        </div>
+        <table class="info-table">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Model</th><th>Serial</th><th>Drives</th><th>Tapes</th><th>State</th>
+                </tr>
+            </thead>
+            <tbody id="library-rows">
+                <tr><td colspan="6" class="table-empty">Loading libraries…</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-heading"><h2>Common tasks</h2></div>
+        <div class="quick-links">
+            <a class="quick-link primary" href="{% url 'libraries:mount_tape' %}">Mount a tape</a>
+            <a class="quick-link" href="{% url 'libraries:unmount_tape' %}">Unmount</a>
+            <a class="quick-link" href="{% url 'libraries:move_tape' %}">Move tape</a>
+            <a class="quick-link" href="{% url 'libraries:create_tape' %}">Create tapes</a>
+            <a class="quick-link" href="{% url 'libraries:brand_selection' %}">New library</a>
+            <a class="quick-link" href="{% url 'libraries:config_files' %}">Config files</a>
+        </div>
+    </div>
+
+    <p style="color:#6b7280;font-size:12px;text-align:center;margin-top:24px;">
+        <strong>MHVTL UI System</strong> by Ahmed Abdelhaleem Ahmed &lt;ahmedhal@gmail.com&gt; ·
+        MHVTL by <a href="http://sites.google.com/site/linuxvtl2/" style="color:#9ca3af;">Mark Harvey &amp; Community</a>
+    </p>
+
+</div>
+
+<script src="{% static 'js/csrf.js' %}"></script>
+<script>
+(function () {
+    'use strict';
+
+    var SUMMARY_URL = "{% url 'libraries:dashboard_summary_ajax' %}";
+    var LIBRARY_URL = "{% url 'libraries:list' %}";
+    var REFRESH_MS = 30000;
+    var TILES = ['tile-service', 'tile-libraries', 'tile-drives', 'tile-tapes', 'tile-storage'];
+
+    function el(id) { return document.getElementById(id); }
+
+    function setTile(id, value, detail, cls) {
+        var tile = el(id);
+        if (!tile) { return; }
+        tile.querySelector('.stat-value').textContent = value;
+        var detailNode = tile.querySelector('[data-detail]');
+        if (detailNode && detail !== undefined) { detailNode.textContent = detail; }
+        tile.className = tile.className.replace(/\s*\b(warning|danger|neutral|info)\b/g, '');
+        if (cls) { tile.className += ' ' + cls; }
+    }
+
+    function cell(row, value) {
+        var td = row.insertCell();
+        td.textContent = (value === undefined || value === null || value === '') ? '—' : value;
+        return td;
+    }
+
+    function message(body, text) {
+        body.innerHTML = '';
+        var td = body.insertRow().insertCell();
+        td.colSpan = 6;
+        td.className = 'table-empty';
+        td.textContent = text;
+    }
+
+    function renderAlerts(alerts) {
+        var box = el('alerts');
+        box.innerHTML = '';
+        (alerts || []).forEach(function (alert) {
+            var div = document.createElement('div');
+            div.className = 'alert alert-' + (alert.level === 'danger' ? 'danger' : 'warning');
+            div.textContent = alert.message;
+            box.appendChild(div);
+        });
+    }
+
+    function renderLibraries(summary) {
+        var body = el('library-rows');
+        var section = summary.libraries || {};
+        var perLibrary = ((summary.media || {}).data || {}).per_library || {};
+
+        if (!section.ok) {
+            message(body, 'Could not read the library configuration: ' + (section.error || 'unknown error'));
+            return;
+        }
+
+        var libraries = (section.data || {}).libraries || [];
+        if (!libraries.length) {
+            message(body, 'No libraries are configured yet.');
+            return;
+        }
+
+        body.innerHTML = '';
+        libraries.forEach(function (lib) {
+            var row = body.insertRow();
+
+            var link = document.createElement('a');
+            link.href = LIBRARY_URL;
+            link.textContent = lib.library_id;
+            row.insertCell().appendChild(link);
+
+            cell(row, ((lib.vendor || '') + ' ' + (lib.product || '')).trim());
+            cell(row, lib.serial);
+            cell(row, lib.drives);
+            cell(row, perLibrary[lib.library_id]);
+
+            var badge = document.createElement('span');
+            var active = String(lib.status || '').toLowerCase() === 'active';
+            badge.className = 'status-badge ' + (active ? 'status-ok' : 'status-unknown');
+            badge.textContent = lib.status || 'unknown';
+            row.insertCell().appendChild(badge);
+        });
+    }
+
+    function render(summary) {
+        renderAlerts(summary.alerts);
+
+        var service = summary.service || {};
+        if (service.ok) {
+            var s = service.data;
+            var up = s.running && s.module_loaded;
+            setTile('tile-service',
+                    up ? 'Running' : 'Down',
+                    up ? s.daemons_active + ' of ' + s.daemons_total + ' daemons active'
+                       : (s.module_loaded ? 'daemons stopped' : 'kernel module not loaded'),
+                    up ? '' : 'danger');
+        } else {
+            setTile('tile-service', 'Unknown', service.error || '', 'warning');
+        }
+
+        var libs = summary.libraries || {};
+        if (libs.ok) {
+            setTile('tile-libraries', libs.data.count,
+                    libs.data.count === 1 ? 'library configured' : 'libraries configured', 'neutral');
+            setTile('tile-drives', libs.data.total_drives,
+                    service.ok ? service.data.drives_active + ' daemons running' : 'configured', 'neutral');
+        } else {
+            setTile('tile-libraries', '—', 'unavailable', 'warning');
+            setTile('tile-drives', '—', 'unavailable', 'warning');
+        }
+
+        var media = summary.media || {};
+        if (media.ok && media.data.known) {
+            setTile('tile-tapes', media.data.total,
+                    media.data.cleaning + ' cleaning' + (media.data.partial ? ' · count incomplete' : ''),
+                    media.data.partial ? 'warning' : 'neutral');
+        } else if (media.ok) {
+            setTile('tile-tapes', '—', 'no library_contents files found', 'warning');
+        } else {
+            setTile('tile-tapes', '—', 'unavailable', 'warning');
+        }
+
+        var storage = summary.storage || {};
+        if (storage.ok) {
+            var size = storage.data.data_size;
+            setTile('tile-storage',
+                    (size && size !== 'Unknown') ? size : '—',
+                    (storage.data.tape_count || 0) + ' media directories', 'neutral');
+        } else {
+            setTile('tile-storage', '—', 'unavailable', 'warning');
+        }
+
+        renderLibraries(summary);
+    }
+
+    function failed(reason) {
+        renderAlerts([{level: 'danger', message: 'Could not load dashboard data: ' + reason}]);
+        TILES.forEach(function (id) { setTile(id, '—', 'unavailable', 'warning'); });
+        message(el('library-rows'), 'Unavailable.');
+    }
+
+    function fetchSummary() {
+        fetch(SUMMARY_URL, {headers: {'X-Requested-With': 'XMLHttpRequest'}, credentials: 'same-origin'})
+            .then(function (response) {
+                // The session expired: send the operator back to the login page
+                // rather than leaving stale numbers on screen.
+                if (response.status === 403) { window.location.reload(); return null; }
+                if (!response.ok) { throw new Error('HTTP ' + response.status); }
+                return response.json();
+            })
+            .then(function (payload) {
+                if (!payload) { return; }
+                if (!payload.success) { throw new Error(payload.error || 'unknown error'); }
+                render(payload.summary);
+            })
+            .catch(function (error) { failed(error.message); });
+    }
+
+    fetchSummary();
+    setInterval(fetchSummary, REFRESH_MS);
+})();
+</script>
+</body>
+</html>

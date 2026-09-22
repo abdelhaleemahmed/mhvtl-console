@@ -1,0 +1,214 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../using/watching.rst:2 56e5cb157c5f4ca5a938f811392ade4d
+msgid "Watching a drive while it works"
+msgstr ""
+
+#: ../../using/watching.rst:4 874716a3acc94b7991699abaaa97be67
+msgid ""
+"A tape drive is least willing to talk exactly when it is most "
+"interesting. The kernel gives the SCSI reservation to whoever is writing,"
+" so for the whole of a backup ``mt`` and ``mtx`` answer *device busy*, "
+"and every tool built on them goes quiet."
+msgstr ""
+
+#: ../../using/watching.rst:9 6d3789b6640b4d5ea6151b412a27b804
+msgid "This console shows the drive working anyway."
+msgstr ""
+
+#: ../../using/watching.rst:16 ee0571df2a4a4b7c906fe8658e2a4f6f
+msgid "On the library page"
+msgstr ""
+
+#: ../../using/watching.rst:18 b7ce78bbda6246bfa892a359a0a6041d
+msgid ""
+"The **Tape Drives** card has a line per drive, refreshed every five "
+"seconds:"
+msgstr ""
+
+#: ../../using/watching.rst:20 ccc7aecab79047c3a97d1edac839af3e
+#, python-format
+msgid "Drive 31 writing G03001TA, 173.8 MB written, 14.8% of the tape"
+msgstr ""
+
+#: ../../using/watching.rst:24 01f59d8787a0498ea5bece5e0273c6fa
+msgid ""
+"That is library 30 during a real backup. The bar is how full the "
+"cartridge is; it turns amber past 75% and red past 90%."
+msgstr ""
+
+#: ../../using/watching.rst:27 3c6eab1cc43147c080e02f118c2c7db2
+msgid "The same panel is on the monitor page, at ``/libraries/monitor/<id>/``."
+msgstr ""
+
+#: ../../using/watching.rst:29 7ee256d152af4b1d939ad0795bacffce
+msgid "The monitor page, with what the drives are doing"
+msgstr ""
+
+#: ../../using/watching.rst:34 11e6801d68e9419986a1548734c57086
+msgid "On the command line"
+msgstr ""
+
+#: ../../using/watching.rst:49 122eba4d8f904f2ba4e0230db4cc3fef
+msgid ""
+"The same sentence the page shows, because both ask one service. Nothing "
+"is worked out in the browser."
+msgstr ""
+
+#: ../../using/watching.rst:53 0c0c0dfe2bde4687b9f6e1934e419909
+msgid "What the states mean"
+msgstr ""
+
+#: ../../using/watching.rst:55 d57da2ae347b4ded8c71919188688a75
+msgid "``writing`` / ``reading``"
+msgstr ""
+
+#: ../../using/watching.rst:56 5a7846350f664443873c94cc8c7205a1
+msgid "The counters grew since the previous reading."
+msgstr ""
+
+#: ../../using/watching.rst:58 1ef204ac52854f28adfc679394533acd
+msgid "``holding``"
+msgstr ""
+
+#: ../../using/watching.rst:59 9bcc728f9f7f49bf816a728f31520479
+msgid "A cartridge is loaded and the counters did not move."
+msgstr ""
+
+#: ../../using/watching.rst:61 ff94e9f11a3349b08977e325ea61522e
+msgid "``empty``"
+msgstr ""
+
+#: ../../using/watching.rst:62 393f0682d28d48969f3a2f25e2ed038d
+msgid "No cartridge in the drive."
+msgstr ""
+
+#: ../../using/watching.rst:64 7c4ef0a0ed06464db80032df906825f9
+msgid "``silent``"
+msgstr ""
+
+#: ../../using/watching.rst:65 cf1e16ed5c8d4aa9b921619faf9cdc09
+msgid ""
+"The drive daemon did not answer - usually one that is stopped. Check with"
+" ``systemctl status vtltape@31``."
+msgstr ""
+
+#: ../../using/watching.rst:69 0a6bdb23b9e9406b86805b254a8a1132
+msgid "Where the numbers come from"
+msgstr ""
+
+#: ../../using/watching.rst:71 b41eca753c4f4f88b7ab221f3380d106
+msgid ""
+"MHVTL's drive daemon keeps its own counters and reports them over the "
+"message queue it already listens on, which the SCSI reservation does not "
+"touch. The command that asks is our own addition to MHVTL."
+msgstr ""
+
+#: ../../using/watching.rst:75 69099bdbb2874f2a81d23024808d66c0
+msgid "``written``"
+msgstr ""
+
+#: ../../using/watching.rst:76 313d1c9365b64ae688912daadaca394d
+msgid "Bytes the backup handed the drive."
+msgstr ""
+
+#: ../../using/watching.rst:78 9b4e63e34a664ab19b67091787e40113
+#, python-format
+msgid "``% of the tape``"
+msgstr ""
+
+#: ../../using/watching.rst:79 cb87bfe18b8c412a9c18e447b24a961e
+msgid ""
+"How much of the cartridge is used - measured in what actually went to the"
+" medium, which is less than *written* when the data compresses."
+msgstr ""
+
+#: ../../using/watching.rst:82 2248f7e765de493da9ccfa6c4db3dfa0
+msgid "``compression``"
+msgstr ""
+
+#: ../../using/watching.rst:83 bacd351c19b24629a6a46898bac3ef94
+msgid ""
+"Bytes in over bytes on the medium. Ordinary files compress about two to "
+"one; a ratio of 1.0 is not shown, because most test data does not "
+"compress and a clause saying so on every line is noise."
+msgstr ""
+
+#: ../../using/watching.rst:88 1999faadc67d453db0217e06a915d417
+msgid "Two readings, not one"
+msgstr ""
+
+#: ../../using/watching.rst:90 d5d3257ee42f4404ad25b17acf7bc495
+msgid ""
+"MHVTL reports totals, not a rate, so *writing* means the number grew "
+"since the last reading. A command run once has nothing to compare with "
+"and waits a second to read again:"
+msgstr ""
+
+#: ../../using/watching.rst:99 978648f075b64c70aa1454fb3444a992
+msgid ""
+"The web page uses the second form, because it polls: the next refresh is "
+"a better answer than a request that blocks."
+msgstr ""
+
+#: ../../using/watching.rst:103 b66b892f2cf44eab98e5ecea4ee1389e
+msgid "If it says ``holding`` while a backup is running"
+msgstr ""
+
+#: ../../using/watching.rst:105 94e20dbd0bc64537a431fca5f2dc6742
+msgid ""
+"The backup may be writing to a **different drive**. ``mhvtl status "
+"library 30`` says which drive holds which cartridge."
+msgstr ""
+
+#: ../../using/watching.rst:107 abbf35d6623a409aa995d7c779d10700
+msgid ""
+"The two readings may have been more than two minutes apart, which makes "
+"the older one useless. Ask again."
+msgstr ""
+
+#: ../../using/watching.rst:111 f49356e502ad4b4987dcd8093b1eb1ab
+msgid "If ``mt`` and the panel disagree"
+msgstr ""
+
+#: ../../using/watching.rst:113 d249f0bd204b4af3ae4f6c6adff0bcaa
+msgid ""
+"They can, and the panel is usually right. ``mt`` reports what the "
+"kernel's tape driver believes, which can be stale:"
+msgstr ""
+
+#: ../../using/watching.rst:127 65d4bce8906449af87e68c33418a2cbe
+msgid ""
+"Two of the three agree that the cartridge is in the drive, and they are "
+"the two that matter: the robot moved it there and the daemon holds it. "
+"See :doc:`../running/when-something-is-wrong`."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

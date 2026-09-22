@@ -1,0 +1,400 @@
+{% extends 'libraries/operator/base.html' %}
+{% load static %}
+
+{% block header_title %}Create Tape{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="section-title">Barcode Format</div>
+            <ul class="page-description" style="margin-left: 20px;">
+                <li><strong>Standard:</strong> 6 characters + 2 character suffix (e.g., E01001L8)</li>
+                <li><strong>Cleaning:</strong> Start with "CLN" (e.g., CLN001L8)</li>
+                <li><strong>WORM:</strong> Start with "W" (e.g., W01001LV)</li>
+                <li><strong>Suffix examples:</strong> L8=LTO8, L7=LTO7, L6=LTO6, S3=SDLT600</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="operation-icon">&#128190;</div>
+            <div class="section-title">Create New Tape</div>
+            <p class="page-description">
+                Create a new virtual tape and add it to a library slot.
+            </p>
+
+            <form method="post" action="{% url 'libraries:create_tape' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="library_id">Select Library</label>
+                    <select name="library_id" id="library_id" class="form-control" required>
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"{% if selected_library_id == library.library_id %} selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="density">Tape Density</label>
+                        <select name="density" id="density" class="form-control" required>
+                            {% for value, label in densities %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help" id="density-help">Select a library to see the media its drives load.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tape_type">Tape Type</label>
+                        <select name="tape_type" id="tape_type" class="form-control" required>
+                            {% for value, label in tape_types %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="barcode">Barcode</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" name="barcode_base" id="barcode_base" class="form-control"
+                                   placeholder="Select library first" maxlength="6" required
+                                   style="text-transform: uppercase; flex: 1;">
+                            <input type="text" id="barcode_suffix" class="form-control"
+                                   value="L8" maxlength="2" readonly
+                                   class="form-control barcode-part" style="text-transform: uppercase; width: 60px; text-align: center;">
+                        </div>
+                        <input type="hidden" name="barcode" id="barcode">
+                        <p class="form-help">6 character base + 2 character suffix (e.g., H70001 + L8)</p>
+                        <p id="barcode-error" class="form-help form-error" style="display: none;"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="slot">Slot Number</label>
+                        <input type="number" name="slot" id="slot" class="form-control"
+                               min="1" max="15000" required placeholder="1">
+                        <p class="form-help">Empty slot number to place the tape</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="size_mb">Tape Size (MB)</label>
+                    <input type="number" name="size_mb" id="size_mb" class="form-control"
+                           value="500000" min="1000" max="50000000">
+                    <p class="form-help" id="size-help">Size in megabytes; set to the density's native capacity when you pick one</p>
+                </div>
+
+                <div class="btn-group">
+                    <a href="{% url 'libraries:tape_list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-success">Create Tape</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" id="existing-barcodes-card" style="display: none;">
+            <div class="section-title">Existing Barcodes in Library</div>
+            <p class="page-description">These barcodes are already in use. Avoid duplicates.</p>
+            <div id="existing-barcodes" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 150px; overflow-y: auto;">
+                <!-- Populated via JavaScript -->
+            </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+{# The media each library's drives load, for tape-media.js. The conversion to
+   the base template dropped this line, and every density list came up empty. #}
+{{ media_info|json_script:"media-info" }}
+<script src="{% static 'js/tape-media.js' %}"></script>
+<script>
+        let existingBarcodes = [];
+
+        // Library to barcode prefix mapping - from backend
+        const libraryPrefixes = {
+            {% for lib_id, prefix in library_prefixes.items %}
+            {{ lib_id }}: "{{ prefix }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        // Offer only the densities the chosen library's drives load
+        // (static/js/tape-media.js), and say what the drives do with each.
+        function refreshDensities() {
+            const libraryId = document.getElementById('library_id').value;
+            TapeMedia.fill(document.getElementById('density'), libraryId);
+            densityChanged();
+        }
+
+        function densityChanged() {
+            const libraryId = document.getElementById('library_id').value;
+            const density = document.getElementById('density').value;
+            document.getElementById('density-help').textContent =
+                TapeMedia.describe(libraryId, density);
+            const size = TapeMedia.suggestedSize(density);
+            document.getElementById('size_mb').value = size.mb;
+            document.getElementById('size-help').textContent = size.text;
+            updateSuffixForTapeType();
+        }
+
+        // Update suffix when density changes — re-suggest barcode with new suffix
+        document.getElementById('density').addEventListener('change', function() {
+            densityChanged();
+            const libraryId = document.getElementById('library_id').value;
+            if (libraryId) {
+                document.getElementById('barcode_base').value = '';
+                suggestNextBarcode(libraryId);
+            }
+            validateBarcode();
+        });
+
+        // Update when tape type changes — barcode format changes entirely
+        document.getElementById('tape_type').addEventListener('change', function() {
+            updateSuffixForTapeType();
+            updateBarcodePlaceholder();
+            const libraryId = document.getElementById('library_id').value;
+            if (libraryId) {
+                document.getElementById('barcode_base').value = '';
+                suggestNextBarcode(libraryId);
+            }
+            validateBarcode();
+        });
+
+        function updateSuffixForTapeType() {
+            const tapeType = document.getElementById('tape_type').value;
+            const density = document.getElementById('density').value;
+            const suffixInput = document.getElementById('barcode_suffix');
+
+            suffixInput.value = TapeMedia.suffixFor(density, tapeType);
+        }
+
+        function updateBarcodePlaceholder() {
+            const tapeType = document.getElementById('tape_type').value;
+            const libraryId = document.getElementById('library_id').value;
+            const barcodeInput = document.getElementById('barcode_base');
+
+            if (!libraryId || !libraryPrefixes[libraryId]) {
+                barcodeInput.placeholder = 'Select library first';
+                return;
+            }
+
+            const fullPrefix = libraryPrefixes[libraryId];
+            const brandLetter = fullPrefix.charAt(0);
+            const libId = String(parseInt(libraryId)).padStart(2, '0');
+
+            if (tapeType === 'clean') {
+                // CLN{lib:2d}{num:1d} = CLN701
+                barcodeInput.placeholder = 'CLN' + libId + '1';
+                barcodeInput.maxLength = 6;
+            } else if (tapeType === 'WORM') {
+                // W{brand}{lib:2d}{num:2d} = WH7001
+                barcodeInput.placeholder = 'W' + brandLetter + libId + '01';
+                barcodeInput.maxLength = 6;
+            } else {
+                // {prefix}{num:3d} = H70001
+                barcodeInput.placeholder = fullPrefix + '001';
+                barcodeInput.maxLength = 6;
+            }
+        }
+
+        // Validate barcode on input
+        document.getElementById('barcode_base').addEventListener('input', validateBarcode);
+
+        // Fetch everything when library changes
+        document.getElementById('library_id').addEventListener('change', function() {
+            const libraryId = this.value;
+            refreshDensities();
+            if (!libraryId) {
+                document.getElementById('existing-barcodes-card').style.display = 'none';
+                existingBarcodes = [];
+                document.getElementById('barcode_base').value = '';
+                document.getElementById('slot').value = '';
+                return;
+            }
+
+            // Update barcode placeholder based on library and tape type
+            updateBarcodePlaceholder();
+
+            // Clear previous values so auto-fill always runs
+            document.getElementById('barcode_base').value = '';
+            document.getElementById('slot').value = '';
+
+            // Fetch existing barcodes (independent of barcode suggestion)
+            fetch(`/libraries/ajax/existing-barcodes/${libraryId}/`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        existingBarcodes = data.barcodes;
+                        displayExistingBarcodes();
+                        validateBarcode();
+                    }
+                })
+                .catch(err => console.error('Failed to fetch barcodes:', err));
+
+            // Suggest next barcode — independent fetch, always fires
+            suggestNextBarcode(libraryId, true);
+
+            // Fetch next available slot — independent fetch
+            fetch(`/libraries/ajax/next-slot/${libraryId}/`)
+                .then(r => r.json())
+                .then(data => {
+                    const slotHelp = document.querySelector('#slot + p.form-help') ||
+                                     document.getElementById('slot').nextElementSibling;
+                    if (data.success && data.next_slot) {
+                        document.getElementById('slot').value = data.next_slot;
+                        if (slotHelp) {
+                            slotHelp.textContent = `Slot ${data.next_slot} of ${data.total_slots} — ${data.free_slots} free, ${data.occupied_slots} used`;
+                            slotHelp.className = 'form-help' + (data.free_slots <= 5 ? ' form-warn' : '');
+                        }
+                    } else {
+                        document.getElementById('slot').value = '';
+                        document.getElementById('slot').placeholder = 'Enter slot manually';
+                        if (slotHelp) {
+                            slotHelp.textContent = `Library is full — ${data.occupied_slots} / ${data.total_slots} slots used`;
+                            slotHelp.className = 'form-help form-error';
+                        }
+                    }
+                })
+                .catch(err => console.error('Failed to fetch next slot:', err));
+        });
+
+        function displayExistingBarcodes() {
+            const container = document.getElementById('existing-barcodes');
+            const card = document.getElementById('existing-barcodes-card');
+
+            if (existingBarcodes.length === 0) {
+                card.style.display = 'none';
+                return;
+            }
+
+            card.style.display = 'block';
+            container.innerHTML = existingBarcodes.map(bc =>
+                `<span class="barcode-chip" style="padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 12px;">${bc}</span>`
+            ).join('');
+        }
+
+        function validateBarcode() {
+            const base = document.getElementById('barcode_base').value.toUpperCase();
+            const suffix = document.getElementById('barcode_suffix').value;
+            const fullBarcode = base + suffix;
+            const errorEl = document.getElementById('barcode-error');
+            const libraryId = document.getElementById('library_id').value;
+
+            // Update hidden field
+            document.getElementById('barcode').value = fullBarcode;
+
+            // Quick client-side check first
+            if (base && existingBarcodes.includes(fullBarcode)) {
+                errorEl.textContent = `Barcode "${fullBarcode}" already exists in this library!`;
+                errorEl.style.display = 'block';
+                return false;
+            }
+
+            // Also validate via backend for extra safety
+            if (base && libraryId) {
+                fetch(`/libraries/ajax/validate-barcode/${libraryId}/?barcode=${fullBarcode}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success && !data.valid) {
+                            errorEl.textContent = data.message;
+                            errorEl.style.display = 'block';
+                        } else {
+                            errorEl.style.display = 'none';
+                        }
+                    })
+                    .catch(() => {});
+            } else {
+                errorEl.style.display = 'none';
+            }
+
+            return true;
+        }
+
+        // adoptSeries: on a library change, follow the suffix the library's
+        // tapes already use, by selecting its density - never by changing the
+        // suffix alone, which would name a different density than is created.
+        function suggestNextBarcode(libraryId, adoptSeries = false) {
+            const tapeType = document.getElementById('tape_type').value;
+            const suffix = document.getElementById('barcode_suffix').value.toUpperCase() || 'L8';
+            const fullPrefix = libraryPrefixes[libraryId];
+            if (!fullPrefix) return;
+
+            const brandLetter = fullPrefix.charAt(0);
+            const libId = String(parseInt(libraryId)).padStart(2, '0');
+
+            // Build prefix matching the tape type (same logic as updateBarcodePlaceholder)
+            let queryPrefix;
+            if (tapeType === 'clean') {
+                queryPrefix = 'CLN' + libId;
+            } else if (tapeType === 'WORM') {
+                queryPrefix = 'W' + brandLetter + libId;
+            } else {
+                queryPrefix = fullPrefix;
+            }
+
+            fetch(`/libraries/ajax/next-barcode/${libraryId}/?prefix=${queryPrefix}&suffix=${suffix}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        if (adoptSeries && data.detected_suffix && tapeType === 'data') {
+                            const density = Object.keys(TapeMedia.info.suffix).find(
+                                d => TapeMedia.info.suffix[d] === data.detected_suffix);
+                            const select = document.getElementById('density');
+                            if (density && density !== select.value &&
+                                    Array.from(select.options).some(o => o.value === density)) {
+                                select.value = density;
+                                densityChanged();
+                                suggestNextBarcode(libraryId);   // again, with the new suffix
+                                return;
+                            }
+                        }
+                        const barcodeInput = document.getElementById('barcode_base');
+                        let base;
+                        if (tapeType === 'clean') {
+                            base = 'CLN' + libId + data.next_number;
+                        } else if (tapeType === 'WORM') {
+                            base = 'W' + brandLetter + libId + String(data.next_number).padStart(2, '0');
+                        } else {
+                            base = fullPrefix + String(data.next_number).padStart(3, '0');
+                        }
+                        barcodeInput.value = base;
+                        validateBarcode();
+                    }
+                })
+                .catch(err => console.error('Failed to fetch next barcode:', err));
+        }
+
+        // Form submission validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const base = document.getElementById('barcode_base').value.toUpperCase();
+            const suffix = document.getElementById('barcode_suffix').value;
+            const fullBarcode = base + suffix;
+
+            // Always sync hidden field on submit (in case input event didn't fire)
+            document.getElementById('barcode').value = fullBarcode;
+
+            if (existingBarcodes.includes(fullBarcode)) {
+                e.preventDefault();
+                alert('Please choose a unique barcode. The current one already exists.');
+            }
+        });
+
+        refreshDensities();
+
+        // The page keeps the library the link carried, so everything that
+        // depends on it - the densities, the next barcode, the slot, the
+        // tapes already there - is filled on arrival, not only when the
+        // picker is touched.
+        if (document.getElementById('library_id').value) {
+            document.getElementById('library_id').dispatchEvent(new Event('change'));
+        }
+    </script>
+{% endblock %}

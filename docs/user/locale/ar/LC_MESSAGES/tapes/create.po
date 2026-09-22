@@ -1,0 +1,219 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../tapes/create.rst:2 8e8a6525163e4a00bdff476451e66d8f
+msgid "Creating tapes"
+msgstr ""
+
+#: ../../tapes/create.rst:4 bf0287ad9333471ab651339bb243e449
+msgid ""
+"A tape is a barcode, a size, and a generation. Creating one writes its "
+"files under ``/opt/mhvtl`` and puts it in a free slot of a library."
+msgstr ""
+
+#: ../../tapes/create.rst:12 da6b1b1b74314a4fb0c6235016aa4a37
+msgid "The barcode decides the generation"
+msgstr ""
+
+#: ../../tapes/create.rst:14 4b163b02a75b4ab0a895f3317395b7f6
+msgid ""
+"A barcode is a prefix, a number and a two-character suffix: ``K50001L8`` "
+"is ``K50`` + ``001`` + ``L8``. The suffix is not decoration - it is how "
+"MHVTL knows what the cartridge is, and therefore which drives can load "
+"it."
+msgstr ""
+
+#: ../../tapes/create.rst:18 e8fc3f096897450ba9e59236bfa24271
+msgid "``L5`` to ``L9``"
+msgstr ""
+
+#: ../../tapes/create.rst:19 76a629c976d744058ca0e9febf0400de
+msgid "LTO-5 to LTO-9"
+msgstr ""
+
+#: ../../tapes/create.rst:21 699064490ed3447f9175b707f00b6853
+msgid "``LA``"
+msgstr ""
+
+#: ../../tapes/create.rst:22 edfb0d14b3734263a816c519090eae49
+msgid "LTO-10"
+msgstr ""
+
+#: ../../tapes/create.rst:24 99584ec9da374445a6455d3edfe6928a
+msgid "``JC``, ``JD``"
+msgstr ""
+
+#: ../../tapes/create.rst:25 4e6d8030cb1b485899608b028c595d08
+msgid "IBM 3592"
+msgstr ""
+
+#: ../../tapes/create.rst:27 67ad39d000fc4a00b6af579da1eefbcc
+msgid "``S3``"
+msgstr ""
+
+#: ../../tapes/create.rst:28 6eab856ba2594a08a9abcda3fb00b260
+msgid "T10000"
+msgstr ""
+
+#: ../../tapes/create.rst:30 4b6965be5f7a4cda88b128d11c18484d
+msgid "Which ones this library's drives take:"
+msgstr ""
+
+#: ../../tapes/create.rst:44 a9694baae2dd4d4ebcada467349243fa
+msgid ""
+"A drive reads older generations and writes recent ones, exactly as the "
+"real hardware does. Making an LTO-5 cartridge for an LTO-8 drive is "
+"allowed - that drive can read it - but nothing will write to it."
+msgstr ""
+
+#: ../../tapes/create.rst:49 df700b2934e04c6ea22e6862646ba9cf
+msgid "One tape"
+msgstr ""
+
+#: ../../tapes/create.rst:51 51bcf34cd14e4024b7e411f348558548
+msgid ""
+"**Operator → Create Tape**, or **Tapes → Create a tape** on the library "
+"page."
+msgstr ""
+
+#: ../../tapes/create.rst:53 7d6f43f45bd14f2d92d4303b51406d47
+msgid ""
+"The form proposes the next free barcode in the series this library "
+"already uses, so tapes stay in one run rather than becoming a scatter of "
+"prefixes."
+msgstr ""
+
+#: ../../tapes/create.rst:56 db45e90774dc4b2c9de75adda36b85d3
+msgid "Create Tape: the next free barcode, the density and the size"
+msgstr ""
+
+#: ../../tapes/create.rst:70 063d2675761946b584fe7c7c2f98a9fb
+msgid "Option"
+msgstr ""
+
+#: ../../tapes/create.rst:70 69bd611a7ed041b39a4b96e565bbca7d
+msgid "What it does"
+msgstr ""
+
+#: ../../tapes/create.rst:72 82bc060d844d47d8babbefd7c97eaf85
+msgid "``--slot``"
+msgstr ""
+
+#: ../../tapes/create.rst:72 e6c592eae6864d9ca9e2b8cfe29ed597
+msgid "Which slot to put it in; the first free one if omitted"
+msgstr ""
+
+#: ../../tapes/create.rst:73 27c82ff120c04004a5a89ad7ab73198f
+msgid "``--size-mb``"
+msgstr ""
+
+#: ../../tapes/create.rst:73 5274189a9d4a49998563ae5be7adab53
+msgid ""
+"Capacity in MB. The default is large; a small tape is better for testing,"
+" because filling it is the interesting part"
+msgstr ""
+
+#: ../../tapes/create.rst:76 9fdc0c450972426eaa696a3e10ae7c37
+msgid "``--density``"
+msgstr ""
+
+#: ../../tapes/create.rst:76 522f2ec86c464b9aaf8e514feb253d29
+msgid "LTO8, LTO7 … read from the barcode suffix if omitted"
+msgstr ""
+
+#: ../../tapes/create.rst:77 73e22bb6ec044865a3a1757e07c16486
+msgid "``--kind``"
+msgstr ""
+
+#: ../../tapes/create.rst:77 73dd19ce0bd1434ca1dfd18616f5b554
+msgid "``data`` (the default), ``clean`` or ``WORM``"
+msgstr ""
+
+#: ../../tapes/create.rst:81 14afec54bf4a4c5abecccbb0258812cf
+msgid "A run of tapes"
+msgstr ""
+
+#: ../../tapes/create.rst:83 f16a0e5010f64740921c6bd97f48dd0e
+msgid "**Tapes → Create a run** makes several at once, numbered in sequence."
+msgstr ""
+
+#: ../../tapes/create.rst:91 fc1b10b994044f0895232c08d6dd0f39
+msgid ""
+"The count stops at the free slots: a library with four empty slots takes "
+"four tapes. Add more room first if you need it (see below)."
+msgstr ""
+
+#: ../../tapes/create.rst:95 3b4969f7071c41e5a914f73cc9e90e3c
+msgid "Size, and why it matters"
+msgstr ""
+
+#: ../../tapes/create.rst:97 e732c3cd9148404b8480b9ebf0773fdb
+msgid ""
+"The default size is large enough that nothing fills it, which is right "
+"for using a library and wrong for watching one. A tape the size of what "
+"you are about to write shows the interesting part - the drive reporting "
+"how full it is, the bar filling up, the end of tape."
+msgstr ""
+
+#: ../../tapes/create.rst:107 b8e9f6ab6aff4fcb908a77d1814ea11a
+msgid "Room for more tapes"
+msgstr ""
+
+#: ../../tapes/create.rst:109 c7596f08e0b746009f23ba7e72929f67
+msgid ""
+"A library has a fixed number of slots, and only the empty ones can take a"
+" new tape. **Empty slots** on the library page changes that, and so does:"
+msgstr ""
+
+#: ../../tapes/create.rst:126 59c7c1fb2f2e4a96bfa490886248caac
+msgid ""
+"Adding slots edits ``library_contents.50``, which MHVTL reads once when "
+"the library starts - so the robot does not see the new slots until it "
+"restarts. ``--restart`` does that for you; without it, the console and "
+"the command line both say the restart is owed."
+msgstr ""
+
+#: ../../tapes/create.rst:131 0250568ca9f1476b872f01b6392deb00
+msgid ""
+"Shrinking only removes empty slots after the last tape; it never removes "
+"a slot holding one."
+msgstr ""
+
+#: ../../tapes/create.rst:135 7884ca81d4a048f483e981cd093310aa
+msgid "Deleting a tape"
+msgstr ""
+
+#: ../../tapes/create.rst:145 718334a60f7e4df3a661bdf36304a6f1
+msgid ""
+"Without ``--remove-media`` the files stay on disk and the tape becomes an"
+" orphan, which can be put back later - see :doc:`adopt`. With it, the "
+"data is gone."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

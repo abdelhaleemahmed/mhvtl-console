@@ -1,0 +1,888 @@
+/*
+ * MHVTL console design system.
+ *
+ * Extracted from the System Console page so every overview screen shares one
+ * set of components instead of each template carrying its own copy of the
+ * colours. Detail pages keep their own styling for now.
+ *
+ * Components: .stat-card, .card, .info-table, .status-badge, .progress-bar,
+ * .quick-link, .alert, .skeleton.
+ */
+
+/* ---- themes ----------------------------------------------------------
+ * Every colour below is a variable, so a theme is just a block that
+ * redefines them. Pick one with <html data-theme="...">; no theme attribute
+ * means Console Navy.
+ *
+ * Add a theme by copying a block and changing the values - no component CSS
+ * needs to know about it.
+ */
+
+:root,
+[data-theme="navy"] {
+    --bg-start: #1a1a2e;
+    --bg-end: #16213e;
+    --header-start: #0f3460;
+    --surface: #1f2937;
+    --surface-deep: #111827;
+    --border: #333;
+    --border-soft: #374151;
+
+    --text: #e5e7eb;
+    --text-dim: #9ca3af;
+    --text-faint: #6b7280;
+
+    /* Cyan, matching the login page. Red is then left to mean one thing:
+     * something is broken. */
+    --accent: #4fc3f7;
+    --accent-soft: rgba(79, 195, 247, .18);
+    --accent-strong: #29b6f6;
+    --accent-ink: #06232e;
+
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --bad: #ef4444;
+    --info: #3b82f6;
+
+    --ok-bg: #065f46;
+    --bad-bg: #7f1d1d;
+    --warn-bg: #78350f;
+    --info-bg: #1e3a5f;
+
+    --alert-ok-text: #6ee7b7;
+    --alert-bad-text: #fca5a5;
+    --alert-warn-text: #fcd34d;
+
+    --shimmer-from: #374151;
+    --shimmer-to: #4b5563;
+    --quick-hover: #4b5563;
+}
+
+/* Graphite: neutral near-black, for a bright room or a second screen. */
+[data-theme="graphite"] {
+    --bg-start: #17181c;
+    --bg-end: #101114;
+    --header-start: #1d1f24;
+    --surface: #1c1e23;
+    --surface-deep: #141519;
+    --border: #2c2f36;
+    --border-soft: #383c44;
+
+    --text: #e7e9ee;
+    --text-dim: #a1a7b3;
+    --text-faint: #6f7681;
+
+    --accent: #4fc3f7;
+    --accent-soft: rgba(79, 195, 247, .15);
+    --accent-strong: #29b6f6;
+    --accent-ink: #06232e;
+
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --info: #60a5fa;
+
+    --ok-bg: #064e3b;
+    --bad-bg: #7f1d1d;
+    --warn-bg: #713f12;
+    --info-bg: #1e3a5f;
+
+    --alert-ok-text: #6ee7b7;
+    --alert-bad-text: #fca5a5;
+    --alert-warn-text: #fde68a;
+
+    --shimmer-from: #2c2f36;
+    --shimmer-to: #3a3e47;
+    --quick-hover: #3a3e47;
+}
+
+/* Daylight: for a projector or a sunlit room. */
+[data-theme="daylight"] {
+    --bg-start: #f4f6fa;
+    --bg-end: #e8edf5;
+    --header-start: #0f3460;
+    --surface: #ffffff;
+    --surface-deep: #f3f5f9;
+    --border: #d7dde8;
+    --border-soft: #e4e9f1;
+
+    --text: #1f2937;
+    --text-dim: #5b6b7c;
+    --text-faint: #8492a6;
+
+    --accent: #0277bd;
+    --accent-soft: rgba(2, 119, 189, .12);
+    --accent-strong: #01579b;
+    --accent-ink: #ffffff;
+
+    --ok: #047857;
+    --warn: #b45309;
+    --bad: #b91c1c;
+    --info: #1d4ed8;
+
+    --ok-bg: #d1fae5;
+    --bad-bg: #fee2e2;
+    --warn-bg: #fef3c7;
+    --info-bg: #dbeafe;
+
+    --alert-ok-text: #065f46;
+    --alert-bad-text: #7f1d1d;
+    --alert-warn-text: #78350f;
+
+    --shimmer-from: #e4e9f1;
+    --shimmer-to: #f0f3f8;
+    --quick-hover: #d7dde8;
+}
+
+/* Sepia: warm parchment and brown ink, the tone of an aged photograph.
+ * Status colours are muted to suit it - fern green, goldenrod, brick. */
+[data-theme="sepia"] {
+    --bg-start: #f1e7d0;
+    --bg-end: #e4d5b7;
+    --header-start: #6b4f2a;
+    --surface: #faf3e3;
+    --surface-deep: #f0e6d2;
+    --border: #d6c3a1;
+    --border-soft: #e3d5ba;
+
+    --text: #4a3b2a;
+    --text-dim: #7a6753;
+    --text-faint: #9c8b74;
+
+    --accent: #8b5e34;
+    --accent-soft: rgba(139, 94, 52, .14);
+    --accent-strong: #6f4a29;
+    --accent-ink: #fdf8ee;
+
+    --ok: #4f7942;
+    --warn: #b8860b;
+    --bad: #a33a3a;
+    --info: #5b6f8c;
+
+    --ok-bg: #dcecd2;
+    --bad-bg: #f3dcd8;
+    --warn-bg: #f6ebcd;
+    --info-bg: #e0e6ef;
+
+    --alert-ok-text: #33502a;
+    --alert-bad-text: #6f2222;
+    --alert-warn-text: #6b4f13;
+
+    --shimmer-from: #e3d5ba;
+    --shimmer-to: #f0e6d2;
+    --quick-hover: #ddcdae;
+}
+
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body.mhvtl-console {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+    min-height: 100vh;
+    color: var(--text);
+}
+
+/* ---- header ---------------------------------------------------------- */
+
+.mhvtl-console .header {
+    background: linear-gradient(135deg, var(--header-start) 0%, var(--bg-end) 100%);
+    color: #fff;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--accent);
+}
+
+.mhvtl-console .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.mhvtl-console .header-title { font-size: 24px; font-weight: 600; }
+.mhvtl-console .header-subtitle { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+
+.mhvtl-console .nav-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-left: 6px;
+    font-size: 14px;
+}
+.mhvtl-console .nav-link:hover { background: var(--accent-soft); color: var(--accent); }
+.mhvtl-console .nav-link.active { color: var(--accent); }
+
+.mhvtl-console .content { max-width: 1400px; margin: 20px auto; padding: 20px; }
+
+.mhvtl-console .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 5px;
+}
+
+/* ---- stat cards ------------------------------------------------------ */
+
+.mhvtl-console .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.mhvtl-console .stat-card {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface-deep) 100%);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.mhvtl-console a.stat-card { text-decoration: none; display: block; }
+.mhvtl-console a.stat-card:hover { border-color: var(--accent); }
+
+.mhvtl-console .stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--ok);
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+.mhvtl-console .stat-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .04em; }
+.mhvtl-console .stat-detail { font-size: 12px; color: var(--text-faint); margin-top: 6px; }
+
+.mhvtl-console .stat-card.warning .stat-value { color: var(--warn); }
+.mhvtl-console .stat-card.danger .stat-value { color: var(--bad); }
+.mhvtl-console .stat-card.neutral .stat-value { color: var(--text); }
+.mhvtl-console .stat-card.info .stat-value { color: var(--info); }
+
+/* ---- cards and tables ------------------------------------------------ */
+
+.mhvtl-console .card {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+}
+
+.mhvtl-console .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.mhvtl-console .card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    gap: 12px;
+}
+.mhvtl-console .card-heading h2 { font-size: 16px; font-weight: 600; color: var(--text); }
+.mhvtl-console .card-heading a { color: var(--text-dim); font-size: 13px; text-decoration: none; }
+.mhvtl-console .card-heading a:hover { color: var(--accent); }
+
+.mhvtl-console .info-table { width: 100%; border-collapse: collapse; }
+.mhvtl-console .info-table th,
+.mhvtl-console .info-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.mhvtl-console .info-table th { color: var(--text-dim); font-weight: 500; font-size: 13px; }
+.mhvtl-console .info-table td { color: var(--text); font-size: 14px; }
+.mhvtl-console .info-table tbody tr:last-child th,
+.mhvtl-console .info-table tbody tr:last-child td { border-bottom: 0; }
+.mhvtl-console .info-table a { color: var(--info); text-decoration: none; }
+.mhvtl-console .info-table a:hover { text-decoration: underline; }
+.mhvtl-console .table-empty { color: var(--text-faint); font-size: 14px; padding: 16px 10px; }
+
+/* ---- badges ---------------------------------------------------------- */
+
+.mhvtl-console .status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+.mhvtl-console .status-running,
+.mhvtl-console .status-ok { background: var(--ok-bg); color: var(--ok); }
+.mhvtl-console .status-stopped,
+.mhvtl-console .status-bad { background: var(--bad-bg); color: var(--bad); }
+.mhvtl-console .status-loaded,
+.mhvtl-console .status-info { background: var(--info-bg); color: var(--info); }
+.mhvtl-console .status-warn { background: var(--warn-bg); color: var(--warn); }
+.mhvtl-console .status-unknown { background: var(--border-soft); color: var(--text-dim); }
+
+/* ---- progress -------------------------------------------------------- */
+
+.mhvtl-console .progress-bar {
+    height: 8px;
+    background: var(--border-soft);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+.mhvtl-console .progress-fill { height: 100%; background: var(--ok); transition: width .3s; }
+.mhvtl-console .progress-fill.warning { background: var(--warn); }
+.mhvtl-console .progress-fill.danger { background: var(--bad); }
+
+/* ---- theme picker ---------------------------------------------------- */
+
+.mhvtl-console .theme-picker {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-soft);
+    border-radius: 5px;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.mhvtl-console .theme-picker:hover { border-color: var(--accent); }
+.mhvtl-console .theme-picker:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* ---- actions --------------------------------------------------------- */
+
+.mhvtl-console .quick-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.mhvtl-console .quick-link {
+    padding: 10px 20px;
+    background: var(--border-soft);
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.mhvtl-console .quick-link:hover { background: var(--quick-hover); }
+.mhvtl-console .quick-link.primary { background: var(--accent); color: var(--accent-ink); }
+.mhvtl-console .quick-link.primary:hover { background: var(--accent-strong); }
+
+/* ---- alerts ---------------------------------------------------------- */
+
+.mhvtl-console .alert { padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+.mhvtl-console .alert-danger { background: var(--bad-bg); color: var(--alert-bad-text); border-left: 5px solid var(--bad); }
+.mhvtl-console .alert-warning { background: var(--warn-bg); color: var(--alert-warn-text); border-left: 5px solid var(--warn); }
+.mhvtl-console .alert-success { background: var(--ok-bg); color: var(--alert-ok-text); border-left: 5px solid var(--ok); }
+.mhvtl-console .alert a { color: inherit; font-weight: 600; }
+
+/* Django's message tags are debug/info/success/warning/error, so templates
+ * writing class="alert alert-{{ message.tags }}" need these names too. */
+.mhvtl-console .alert-error { background: var(--bad-bg); color: var(--alert-bad-text); border-left: 5px solid var(--bad); }
+.mhvtl-console .alert-info,
+.mhvtl-console .alert-debug { background: var(--info-bg); color: var(--info); border-left: 5px solid var(--info); }
+
+/* ---- loading state --------------------------------------------------- */
+
+/* Tiles render immediately with a placeholder and fill in when the data
+ * arrives, so one slow mtx call cannot hold up the whole page. */
+.mhvtl-console .skeleton {
+    display: inline-block;
+    min-width: 2.5ch;
+    height: 1em;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--shimmer-from) 25%, var(--shimmer-to) 50%, var(--shimmer-from) 75%);
+    background-size: 200% 100%;
+    animation: mhvtl-shimmer 1.4s ease-in-out infinite;
+    vertical-align: middle;
+}
+@keyframes mhvtl-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .mhvtl-console .skeleton { animation: none; }
+}
+
+.mhvtl-console .stale-note { font-size: 12px; color: var(--warn); margin-left: 8px; }
+
+@media (max-width: 640px) {
+    .mhvtl-console .content { padding: 12px; }
+    .mhvtl-console .header-content { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---- page components ------------------------------------------------
+ * Used by the console pages (service status, logs, kernel modules, disk
+ * usage). They each carried their own copy of these rules, which is how the
+ * greens and reds drifted apart between pages.
+ */
+
+.mhvtl-console .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-block;
+}
+.mhvtl-console .btn-primary { background: var(--accent); color: var(--accent-ink); }
+.mhvtl-console .btn-primary:hover { background: var(--accent-strong); }
+.mhvtl-console .btn-secondary { background: var(--border-soft); color: var(--text); }
+.mhvtl-console .btn-secondary:hover { background: var(--quick-hover); }
+.mhvtl-console .btn-active { background: var(--accent); color: var(--accent-ink); }
+.mhvtl-console .btn-success { background: var(--ok); color: var(--accent-ink); }
+.mhvtl-console .btn-danger { background: var(--bad); color: #fff; }
+.mhvtl-console .btn-warning { background: var(--warn); color: #1f1300; }
+.mhvtl-console .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.mhvtl-console .filter-bar { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+.mhvtl-console .filter-bar label { color: var(--text-dim); }
+.mhvtl-console .filter-bar select,
+.mhvtl-console .filter-bar input {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--border-soft);
+    background: var(--surface-deep);
+    color: var(--text);
+    font-family: inherit;
+}
+
+.mhvtl-console .control-buttons { display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
+.mhvtl-console .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+
+/* summary numbers above a table */
+.mhvtl-console .summary-box,
+.mhvtl-console .summary-grid { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+.mhvtl-console .summary-item {
+    background: var(--surface-deep);
+    padding: 15px 25px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+.mhvtl-console .summary-number { font-size: 28px; font-weight: bold; color: var(--info); }
+.mhvtl-console .summary-item.success .summary-number { color: var(--ok); }
+.mhvtl-console .summary-item.danger .summary-number { color: var(--bad); }
+.mhvtl-console .summary-item.warning .summary-number { color: var(--warn); }
+.mhvtl-console .summary-label { font-size: 12px; color: var(--text-dim); }
+
+/* service status */
+.mhvtl-console .status-header { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+.mhvtl-console .status-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; flex-shrink: 0;
+}
+.mhvtl-console .status-icon.healthy { background: var(--ok-bg); color: var(--ok); }
+.mhvtl-console .status-icon.unhealthy { background: var(--bad-bg); color: var(--bad); }
+.mhvtl-console .status-icon.partial { background: var(--warn-bg); color: var(--warn); }
+.mhvtl-console .status-details { color: var(--text-dim); font-size: 14px; }
+
+.mhvtl-console .service-list { display: flex; flex-direction: column; gap: 8px; }
+.mhvtl-console .service-item {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 10px 14px; background: var(--surface-deep);
+    border: 1px solid var(--border); border-radius: 6px;
+}
+.mhvtl-console .service-name { font-weight: 600; font-size: 14px; }
+.mhvtl-console .service-id { font-family: 'Consolas', monospace; color: var(--text-dim); font-size: 13px; }
+.mhvtl-console .status-active { background: var(--ok-bg); color: var(--ok); }
+.mhvtl-console .status-inactive { background: var(--bad-bg); color: var(--bad); }
+.mhvtl-console .status-enabled { background: var(--info-bg); color: var(--info); }
+.mhvtl-console .status-disabled { background: var(--border-soft); color: var(--text-dim); }
+.mhvtl-console .status-output {
+    background: var(--surface-deep); border: 1px solid var(--border); border-radius: 6px;
+    padding: 14px; font-family: 'Consolas', monospace; font-size: 12px;
+    color: var(--text-dim); white-space: pre-wrap; max-height: 260px; overflow-y: auto;
+}
+
+/* kernel modules */
+.mhvtl-console .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
+.mhvtl-console .module-card {
+    background: var(--surface-deep); border: 1px solid var(--border);
+    border-radius: 8px; padding: 15px;
+}
+.mhvtl-console .module-name { font-family: 'Consolas', monospace; font-weight: 600; margin-bottom: 8px; }
+.mhvtl-console .module-status { font-size: 12px; color: var(--text-dim); }
+.mhvtl-console .module-table { width: 100%; border-collapse: collapse; }
+.mhvtl-console .module-table th,
+.mhvtl-console .module-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.mhvtl-console .module-table th { color: var(--text-dim); font-weight: 500; font-size: 13px; }
+.mhvtl-console .status-not-loaded { background: var(--border-soft); color: var(--text-dim); }
+
+/* log viewer */
+.mhvtl-console .log-stats { display: flex; gap: 20px; margin-bottom: 15px; color: var(--text-dim); font-size: 14px; flex-wrap: wrap; }
+.mhvtl-console .log-stats span { background: var(--border-soft); padding: 5px 12px; border-radius: 15px; }
+.mhvtl-console .log-container {
+    background: var(--surface-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 15px;
+    font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.6;
+    max-height: 600px; overflow-y: auto;
+}
+.mhvtl-console .log-line { padding: 2px 0; border-bottom: 1px solid var(--border); white-space: pre-wrap; word-break: break-all; }
+.mhvtl-console .log-line:hover { background: var(--accent-soft); }
+.mhvtl-console .log-line-number {
+    color: var(--text-faint); margin-right: 15px; user-select: none;
+    display: inline-block; min-width: 40px; text-align: right;
+}
+.mhvtl-console .log-empty { color: var(--text-faint); text-align: center; padding: 40px; }
+
+/* disk usage */
+.mhvtl-console .disk-card { background: var(--surface-deep); border: 1px solid var(--border); padding: 20px; border-radius: 10px; margin-bottom: 15px; }
+.mhvtl-console .disk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 12px; }
+.mhvtl-console .disk-path { font-size: 18px; font-weight: 600; }
+.mhvtl-console .disk-percent { font-size: 24px; font-weight: bold; }
+.mhvtl-console .disk-percent.normal { color: var(--ok); }
+.mhvtl-console .disk-percent.warning { color: var(--warn); }
+.mhvtl-console .disk-percent.danger { color: var(--bad); }
+.mhvtl-console .progress-fill.normal { background: var(--ok); }
+.mhvtl-console .disk-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; color: var(--text-dim); font-size: 14px; }
+.mhvtl-console .disk-detail { text-align: center; }
+.mhvtl-console .disk-detail-value { font-size: 18px; font-weight: 600; color: var(--text); }
+.mhvtl-console .disk-detail-label { font-size: 12px; }
+.mhvtl-console .mhvtl-data { background: var(--surface-deep); padding: 20px; border-radius: 10px; border: 1px solid var(--info-bg); }
+.mhvtl-console .mhvtl-stat { display: inline-block; background: var(--info-bg); padding: 10px 20px; border-radius: 20px; margin: 5px; }
+.mhvtl-console .mhvtl-stat-value { font-weight: bold; color: var(--info); }
+.mhvtl-console .dir-listing {
+    background: var(--surface-deep); border: 1px solid var(--border); border-radius: 6px;
+    padding: 14px; font-family: 'Consolas', monospace; font-size: 12px;
+    max-height: 260px; overflow-y: auto;
+}
+.mhvtl-console .dir-line { padding: 2px 0; color: var(--text-dim); white-space: pre; }
+
+/* device list (console dashboard) */
+.mhvtl-console .device-list {
+    font-family: 'Consolas', monospace; font-size: 13px;
+    background: var(--surface-deep); padding: 15px; border-radius: 5px;
+    max-height: 200px; overflow-y: auto; border: 1px solid var(--border);
+}
+.mhvtl-console .device-item { padding: 5px 0; border-bottom: 1px solid var(--border); }
+.mhvtl-console .device-item:last-child { border-bottom: 0; }
+
+/* ---- forms, badges, page headings -----------------------------------
+ * From the operator base template, which styled its own light-theme copies.
+ */
+
+.mhvtl-console .page-header { margin-bottom: 20px; }
+.mhvtl-console .page-header h1 { font-size: 26px; color: var(--text); margin-bottom: 5px; }
+.mhvtl-console .page-description { color: var(--text-dim); font-size: 14px; }
+
+.mhvtl-console .form-row { display: flex; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
+.mhvtl-console .form-row .form-group { flex: 1; min-width: 220px; }
+.mhvtl-console .form-group { margin-bottom: 15px; }
+.mhvtl-console .form-group label {
+    display: block; margin-bottom: 5px; font-weight: 600; color: var(--text); font-size: 14px;
+}
+.mhvtl-console .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-soft);
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--surface-deep);
+    color: var(--text);
+    transition: border-color .2s;
+}
+.mhvtl-console .form-control:focus { border-color: var(--accent); outline: none; }
+.mhvtl-console .form-control:disabled { opacity: .6; cursor: not-allowed; }
+.mhvtl-console .form-help { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
+
+.mhvtl-console .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.mhvtl-console .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.mhvtl-console .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+.mhvtl-console .badge-success { background: var(--ok-bg); color: var(--ok); }
+.mhvtl-console .badge-warning { background: var(--warn-bg); color: var(--warn); }
+.mhvtl-console .badge-danger { background: var(--bad-bg); color: var(--bad); }
+.mhvtl-console .badge-info { background: var(--info-bg); color: var(--info); }
+
+/* Bare tables: operator pages write <table> with no class. */
+.mhvtl-console .content table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.mhvtl-console .content th,
+.mhvtl-console .content td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+.mhvtl-console .content th { background: var(--surface-deep); font-weight: 600; color: var(--text-dim); font-size: 13px; }
+.mhvtl-console .content tbody tr:hover { background: var(--accent-soft); }
+
+/* ---- library cards and operator lists -------------------------------
+ * From the libraries dashboard and the operator dashboard.
+ */
+
+.mhvtl-console .dashboard-grid,
+.mhvtl-console .library-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.mhvtl-console .library-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: border-color .2s, transform .2s;
+}
+.mhvtl-console .library-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.mhvtl-console .library-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
+.mhvtl-console .library-card-title { font-size: 18px; font-weight: bold; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.mhvtl-console .library-card-title .mhvtl-id { font-size: 14px; color: var(--text-dim); font-weight: normal; }
+.mhvtl-console .library-card-body { color: var(--text-dim); font-size: 14px; }
+.mhvtl-console .library-card-footer { margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+.mhvtl-console .discovery-status { display: inline-block; font-size: 12px;
+    padding: 3px 8px; border-radius: 10px; }   /* a pill, not a bar across the card */
+.mhvtl-console .discovery-status-discovered { background: var(--ok-bg); color: var(--ok); }
+.mhvtl-console .discovery-status-django_created { background: var(--info-bg); color: var(--info); }
+
+.mhvtl-console .status-success { color: var(--ok); }
+.mhvtl-console .status-warning { color: var(--warn); }
+
+.mhvtl-console .recent-operations { display: flex; flex-direction: column; gap: 10px; }
+.mhvtl-console .operation-item {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 10px 14px; background: var(--surface-deep);
+    border: 1px solid var(--border); border-radius: 6px;
+}
+.mhvtl-console .operation-description { color: var(--text); font-size: 14px; }
+.mhvtl-console .operation-timestamp { color: var(--text-faint); font-size: 12px; white-space: nowrap; }
+
+.mhvtl-console .refresh-button {
+    background: var(--border-soft); color: var(--text);
+    border: 1px solid var(--border); border-radius: 5px;
+    padding: 8px 14px; font-size: 13px; font-family: inherit; cursor: pointer;
+}
+.mhvtl-console .refresh-button:hover { background: var(--quick-hover); }
+
+.mhvtl-console .alert-container { display: flex; flex-direction: column; gap: 10px; }
+.mhvtl-console .alert-close {
+    background: none; border: none; color: inherit;
+    font-size: 18px; cursor: pointer; opacity: .7; padding: 0 4px;
+}
+.mhvtl-console .alert-close:hover { opacity: 1; }
+
+/* operator dashboard */
+.mhvtl-console .library-list { display: flex; flex-direction: column; gap: 10px; }
+.mhvtl-console .library-item {
+    display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    padding: 14px 16px; background: var(--surface-deep);
+    border: 1px solid var(--border); border-radius: 8px;
+}
+.mhvtl-console .library-item:hover { border-color: var(--accent); }
+.mhvtl-console .library-id { font-family: 'Consolas', monospace; font-weight: bold; color: var(--accent); font-size: 16px; }
+.mhvtl-console .library-info { font-weight: 600; color: var(--text); }
+.mhvtl-console .library-details { color: var(--text-dim); font-size: 13px; }
+
+.mhvtl-console .operation-grid,
+.mhvtl-console .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+.mhvtl-console .operation-group { margin-bottom: 24px; }
+
+/* Per-tile accents on the libraries dashboard, so a row of numbers is not
+ * one undifferentiated colour. */
+.mhvtl-console .stat-card.total-libraries .stat-value { color: var(--info); }
+.mhvtl-console .stat-card.drives .stat-value { color: var(--accent); }
+.mhvtl-console .stat-card.discovered .stat-value { color: var(--ok); }
+.mhvtl-console .stat-card.created .stat-value { color: var(--warn); }
+.mhvtl-console .stat-card.media .stat-value { color: var(--text); }
+
+/* The site header (templates/base.html) is outside .mhvtl-console, so its
+ * theme picker needs styling of its own. */
+.theme-picker {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-soft);
+    border-radius: 5px;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+}
+.theme-picker:hover { border-color: var(--accent); }
+
+/* Form feedback, so a page does not write a colour into its own markup:
+   these were inline #e74c3c and #e67e22 in the tape pages. */
+.mhvtl-console .form-error { color: var(--bad); }
+.mhvtl-console .form-warn { color: var(--warn); }
+.mhvtl-console .barcode-part { background: var(--surface-deep); }
+.mhvtl-console .barcode-chip { background: var(--surface-deep); color: var(--text); }
+.mhvtl-console .form-ok { color: var(--ok); }
+
+/* Media generations.
+ *
+ * The mount page colours a slot by the generation of the tape in it, which is
+ * genuinely useful in a library holding several. The palette lived in that
+ * page as two dozen fixed colours, so in a dark theme the slots were pastel
+ * boxes on a navy grid. It is here now, built from the theme's own tokens,
+ * and a theme that wants its own can override these six. */
+.mhvtl-console .slot-compact.lto-9,
+.mhvtl-console .lto-9 { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
+.mhvtl-console .slot-compact.lto-8,
+.mhvtl-console .lto-8 { background: var(--info-bg); border-color: var(--info); color: var(--alert-info-text, var(--text)); }
+.mhvtl-console .slot-compact.lto-7,
+.mhvtl-console .lto-7 { background: var(--ok-bg); border-color: var(--ok); color: var(--alert-ok-text); }
+.mhvtl-console .slot-compact.lto-6,
+.mhvtl-console .lto-6 { background: var(--warn-bg); border-color: var(--warn); color: var(--alert-warn-text); }
+.mhvtl-console .slot-compact.lto-5,
+.mhvtl-console .lto-5 { background: var(--bad-bg); border-color: var(--bad); color: var(--alert-bad-text); }
+.mhvtl-console .slot-compact.lto-unknown,
+.mhvtl-console .lto-unknown { background: var(--surface-deep); border-color: var(--border); color: var(--text-dim); }
+
+/* Page header extras: a breadcrumb and the buttons that sit beside the title.
+ * Every libraries page drew these itself, with its own colours. */
+.mhvtl-console .breadcrumb {
+    background: rgba(255, 255, 255, .12); padding: 6px 14px; border-radius: 20px;
+    font-size: 13px; display: inline-block; margin-top: 6px;
+}
+.mhvtl-console .breadcrumb a { color: inherit; text-decoration: none; margin: 0 4px; opacity: .85; }
+.mhvtl-console .breadcrumb a:hover { opacity: 1; text-decoration: underline; }
+.mhvtl-console .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.mhvtl-console .header-btn {
+    padding: 8px 16px; background: rgba(255, 255, 255, .2); color: #fff;
+    text-decoration: none; border: none; border-radius: 6px; font-size: 14px;
+    cursor: pointer; transition: background .2s ease;
+}
+.mhvtl-console .header-btn:hover { background: rgba(255, 255, 255, .32); }
+.mhvtl-console .header-btn.discovery { background: var(--info-bg); border: 1px solid var(--info); }
+.mhvtl-console .header-btn.danger { background: var(--bad-bg); border: 1px solid var(--bad); }
+
+/* Figure cards and the grids they sit in: a headline number with a label, and
+ * the squares that link somewhere. The iSCSI dashboard and the MHVTL status
+ * page each drew their own, both with `background: white` - which no theme
+ * could override, because these rules are what a theme changes. */
+.mhvtl-console .status-grid,
+.mhvtl-console .quick-actions {
+    display: grid; gap: 20px; margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.mhvtl-console .quick-actions {
+    gap: 15px; margin-bottom: 0;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.mhvtl-console .status-card,
+.mhvtl-console .action-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 25px; text-align: center;
+}
+.mhvtl-console .status-card h3 {
+    font-size: 14px; color: var(--text-dim); margin-bottom: 10px;
+    text-transform: uppercase;
+}
+.mhvtl-console .status-card .value {
+    font-size: 36px; font-weight: 700; color: var(--text);
+}
+.mhvtl-console .status-card.service-running .value { color: var(--ok); }
+.mhvtl-console .status-card.service-stopped .value { color: var(--bad); }
+.mhvtl-console .action-card {
+    padding: 20px; text-decoration: none; color: inherit; display: block;
+    transition: transform .2s ease, border-color .2s ease;
+}
+.mhvtl-console .action-card:hover {
+    transform: translateY(-3px); border-color: var(--accent);
+}
+.mhvtl-console .action-card .icon { font-size: 32px; margin-bottom: 10px; }
+.mhvtl-console .action-card h4 { margin-bottom: 5px; color: var(--text); }
+.mhvtl-console .action-card p { font-size: 12px; color: var(--text-dim); }
+
+/* Whether an iSCSI export still points at the device it was made for. The
+ * addresses move when a library is recreated, so "bound" is worth saying. */
+.mhvtl-console .binding-state {
+    display: inline-block; padding: 1px 8px; border-radius: 10px;
+    font-weight: 600; text-transform: uppercase; font-size: .8em;
+}
+.mhvtl-console .binding-bound { background: var(--ok-bg); color: var(--alert-ok-text); }
+.mhvtl-console .binding-stale,
+.mhvtl-console .binding-missing { background: var(--bad-bg); color: var(--alert-bad-text); }
+.mhvtl-console .binding-withheld { background: var(--warn-bg); color: var(--alert-warn-text); }
+.mhvtl-console .binding-unknown { background: var(--surface-deep); color: var(--text-dim); }
+
+/* The link inside an alert: it inherits the alert's own text colour, which is
+ * the only one guaranteed to read against that alert's background. */
+.mhvtl-console .alert .alert-action { color: inherit; font-weight: 600; }
+
+/* The x that puts the default-password warning away. The console's alerts are
+ * not flex containers, so it is floated to the end of the line. */
+.mhvtl-console .default-password-warning {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+}
+.mhvtl-console .alert-dismiss {
+    background: transparent; border: none; cursor: pointer;
+    color: inherit; opacity: .55; font-size: 22px; line-height: 1;
+    padding: 0 4px; transition: opacity .2s ease;
+}
+.mhvtl-console .alert-dismiss:hover { opacity: 1; }
+
+
+/* What each drive is doing, live: the panel on the library page and on the
+ * monitor page. Both are rendered by the server and swapped in by
+ * js/auto-refresh.js, so these rules are all either page needs. */
+.mhvtl-console .drive-activity {
+    background: var(--surface-deep); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 15px; margin-bottom: 15px;
+}
+.mhvtl-console .drive-live {
+    display: flex; gap: 12px; align-items: baseline; font-size: 13px;
+    padding: 4px 0; color: var(--text-dim);
+}
+.mhvtl-console .drive-live .live-drive { min-width: 70px; color: var(--text); }
+.mhvtl-console .drive-live .live-state { min-width: 190px; }
+.mhvtl-console .drive-live .live-state.writing { color: var(--warn); font-weight: 600; }
+.mhvtl-console .drive-live .live-state.reading { color: var(--info); font-weight: 600; }
+.mhvtl-console .drive-live .live-state.holding { color: var(--ok); }
+.mhvtl-console .drive-live .live-state.silent { color: var(--bad); }
+.mhvtl-console .drive-live .live-bytes { font-family: monospace; }
+
+/* Tapes as tiles, the way a file manager shows drives: how full, and how much
+ * room is left. The state class - normal, filling, full - is the service's
+ * decision, so the page picks no thresholds and no colours of its own. */
+.mhvtl-console .tape-tiles {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.mhvtl-console .tape-tile {
+    background: var(--surface-deep); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
+}
+.mhvtl-console .tape-tile-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-bottom: 10px;
+}
+.mhvtl-console .tape-tile-barcode {
+    font-family: 'Consolas', monospace; font-weight: 600; color: var(--text);
+}
+.mhvtl-console .lto-chip {
+    padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600;
+    border: 1px solid transparent;
+}
+.mhvtl-console .tape-bar {
+    height: 10px; border-radius: 5px; overflow: hidden;
+    background: var(--border); border: 1px solid var(--border-soft);
+}
+.mhvtl-console .tape-bar-fill {
+    height: 100%; background: var(--info); transition: width .4s ease;
+}
+.mhvtl-console .tape-bar.filling .tape-bar-fill { background: var(--warn); }
+.mhvtl-console .tape-bar.full .tape-bar-fill { background: var(--bad); }
+.mhvtl-console .tape-bar.unknown .tape-bar-fill { background: var(--text-faint); }
+.mhvtl-console .tape-tile-summary {
+    margin-top: 8px; font-size: 13px; color: var(--text);
+}
+.mhvtl-console .tape-tile.full .tape-tile-summary { color: var(--bad); font-weight: 600; }
+.mhvtl-console .tape-tile-where {
+    margin-top: 2px; font-size: 12px; color: var(--text-dim);
+}
+.mhvtl-console .tape-tile-missing { color: var(--bad); }
+.mhvtl-console .tape-tiles-empty { color: var(--text-dim); }
+
+/* The same bar on a line of the live drive panel: narrow, and beside the
+ * words rather than under them. */
+.mhvtl-console .tape-bar-fill { display: block; }
+.mhvtl-console .live-bar {
+    display: inline-block; width: 90px; height: 8px; flex: none;
+    vertical-align: middle;
+}

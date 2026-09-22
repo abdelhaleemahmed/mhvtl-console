@@ -1,0 +1,94 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Drive Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--surface-deep); font-weight: 600; color: var(--text); }
+    tr:hover { background: var(--surface-deep); }
+    .action-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+    .drive-card { background: var(--surface-deep); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--info); }
+    .drive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .drive-id { font-size: 18px; font-weight: bold; color: var(--text); }
+    .drive-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .detail-item { }
+    .detail-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
+    .detail-value { font-size: 14px; color: var(--text); font-weight: 500; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="section-title">Select Library</div>
+            <form method="get" action="{% url 'libraries:drive_list' %}">
+                <div class="form-group">
+                    <select name="library_id" id="library_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"
+                                    {% if selected_library and selected_library.library_id == library.library_id %}selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        {% if selected_library %}
+            <div class="action-bar">
+                <a href="{% url 'libraries:add_drive' %}?library_id={{ selected_library.library_id }}" class="btn btn-success">Add Drive</a>
+                <a href="{% url 'libraries:remove_drive' %}?library_id={{ selected_library.library_id }}" class="btn btn-danger">Remove Drive</a>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>Note:</strong> After adding or removing drives, you must restart MHVTL services for changes to take effect.
+            </div>
+
+            {% if drives_result %}
+                <div class="card">
+                    <div class="section-title">Library {{ selected_library.library_id }} - {{ drives_result.count }} Drives</div>
+
+                    {% if drives_result.drives %}
+                        {% for drive in drives_result.drives %}
+                            <div class="drive-card">
+                                <div class="drive-header">
+                                    <div class="drive-id">Drive {{ drive.drive_id }} (Slot {{ drive.slot }})</div>
+                                </div>
+                                <div class="drive-details">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Vendor</div>
+                                        <div class="detail-value">{{ drive.vendor }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Product</div>
+                                        <div class="detail-value">{{ drive.product }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Serial</div>
+                                        <div class="detail-value">{{ drive.serial }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">SCSI Address</div>
+                                        <div class="detail-value">{{ drive.channel }}:{{ drive.target }}:{{ drive.lun }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="table-empty">No drives found in this library</p>
+                    {% endif %}
+                </div>
+            {% elif error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+        {% endif %}
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Back to Operator Panel</a>
+        </div>
+{% endblock %}

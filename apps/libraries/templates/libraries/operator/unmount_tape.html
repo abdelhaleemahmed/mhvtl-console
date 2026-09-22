@@ -1,0 +1,346 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Unmount Tape{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
+    @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+    .operation-icon { font-size: 36px; text-align: center; margin-bottom: 15px; }
+    #loading { display: none; text-align: center; padding: 20px; color: var(--text-dim); }
+    #loading.active { display: block; }
+    /* Library Status Panel */
+            .status-panel { background: var(--surface-deep); border-radius: 8px; padding: 15px; }
+    .status-section { margin-bottom: 20px; }
+    .status-section:last-child { margin-bottom: 0; }
+    .status-section h4 { font-size: 14px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .drive-list { display: flex; flex-direction: column; gap: 8px; }
+    .drive-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--surface); border-radius: 5px; border-left: 4px solid var(--border); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .drive-item.loaded { border-left-color: var(--ok); background: var(--ok-bg); }
+    .drive-item.loaded:hover { background: var(--ok-bg); }
+    .drive-item.empty { border-left-color: var(--text-dim); opacity: 0.6; }
+    .drive-item.selected { border-left-color: var(--bad); background: var(--bad-bg); box-shadow: 0 0 0 2px var(--bad); }
+    .item-label { font-weight: 600; }
+    .item-barcode { font-family: 'Consolas', monospace; color: var(--text); flex: 1; margin: 0 15px; }
+    .item-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+    .item-status.loaded { background: var(--ok-bg); color: var(--alert-ok-text); }
+    .item-status.empty { background: var(--border); color: var(--text-dim); }
+    .item-origin { font-size: 11px; color: var(--text-dim); }
+    .slot-grid-compact { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; max-height: 250px; overflow-y: auto; }
+    .slot-compact { padding: 8px; text-align: center; border-radius: 4px; font-size: 11px; }
+    .slot-compact.full { background: var(--info-bg); border: 1px solid var(--info); }
+    .slot-compact.empty { background: var(--surface-deep); border: 1px solid var(--border); color: var(--text-dim); }
+    .slot-compact.origin { background: var(--warn-bg); border: 2px solid var(--warn); }
+    .slot-num { font-weight: 600; }
+    .slot-barcode { font-family: 'Consolas', monospace; font-size: 10px; display: block; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .summary-stats { display: flex; gap: 15px; margin-bottom: 15px; }
+    .stat-box { flex: 1; text-align: center; padding: 10px; background: var(--surface); border-radius: 5px; }
+    .no-library { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+    .no-library-icon { font-size: 48px; margin-bottom: 10px; }
+    .quick-unmount { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
+    .quick-unmount-title { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-grid">
+            <!-- Unmount Form -->
+            <div class="card">
+                <div class="operation-icon">&#128190; &#8594; &#128230;</div>
+                <div class="section-title">Unmount Tape from Drive</div>
+                <p class="page-description">
+                    Unload a tape from a drive back to its storage slot.
+                </p>
+
+                <form method="post" action="{% url 'libraries:unmount_tape' %}" id="unmount-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="library_id">Select Library</label>
+                        <select name="library_id" id="library_id" class="form-control" required onchange="loadLibraryStatus()">
+                            <option value="">-- Select Library --</option>
+                            {% for library in libraries %}
+                                <option value="{{ library.library_id }}" {% if selected_library_id == library.library_id %}selected{% endif %}>
+                                    Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help">Choose the library containing the drive</p>
+                    </div>
+
+                    <div id="loading">Loading library status...</div>
+
+                    <div id="drive-slot-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="drive">Source Drive (with tape)</label>
+                            <select name="drive" id="drive" class="form-control" required onchange="updateSlotOrigin()">
+                                <option value="">-- Select Drive --</option>
+                            </select>
+                            <p class="form-help">Only drives with loaded tapes are shown</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="slot">Destination Slot</label>
+                            <select name="slot" id="slot" class="form-control" required>
+                                <option value="">-- Select Slot --</option>
+                            </select>
+                            <p class="form-help" id="slot-help">Select the slot to return the tape to</p>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Unmount Tape</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Library Status Panel -->
+            <div class="card">
+                <div class="section-title">Library Status</div>
+
+                <div id="status-placeholder" class="no-library">
+                    <div class="no-library-icon">&#128218;</div>
+                    <p>Select a library to view its current status</p>
+                </div>
+
+                <div id="status-panel" class="status-panel" style="display: none;">
+                    <div class="summary-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="stat-drives">0/0</div>
+                            <div class="stat-label">Drives Loaded</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="stat-slots">0/0</div>
+                            <div class="stat-label">Slots Empty</div>
+                        </div>
+                    </div>
+
+                    <div class="status-section">
+                        <h4>&#128190; Loaded Drives (Click to select)</h4>
+                        <div class="drive-list" id="drive-status"></div>
+                        <div id="no-loaded-drives" style="display: none; text-align: center; padding: 20px; color: var(--text-dim);">
+                            No drives have tapes loaded
+                        </div>
+                    </div>
+
+                    <div class="status-section">
+                        <h4>&#128230; Storage Slots</h4>
+                        <div class="slot-grid-compact" id="slot-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        let libraryData = null;
+
+        function loadLibraryStatus() {
+            const libraryId = document.getElementById('library_id').value;
+            const loading = document.getElementById('loading');
+            const fields = document.getElementById('drive-slot-fields');
+            const submitBtn = document.getElementById('submit-btn');
+            const statusPlaceholder = document.getElementById('status-placeholder');
+            const statusPanel = document.getElementById('status-panel');
+
+            if (!libraryId) {
+                fields.style.display = 'none';
+                submitBtn.disabled = true;
+                statusPlaceholder.style.display = 'block';
+                statusPanel.style.display = 'none';
+                return;
+            }
+
+            loading.classList.add('active');
+            fields.style.display = 'none';
+
+            fetch(`/libraries/ajax/library-status/${libraryId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    loading.classList.remove('active');
+                    libraryData = data;
+
+                    if (!data.success) {
+                        alert('Error loading library status: ' + (data.error || 'Unknown error'));
+                        return;
+                    }
+
+                    // Update status panel
+                    statusPlaceholder.style.display = 'none';
+                    statusPanel.style.display = 'block';
+
+                    // Update summary stats
+                    const loadedDrives = data.drives.filter(d => d.full).length;
+                    const totalDrives = data.drives.length;
+                    const emptySlots = data.storage_slots.filter(s => !s.full).length;
+                    const totalSlots = data.storage_slots.length;
+
+                    document.getElementById('stat-drives').textContent = `${loadedDrives}/${totalDrives}`;
+                    document.getElementById('stat-slots').textContent = `${emptySlots}/${totalSlots}`;
+
+                    // Update drive status display (only loaded drives, clickable)
+                    const driveStatus = document.getElementById('drive-status');
+                    const noLoadedDrives = document.getElementById('no-loaded-drives');
+                    driveStatus.innerHTML = '';
+
+                    const loadedDrivesList = data.drives.filter(d => d.full);
+                    if (loadedDrivesList.length === 0) {
+                        noLoadedDrives.style.display = 'block';
+                    } else {
+                        noLoadedDrives.style.display = 'none';
+                        loadedDrivesList.forEach(drive => {
+                            const div = document.createElement('div');
+                            div.className = 'drive-item loaded';
+                            div.dataset.driveNum = drive.drive_num;
+                            div.dataset.slotOrigin = drive.slot_origin || '';
+                            div.dataset.barcode = drive.barcode || '';
+                            div.innerHTML = `
+                                <span class="item-label">Drive ${drive.drive_num}</span>
+                                <span class="item-barcode">${drive.barcode || 'Unknown'}</span>
+                                <span class="item-origin">${drive.slot_origin ? 'from Slot ' + drive.slot_origin : ''}</span>
+                                <span class="item-status loaded">LOADED</span>
+                            `;
+                            div.onclick = () => selectDrive(drive.drive_num);
+                            driveStatus.appendChild(div);
+                        });
+                    }
+
+                    // Update slot status display
+                    const slotStatus = document.getElementById('slot-status');
+                    slotStatus.innerHTML = '';
+                    data.storage_slots.forEach(slot => {
+                        const div = document.createElement('div');
+                        div.className = `slot-compact ${slot.full ? 'full' : 'empty'}`;
+                        div.id = `slot-visual-${slot.slot_num}`;
+                        div.innerHTML = `
+                            <div class="slot-num">${slot.slot_num}</div>
+                            <div class="slot-barcode">${slot.full ? (slot.barcode || 'Full') : '-'}</div>
+                        `;
+                        slotStatus.appendChild(div);
+                    });
+
+                    // Populate drive dropdown (only loaded drives)
+                    const driveSelect = document.getElementById('drive');
+                    driveSelect.innerHTML = '<option value="">-- Select Drive --</option>';
+                    data.drives.forEach(drive => {
+                        if (drive.full) {
+                            const option = document.createElement('option');
+                            option.value = drive.drive_num;
+                            option.dataset.slotOrigin = drive.slot_origin || '';
+                            option.textContent = `Drive ${drive.drive_num} - ${drive.barcode || 'Tape'}${drive.slot_origin ? ' (from Slot ' + drive.slot_origin + ')' : ''}`;
+                            driveSelect.appendChild(option);
+                        }
+                    });
+
+                    // Populate slot dropdown (empty slots + origin slots)
+                    updateSlotDropdown();
+
+                    fields.style.display = 'block';
+                    submitBtn.disabled = loadedDrivesList.length === 0;
+                })
+                .catch(error => {
+                    loading.classList.remove('active');
+                    alert('Error: ' + error);
+                });
+        }
+
+        function selectDrive(driveNum) {
+            // Update dropdown
+            document.getElementById('drive').value = driveNum;
+            updateSlotOrigin();
+
+            // Update visual selection
+            document.querySelectorAll('.drive-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`.drive-item[data-drive-num="${driveNum}"]`)?.classList.add('selected');
+        }
+
+        function updateSlotOrigin() {
+            const driveSelect = document.getElementById('drive');
+            const selectedOption = driveSelect.options[driveSelect.selectedIndex];
+            const slotOrigin = selectedOption?.dataset?.slotOrigin;
+
+            // Update slot help text
+            const slotHelp = document.getElementById('slot-help');
+            if (slotOrigin) {
+                slotHelp.innerHTML = `Original slot: <strong>${slotOrigin}</strong> (pre-selected)`;
+            } else {
+                slotHelp.textContent = 'Select an empty slot for the tape';
+            }
+
+            // Update slot dropdown to pre-select origin
+            updateSlotDropdown(slotOrigin);
+
+            // Highlight origin slot in visual display
+            document.querySelectorAll('.slot-compact').forEach(slot => {
+                slot.classList.remove('origin');
+            });
+            if (slotOrigin) {
+                document.getElementById(`slot-visual-${slotOrigin}`)?.classList.add('origin');
+            }
+
+            // Update visual selection for drives
+            const driveNum = driveSelect.value;
+            document.querySelectorAll('.drive-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            if (driveNum) {
+                document.querySelector(`.drive-item[data-drive-num="${driveNum}"]`)?.classList.add('selected');
+            }
+        }
+
+        function updateSlotDropdown(preSelectSlot = null) {
+            if (!libraryData) return;
+
+            const slotSelect = document.getElementById('slot');
+            slotSelect.innerHTML = '<option value="">-- Select Slot --</option>';
+
+            // Add empty slots
+            libraryData.storage_slots.forEach(slot => {
+                if (!slot.full) {
+                    const option = document.createElement('option');
+                    option.value = slot.slot_num;
+                    option.textContent = `Slot ${slot.slot_num}`;
+                    if (preSelectSlot && slot.slot_num == preSelectSlot) {
+                        option.textContent += ' (original)';
+                        option.selected = true;
+                    }
+                    slotSelect.appendChild(option);
+                }
+            });
+
+            // If origin slot is full (shouldn't happen normally), still add it as option
+            if (preSelectSlot) {
+                const originSlot = libraryData.storage_slots.find(s => s.slot_num == preSelectSlot);
+                if (originSlot && originSlot.full) {
+                    // Origin slot has a tape - need to select different slot
+                    document.getElementById('slot-help').innerHTML =
+                        `Original slot ${preSelectSlot} is occupied. Select another slot.`;
+                }
+            }
+        }
+
+        document.getElementById('unmount-form').addEventListener('submit', function(e) {
+            const drive = document.getElementById('drive').value;
+            const slot = document.getElementById('slot').value;
+
+            if (!drive || !slot) {
+                e.preventDefault();
+                alert('Please select both a drive and a destination slot');
+            }
+        });
+
+        // Auto-load library status if a library is pre-selected
+        document.addEventListener('DOMContentLoaded', function() {
+            const librarySelect = document.getElementById('library_id');
+            if (librarySelect.value) {
+                loadLibraryStatus();
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,26 @@
+# Repoint saved iSCSI pscsi backstores at their devices, by SCSI address,
+# before target.service restores them.
+#
+# A pscsi backstore is saved by /dev/sgN node, and those numbers are assigned
+# in probe order, which changes across reboots. Without this, target.service
+# can export the wrong robot under a library's name - after one reboot here,
+# the library10 target's LUN 0 was library 20's changer.
+#
+# Ordered after mhvtl.target, because the devices must exist, and before
+# target.service, so the wrong mapping is never live. --wait covers the gap
+# between mhvtl.target reporting started and the 1.8 daemons adding their
+# units. A device that never appears is left alone, not guessed.
+[Unit]
+Description=Repoint saved MHVTL iSCSI backstores by SCSI address
+After=mhvtl.target
+Wants=mhvtl.target
+Before=target.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mhvtl --quiet iscsi remap --wait 60
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target
+RequiredBy=target.service

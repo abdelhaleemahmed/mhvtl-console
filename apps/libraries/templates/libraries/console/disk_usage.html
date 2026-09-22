@@ -1,0 +1,90 @@
+{% extends 'libraries/console/base.html' %}
+{% comment %}
+|unlocalize on every width: Django prints numbers in the reader's language,
+and in Arabic 81.9 is "81,9" - which CSS ignores, so the bar would draw
+empty the day the Arabic interface is switched on.
+{% endcomment %}{% load l10n %}
+
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="section-title">Filesystem Usage</div>
+
+    {% comment %}
+    Every value here is the disk service's: `percent`, `level` (normal,
+    warning or danger - the thresholds live in DiskUsage.level, not here) and
+    the sizes df printed. This page once read `percent_used` and `total_mb`,
+    which the service never had, and showed an empty bar and " MB" on every
+    host. The dashboard's disk bar reads the same fields.
+    {% endcomment %}
+    {% for disk in disk_usage %}
+    <div class="disk-card">
+        <div class="disk-header">
+            <div class="disk-path">{{ disk.path }}</div>
+            <div class="disk-percent {{ disk.level }}">{{ disk.percent }}%</div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill {{ disk.level }}" style="width: {{ disk.percent|unlocalize }}%"></div>
+        </div>
+
+        <div class="disk-details">
+            <div class="disk-detail">
+                <div class="disk-detail-value">{{ disk.size|default:"?" }}</div>
+                <div class="disk-detail-label">Total</div>
+            </div>
+            <div class="disk-detail">
+                <div class="disk-detail-value">{{ disk.used|default:"?" }}</div>
+                <div class="disk-detail-label">Used</div>
+            </div>
+            <div class="disk-detail">
+                <div class="disk-detail-value">{{ disk.available|default:"?" }}</div>
+                <div class="disk-detail-label">Free</div>
+            </div>
+        </div>
+
+        {% if disk.level == 'danger' %}
+        <div class="alert alert-danger" style="margin-top: 15px; margin-bottom: 0;">
+            Disk space critically low! Consider cleaning up or expanding storage.
+        </div>
+        {% elif disk.level == 'warning' %}
+        <div class="alert alert-warning" style="margin-top: 15px; margin-bottom: 0;">
+            Disk space usage is high. Monitor closely.
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p style="color: var(--text-dim);">No disk usage information available.</p>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <div class="section-title">MHVTL Data Directory</div>
+
+    <div class="mhvtl-data">
+        <div class="mhvtl-stat">
+            <span class="mhvtl-stat-value">{{ mhvtl_data.data_dir }}</span> Data Directory
+        </div>
+        <div class="mhvtl-stat">
+            <span class="mhvtl-stat-value">{{ mhvtl_data.data_size|default:"N/A" }}</span> Total Size
+        </div>
+        <div class="mhvtl-stat">
+            <span class="mhvtl-stat-value">{{ mhvtl_data.tape_count }}</span> Tape Files
+        </div>
+    </div>
+
+    {% if mhvtl_data.details %}
+    <div class="section-title" style="margin-top: 20px;">Directory Contents</div>
+    <div class="dir-listing">
+        {% for line in mhvtl_data.details %}
+        <div class="dir-line">{{ line }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'libraries:console_dashboard' %}" class="btn btn-secondary">Back to Console</a>
+</div>
+{% endblock %}

@@ -1,0 +1,521 @@
+{% extends 'libraries/operator/base.html' %}
+{% load static %}
+
+{% block title %}iSCSI Export Guide{% endblock %}
+
+{% block extra_css %}
+<style>
+    .guide-section {
+        background: var(--surface);
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .guide-section h2 {
+        color: var(--text);
+        font-size: 20px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--info);
+    }
+    .step {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: var(--surface-deep);
+        border-radius: 8px;
+        border-left: 4px solid var(--info);
+    }
+    .step-number {
+        background: var(--info);
+        color: #fff;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+    .step-content {
+        flex: 1;
+    }
+    .step-content h4 {
+        margin-bottom: 8px;
+        color: var(--text);
+    }
+    .step-content p {
+        color: var(--text-dim);
+        margin-bottom: 10px;
+    }
+    .code-block {
+        background: var(--text);
+        color: var(--border);
+        padding: 15px;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        overflow-x: auto;
+        margin: 10px 0;
+    }
+    .code-block .comment {
+        color: var(--text-dim);
+    }
+    .code-block .command {
+        color: var(--ok);
+    }
+    .code-block .output {
+        color: var(--border);
+    }
+    .tip-box {
+        background: var(--info-bg);
+        border: 1px solid var(--info);
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+    .tip-box strong {
+        color: var(--info);
+    }
+    .warning-box {
+        background: var(--warn-bg);
+        border: 1px solid var(--warn);
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+    .warning-box strong {
+        color: var(--alert-warn-text);
+    }
+    .method-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .method-tab {
+        padding: 10px 20px;
+        background: var(--border);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    .method-tab.active {
+        background: var(--info);
+        color: #fff;
+    }
+    .method-content {
+        display: none;
+    }
+    .method-content.active {
+        display: block;
+    }
+    .toc {
+        background: var(--surface-deep);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .toc h3 {
+        margin-bottom: 15px;
+        color: var(--text);
+    }
+    .toc ul {
+        list-style: none;
+        padding: 0;
+    }
+    .toc li {
+        margin-bottom: 8px;
+    }
+    .toc a {
+        color: var(--info);
+        text-decoration: none;
+    }
+    .toc a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>iSCSI Export Guide</h1>
+    <p class="page-description">Learn how to export MHVTL virtual tape libraries over iSCSI</p>
+</div>
+
+<!-- Table of Contents -->
+<div class="toc">
+    <h3>Contents</h3>
+    <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#quick-export">Method 1: Quick Export (Recommended)</a></li>
+        <li><a href="#manual-export">Method 2: Manual Step-by-Step Export</a></li>
+        <li><a href="#client-setup">Client Configuration</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ul>
+</div>
+
+<!-- Overview -->
+<div class="guide-section" id="overview">
+    <h2>Overview</h2>
+    <p>iSCSI (Internet Small Computer Systems Interface) allows you to export MHVTL virtual tape libraries over the network. This enables backup software running on remote systems to access your virtual tapes as if they were locally attached.</p>
+
+    <p><strong>Key Concepts:</strong></p>
+    <ul style="margin-left: 20px; margin-top: 10px;">
+        <li><strong>Target</strong> - The server (this system) that exports devices</li>
+        <li><strong>Initiator</strong> - The client that connects to the target</li>
+        <li><strong>IQN</strong> - iSCSI Qualified Name, a unique identifier (e.g., <code>iqn.2026-01.com.mhvtl:library70</code>)</li>
+        <li><strong>Backstore</strong> - The underlying storage device being exported</li>
+        <li><strong>LUN</strong> - Logical Unit Number, maps a backstore to a target</li>
+        <li><strong>Portal</strong> - Network endpoint (IP:port) where clients connect</li>
+        <li><strong>ACL</strong> - Access Control List, controls which initiators can connect</li>
+    </ul>
+</div>
+
+<!-- Prerequisites -->
+<div class="guide-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+
+    <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>Ensure MHVTL is Running</h4>
+            <p>Your virtual tape library must be started and have SCSI devices available.</p>
+            <div class="code-block">
+<span class="comment"># Check MHVTL services</span>
+<span class="command">$ sudo systemctl status mhvtl</span>
+
+<span class="comment"># List available SCSI devices</span>
+<span class="command">$ sudo lsscsi -g</span>
+<span class="output">[0:0:0:0]    mediumx STK      L700             0104  /dev/sch0  /dev/sg3
+[0:0:1:0]    tape    IBM      ULT3580-TD8      0104  /dev/st0   /dev/sg4
+[0:0:2:0]    tape    IBM      ULT3580-TD8      0104  /dev/st1   /dev/sg5</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>Ensure target.service is Running</h4>
+            <p>The LIO target service must be active to export iSCSI targets.</p>
+            <div class="code-block">
+<span class="comment"># Check target service status</span>
+<span class="command">$ sudo systemctl status target</span>
+
+<span class="comment"># Start if not running</span>
+<span class="command">$ sudo systemctl start target</span>
+
+<span class="comment"># Enable for automatic start on boot</span>
+<span class="command">$ sudo systemctl enable target</span>
+            </div>
+            <p>Or use the <a href="{% url 'libraries:iscsi_service' %}">Service Control</a> page in this GUI.</p>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>Note Your SCSI Device Paths</h4>
+            <p>You'll need the <strong>/dev/sg*</strong> (SCSI generic) device paths for export. These are shown in the last column of <code>lsscsi -g</code> output.</p>
+            <div class="tip-box">
+                <strong>Tip:</strong> For iSCSI export, always use the <code>/dev/sg*</code> devices (SCSI generic), not <code>/dev/st*</code> or <code>/dev/sch*</code>.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Export Method -->
+<div class="guide-section" id="quick-export">
+    <h2>Method 1: Quick Export (Recommended)</h2>
+    <p>The Quick Export wizard automates the entire process. Use this if you want to export a complete library with minimal configuration.</p>
+
+    <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>Go to Quick Export</h4>
+            <p>Navigate to <a href="{% url 'libraries:iscsi_export_library' %}">iSCSI Export > Quick Export</a></p>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>Select Your Library</h4>
+            <p>Choose the library you want to export from the dropdown list.</p>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>Select Devices</h4>
+            <p>Check the devices you want to export. Typically this includes:</p>
+            <ul style="margin-left: 20px;">
+                <li>The media changer (robot/picker) - type: <code>mediumx</code></li>
+                <li>All tape drives - type: <code>tape</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <h4>Configure Access</h4>
+            <p>Choose your access control method:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Allow all initiators</strong> - Any client can connect (simple but less secure)</li>
+                <li><strong>Specific initiator</strong> - Only the specified IQN can connect (more secure)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+            <h4>Click Export</h4>
+            <p>The wizard will automatically:</p>
+            <ul style="margin-left: 20px;">
+                <li>Create pscsi backstores for each device</li>
+                <li>Create an iSCSI target with a generated IQN</li>
+                <li>Map all devices as LUNs</li>
+                <li>Configure ACLs and add a default portal</li>
+                <li>Save the configuration</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <strong>Done!</strong> Your library is now available over iSCSI. Skip to the <a href="#client-setup">Client Configuration</a> section to connect from a remote system.
+    </div>
+</div>
+
+<!-- Manual Export Method -->
+<div class="guide-section" id="manual-export">
+    <h2>Method 2: Manual Step-by-Step Export</h2>
+    <p>Use this method for more control over the configuration, or to understand what's happening behind the scenes.</p>
+
+    <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>Create Backstores</h4>
+            <p>First, create pscsi backstores for each SCSI device you want to export.</p>
+            <p>Go to <a href="{% url 'libraries:iscsi_backstores' %}">Backstores</a> and click "Create Backstore".</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Name:</strong> A descriptive name (e.g., <code>lib70_changer</code>, <code>lib70_drive0</code>)</li>
+                <li><strong>Device Path:</strong> The /dev/sg* path (e.g., <code>/dev/sg3</code>)</li>
+                <li><strong>Plugin:</strong> Select <code>pscsi</code> for SCSI passthrough</li>
+            </ul>
+            <div class="warning-box">
+                <strong>Important:</strong> Create a backstore for the media changer AND each tape drive you want to export.
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>Create an iSCSI Target</h4>
+            <p>Go to <a href="{% url 'libraries:iscsi_create_target' %}">Targets > Create Target</a>.</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>IQN:</strong> Enter a unique identifier, e.g., <code>iqn.2026-01.com.mhvtl:library70</code></li>
+                <li>Check "Allow all initiators" for easy setup, or leave unchecked for manual ACL configuration</li>
+                <li>Check "Add default portal" to create a listener on all interfaces (0.0.0.0:3260)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>Add LUN Mappings</h4>
+            <p>On the target detail page, add LUNs to map your backstores:</p>
+            <ul style="margin-left: 20px;">
+                <li>Click "Add LUN"</li>
+                <li>Select a backstore from the dropdown</li>
+                <li>Optionally specify a LUN ID (or let it auto-assign)</li>
+            </ul>
+            <div class="tip-box">
+                <strong>Tip:</strong> Add the media changer first (LUN 0), then tape drives (LUN 1, 2, etc.). Some backup software expects this order.
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <h4>Configure Access Control</h4>
+            <p>On the target detail page, configure who can connect:</p>
+            <p><strong>Option A: Allow All Initiators</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Check "Allow all initiators (generate_node_acls)"</li>
+                <li>Any client with network access can connect</li>
+            </ul>
+            <p><strong>Option B: Specific Initiators</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Uncheck "Allow all initiators"</li>
+                <li>Click "Add ACL"</li>
+                <li>Enter the initiator's IQN (find it on the client with <code>cat /etc/iscsi/initiatorname.iscsi</code>)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+            <h4>Verify Portal Configuration</h4>
+            <p>Ensure at least one portal exists on the target. If not, add one:</p>
+            <ul style="margin-left: 20px;">
+                <li>Click "Add Portal"</li>
+                <li><strong>IP Address:</strong> <code>0.0.0.0</code> (all interfaces) or a specific IP</li>
+                <li><strong>Port:</strong> <code>3260</code> (standard iSCSI port)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">6</div>
+        <div class="step-content">
+            <h4>Save Configuration</h4>
+            <p>Go to <a href="{% url 'libraries:iscsi_service' %}">Service Control</a> and click "Save Configuration" to persist settings across reboots.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Client Setup -->
+<div class="guide-section" id="client-setup">
+    <h2>Client Configuration</h2>
+    <p>On the system that will access the virtual tape library (the iSCSI initiator):</p>
+
+    <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>Install iSCSI Initiator Tools</h4>
+            <div class="code-block">
+<span class="comment"># RHEL/CentOS/Rocky</span>
+<span class="command">$ sudo dnf install iscsi-initiator-utils</span>
+
+<span class="comment"># Debian/Ubuntu</span>
+<span class="command">$ sudo apt install open-iscsi</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>Start the iSCSI Service</h4>
+            <div class="code-block">
+<span class="command">$ sudo systemctl start iscsid</span>
+<span class="command">$ sudo systemctl enable iscsid</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>Discover Available Targets</h4>
+            <p>Replace <code>TARGET_IP</code> with the IP address of your MHVTL server:</p>
+            <div class="code-block">
+<span class="command">$ sudo iscsiadm -m discovery -t sendtargets -p TARGET_IP:3260</span>
+<span class="output">TARGET_IP:3260,1 iqn.2026-01.com.mhvtl:library70</span>
+            </div>
+            <div class="alert alert-warning" style="margin-top: 10px;">
+                <strong>Note:</strong> discovery records <em>every</em> target the server offers,
+                and by default the client logs in to all of them at boot. To use one library
+                only, create a record for that target instead:
+                <code>sudo iscsiadm -m node -T &lt;iqn&gt; -p TARGET_IP:3260 -o new</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <h4>Login to the Target</h4>
+            <div class="code-block">
+<span class="command">$ sudo iscsiadm -m node -T iqn.2026-01.com.mhvtl:library70 -p TARGET_IP:3260 --login</span>
+<span class="output">Logging in to [iface: default, target: iqn.2026-01.com.mhvtl:library70, portal: TARGET_IP,3260]
+Login to [iface: default, target: iqn.2026-01.com.mhvtl:library70, portal: TARGET_IP,3260] successful.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+            <h4>Verify Devices Appeared</h4>
+            <div class="code-block">
+<span class="command">$ sudo lsscsi -g</span>
+<span class="output">[3:0:0:0]    mediumx STK      L700             0104  /dev/sch1  /dev/sg10
+[3:0:0:1]    tape    IBM      ULT3580-TD8      0104  /dev/st2   /dev/sg11
+[3:0:0:2]    tape    IBM      ULT3580-TD8      0104  /dev/st3   /dev/sg12</span>
+
+<span class="comment"># Check the media changer</span>
+<span class="command">$ sudo mtx -f /dev/sg10 status</span>   <span class="comment"># the changer's generic node</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">6</div>
+        <div class="step-content">
+            <h4>Configure Automatic Login (Optional)</h4>
+            <p>To automatically reconnect after reboot:</p>
+            <div class="code-block">
+<span class="command">$ sudo iscsiadm -m node -T iqn.2026-01.com.mhvtl:library70 -p TARGET_IP:3260 -o update -n node.startup -v automatic</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <strong>Success!</strong> Your backup software can now use the changer's <code>/dev/sg*</code> node (or its <code>/dev/tape/by-id/*-changer</code> link) and the <code>/dev/nst*</code> tape drives. Avoid <code>/dev/sch*</code>: the kernel <code>ch</code> driver leaks references on some changers (see the <em>ch driver leak</em> guide).
+    </div>
+</div>
+
+<!-- Troubleshooting -->
+<div class="guide-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+
+    <h4>Discovery fails or times out</h4>
+    <ul style="margin-left: 20px;">
+        <li>Check that target.service is running: <code>systemctl status target</code></li>
+        <li>Verify firewall allows port 3260: <code>firewall-cmd --add-port=3260/tcp --permanent</code></li>
+        <li>Confirm a portal exists on the target</li>
+    </ul>
+
+    <h4>Login fails with "permission denied"</h4>
+    <ul style="margin-left: 20px;">
+        <li>Check ACL configuration - either enable "Allow all initiators" or add the client's IQN</li>
+        <li>Find client IQN with: <code>cat /etc/iscsi/initiatorname.iscsi</code></li>
+    </ul>
+
+    <h4>Devices don't appear after login</h4>
+    <ul style="margin-left: 20px;">
+        <li>Check that LUNs are configured on the target</li>
+        <li>Verify backstores point to valid devices</li>
+        <li>Try rescanning: <code>iscsiadm -m session --rescan</code></li>
+    </ul>
+
+    <h4>Configuration lost after reboot</h4>
+    <ul style="margin-left: 20px;">
+        <li>Save configuration: Go to Service Control > "Save Configuration"</li>
+        <li>Or run: <code>sudo targetcli saveconfig</code></li>
+    </ul>
+
+    <h4>Logout from target</h4>
+    <div class="code-block">
+<span class="command">$ sudo iscsiadm -m node -T iqn.2026-01.com.mhvtl:library70 -p TARGET_IP:3260 --logout</span>
+    </div>
+</div>
+
+<div class="btn-group" style="margin-top: 30px;">
+    <a href="{% url 'libraries:iscsi_dashboard' %}" class="btn btn-primary">Back to iSCSI Dashboard</a>
+    <a href="{% url 'libraries:iscsi_export_library' %}" class="btn btn-success">Quick Export a Library</a>
+</div>
+{% endblock %}

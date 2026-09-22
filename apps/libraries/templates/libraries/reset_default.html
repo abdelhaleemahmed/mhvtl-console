@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reset to Defaults - MHVTL Console{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/reset-default.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="reset-card">
+        <div class="warning-header">
+            <div class="warning-icon">🚨</div>
+            <h1 class="warning-title">CRITICAL SYSTEM RESET</h1>
+            <p class="warning-description">
+                This action will completely reset all MHVTL configurations to factory defaults.
+                All your current library configurations, drives, and media will be permanently removed.
+            </p>
+        </div>
+
+        <div class="critical-warning">
+            <div class="critical-title">
+                <span>⚠️</span>
+                DANGER - IRREVERSIBLE ACTION
+            </div>
+            <div class="critical-list">
+                <ul style="list-style: none; padding: 0;">
+                    <li>🗑️ ALL library configurations will be deleted</li>
+                    <li>💽 ALL tape drive configurations will be removed</li>
+                    <li>📼 ALL media assignments will be cleared</li>
+                    <li>⚙️ ALL custom settings will be lost</li>
+                    <li>🔄 System will return to fresh installation state</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="impact-section">
+            <div class="impact-title">
+                <span>📊</span>
+                Impact Assessment
+            </div>
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="impact-item-title">Libraries</div>
+                    <div class="impact-item-desc">All {{ library_count|default:0 }} libraries will be removed</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-item-title">Drives</div>
+                    <div class="impact-item-desc">All tape drives will be deleted</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-item-title">Configuration</div>
+                    <div class="impact-item-desc">All MHVTL config files will be reset</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-item-title">Media</div>
+                    <div class="impact-item-desc">Media handling based on your selection</div>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" id="resetForm" data-dashboard-url="{% url 'libraries:dashboard' %}">
+            {% csrf_token %}
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="form-label">
+                        Media Removal Option <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <select name="remove_media" class="form-select" required id="mediaSelect">
+                        <option value="">Choose media handling...</option>
+                        <option value="NO">NO - Keep all tape media (recommended)</option>
+                        <option value="YES">YES - Remove ALL tape media permanently</option>
+                    </select>
+                    <div class="form-help">
+                        Choose whether to preserve or completely remove all virtual media cartridges
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirmation-checklist">
+                <div class="checklist-title">⚠️ Confirmation Required</div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-input" id="confirm1" required>
+                    <label class="checklist-label" for="confirm1">
+                        I understand this will remove ALL library configurations permanently
+                    </label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-input" id="confirm2" required>
+                    <label class="checklist-label" for="confirm2">
+                        I understand this will remove ALL drive configurations permanently
+                    </label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-input" id="confirm3" required>
+                    <label class="checklist-label" for="confirm3">
+                        I understand this action cannot be undone or reversed
+                    </label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-input" id="confirm4" required>
+                    <label class="checklist-label" for="confirm4">
+                        I have backed up any important configurations if needed
+                    </label>
+                </div>
+
+                <div class="checklist-item">
+                    <input type="checkbox" class="checklist-input" id="confirmFinal" required>
+                    <label class="checklist-label" for="confirmFinal">
+                        <strong>I am absolutely certain I want to reset ALL MHVTL settings to defaults</strong>
+                    </label>
+                </div>
+            </div>
+
+            <div class="final-confirmation" id="finalConfirmation" style="display: none;">
+                <div class="final-title">🔐 Final Security Check</div>
+                <div class="final-text">
+                    You are about to perform a complete system reset. This action will immediately
+                    remove all configurations and cannot be stopped once started.
+                    <br><br>
+                    <strong>Media Action:</strong> <span id="mediaActionText">Please select media option</span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'libraries:dashboard' %}" class="btn btn-secondary">
+                    ← Cancel & Return Safely
+                </a>
+                <button type="submit" class="btn btn-danger" id="resetBtn" disabled>
+                    <span id="resetText">💥 RESET ALL SETTINGS</span>
+                    <span id="resetSpinner" class="spinner"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/reset-default.js' %}"></script>
+{% endblock %}

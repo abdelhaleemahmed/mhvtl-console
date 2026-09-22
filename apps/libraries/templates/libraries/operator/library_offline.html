@@ -1,0 +1,73 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Take Library Offline{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
+    .warning-box { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+    .warning-box h4 { color: var(--alert-warn-text); margin-bottom: 10px; }
+    .warning-box ul { margin-left: 20px; color: var(--alert-warn-text); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="operation-icon">&#9632;</div>
+            <div class="section-title">Take Library Offline</div>
+            <p class="page-description">
+                Stop a virtual tape library and remove it from the system.
+            </p>
+
+            <div class="warning-box">
+                <h4>Warning:</h4>
+                <ul>
+                    <li>Any tapes currently loaded in drives will be unloaded</li>
+                    <li>Active backup/restore jobs using this library will fail</li>
+                    <li>The library's drives will no longer be accessible</li>
+                    <li>Make sure no applications are using the library before proceeding</li>
+                </ul>
+            </div>
+
+            <form method="post" action="{% url 'libraries:library_offline' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="library_id">Select Library</label>
+                    <select name="library_id" id="library_id" class="form-control" required>
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"{% if selected_library_id == library.library_id %} selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <p class="form-help">Choose the library to take offline</p>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="confirm" required>
+                        I understand that this will stop the library and disconnect any active sessions
+                    </label>
+                </div>
+
+                <div class="btn-group">
+                    <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Take Offline</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="section-title">Notes</div>
+            <ul class="page-description" style="margin-left: 20px;">
+                <li>This operation may require root privileges</li>
+                <li>The library can be brought back online at any time</li>
+                <li>Configuration and tape data are preserved when offline</li>
+                <li>Check <a href="{% url 'libraries:library_status' %}">Library Status</a> to verify the library is offline</li>
+            </ul>
+        </div>
+{% endblock %}

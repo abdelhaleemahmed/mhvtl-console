@@ -1,0 +1,372 @@
+{% extends 'libraries/base.html' %}
+
+
+{% block header_title %}🏭 {{ title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .main-container {
+                max-width: 1000px;
+                margin: 50px auto;
+                padding: 0 20px;
+            }
+    .brand-card {
+                background: var(--surface);
+                border-radius: 20px;
+                padding: 40px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                margin-bottom: 30px;
+            }
+    .brand-header {
+                margin-bottom: 40px;
+            }
+    .brand-icon {
+                font-size: 64px;
+                margin-bottom: 20px;
+            }
+    .brand-title {
+                font-size: 32px;
+                font-weight: 700;
+                color: var(--text);
+                margin-bottom: 15px;
+            }
+    .brand-description {
+                font-size: 18px;
+                color: var(--text-dim);
+                line-height: 1.6;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+    .media-filter {
+                display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+                margin: 0 0 20px; font-size: 14px;
+            }
+    .media-filter select { max-width: 280px; }
+    .media-filter-count { color: var(--text-dim); font-size: 13px; }
+    .brands-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+                margin-bottom: 40px;
+            }
+    .brand-option {
+                background: linear-gradient(135deg, var(--surface-deep), var(--border));
+                border: 2px solid var(--border);
+                border-radius: 15px;
+                padding: 25px;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                text-decoration: none;
+                color: inherit;
+                position: relative;
+                overflow: hidden;
+            }
+    .brand-option:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                border-color: var(--accent);
+                background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+                color: white;
+            }
+    .brand-option::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+    .brand-option:hover::before {
+                opacity: 1;
+            }
+    .brand-logo {
+                font-size: 36px;
+                margin-bottom: 15px;
+                display: block;
+            }
+    .brand-name {
+                font-size: 24px;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+    .brand-models-count {
+                font-size: 14px;
+                opacity: 0.8;
+                margin-bottom: 15px;
+            }
+    .brand-features {
+                list-style: none;
+                text-align: left;
+                font-size: 13px;
+            }
+    .brand-features li {
+                padding: 4px 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+    .brand-features li::before {
+                content: '✓';
+                color: var(--ok);
+                font-weight: bold;
+                font-size: 14px;
+            }
+    .brand-option:hover .brand-features li::before {
+                color: rgba(255, 255, 255, 0.9);
+            }
+    /* Special styling for different brands */
+            .brand-stk:hover {
+                background: linear-gradient(135deg, var(--bad), var(--warn));
+            }
+    .brand-ibm:hover {
+                background: linear-gradient(135deg, var(--text), var(--text-dim));
+            }
+    .brand-hp:hover {
+                background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+            }
+    .brand-spectra:hover {
+                background: linear-gradient(135deg, var(--accent), var(--accent));
+            }
+    .brand-quantum:hover {
+                background: linear-gradient(135deg, var(--ok), var(--ok));
+            }
+    .form-actions {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+                align-items: center;
+            }
+    .info-section {
+                background: rgba(102, 126, 234, 0.1);
+                border: 1px solid rgba(102, 126, 234, 0.2);
+                border-radius: 15px;
+                padding: 25px;
+                margin-top: 30px;
+                text-align: left;
+            }
+    .info-title {
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: var(--accent);
+                font-size: 18px;
+            }
+    .info-content {
+                font-size: 14px;
+                line-height: 1.6;
+                color: var(--text-dim);
+            }
+    /* Mobile responsiveness */
+            @media (max-width: 768px) {
+                .brands-grid {
+                    grid-template-columns: 1fr;
+                }
+    
+                .brand-card {
+                    padding: 30px 20px;
+                }
+    
+                .brand-title {
+                    font-size: 28px;
+                }
+    
+                .form-actions {
+                    flex-direction: column;
+                }
+            }
+    .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: var(--text-dim);
+            }
+    .empty-icon {
+                font-size: 64px;
+                margin-bottom: 20px;
+            }
+    .empty-title {
+                font-size: 24px;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+    .empty-description {
+                font-size: 16px;
+                margin-bottom: 30px;
+                line-height: 1.5;
+            }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="brand-card">
+            <div class="brand-header">
+                <div class="brand-icon">🎯</div>
+                <h1 class="brand-title">Select Library Brand</h1>
+                <p class="brand-description">
+                    Choose from industry-leading tape library manufacturers. Each brand comes with 
+                    pre-configured models and tested default settings for quick deployment.
+                </p>
+            </div>
+
+            <div class="media-filter">
+                <label for="mediaFilter">Show vendors whose libraries can take</label>
+                <select id="mediaFilter" class="form-control">
+                    <option value="">any tape</option>
+                    {% for choice in media_choices %}
+                        <option value="{{ choice.density }}"
+                                {% if choice.density == selected_media %}selected{% endif %}>
+                            {{ choice.label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <span id="mediaFilterCount" class="media-filter-count"></span>
+            </div>
+
+            {% if brands %}
+                <div class="brands-grid" id="brandsGrid">
+                    {% for brand in brands %}
+                        <a href="{% url 'libraries:brand_config' brand.key %}"
+                           class="brand-option brand-{{ brand.key|lower }}"
+                           data-media="{{ brand.media|join:" " }}">
+
+                            <div class="brand-logo">
+                                {% if brand.key == 'STK' %}📼
+                                {% elif brand.key == 'IBM' %}💻
+                                {% elif brand.key == 'HP' %}🖨️
+                                {% elif brand.key == 'SPECTRA' %}🔮
+                                {% elif brand.key == 'QUANTUM' %}⚛️
+                                {% elif brand.key == 'ADIC' %}🗃️
+                                {% elif brand.key == 'SONY' %}📺
+                                {% elif brand.key == 'DELL' %}💿
+                                {% elif brand.key == 'OVERLAND' %}🏔️
+                                {% else %}📚{% endif %}
+                            </div>
+
+                            <div class="brand-name">{{ brand.display }}</div>
+                            <div class="brand-models-count">
+                                {{ brand.model_count }} model{{ brand.model_count|pluralize }},
+                                {{ brand.drive_count }} drive{{ brand.drive_count|pluralize }}
+                            </div>
+
+                            <ul class="brand-features">
+                                <li>{{ brand.models|join:", "|truncatechars:58 }}</li>
+                                <li>Media: {{ brand.families|join:", " }}</li>
+                                <li>
+                                    {% if brand.newest_lto %}
+                                        Up to {{ brand.newest_lto }}
+                                    {% else %}
+                                        {{ brand.media|join:", "|truncatechars:40 }}
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </a>
+                    {% endfor %}
+                </div>
+                <div id="noBrandMatch" class="empty-state" style="display: none;">
+                    <div class="empty-icon">🔍</div>
+                    <div class="empty-title">No vendor takes that tape</div>
+                    <div class="empty-description">
+                        Choose another tape, or "any tape" to see every vendor.
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">⚠️</div>
+                    <div class="empty-title">No Brands Available</div>
+                    <div class="empty-description">
+                        No vendor profiles are loaded.<br>
+                        This is a packaging problem: apps/libraries/services/profiles
+                        is missing or failed to import.
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <a href="{% url 'libraries:setup_choice' %}" class="btn btn-secondary">
+                    ← Back to Setup Choice
+                </a>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">💡 Brand Selection Guide</div>
+                <div class="info-content">
+                    <strong>Standard Configurations:</strong> Each brand includes tested configurations 
+                    for their most popular library models. Default settings are optimized for typical 
+                    use cases and can be customized after initial setup.
+                    <br><br>
+                    <strong>Enterprise Features:</strong> All brands support enterprise features like 
+                    multiple drives, large slot counts, and advanced media management. Choose based 
+                    on your existing infrastructure or preferred vendor.
+                    <br><br>
+                    <strong>Compatibility:</strong> MHVTL emulates the exact behavior of physical 
+                    libraries, ensuring compatibility with backup software and enterprise applications.
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.location.href = "{% url 'libraries:setup_choice' %}";
+            }
+        });
+
+        // Add hover effects for better UX
+        document.querySelectorAll('.brand-option').forEach(option => {
+            option.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+
+            option.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+<script>
+        // Which vendors can take a given tape. Each card carries the densities
+        // its libraries' drives load (from the profiles), so choosing a tape
+        // here answers "where do I make an LTO-9 library?" without opening
+        // every vendor in turn.
+        (function () {
+            const filter = document.getElementById('mediaFilter');
+            const grid = document.getElementById('brandsGrid');
+            if (!filter || !grid) return;
+            const cards = Array.from(grid.querySelectorAll('.brand-option'));
+            const empty = document.getElementById('noBrandMatch');
+            const count = document.getElementById('mediaFilterCount');
+
+            function apply() {
+                const wanted = filter.value;
+                let shown = 0;
+                cards.forEach(card => {
+                    const media = (card.dataset.media || '').split(' ');
+                    const matches = !wanted || media.includes(wanted);
+                    card.style.display = matches ? '' : 'none';
+                    if (matches) shown += 1;
+                    // Carry the tape into the form, which then offers only the
+                    // models and drives that take it.
+                    const link = new URL(card.href, window.location.origin);
+                    if (wanted) link.searchParams.set('media', wanted);
+                    else link.searchParams.delete('media');
+                    card.href = link.pathname + link.search;
+                });
+                empty.style.display = shown ? 'none' : 'block';
+                count.textContent = wanted
+                    ? `${shown} of ${cards.length} vendors` : '';
+                const url = new URL(window.location);
+                if (wanted) url.searchParams.set('media', wanted);
+                else url.searchParams.delete('media');
+                window.history.replaceState({}, '', url);
+            }
+
+            filter.addEventListener('change', apply);
+            apply();
+        })();
+    </script>
+{% endblock %}

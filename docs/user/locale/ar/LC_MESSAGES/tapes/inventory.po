@@ -1,0 +1,178 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../tapes/inventory.rst:2 e959e2ac690140c596af649ce1b0d47e
+msgid "The tape inventory"
+msgstr ""
+
+#: ../../tapes/inventory.rst:4 1a0db19ebd084e91be937d901cd1a90a
+msgid "Every tape a library holds, what is in each one, and how full it is."
+msgstr ""
+
+#: ../../tapes/inventory.rst:11 8510e65d916c4f0f8d3a39e75d8fc8d6
+msgid "In the console"
+msgstr ""
+
+#: ../../tapes/inventory.rst:13 356b655aae114f06bf73c706414a6909
+msgid ""
+"**Tapes → Inventory** on the library page, or **Operator → Tapes**, at "
+"``/libraries/operator/tapes/``."
+msgstr ""
+
+#: ../../tapes/inventory.rst:16 e57c2bcde4e24157b751be6234c7b5d6
+msgid "The tape inventory for a library"
+msgstr ""
+
+#: ../../tapes/inventory.rst:20 eb7cabe981a14bd98cab483df8cf9e66
+msgid ""
+"The library page shows the same tapes as tiles, which is the quickest way"
+" to see whether anything is filling up: a bar per tape, and how much room"
+" is left under it. The bar is blue while there is room, amber past 75%, "
+"and red past 90%."
+msgstr ""
+
+#: ../../tapes/inventory.rst:25 926c7f81a25248d7be7e3d9107a2003f
+msgid "Two tape tiles: one three-quarters full in amber, one empty"
+msgstr ""
+
+#: ../../tapes/inventory.rst:30 d17cd88fc1924abba1043963fe657a8d
+msgid "From the terminal"
+msgstr ""
+
+#: ../../tapes/inventory.rst:44 05eeba10144d41aebd3f151cd6580b01
+msgid "Column"
+msgstr ""
+
+#: ../../tapes/inventory.rst:44 973adccf48bf477eaccc60909a604823
+msgid "What it means"
+msgstr ""
+
+#: ../../tapes/inventory.rst:46 f9c1075599aa4d40b545c1c971e0a9f5
+msgid "**SLOT**"
+msgstr ""
+
+#: ../../tapes/inventory.rst:46 abcebe4a32e6421d85995577cf283519
+msgid "Where the cartridge sits. A tape in a drive shows the drive"
+msgstr ""
+
+#: ../../tapes/inventory.rst:47 b2566ae774e34677adcc0bb584ae0b7d
+msgid "**KIND**"
+msgstr ""
+
+#: ../../tapes/inventory.rst:47 55749cb4ecc5400baaf8a7e9a4205ae5
+msgid "``data``, ``clean`` or ``WORM``, from the barcode"
+msgstr ""
+
+#: ../../tapes/inventory.rst:48 d90c1e79c95046b7b866c71c665420bb
+msgid "**DENSITY**"
+msgstr ""
+
+#: ../../tapes/inventory.rst:48 efe1d1e8ccc84103986d98a70e2c7566
+msgid "The generation, from the barcode suffix"
+msgstr ""
+
+#: ../../tapes/inventory.rst:49 37cc8c7ffd5d43788b4695d062902566
+msgid "**USED MB**"
+msgstr ""
+
+#: ../../tapes/inventory.rst:49 3272ab2cffdd49b3b369177e901d87eb
+msgid "How much of it has been written - the size of its files"
+msgstr ""
+
+#: ../../tapes/inventory.rst:50 0db5de6f63cd44c695e82982d377c324
+msgid "**CAPACITY MB**"
+msgstr ""
+
+#: ../../tapes/inventory.rst:50 429e9d9e230340e78246950d71654b32
+msgid "How big it was made"
+msgstr ""
+
+#: ../../tapes/inventory.rst:51 5a05ce503f014b37a29a2c4f97b306b8
+msgid "**ON DISK**"
+msgstr ""
+
+#: ../../tapes/inventory.rst:51 517a7cbd3f444438acc8666a80813d59
+msgid ""
+"Whether its files are really there. ``no`` means the library lists a tape"
+" whose files are gone"
+msgstr ""
+
+#: ../../tapes/inventory.rst:56 e68cea91d7c3478c9e3d43b7c359b217
+msgid "Where the numbers come from"
+msgstr ""
+
+#: ../../tapes/inventory.rst:58 5bcc025da26f4ee9b33550eefb80c849
+msgid ""
+"**Used** is the size of the tape's data files under "
+"``/opt/mhvtl/<barcode>/``. It is what is really on the disk, which is "
+"what matters when the disk fills up."
+msgstr ""
+
+#: ../../tapes/inventory.rst:62 1440a35c76924f83830a611d67b09d93
+msgid ""
+"**Capacity** is read from the cartridge's own MAM file - the medium "
+"auxiliary memory, which a real cartridge also has. That is why a tape "
+"sitting in a slot has a size at all: nothing needs to load it to ask."
+msgstr ""
+
+#: ../../tapes/inventory.rst:66 5bd802fa6ff146e58cbb126bfeb47a2e
+msgid ""
+"A tape in a drive has a second, better answer: the drive itself, which is"
+" live while a backup runs. The two disagree during a write - the MAM is "
+"only written back when the tape is unloaded - and the drive is right. See"
+" :doc:`../using/watching`."
+msgstr ""
+
+#: ../../tapes/inventory.rst:72 e4ec763cf260413da7c19301f1066c9d
+msgid "Compression"
+msgstr ""
+
+#: ../../tapes/inventory.rst:74 e9ad2dd502bc4bc8b1df2f3e0d24e1f3
+msgid ""
+"MHVTL compresses what it writes, so a tape holds more than its size in "
+"data: 600 MB of ordinary files takes about 285 MB of a cartridge. The "
+"drive reports the ratio while it writes, and the tape's *used* figure is "
+"the compressed size, because that is what occupies the disk."
+msgstr ""
+
+#: ../../tapes/inventory.rst:80 e6ddc793f4c442d7a3f69e2966976595
+msgid "Tapes that are not in a library"
+msgstr ""
+
+#: ../../tapes/inventory.rst:82 226f25147c444ad4b5b08bba56229676
+msgid ""
+"A tape whose library was removed still has its files. It appears in no "
+"inventory, because no library lists it:"
+msgstr ""
+
+#: ../../tapes/inventory.rst:89 214eb7118ba84b0cb231cd51d0bea0b1
+msgid "See :doc:`adopt` for putting one back."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

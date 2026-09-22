@@ -1,0 +1,52 @@
+{% extends 'libraries/console/base.html' %}
+
+{% block header_title %}{{ log_title|default:"Log Viewer" }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form method="get" class="filter-bar">
+        <label for="type">Log Type:</label>
+        <select name="type" id="type">
+            {% for t in available_types %}
+                <option value="{{ t.value }}" {% if t.value == log_type %}selected{% endif %}>{{ t.label }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="lines">Lines:</label>
+        <select name="lines" id="lines">
+            <option value="50" {% if lines == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if lines == 100 %}selected{% endif %}>100</option>
+            <option value="200" {% if lines == 200 %}selected{% endif %}>200</option>
+            <option value="500" {% if lines == 500 %}selected{% endif %}>500</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Refresh</button>
+        <a href="{% url 'libraries:console_dashboard' %}" class="btn btn-secondary">Back to Console</a>
+    </form>
+</div>
+
+<div class="card">
+    <div class="section-title">{{ log_title }}</div>
+
+    {% if log_data.success %}
+        <div class="log-stats">
+            <span>File: {{ log_data.log_file|default:"N/A" }}</span>
+            <span>Lines: {{ log_data.total_lines }}</span>
+        </div>
+
+        <div class="log-container">
+            {% if log_data.lines %}
+                {% for line in log_data.lines %}
+                    <div class="log-line"><span class="log-line-number">{{ forloop.counter }}</span>{{ line }}</div>
+                {% endfor %}
+            {% else %}
+                <div class="log-empty">No log entries found</div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-danger">
+            {{ log_data.error|default:"Unable to read log file" }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

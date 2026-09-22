@@ -1,0 +1,161 @@
+{% extends 'libraries/operator/base.html' %}
+
+{% block title %}iSCSI Targets{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>iSCSI Targets</h1>
+    <p class="page-description">Manage iSCSI targets for exporting tape libraries</p>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 class="section-title" style="margin-bottom: 0; border: none;">Configured Targets</h3>
+        <a href="{% url 'libraries:iscsi_create_target' %}" class="btn btn-success">+ Create Target</a>
+    </div>
+
+    {% if targets %}
+    <table>
+        <thead>
+            <tr>
+                <th>Target IQN</th>
+                <th>TPGs</th>
+                <th>LUNs</th>
+                <th>Portals</th>
+                <th>ACLs</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for target in targets %}
+            <tr>
+                <td><code style="font-size: 13px;">{{ target.iqn }}</code></td>
+                <td>{{ target.tpgs|length }}</td>
+                <td>
+                    {% with tpg=target.tpgs.0 %}
+                        {{ tpg.luns|length|default:"0" }}
+                    {% endwith %}
+                </td>
+                <td>
+                    {% with tpg=target.tpgs.0 %}
+                        {% for portal in tpg.portals %}
+                            {{ portal.ip_address }}:{{ portal.port }}{% if not forloop.last %}<br>{% endif %}
+                        {% empty %}
+                            <span class="badge badge-warning">None</span>
+                        {% endfor %}
+                    {% endwith %}
+                </td>
+                <td>
+                    {% with tpg=target.tpgs.0 %}
+                        {% if tpg.generate_node_acls %}
+                            <span class="badge badge-info">Allow All</span>
+                        {% else %}
+                            {{ tpg.acls|length|default:"0" }} initiators
+                        {% endif %}
+                    {% endwith %}
+                </td>
+                <td>
+                    <a href="{% url 'libraries:iscsi_target_detail' iqn=target.iqn %}" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">Manage</a>
+                    <button type="button" class="btn btn-danger delete-target-btn"
+                            data-iqn="{{ target.iqn }}"
+                            data-library="{{ target.library_id|default_if_none:'' }}"
+                            style="padding: 5px 10px; font-size: 12px;">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 40px; color: var(--text-dim);">
+        <p style="font-size: 48px; margin-bottom: 10px;">&#128230;</p>
+        <p>No iSCSI targets configured.</p>
+        <p><a href="{% url 'libraries:iscsi_create_target' %}">Create your first target</a> or <a href="{% url 'libraries:iscsi_export_library' %}">quick export a library</a>.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="btn-group">
+    <a href="{% url 'libraries:iscsi_dashboard' %}" class="btn btn-secondary">Back to iSCSI Dashboard</a>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="background: var(--surface); max-width: 400px; margin: 100px auto; padding: 30px; border-radius: 10px;">
+        <h3 style="margin-bottom: 20px;">Delete Target</h3>
+        <p>Are you sure you want to delete target:</p>
+        <p><code id="deleteTargetIqn" style="word-break: break-all;"></code></p>
+        <p style="color: var(--bad); margin-top: 10px;">This will also remove all LUNs and ACLs.</p>
+        {% comment %}
+        Deleting a target leaves its backstores behind, holding the /dev/sg
+        node each was made with. For a target that exports one library, that
+        is rarely what is meant, so this offers to remove them too - which is
+        what `mhvtl iscsi unexport` does.
+        {% endcomment %}
+        <p id="deleteBackstoresRow" style="display: none; margin-top: 12px;">
+            <label>
+                <input type="checkbox" id="deleteBackstores" checked>
+                also remove the devices exported for library
+                <strong id="deleteBackstoresLibrary"></strong>
+            </label>
+        </p>
+        <div class="btn-group" style="margin-top: 20px;">
+            <button id="confirmDelete" class="btn btn-danger">Delete</button>
+            <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let targetToDelete = null;
+    let libraryToUnexport = null;
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteTargetIqn = document.getElementById('deleteTargetIqn');
+    const backstoresRow = document.getElementById('deleteBackstoresRow');
+    const backstoresBox = document.getElementById('deleteBackstores');
+    const backstoresLibrary = document.getElementById('deleteBackstoresLibrary');
+
+    document.querySelectorAll('.delete-target-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            targetToDelete = this.dataset.iqn;
+            // Which library this target exports, decided by the service and
+            // put on the button; the page reads nothing out of the name.
+            libraryToUnexport = this.dataset.library || null;
+            deleteTargetIqn.textContent = targetToDelete;
+            backstoresLibrary.textContent = libraryToUnexport || '';
+            backstoresRow.style.display = libraryToUnexport ? 'block' : 'none';
+            deleteModal.style.display = 'block';
+        });
+    });
+
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        deleteModal.style.display = 'none';
+        targetToDelete = null;
+    });
+
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        if (targetToDelete) {
+            fetch('{% url "libraries:iscsi_delete_target_ajax" %}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    iqn: targetToDelete,
+                    library_id: libraryToUnexport,
+                    remove_backstores: Boolean(libraryToUnexport) && backstoresBox.checked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete target: ' + data.message);
+                }
+            })
+            .catch(err => alert('Error: ' + err));
+        }
+        deleteModal.style.display = 'none';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,324 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Move Tape{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
+    @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+    .operation-icon { font-size: 36px; text-align: center; margin-bottom: 15px; }
+    #loading { display: none; text-align: center; padding: 20px; color: var(--text-dim); }
+    #loading.active { display: block; }
+    /* Library Status Panel */
+            .status-panel { background: var(--surface-deep); border-radius: 8px; padding: 15px; }
+    .summary-stats { display: flex; gap: 15px; margin-bottom: 15px; }
+    .stat-box { flex: 1; text-align: center; padding: 10px; background: var(--surface); border-radius: 5px; }
+    .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; max-height: 400px; overflow-y: auto; }
+    .slot-box { padding: 10px 8px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .slot-box.full { background: var(--info-bg); border-color: var(--info); }
+    .slot-box.full:hover { background: var(--info-bg); border-color: var(--accent); }
+    .slot-box.empty { background: var(--surface-deep); border-color: var(--border); color: var(--text-dim); }
+    .slot-box.empty:hover { background: var(--surface-deep); border-color: var(--border); }
+    .slot-box.selected-source { background: var(--warn-bg); border-color: var(--warn); box-shadow: 0 0 0 2px var(--warn); }
+    .slot-box.selected-dest { background: var(--ok-bg); border-color: var(--ok); box-shadow: 0 0 0 2px var(--ok); }
+    .slot-num { font-weight: 600; font-size: 14px; }
+    .slot-barcode { font-family: 'Consolas', monospace; font-size: 10px; display: block; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .slot-status { font-size: 9px; text-transform: uppercase; margin-top: 2px; }
+    .no-library { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+    .no-library-icon { font-size: 48px; margin-bottom: 10px; }
+    .move-preview { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 8px; padding: 15px; margin-top: 15px; display: none; }
+    .move-preview.active { display: block; }
+    .move-preview-title { font-weight: 600; margin-bottom: 10px; color: var(--warn); }
+    .move-preview-arrow { text-align: center; font-size: 24px; color: var(--warn); margin: 10px 0; }
+    .move-preview-slot { display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .move-preview-slot .slot-info { background: var(--surface); padding: 10px 15px; border-radius: 5px; text-align: center; }
+    .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-color { width: 16px; height: 16px; border-radius: 3px; }
+    .legend-color.full { background: var(--info-bg); border: 1px solid var(--info); }
+    .legend-color.empty { background: var(--surface-deep); border: 1px solid var(--border); }
+    .legend-color.source { background: var(--warn-bg); border: 2px solid var(--warn); }
+    .legend-color.dest { background: var(--ok-bg); border: 2px solid var(--ok); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-grid">
+            <!-- Move Form -->
+            <div class="card">
+                <div class="operation-icon">&#128230; &#8644; &#128230;</div>
+                <div class="section-title">Move Tape Between Slots</div>
+                <p class="page-description">
+                    Transfer a tape from one storage slot to another within the same library.
+                </p>
+
+                <form method="post" action="{% url 'libraries:move_tape' %}" id="move-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="library_id">Select Library</label>
+                        <select name="library_id" id="library_id" class="form-control" required onchange="loadLibraryStatus()">
+                            <option value="">-- Select Library --</option>
+                            {% for library in libraries %}
+                                <option value="{{ library.library_id }}" {% if selected_library_id == library.library_id %}selected{% endif %}>
+                                    Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="loading">Loading library status...</div>
+
+                    <div id="slot-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="from_slot">Source Slot (with tape)</label>
+                            <select name="from_slot" id="from_slot" class="form-control" required onchange="updatePreview()">
+                                <option value="">-- Click a tape in the grid or select here --</option>
+                            </select>
+                            <p class="form-help">Slot containing the tape to move</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="to_slot">Destination Slot (empty)</label>
+                            <select name="to_slot" id="to_slot" class="form-control" required onchange="updatePreview()">
+                                <option value="">-- Click an empty slot in the grid or select here --</option>
+                            </select>
+                            <p class="form-help">Empty slot where the tape will be moved</p>
+                        </div>
+
+                        <div id="move-preview" class="move-preview">
+                            <div class="move-preview-title">Move Preview</div>
+                            <div class="move-preview-slot">
+                                <div class="slot-info" id="preview-source">
+                                    <div class="slot-num">--</div>
+                                    <div class="slot-barcode">Select source</div>
+                                </div>
+                            </div>
+                            <div class="move-preview-arrow">&#8595;</div>
+                            <div class="move-preview-slot">
+                                <div class="slot-info" id="preview-dest">
+                                    <div class="slot-num">--</div>
+                                    <div class="slot-barcode">Select destination</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Move Tape</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Library Status Panel -->
+            <div class="card">
+                <div class="section-title">Slot Map (Click to Select)</div>
+
+                <div id="status-placeholder" class="no-library">
+                    <div class="no-library-icon">&#128218;</div>
+                    <p>Select a library to view its slot map</p>
+                </div>
+
+                <div id="status-panel" class="status-panel" style="display: none;">
+                    <div class="summary-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="stat-full">0</div>
+                            <div class="stat-label">Tapes in Slots</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="stat-empty">0</div>
+                            <div class="stat-label">Empty Slots</div>
+                        </div>
+                    </div>
+
+                    <div class="slot-grid" id="slot-grid"></div>
+
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-color full"></div> Tape</div>
+                        <div class="legend-item"><div class="legend-color empty"></div> Empty</div>
+                        <div class="legend-item"><div class="legend-color source"></div> Source</div>
+                        <div class="legend-item"><div class="legend-color dest"></div> Destination</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        let libraryData = null;
+        let selectedSource = null;
+        let selectedDest = null;
+
+        function loadLibraryStatus() {
+            const libraryId = document.getElementById('library_id').value;
+            const loading = document.getElementById('loading');
+            const fields = document.getElementById('slot-fields');
+            const submitBtn = document.getElementById('submit-btn');
+            const statusPlaceholder = document.getElementById('status-placeholder');
+            const statusPanel = document.getElementById('status-panel');
+
+            // Reset selections
+            selectedSource = null;
+            selectedDest = null;
+
+            if (!libraryId) {
+                fields.style.display = 'none';
+                submitBtn.disabled = true;
+                statusPlaceholder.style.display = 'block';
+                statusPanel.style.display = 'none';
+                return;
+            }
+
+            loading.classList.add('active');
+            fields.style.display = 'none';
+
+            fetch(`/libraries/ajax/library-status/${libraryId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    loading.classList.remove('active');
+                    libraryData = data;
+
+                    if (!data.success) {
+                        alert('Error: ' + (data.error || 'Unknown error'));
+                        return;
+                    }
+
+                    // Update status panel
+                    statusPlaceholder.style.display = 'none';
+                    statusPanel.style.display = 'block';
+
+                    // Update summary stats
+                    const fullSlots = data.storage_slots.filter(s => s.full).length;
+                    const emptySlots = data.storage_slots.filter(s => !s.full).length;
+
+                    document.getElementById('stat-full').textContent = fullSlots;
+                    document.getElementById('stat-empty').textContent = emptySlots;
+
+                    // Build slot grid
+                    const slotGrid = document.getElementById('slot-grid');
+                    slotGrid.innerHTML = '';
+
+                    data.storage_slots.forEach(slot => {
+                        const div = document.createElement('div');
+                        div.className = `slot-box ${slot.full ? 'full' : 'empty'}`;
+                        div.dataset.slotNum = slot.slot_num;
+                        div.dataset.full = slot.full;
+                        div.dataset.barcode = slot.barcode || '';
+                        div.innerHTML = `
+                            <div class="slot-num">${slot.slot_num}</div>
+                            <div class="slot-barcode">${slot.full ? (slot.barcode || 'Tape') : '-'}</div>
+                            <div class="slot-status">${slot.full ? 'Full' : 'Empty'}</div>
+                        `;
+                        div.onclick = () => handleSlotClick(slot);
+                        slotGrid.appendChild(div);
+                    });
+
+                    // Populate dropdowns
+                    const fromSelect = document.getElementById('from_slot');
+                    const toSelect = document.getElementById('to_slot');
+
+                    fromSelect.innerHTML = '<option value="">-- Select Source Slot --</option>';
+                    toSelect.innerHTML = '<option value="">-- Select Destination Slot --</option>';
+
+                    data.storage_slots.forEach(slot => {
+                        if (slot.full) {
+                            const option = document.createElement('option');
+                            option.value = slot.slot_num;
+                            option.textContent = `Slot ${slot.slot_num} - ${slot.barcode || 'Tape'}`;
+                            fromSelect.appendChild(option);
+                        } else {
+                            const option = document.createElement('option');
+                            option.value = slot.slot_num;
+                            option.textContent = `Slot ${slot.slot_num}`;
+                            toSelect.appendChild(option);
+                        }
+                    });
+
+                    fields.style.display = 'block';
+                    updatePreview();
+                })
+                .catch(error => {
+                    loading.classList.remove('active');
+                    alert('Error: ' + error);
+                });
+        }
+
+        function handleSlotClick(slot) {
+            if (slot.full) {
+                // Clicking a full slot - select as source
+                selectedSource = slot;
+                document.getElementById('from_slot').value = slot.slot_num;
+            } else {
+                // Clicking an empty slot - select as destination
+                selectedDest = slot;
+                document.getElementById('to_slot').value = slot.slot_num;
+            }
+            updateVisualSelection();
+            updatePreview();
+        }
+
+        function updateVisualSelection() {
+            // Remove all selections
+            document.querySelectorAll('.slot-box').forEach(box => {
+                box.classList.remove('selected-source', 'selected-dest');
+            });
+
+            // Add source selection
+            const fromSlot = document.getElementById('from_slot').value;
+            if (fromSlot) {
+                document.querySelector(`.slot-box[data-slot-num="${fromSlot}"]`)?.classList.add('selected-source');
+            }
+
+            // Add destination selection
+            const toSlot = document.getElementById('to_slot').value;
+            if (toSlot) {
+                document.querySelector(`.slot-box[data-slot-num="${toSlot}"]`)?.classList.add('selected-dest');
+            }
+        }
+
+        function updatePreview() {
+            const fromSlot = document.getElementById('from_slot').value;
+            const toSlot = document.getElementById('to_slot').value;
+            const preview = document.getElementById('move-preview');
+            const submitBtn = document.getElementById('submit-btn');
+
+            updateVisualSelection();
+
+            if (fromSlot && toSlot) {
+                const sourceSlot = libraryData?.storage_slots.find(s => s.slot_num == fromSlot);
+                const destSlot = libraryData?.storage_slots.find(s => s.slot_num == toSlot);
+
+                document.getElementById('preview-source').innerHTML = `
+                    <div class="slot-num">Slot ${fromSlot}</div>
+                    <div class="slot-barcode">${sourceSlot?.barcode || 'Tape'}</div>
+                `;
+                document.getElementById('preview-dest').innerHTML = `
+                    <div class="slot-num">Slot ${toSlot}</div>
+                    <div class="slot-barcode">(empty)</div>
+                `;
+
+                preview.classList.add('active');
+                submitBtn.disabled = false;
+            } else {
+                preview.classList.remove('active');
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Sync dropdown changes with visual selection
+        document.getElementById('from_slot').addEventListener('change', updatePreview);
+        document.getElementById('to_slot').addEventListener('change', updatePreview);
+
+        // Auto-load library status if a library is pre-selected
+        document.addEventListener('DOMContentLoaded', function() {
+            const librarySelect = document.getElementById('library_id');
+            if (librarySelect.value) {
+                loadLibraryStatus();
+            }
+        });
+    </script>
+{% endblock %}

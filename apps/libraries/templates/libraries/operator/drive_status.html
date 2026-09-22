@@ -1,0 +1,112 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Drive Status{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+    .status-item { background: var(--surface-deep); padding: 15px; border-radius: 8px; }
+    .status-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; }
+    .status-value { font-size: 18px; font-weight: bold; color: var(--text); margin-top: 5px; }
+    .status-online { color: var(--ok); }
+    .status-offline { color: var(--bad); }
+    .raw-output { background: var(--text); color: var(--border); padding: 15px; border-radius: 5px; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="section-title">Select Drive</div>
+            <form method="get" action="{% url 'libraries:drive_status' %}">
+                <div class="form-group">
+                    <label for="drive_id">Drive</label>
+                    <select name="drive_id" id="drive_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- Select Drive --</option>
+                        {% for drive in drives %}
+                            <option value="{{ drive.drive_id }}"
+                                    {% if selected_drive and selected_drive.drive_id == drive.drive_id %}selected{% endif %}>
+                                Drive {{ drive.drive_id }} (Library {{ drive.library.library_id }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        {% if status_result %}
+            {% if status_result.success %}
+                <div class="card">
+                    <div class="section-title">Drive {{ selected_drive.drive_id }} Status</div>
+                    <p class="page-description">Device: {{ status_result.device_path }}</p>
+
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <div class="status-label">Status</div>
+                            <div class="status-value {% if status_result.online %}status-online{% else %}status-offline{% endif %}">
+                                {% if status_result.online %}ONLINE{% else %}OFFLINE{% endif %}
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Tape Loaded</div>
+                            <div class="status-value">{% if status_result.tape_loaded %}Yes{% else %}No{% endif %}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Ready</div>
+                            <div class="status-value">{% if status_result.ready %}Yes{% else %}No{% endif %}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Write Protected</div>
+                            <div class="status-value">{% if status_result.write_protected %}Yes{% else %}No{% endif %}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Position</div>
+                            <div class="status-value">
+                                {% if status_result.bot %}BOT{% elif status_result.eot %}EOT{% else %}--{% endif %}
+                            </div>
+                        </div>
+                        {% if status_result.density %}
+                        <div class="status-item">
+                            <div class="status-label">Density</div>
+                            <div class="status-value">{{ status_result.density }}</div>
+                        </div>
+                        {% endif %}
+                        {% if status_result.block_size %}
+                        <div class="status-item">
+                            <div class="status-label">Block Size</div>
+                            <div class="status-value">{{ status_result.block_size }} bytes</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">
+                        Raw MT Output
+                        <button onclick="toggleRawOutput()" class="btn btn-secondary" style="float: right; padding: 5px 10px;">Toggle</button>
+                    </div>
+                    <div id="raw-output" class="raw-output" style="display: none;">{{ status_result.raw_output }}</div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> {{ status_result.error }}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Back to Operator Panel</a>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    /* The raw mt output is hidden until asked for: it is long, and the panel
+     * above says the same in a readable form. */
+    function toggleRawOutput() {
+        var el = document.getElementById('raw-output');
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

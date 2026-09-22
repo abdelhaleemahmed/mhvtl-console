@@ -1,0 +1,219 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../running/when-something-is-wrong.rst:2 ff6d45aaf3944906a37e7d8e04dbee95
+msgid "When something is wrong"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:4 e10200e66c9b4cea8f65d69c2dd62b41
+msgid "The usual causes, what each looks like, and the command that settles it."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:11
+#: c86a80a4185341b3977f0b3272ad5c29
+msgid "Three answers that disagree"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:13
+#: d760e6ab2cf84b63ace3a85487ec9f14
+msgid ""
+"A drive's state can be asked three ways, and they do not always agree. "
+"This is the single most confusing thing about MHVTL, and it is worth "
+"knowing before it happens:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:28
+#: 71f83842365a4d1a8704a6bcf5e496f3
+msgid ""
+"That was a real drive with a real cartridge in it, which wrote and read "
+"back perfectly. ``mt`` was simply stale."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:31
+#: 1fa8f99e94f94ca196863e2db91e18f2
+msgid ""
+"**Believe the robot and the daemon.** The robot moved the cartridge, the "
+"daemon is holding it, and the daemon's counters are the only ones that "
+"keep working during a backup - the kernel gives the SCSI reservation to "
+"whoever is writing, and ``mt`` and ``mtx`` answer *device busy* until it "
+"finishes."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:37
+#: be01675653d44491b38a5d5c409bc05e
+msgid "\"Restart the library for its robot to see this\""
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:39
+#: 8ad2deeeb3814e728dfb1055653d3700
+msgid ""
+"MHVTL reads its configuration **once**, when a daemon starts. Adding a "
+"tape, adopting one, or changing the slot count edits the file, and the "
+"running robot knows nothing about it:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:49
+#: c774c391d90d46e582352f38d8131888
+msgid ""
+"Until you do, ``mhvtl tape list`` shows the new cartridge and ``mhvtl "
+"status library`` does not. The console says the same on the library page."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:57
+#: 6c71095b29a548e6ac7da9f90bd2c513
+msgid "A drive says ``silent``"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:59
+#: b22d04b7c0904173a3ade3526eaa47d6
+msgid ""
+"Its daemon is not running. Nothing is broken about the library; that one "
+"drive is simply absent:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:75
+#: 84ec8f92c4ff4c8eb021a7e56a98d6ce
+msgid "A library page that answers 404"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:77
+#: 10c3762c19944526a829600634d77ef8
+msgid ""
+"A library made from the command line exists in the configuration before "
+"the console's database hears of it. Opening the page syncs it first, so "
+"this should be rare. If it persists:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:87
+#: 7f315cf0631c4f70ab4d574aca4f44fc
+msgid "An export that points at the wrong device"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:89
+#: efca90773f31411fa2e5242c40c435d8
+msgid ""
+"``/dev/sg`` numbers change when the MHVTL module reloads and when a "
+"library is recreated. An iSCSI export remembers a node, so after either "
+"it may be pointing at something else entirely:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:101
+#: c9b04a27e50248efa41470de90e9bfa1
+msgid ""
+"This runs at boot as well. The iSCSI page shows the same per device: "
+"**Created on**, **Device now**, and whether they agree."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:105
+#: 50f2aeea1afb4f4f9478f42244e6f478
+msgid "Tapes that belong to no library"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:107
+#: fa8e80246bd14b84aac3cb8f1b758052
+msgid ""
+"Removing a library leaves its cartridges on disk on purpose - they are "
+"data:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:120
+#: 1d0b90d1aef54d5a9f20692b45040b78
+msgid "See :doc:`../tapes/adopt`."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:123
+#: aea50e03899c4220b6952ae2feb65fef
+msgid "A drive that will not take a cartridge"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:125
+#: 37edfec763ae40f7bcb865a8a4c7a121
+msgid "Check that the drive writes that generation at all:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:131
+#: 31d01a35a5764979a876c0ee6d044ee2
+msgid ""
+"A drive reads older cartridges and writes recent ones, as the real "
+"hardware does. Mounting an LTO-5 cartridge into an LTO-8 drive is allowed"
+" and reading it works; writing to it does not."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:136
+#: 4ee15264e05b41c4a84ede874d18e14c
+msgid "The disk is full"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:138
+#: c16ead1621464dbfa80cdaceea6c6c9f
+msgid ""
+"Tapes are files, so a full disk fails writes in ways that look like drive"
+" faults:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:145
+#: ecbbdff8703e4cb5adaf08ff1b807095
+msgid ""
+"A cartridge occupies only what has been written to it, so the problem is "
+"usually one library that has had a great deal written to it, not the "
+"number of cartridges."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:150
+#: bc8ed11f6c174f61b908e6761e6dcd5b
+msgid "Removing a library and rebooting"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:152
+#: 40de04fcab42408fa377743da74079f6
+msgid ""
+"On this host the kernel ``ch`` driver is blacklisted, because it takes a "
+"reference on every drive a changer reports and never releases it - the "
+"drives' SCSI addresses then stay unusable until a reboot. If a newly "
+"created library is missing drives, or ``rmmod mhvtl`` says the module is "
+"in use with everything stopped, read *The kernel ch driver leak* in the "
+"*Guides*. Only a reboot clears it."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:160
+#: 5ce8ef74196f47c68004fe0cec9d8ce9
+msgid "Nothing here helped"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:162
+#: 308396fb289f4d518360483a1e0e5382
+msgid "The logs say what the drive was actually asked to do:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:168
+#: 8e6d24c8bd8b4a12849ce1fc84d6002d
+msgid "and the configuration can be checked against itself:"
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

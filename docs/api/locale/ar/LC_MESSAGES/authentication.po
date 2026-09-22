@@ -1,0 +1,197 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI API
+# Reference package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI API Reference 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 07:49+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../authentication.rst:2 5c0cb1792c6f493bbff313548a55b18d
+msgid "Authentication"
+msgstr ""
+
+#: ../../authentication.rst:4 8c13ec09f8cc459a8fed6d367b14d203
+msgid ""
+"The ``authentication`` app handles login, session management, and the "
+"post-login dashboard."
+msgstr ""
+
+#: ../../authentication.rst:8 698aec91ae514c84b4a4c39077c55b66
+msgid "Models"
+msgstr ""
+
+#: 9c5902d93fb8443d8283ad55e1c89ce7
+#: apps.authentication.models.DEFAULT_PASSWORD:1 of
+msgid ""
+"Password the account is seeded with, matching the original PHP console. "
+"The GUI warns on every page until it is changed."
+msgstr ""
+
+#: 091181305fde4200b33ed0319b3e92ec
+#: apps.authentication.models.DEFAULT_USERNAME:1 of
+msgid ""
+"the account is created by a migration, and its password is changed from "
+"the UI or with `manage.py changepassword <username>`."
+msgstr ""
+
+#: 89d60fc7d55d4aae8e70a0227f7b8203 apps.authentication.models.DEFAULT_USERNAME
+#: of
+msgid "type"
+msgstr ""
+
+#: apps.authentication.models.DEFAULT_USERNAME:5
+#: f268da6a250948ada65c96b524ac828c of
+msgid "Username of the single shared account. There is no user management UI"
+msgstr ""
+
+#: a279e668dcd34e8dbbceb4ec713ac2af apps.authentication.models.gui_username:1
+#: of
+msgid "Username the password-only login form authenticates against."
+msgstr ""
+
+#: apps.authentication.models.gui_username:3 ed5eea5426a64502b7467f26dbe20b4f
+#: of
+msgid ""
+"The login form asks for a password and no username, so the account has to"
+" be worked out here:"
+msgstr ""
+
+#: apps.authentication.models.gui_username:6 e7897f75ccc3499d8af28c8075a02407
+#: of
+msgid ""
+"``settings.MHVTL_GUI_USERNAME`` when that account exists - set it when an"
+" install has several accounts and you want a specific one;"
+msgstr ""
+
+#: apps.authentication.models.gui_username:8 fb6670e79057494f94ca4d03c086dc67
+#: of
+msgid ""
+"otherwise the only active account, so an install that predates this and "
+"named its account something else keeps working;"
+msgstr ""
+
+#: 18cf802431214322bdb5cb126dd1418f apps.authentication.models.gui_username:10
+#: of
+msgid ""
+"otherwise the seeded default, which simply fails to authenticate and "
+"leaves the operator at the login page."
+msgstr ""
+
+#: 5adba206e4ec4cd0bdbbe31af353de7b apps.authentication.models.User:1 of
+msgid "Extended user model for MHVTL"
+msgstr ""
+
+#: 187efcbf00f94e108c56e98322d0b1f0 23f6db9fda454c089827175820a41f0a
+#: 241899842ede48e88bfcb4c81657a1b9 49ad3fb6c64e4418ae91d7f8e97e8bcd
+#: 56d65590cdb3443584d544d98b01a484 667e24e9ee91418da1ed8b5719d4069d
+#: 899d7da622c84fbc8469a1a84d2d89e7 89abe8d501ec4054bb7de4dcd69f7da1
+#: 9110f84a3a874c238d92ae0fde915987 93e11f2e18364ae29a59a45a4fdec758
+#: 97be53a9239849b8bdf19d44feba37e6
+#: apps.authentication.models.User.date_joined:1
+#: apps.authentication.models.User.email:1
+#: apps.authentication.models.User.first_name:1
+#: apps.authentication.models.User.id:1
+#: apps.authentication.models.User.is_active:1
+#: apps.authentication.models.User.is_staff:1
+#: apps.authentication.models.User.is_superuser:1
+#: apps.authentication.models.User.last_login:1
+#: apps.authentication.models.User.last_login_ip:1
+#: apps.authentication.models.User.last_name:1
+#: apps.authentication.models.User.password:1
+#: apps.authentication.models.User.role:1
+#: apps.authentication.models.User.username:1 e14bda4fe783478a9aedc2891fd2d43a
+#: fe0ec5be575c4a69a597387176f84de8 of
+msgid ""
+"A wrapper for a deferred-loading field. When the value is read from this "
+"object the first time, the query is executed."
+msgstr ""
+
+#: apps.authentication.models.User.groups:1
+#: apps.authentication.models.User.user_permissions:1
+#: d07fec60717240639b4d4cfb501d0b32 f7d9f7f1d2f24b60907ce37903290754 of
+msgid ""
+"Accessor to the related objects manager on the forward and reverse sides "
+"of a many-to-many relation."
+msgstr ""
+
+#: 9bc1b38a4a4542188e88f1c4e9ffd3eb apps.authentication.models.User.groups:4
+#: apps.authentication.models.User.logentry_set:4
+#: apps.authentication.models.User.user_permissions:4
+#: bf9df0216562498fa12acf126df23656 dc8c926a32204c6aad356cecde58ce0e of
+msgid "In the example::"
+msgstr ""
+
+#: apps.authentication.models.User.groups:9
+#: apps.authentication.models.User.user_permissions:9
+#: cce1b2c1a2394bb0bd18a9495cf0ad28 e8d9e0c77f174107925a91060f514ca3 of
+msgid ""
+"``Pizza.toppings`` and ``Topping.pizzas`` are ``ManyToManyDescriptor`` "
+"instances."
+msgstr ""
+
+#: 559b623072b646a98a48a95d733e1095 apps.authentication.models.User.groups:12
+#: apps.authentication.models.User.logentry_set:11
+#: apps.authentication.models.User.user_permissions:12
+#: dd96a47cbce946deb236bbac4e1617b1 ec2bc762e6ed4de0a68581dd859c2385 of
+msgid ""
+"Most of the implementation is delegated to a dynamically defined manager "
+"class built by ``create_forward_many_to_many_manager()`` defined below."
+msgstr ""
+
+#: apps.authentication.models.User.logentry_set:1
+#: d5a3ae73b5954437b18ecd50480680de of
+msgid ""
+"Accessor to the related objects manager on the reverse side of a many-to-"
+"one relation."
+msgstr ""
+
+#: apps.authentication.models.User.logentry_set:9
+#: f641628df59e482c96e9e1553293a74a of
+msgid "``Parent.children`` is a ``ReverseManyToOneDescriptor`` instance."
+msgstr ""
+
+#: ../../authentication.rst:16 735d848e84494be1abc9e4037916c76f
+msgid "Views"
+msgstr ""
+
+#: apps.authentication.views.LoginView:1 ca52b617ee1042049be23ce9c22ef294 of
+msgid "Password-only login for the single shared GUI account."
+msgstr ""
+
+#: apps.authentication.views.LoginView:3 f9a9b43e56c9408eb2dd969152d032f5 of
+msgid ""
+"The form asks for a password and nothing else, as the original PHP "
+"console did. The password is checked against the hashed one in the "
+"database rather than a literal in this file, so it can be changed from "
+"the UI and reset with `manage.py changepassword`."
+msgstr ""
+
+#: 054b701e51314c0ea713e1d91b0a8702 apps.authentication.views.LogoutView:1 of
+msgid "Clear the session. Accepts GET because the nav links are plain links."
+msgstr ""
+
+#: a384870f35014e98b3e1e455286f6747
+#: apps.authentication.views.ChangePasswordView:1 of
+msgid "Change the shared account's password from the UI."
+msgstr ""
+
+#: 5b66dc4a2ac341409b990cfb3307be66 apps.authentication.views.DashboardView:1
+#: of
+msgid "Main dashboard view after login."
+msgstr ""
+

@@ -1,0 +1,47 @@
+# Passwordless sudo for mhvtl-gui service account
+# Required for MHVTL library management operations
+
+# targetcli writes its preferences under $TARGETCLI_HOME; the service sets it
+# to a directory it may write, and sudo would otherwise drop the variable.
+Defaults:mhvtl-gui env_keep += "TARGETCLI_HOME"
+
+mhvtl-gui ALL=(ALL) NOPASSWD: /usr/bin/mktape, \
+    /usr/bin/vtlcmd, \
+    /usr/sbin/mtx, \
+    /usr/bin/mt, \
+    /usr/bin/lsscsi, \
+    /usr/bin/targetcli, \
+    /usr/bin/generate_library_contents, \
+    /usr/bin/systemctl start mhvtl*, \
+    /usr/bin/systemctl stop mhvtl*, \
+    /usr/bin/systemctl restart mhvtl*, \
+    /usr/bin/systemctl status mhvtl*, \
+    /usr/bin/systemctl start vtl*, \
+    /usr/bin/systemctl stop vtl*, \
+    /usr/bin/systemctl restart vtl*, \
+    /usr/bin/systemctl status vtl*, \
+    /usr/bin/systemctl start target*, \
+    /usr/bin/systemctl stop target*, \
+    /usr/bin/systemctl restart target*, \
+    /usr/bin/systemctl status target*, \
+    /usr/bin/systemctl enable vtl*, \
+    /usr/bin/systemctl disable vtl*, \
+    /usr/bin/systemctl reset-failed vtl*, \
+    /usr/bin/systemctl daemon-reload, \
+    /usr/bin/dmesg, \
+    /usr/bin/dd, \
+    /usr/bin/stat, \
+    /usr/bin/tar, \
+    /usr/bin/tee, \
+    /usr/bin/touch, \
+    /usr/bin/cp, \
+    /usr/bin/rm, \
+    /usr/bin/chown, \
+    /usr/bin/cat, \
+    /usr/bin/tail, \
+    /usr/bin/test, \
+    /usr/bin/du, \
+    /usr/bin/find, \
+    /usr/bin/kill, \
+    /usr/bin/mkdir, \
+    /usr/sbin/iscsiadm

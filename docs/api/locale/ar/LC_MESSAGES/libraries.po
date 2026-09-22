@@ -1,0 +1,1261 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI API
+# Reference package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI API Reference 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:12+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../libraries.rst:2 90b5e418f051448aacd933e26e38a6ef
+msgid "Libraries App"
+msgstr ""
+
+#: ../../libraries.rst:4 08935d24765c41dfa6efd2e9dd793d45
+msgid ""
+"The ``libraries`` app is the core of MHVTL GUI. It manages tape "
+"libraries, drives, and media through Django models, views, and a service "
+"layer."
+msgstr ""
+
+#: ../../libraries.rst:8 62a927a8aa12416ead19265c695a6967
+msgid "Models"
+msgstr ""
+
+#: 2f14c608b7ea4d09ab0d779060167bb2 apps.libraries.models.LibraryBrand:1 of
+msgid "Available library brands/vendors"
+msgstr ""
+
+#: 004cb512c01f4ab89850580e523d04eb 04a20591f1724b85a2cf25e07e249f60
+#: 063617fe88ee45ff96003ebd9fb4f4db 06720f9778f4460c8cb411c2e2811667
+#: 07aab8189e154b50b960651d97aa4c1c 0ad645c01d1c4585bc41e9522bf39432
+#: 0fc86bba0c184ad993e81b5fa928cbf1 171d78f0d90448de936e05383689475c
+#: 174a3a07392740359eed58b2cb40f6bc 1ea45895645d4fa98d180ea7306daa5c
+#: 23d91035799341889bcf6a5525eadec1 2ba870e2d42c4a3a94fa0217afcc751d
+#: 2ff9583f324e4e25aac05e0b9efef11f 32602df1818f43cf9e75c54804458ac3
+#: 33a87aecf3544d5287876be27e7e3bb8 3bf459a343c04e9f906e723bfee5d98d
+#: 3dba9eea38754acc86f03c0c855d9c9d 4180a2b6a71c4ac9a3fbbd3d4b212773
+#: 51057e4c6f7042af9978d438bce68a10 529f7763865246808184235a3a96e0b9
+#: 54f667053e864ffaa3a0fe4b2d237634 5562fe6c3be14a9d9a7a3d1c3def741c
+#: 564e6565288d4d94bc62e04c98987492 57ec2c54824a41c18f18cd188d10d67a
+#: 582e1085a99e42e2b93f9418bc3828db 5a0e9ac7e25e4a73ab7c1d5e8442c142
+#: 5d648b5c1c1e4a1a908dc3e43e1fb136 609a2bc69efa4212ad05142790bd737f
+#: 64e539189f4e4f439fd05d5bb124db28 689dbb2771354659b3b340e7fa409a42
+#: 71b5ee8b0b2a43ef96cd1408b2bce367 767d27b3ce69427f98fb5e6482ac653d
+#: 7af15d9765ee4e3aa2b07f1494ebc110 816eb6f13222415880836241692a5cad
+#: 82e7a49fe0e34fd8be33c642c452cb0a 8b270ef5b98b469ab6675b6be316ff36
+#: 9475333e85ee4fcb86bc2000a90486fd 981586aa0e1b4912b4de7e63481b56ca
+#: 99928625e3164ba3b6354e0bb993383c a111a91d931442188bbd6c6f3e8ba4d5
+#: a5e65537862e4d57b34ce3f1a2cdab49 a826fb7c08d84f7d994dab47ac6e597a
+#: a93d8f766c6c409caf1d99405e40a007 aaca5b5f52304e66ab20fea3d823a1e5
+#: ad053884f473467f8796d2d6569f0f36 apps.libraries.models.Drive.channel:1
+#: apps.libraries.models.Drive.config_source:1
+#: apps.libraries.models.Drive.created_at:1
+#: apps.libraries.models.Drive.discovery_status:1
+#: apps.libraries.models.Drive.drive_id:1 apps.libraries.models.Drive.id:1
+#: apps.libraries.models.Drive.is_active:1
+#: apps.libraries.models.Drive.last_synced:1 apps.libraries.models.Drive.lun:1
+#: apps.libraries.models.Drive.mhvtl_id:1
+#: apps.libraries.models.Drive.product_identification:1
+#: apps.libraries.models.Drive.product_revision:1
+#: apps.libraries.models.Drive.target:1
+#: apps.libraries.models.Drive.unit_serial_number:1
+#: apps.libraries.models.Drive.vendor_identification:1
+#: apps.libraries.models.Library.channel:1
+#: apps.libraries.models.Library.config_source:1
+#: apps.libraries.models.Library.created_at:1
+#: apps.libraries.models.Library.discovery_metadata:1
+#: apps.libraries.models.Library.discovery_status:1
+#: apps.libraries.models.Library.empty_slots:1
+#: apps.libraries.models.Library.home_directory:1
+#: apps.libraries.models.Library.id:1 apps.libraries.models.Library.is_active:1
+#: apps.libraries.models.Library.is_standard_config:1
+#: apps.libraries.models.Library.last_synced:1
+#: apps.libraries.models.Library.library_id:1
+#: apps.libraries.models.Library.lun:1
+#: apps.libraries.models.Library.media_count:1
+#: apps.libraries.models.Library.mhvtl_id:1 apps.libraries.models.Library.naa:1
+#: apps.libraries.models.Library.product_identification:1
+#: apps.libraries.models.Library.product_revision:1
+#: apps.libraries.models.Library.sync_hash:1
+#: apps.libraries.models.Library.target:1
+#: apps.libraries.models.Library.unit_serial_number:1
+#: apps.libraries.models.Library.updated_at:1
+#: apps.libraries.models.Library.vendor_identification:1
+#: apps.libraries.models.LibraryBrand.color_code:1
+#: apps.libraries.models.LibraryBrand.created_at:1
+#: apps.libraries.models.LibraryBrand.display_name:1
+#: apps.libraries.models.LibraryBrand.id:1
+#: apps.libraries.models.LibraryBrand.is_active:1
+#: apps.libraries.models.LibraryBrand.name:1
+#: apps.libraries.models.LibraryModel.created_at:1
+#: apps.libraries.models.LibraryModel.default_revision:1
+#: apps.libraries.models.LibraryModel.id:1
+#: apps.libraries.models.LibraryModel.is_active:1
+#: apps.libraries.models.LibraryModel.name:1
+#: apps.libraries.models.LibraryModel.product_identification:1
+#: apps.libraries.models.LibraryOperation.description:1
+#: apps.libraries.models.LibraryOperation.discovery_session_id:1
+#: apps.libraries.models.LibraryOperation.id:1
+#: apps.libraries.models.LibraryOperation.media_barcode:1
+#: apps.libraries.models.LibraryOperation.operation:1
+#: apps.libraries.models.LibraryOperation.source_slot:1
+#: apps.libraries.models.LibraryOperation.target_slot:1
+#: apps.libraries.models.LibraryOperation.timestamp:1
+#: apps.libraries.models.LibraryOperation.user_session:1
+#: apps.libraries.models.MediaSlot.config_source:1
+#: apps.libraries.models.MediaSlot.created_at:1
+#: apps.libraries.models.MediaSlot.discovery_status:1
+#: apps.libraries.models.MediaSlot.id:1
+#: apps.libraries.models.MediaSlot.is_empty:1
+#: apps.libraries.models.MediaSlot.is_import_export:1
+#: apps.libraries.models.MediaSlot.last_synced:1
+#: apps.libraries.models.MediaSlot.media_barcode:1
+#: apps.libraries.models.MediaSlot.media_type:1
+#: apps.libraries.models.MediaSlot.slot_number:1
+#: apps.libraries.models.MediaSlot.updated_at:1
+#: b61c56279f914b3690cefb19c079f045 b71eb023f4204b32819317d9d66d59c3
+#: c33e2f6aa2124531a4239207cb80f31e c66a48df397b46b298ff25480f573efb
+#: cc6d893fa4184fa0b5526e726e324f22 d082818e03684941b05acce6b33e82ec
+#: d3599242cfa7490a985582b96c213c9c d57f616942b541589ba6b2d4444998fc
+#: d63a16bb7eaa4154a38059b72f112a33 d6e5ac66cae54dfc8265e058fd980b11
+#: d7654acbaee24012b8035763393f916c d92a4e45137a477484ca229e69f2f8f6
+#: d92dc9b8037645d9ad4d72f17d3df08e e44229ac3dfa4853bae451e479e91b91
+#: e4fe1643e79c432d85c422d6cdb18178 e5f76033d92f497dab2c73f16f31e705
+#: e86e6267c64144bdb44cd727eb13ca82 eb51d64946e74313ae16620473d8f784
+#: eb8aeabd829246c2a4e0dc34c9658476 ee1c4fe0565c4f6c813ff145add37088
+#: ee562fcedf4e47fe9bffc3a2125e76e4 ef3d6a5c8ddf414ebb1e7983e5e92a8f
+#: ef79225db1ae495e8f106e3124f52d00 f1cc68ba46b343158e200fa4f36bf413
+#: f5e1991b91ae4b508db93699fa59c9d2 of
+msgid ""
+"A wrapper for a deferred-loading field. When the value is read from this "
+"object the first time, the query is executed."
+msgstr ""
+
+#: 1121679c5f0c4677a484a0ad79c131fc 15ca59905c25497da0b1f7720cd028d6
+#: 213de4fa419e4e5594e0a535b1a77593 3c09b498925f4d0ca4640fb3265df4ca
+#: 43d5f106f07f48898f9ea0d9011b35d8 apps.libraries.models.Library.drives:1
+#: apps.libraries.models.Library.operations:1
+#: apps.libraries.models.Library.slots:1
+#: apps.libraries.models.LibraryBrand.library_set:1
+#: apps.libraries.models.LibraryBrand.models:1
+#: apps.libraries.models.LibraryModel.library_set:1
+#: cd9f85fef8b3427fb961b1367ebb24ff of
+msgid ""
+"Accessor to the related objects manager on the reverse side of a many-to-"
+"one relation."
+msgstr ""
+
+#: 280632b10d1d46bf9c1cee5e5344dbe5 3dc381cbe4d5455daa4dc4aadd5e605f
+#: 50725abb649946abab47370c4312f1a2 5e08644330374a008ffdafa653eb28cf
+#: 5f5a4b400bac433db3e7f62fc0fba36e 7c59652f4fa84e4791848a6e0e9553e4
+#: 955072d151c54c01952f7110ea2b8992 9f0ac6ab39284c7b93627fab6a63837f
+#: apps.libraries.models.Drive.library:4 apps.libraries.models.Library.brand:4
+#: apps.libraries.models.Library.drives:4 apps.libraries.models.Library.model:4
+#: apps.libraries.models.Library.operations:4
+#: apps.libraries.models.Library.slots:4
+#: apps.libraries.models.LibraryBrand.library_set:4
+#: apps.libraries.models.LibraryBrand.models:4
+#: apps.libraries.models.LibraryModel.brand:4
+#: apps.libraries.models.LibraryModel.library_set:4
+#: apps.libraries.models.LibraryOperation.library:4
+#: apps.libraries.models.MediaSlot.library:4 bbf70f504a05453e9bf02101c64fe3d2
+#: c18793b950374a74a70b547b82437967 ca2e90ecd0564fbbbecaf28ca8e7e3ff
+#: ebce1af4b79f48a58e4b6752a3b14c34 of
+msgid "In the example::"
+msgstr ""
+
+#: 0c4da3f6a25a407e99a53e9e6e075daa 3ff196dfb3834e0180e3833579873334
+#: 503025b9fad241eb86cf70e30160e479 apps.libraries.models.Library.drives:9
+#: apps.libraries.models.Library.operations:9
+#: apps.libraries.models.Library.slots:9
+#: apps.libraries.models.LibraryBrand.library_set:9
+#: apps.libraries.models.LibraryBrand.models:9
+#: apps.libraries.models.LibraryModel.library_set:9
+#: b30285d339fc4036b74d0273b72ababd d752a5a3e1e34ad895557757db316eb2
+#: fbe095b7c76c4ae286ce4d0436983622 of
+msgid "``Parent.children`` is a ``ReverseManyToOneDescriptor`` instance."
+msgstr ""
+
+#: 3cfab0402ac848d782ae3e56cc72f659 5098f3cdcfea49ac8922bacec06c77c1
+#: 50fd5d153c7d4a8e99fb530b8c088624 558fe0b6241346599e2f3ad90c2e6cec
+#: 5943221a9a674984ac8ed9fba496e4df 6c44cf728374489cadd4213476d34360
+#: apps.libraries.models.Library.drives:11
+#: apps.libraries.models.Library.operations:11
+#: apps.libraries.models.Library.slots:11
+#: apps.libraries.models.LibraryBrand.library_set:11
+#: apps.libraries.models.LibraryBrand.models:11
+#: apps.libraries.models.LibraryModel.library_set:11 of
+msgid ""
+"Most of the implementation is delegated to a dynamically defined manager "
+"class built by ``create_forward_many_to_many_manager()`` defined below."
+msgstr ""
+
+#: 24b3c6259feb484eba7eb4aed95175ed apps.libraries.models.LibraryModel:1 of
+msgid "Library models for each brand"
+msgstr ""
+
+#: 0ef850d043974976b80baa2ee7fed427 1cc2d4f69fce4fe78f7b5c217df4d226
+#: 20f7ca3b733447f685910b9959fad359 7a13d43ad3a44116bd8bbb178596a1cb
+#: apps.libraries.models.Drive.library:1 apps.libraries.models.Library.brand:1
+#: apps.libraries.models.Library.model:1
+#: apps.libraries.models.LibraryModel.brand:1
+#: apps.libraries.models.LibraryOperation.library:1
+#: apps.libraries.models.MediaSlot.library:1 d49dcc805fe24bc2ab5100a563c0ac73
+#: e83d44c532d44e2f803786f9016940ea of
+msgid ""
+"Accessor to the related object on the forward side of a many-to-one or "
+"one-to-one (via ForwardOneToOneDescriptor subclass) relation."
+msgstr ""
+
+#: 05e9cdf09d954ce09952066246280bb9 6f9233427b1f46a3896d9bc503ccfacf
+#: a2c317b3e7064e468e343b47de732d48 apps.libraries.models.Drive.library:9
+#: apps.libraries.models.Library.brand:9 apps.libraries.models.Library.model:9
+#: apps.libraries.models.LibraryModel.brand:9
+#: apps.libraries.models.LibraryOperation.library:9
+#: apps.libraries.models.MediaSlot.library:9 b4a06efc19d94680a87f27af08878632
+#: bf974f7f054f46d4ba9b963fc9ae40a1 f622604c9f84418f8ca4740622efd26e of
+msgid "``Child.parent`` is a ``ForwardManyToOneDescriptor`` instance."
+msgstr ""
+
+#: 2611507bafea481e8329895005cc0c06 apps.libraries.models.Library:1 of
+msgid "Main library configuration"
+msgstr ""
+
+#: 2f7288f65c744d348398f7cbb664999a apps.libraries.models.Library.total_slots:1
+#: of
+msgid "Total number of slots (media + empty)"
+msgstr ""
+
+#: 2f881baf6b50486891a95365e4313ef9
+#: apps.libraries.models.Library.is_discovered:1 of
+msgid "Check if this library was discovered from MHVTL"
+msgstr ""
+
+#: 4a8b16deadd34abdb724ff7c98d2979f apps.libraries.models.Library.needs_sync:1
+#: of
+msgid "Check if library needs synchronization"
+msgstr ""
+
+#: 763516a8ae3543eba8661aa6fd2ac1f7
+#: apps.libraries.models.Library.calculate_sync_hash:1 of
+msgid "Calculate MD5 hash of current configuration for change detection"
+msgstr ""
+
+#: 010f20dcf8d945258576a6976431532d apps.libraries.models.Library.mark_synced:1
+#: of
+msgid "Mark library as successfully synced"
+msgstr ""
+
+#: 9641ed67a1ad4f019a7c6e3591923e68
+#: apps.libraries.models.Library.detect_changes:1 of
+msgid "Detect if configuration has changed since last sync"
+msgstr ""
+
+#: 9fbd3057692c4b67b265a5917ab79eb3 apps.libraries.models.Library.clean:1 of
+msgid "Validate that total slots don't exceed 15000"
+msgstr ""
+
+#: 924d560593544bba9c9296845fd7319a apps.libraries.models.Library.save:1 of
+msgid ""
+"Save the current instance. Override this in a subclass if you want to "
+"control the saving process."
+msgstr ""
+
+#: a430a64961c44f7dab777cc5c273daa3 apps.libraries.models.Library.save:4 of
+msgid ""
+"The 'force_insert' and 'force_update' parameters can be used to insist "
+"that the \"save\" must be an SQL insert or update (or equivalent for non-"
+"SQL backends), respectively. Normally, they should not be set."
+msgstr ""
+
+#: 4f6f5ba810644117a3e0ee98a0cb2a02 apps.libraries.models.Drive:1 of
+msgid "Tape drives associated with libraries"
+msgstr ""
+
+#: apps.libraries.models.Drive.is_discovered:1 fbbe57bbf58544428dacae3a4d46f190
+#: of
+msgid "Check if this drive was discovered from MHVTL"
+msgstr ""
+
+#: apps.libraries.models.MediaSlot:1 fa8ccb2a3cec481e964b8d044677d300 of
+msgid "Media slots in libraries"
+msgstr ""
+
+#: 48dea9f146db4bed9ed5cb17af6763ed
+#: apps.libraries.models.MediaSlot.is_discovered:1 of
+msgid "Check if this slot was discovered from MHVTL"
+msgstr ""
+
+#: apps.libraries.models.LibraryOperation:1 ef3b662f6a2b46579317e06819b4e4f5 of
+msgid "Log of library operations"
+msgstr ""
+
+#: ../../libraries.rst:16 607ed44d9efd49c9b69973dad88df6c1
+msgid "Views"
+msgstr ""
+
+#: 6bf206b473cb4cf383702eb4fcb40895 apps.libraries.views.ConfiguredLibrary:1 of
+msgid "A device.conf library, in the shape the library pages read."
+msgstr ""
+
+#: apps.libraries.views.ConfiguredLibrary:3 bce31f9800cb4f73aabfe04b1dcdb01a of
+msgid ""
+"status is \"active\" when its library_contents file can be read and "
+"\"missing_contents\" when it cannot."
+msgstr ""
+
+#: 0f5b532d7e964a2d8efd550b1b6162f2 apps.libraries.views.LibraryDashboardView:1
+#: of
+msgid "Main dashboard view showing library overview with real statistics"
+msgstr ""
+
+#: 0e819b216620471a9154a6e3f028ef5e apps.libraries.views.SetupChoiceView:1 of
+msgid "Setup workflow - choose between standard and custom setup"
+msgstr ""
+
+#: 1eef26413a1b49c29afcdf527d228938 apps.libraries.views.SetupChoiceView.post:1
+#: of
+msgid "Handle setup choice form submission"
+msgstr ""
+
+#: 832ccb23f2ef410ca5679a156fad96db apps.libraries.views.BrandSelectionView:1
+#: of
+msgid "Setup workflow - choose the vendor, or the media and then the vendor."
+msgstr ""
+
+#: 7766ebc165ef4c2ab1bcff27bc12bcc8 apps.libraries.views.BrandConfigView:1 of
+msgid "Setup workflow - configure specific brand using the library service"
+msgstr ""
+
+#: apps.libraries.views.BrandConfigView.post:1 df8d79fccfd241dab25349db0a8a29cc
+#: of
+msgid "Handle brand configuration form submission using the library service"
+msgstr ""
+
+#: apps.libraries.views.CustomSetupView:1 cdd4892675e945c0ba2706c95308889e of
+msgid "Setup workflow - custom configuration"
+msgstr ""
+
+#: 5bffc1027cff4dc5b0b6978c6821e854 apps.libraries.views.CustomSetupView.post:1
+#: of
+msgid "Handle custom library creation"
+msgstr ""
+
+#: 512cfacc07cd4beeb3970c6da50ed0b5 apps.libraries.views.LibraryListView:1 of
+msgid "List all libraries from MHVTL config (authoritative source)"
+msgstr ""
+
+#: 3a7508880b88411e9b3f0c512b9b5839 apps.libraries.views.LibraryDetailView:1 of
+msgid "View details of a specific library"
+msgstr ""
+
+#: 479f399c8a9a44d6b4f0af0e8dccf909 apps.libraries.views.LibraryConfigureView:1
+#: of
+msgid "Disabled in this release."
+msgstr ""
+
+#: a286974f8dd342eba96d2da53a14c895 apps.libraries.views.LibraryConfigureView:3
+#: of
+msgid ""
+"The page was the clearest summary of one library in the GUI, but its Save"
+" button posted vendor, product and serial to LibraryService.update(), "
+"which **deletes and recreates the library** - MHVTL reads those strings "
+"once, when the daemon starts, so there is no in-place edit - and the page"
+" said nothing about it. An innocent-looking form that rebuilds a library "
+"is not something to ship, so it answers with a note and sends the "
+"operator to the pages that do the same work safely. What replaces it is "
+"in the docs (guides/phase-two): a rebuild spelled out and confirmed, or a"
+" read-only page."
+msgstr ""
+
+#: apps.libraries.views.LibraryConfigureView.post:1
+#: be5014d2003e4da4816f14143e8ca406 of
+msgid ""
+"Nothing is written: the form is gone, and a POST here is a stale page or "
+"a script that has not noticed."
+msgstr ""
+
+#: 8e1e7e3217774fe5833c5401556eaa6c apps.libraries.views.LibraryControlView:1
+#: of
+msgid "Stop, start or restart one library, and change its empty slots."
+msgstr ""
+
+#: 918d2b257828471f9c8b24755ef04167 apps.libraries.views.LibraryControlView:3
+#: of
+msgid ""
+"The detail page has posted to /libraries/control/<id>/ since it was "
+"written; the URL was commented out and this view did not exist, so its "
+"Stop button answered 404. The slot change is here too because it needs "
+"the same restart to reach the robot: library_contents is read once, when "
+"the daemon starts."
+msgstr ""
+
+#: 00c268bf48e14535b1de2c2fdcc583fb 0234fb39711d47a69344db8539c55c93
+#: 5f01289cb41a4a51a3b53bf65aa5b590 9c19700935764100a59cebf0236f116e
+#: aa87a55b0c944c45bddd6907e5f72b1f
+#: apps.libraries.iscsi_views.IscsiAttachView.page:1
+#: apps.libraries.iscsi_views.IscsiRebindView.page:1
+#: apps.libraries.iscsi_views.IscsiRecordBindingView.page:1
+#: apps.libraries.tape_operations_views.AdoptTapeView.page:1
+#: apps.libraries.views.LibraryControlView.page:1 of
+msgid "URL name of the page whose form posts here."
+msgstr ""
+
+#: 7bb4c85e630e411c897a0451fbfe792e apps.libraries.views.LibraryMonitorView:1
+#: of
+msgid "Monitor one library: its daemon, its cost, its disk and its drives."
+msgstr ""
+
+#: 806577dd85274dffaa3b960d531864be
+#: apps.libraries.views.LibraryMonitorMetricsView:1 of
+msgid "HTMX partial view for refreshing monitor metrics"
+msgstr ""
+
+#: apps.libraries.views.LibraryRemoveView:1 cb1f2e7cbfbd4ef3a7be570a0e8705b0 of
+msgid "Remove library workflow using actual service"
+msgstr ""
+
+#: 45a0053c56d3423c9d3bf4c01c1218e1
+#: apps.libraries.views.LibraryRemoveView.post:1 of
+msgid "Handle library removal using actual LibraryService.delete"
+msgstr ""
+
+#: apps.libraries.views.ResetDefaultView:1 be0951d5bd93449cb7ee13fa996ee0b4 of
+msgid "Reset all libraries using actual service"
+msgstr ""
+
+#: apps.libraries.views.ResetDefaultView.post:1
+#: b9e343934b0f4164ba84e27058e5dc81 of
+msgid "Handle reset using actual LibraryService.delete for each library"
+msgstr ""
+
+#: 46e2e03c5e0a4a3bb154cb9ed3a9e87f apps.libraries.views.ConfigFilesView:1 of
+msgid "View actual MHVTL configuration files"
+msgstr ""
+
+#: 8d109a17b596496cafad953135e1b412 apps.libraries.views.DownloadConfigView:1
+#: of
+msgid "Download one config file."
+msgstr ""
+
+#: 583b18cf2121480b9f4ebc8636d21d62
+#: apps.libraries.views.DownloadAllConfigsView:1 of
+msgid "Download every MHVTL config file as a zip archive."
+msgstr ""
+
+#: apps.libraries.views.MHVTLStatusView:1 b6c681bfdc82483fa79fdecfb86ba2e0 of
+msgid "MHVTL system status using actual service"
+msgstr ""
+
+#: 084548403ad840d0aabb0ce096f95772 apps.libraries.views.CleanupOrphanedView:1
+#: of
+msgid "Form-based view to cleanup orphaned libraries"
+msgstr ""
+
+#: ../../libraries.rst:24 5ecd8ac7459d481c95e20a48db0e3d0c
+msgid "AJAX Views"
+msgstr ""
+
+#: apps.libraries.ajax_views.LibraryModelsAPIView:1
+#: f3ad9a3f00eb4ab8adbd9055e25a1d7c of
+msgid "Get models for a specific brand (AJAX)"
+msgstr ""
+
+#: apps.libraries.ajax_views.LibraryStatusAPIView:1
+#: f9083854e24843cb8d8b49ecd7eea3cc of
+msgid ""
+"Get library status information (AJAX) with discovery data and system "
+"metrics"
+msgstr ""
+
+#: apps.libraries.ajax_views.library_status_detail:1
+#: ea3dd58cb564426eaa802d5d79496489 of
+msgid "AJAX endpoint to get detailed library status for auto-refresh"
+msgstr ""
+
+#: apps.libraries.ajax_views.create_library_ajax:1
+#: ed0a0ed04ec448c99e4ca1e55a133ad1 of
+msgid "AJAX endpoint to create a library (services/libraries)."
+msgstr ""
+
+#: 7aae71d122514d02a15d001d34643068
+#: apps.libraries.ajax_views.update_library_ajax:1 of
+msgid "AJAX endpoint to update a library (services/libraries)."
+msgstr ""
+
+#: 92f9955e8be74fa196d52bf514e280db
+#: apps.libraries.ajax_views.delete_library_ajax:1 of
+msgid "AJAX endpoint to delete a library (services/libraries)."
+msgstr ""
+
+#: 387d5b18a0ed4297ba476f896301222b
+#: apps.libraries.ajax_views.mhvtl_system_status_ajax:1 of
+msgid "AJAX endpoint to get comprehensive MHVTL system health status"
+msgstr ""
+
+#: 8ea6aeebab0f49138f1e65ca3f5d53d7
+#: apps.libraries.ajax_views.preview_config_file_ajax:1 of
+msgid "AJAX endpoint to preview a config file's content"
+msgstr ""
+
+#: 4d9f763c43a241c7bb4f022f021e7ecb
+#: apps.libraries.ajax_views.validate_mhvtl_config_ajax:1 of
+msgid "AJAX endpoint to validate MHVTL configuration"
+msgstr ""
+
+#: apps.libraries.ajax_views.regenerate_configs_ajax:1
+#: ef37191ba1af4bd88228e52ac9e00696 of
+msgid "AJAX endpoint to regenerate all MHVTL configuration files"
+msgstr ""
+
+#: 899e14f8ce934f86ac6a24025844167f
+#: apps.libraries.ajax_views.get_library_status_mhvtl_ajax:1 of
+msgid "AJAX endpoint to get library status directly from MHVTL"
+msgstr ""
+
+#: apps.libraries.ajax_views.export_library_ajax:1
+#: dd0e9dbbaecc4a83bf1824ff4328dedc of
+msgid ""
+"AJAX endpoint to export Django-created library to MHVTL (UPDATED for "
+"scripts)"
+msgstr ""
+
+#: 1db9bc00f1534d2cb9fd967c55335eee
+#: apps.libraries.ajax_views.validate_config_ajax:1 of
+msgid "AJAX endpoint to validate library configuration (UPDATED for scripts)"
+msgstr ""
+
+#: apps.libraries.ajax_views.preview_config_ajax:1
+#: faeff56be3ac497caf619d77c2c9b854 of
+msgid ""
+"AJAX endpoint to preview library configuration (UPDATED to show actual "
+"MHVTL config)"
+msgstr ""
+
+#: 0c8b35e20e63419c9fdff51cbfd976de
+#: apps.libraries.ajax_views.refresh_discovery_ajax:1 of
+msgid "AJAX endpoint to refresh discovery (quick sync with device.conf)"
+msgstr ""
+
+#: apps.libraries.ajax_views.run_discovery_ajax:1
+#: b158cb4b552543a0b1390ca6d7bfd8ce of
+msgid "AJAX endpoint to run full discovery scan (sync with device.conf)"
+msgstr ""
+
+#: 7b6a7be440fe418db899a6c5c0b03a59
+#: apps.libraries.ajax_views.sync_library_ajax:1 of
+msgid "AJAX endpoint to sync a specific library with MHVTL device.conf"
+msgstr ""
+
+#: 548f6c5cdc1f41c39b7a2dab1c534e0e
+#: apps.libraries.ajax_views.cleanup_orphaned_ajax:1 of
+msgid "AJAX endpoint to cleanup orphaned libraries not found in MHVTL config"
+msgstr ""
+
+#: 26f45d31e81d4fc8b920171d3ea3faa3
+#: apps.libraries.ajax_views.discovery_stats_ajax:1 of
+msgid "Get discovery statistics for dashboard display"
+msgstr ""
+
+#: 9561ba52d10948468b9f4ba1bc70d955
+#: apps.libraries.ajax_views.get_library_status_with_lto_ajax:1 of
+msgid "AJAX endpoint to get library status with LTO generation information."
+msgstr ""
+
+#: apps.libraries.ajax_views.get_library_status_with_lto_ajax:3
+#: e75eedd5fea5461db3339b134b37fc80 of
+msgid "Returns drive and tape LTO generations for compatibility checking."
+msgstr ""
+
+#: 530ee8041af14d1b877ff4ac6a5bd4da
+#: apps.libraries.ajax_views.check_mount_compatibility_ajax:1 of
+msgid "AJAX endpoint to check tape/drive compatibility before mounting."
+msgstr ""
+
+#: apps.libraries.ajax_views.check_mount_compatibility_ajax:3
+#: bd05df8452684446aa708ee837e5acb1 of
+msgid "Query parameters:"
+msgstr ""
+
+#: apps.libraries.ajax_views.check_mount_compatibility_ajax:4
+#: db2d1fc2510549f1b44a4ed7d9785280 of
+msgid "slot: Source slot number drive: Target drive number"
+msgstr ""
+
+#: apps.libraries.ajax_views.check_mount_compatibility_ajax:7
+#: b29ee25e029c43908033e01bc861649a of
+msgid "Returns compatibility status with detailed explanation."
+msgstr ""
+
+#: apps.libraries.ajax_views.get_drive_info_ajax:1
+#: d6d4a02edcf045a893b21c37dc6637dd of
+msgid "AJAX endpoint to get drive information including LTO generations."
+msgstr ""
+
+#: 9b82827dc3ce4318abe9411308522197
+#: apps.libraries.ajax_views.get_drive_info_ajax:3 of
+msgid "Returns list of drives with their LTO generation and compatibility info."
+msgstr ""
+
+#: 304ada1c37904c83a68cf50d41877951
+#: apps.libraries.ajax_views.dashboard_summary_ajax:1 of
+msgid "Overview data for the dashboard tiles."
+msgstr ""
+
+#: apps.libraries.ajax_views.dashboard_summary_ajax:3
+#: e9f79841ad084bf5b494f65c0d85b9f6 of
+msgid ""
+"Split out from the page render so a slow systemctl or lsmod call delays "
+"one tile instead of the whole page."
+msgstr ""
+
+#: ../../libraries.rst:32 6d2b0107ccd042c5a3dd024ab2740763
+msgid "Tape Operations Views"
+msgstr ""
+
+#: 9ee3b5f00668454ca1b5771afca11839 apps.libraries.tape_operations_views:1 of
+msgid ""
+"Tape Operations Views Django views for tape library operations (mount, "
+"unmount, move, status), tape and drive management, and the barcode "
+"helpers the forms call."
+msgstr ""
+
+#: aebbe57eb0234a5a8e4f35a0b58a31ec apps.libraries.tape_operations_views:5 of
+msgid ""
+"Every view calls apps/libraries/services directly: services/operations "
+"for moving tapes and reading mtx/mt, services/tapes for tapes and "
+"barcodes, services/drives and services/libraries for the configuration, "
+"services/scsi for discovery. They used to go through "
+"adapters/tape_operations_service.py and "
+"adapters/mhvtl_library_service.py; the few helpers below that shape a "
+"service answer into what a template or its JavaScript reads are what is "
+"left of that."
+msgstr ""
+
+#: 86dd46c5243d4ad78b8db737008d832e apps.libraries.tape_operations_views:12 of
+msgid "Location: apps/libraries/tape_operations_views.py"
+msgstr ""
+
+#: 1b061e5ad3f7412ebf2acf6df160ac11
+#: apps.libraries.tape_operations_views.TAPE_SERVICE_AVAILABLE:1 of
+msgid ""
+"The operator dashboard template still reads this flag; the services are "
+"part of this app, so they are always there."
+msgstr ""
+
+#: 6d3c3bf46c5b487a9b2a1d5bcfcb7eed apps.libraries.iscsi_views.check_login:1
+#: apps.libraries.tape_operations_views.check_login:1
+#: fbb0d98e0d9048c4ba1377c300f4be55 of
+msgid "Check if user is logged in"
+msgstr ""
+
+#: 9a462fbeb4564abe867fd67d85072506
+#: apps.libraries.tape_operations_views.get_live_libraries:1 of
+msgid ""
+"Return library list using live MHVTL config as authoritative source, "
+"joined with DB records — same pattern as LibraryListView. Falls back to "
+"DB-only if device.conf cannot be read."
+msgstr ""
+
+#: 0cc67d9609094afc8f9de5fe6635db92
+#: apps.libraries.tape_operations_views.tape_media_context:1 of
+msgid "What the two tape-creation pages need to offer only usable media."
+msgstr ""
+
+#: apps.libraries.tape_operations_views.tape_media_context:3
+#: bc86df0b63d740cfbe9fd286ce0b4456 of
+msgid ""
+"For each library, the densities its drives load (and which only read- "
+"only), from TapeService.media_for_library; plus every density that can be"
+" created, with its barcode suffixes and native capacity, for a library "
+"whose drives are unknown. The pages filter the density list by library "
+"with this, and the service refuses anything else anyway."
+msgstr ""
+
+#: 28f31913ccaf49c2bfd42768610d7c2f
+#: apps.libraries.tape_operations_views.OperatorDashboardView:1 of
+msgid ""
+"Main operator dashboard - entry point for tape operations Similar to "
+"vtlcmd.php in PHP GUI"
+msgstr ""
+
+#: 33221c966b594c6599ca75c1f5a13bec
+#: apps.libraries.tape_operations_views.LibraryStatusView:1 of
+msgid ""
+"Show library status (mtx status output) Similar to robot.status.php in "
+"PHP GUI"
+msgstr ""
+
+#: 9c409a4546664cfd88c046b4701664da
+#: apps.libraries.tape_operations_views.DriveStatusView:1 of
+msgid ""
+"Show drive status (mt status output) Similar to drive.status.php in PHP "
+"GUI"
+msgstr ""
+
+#: apps.libraries.tape_operations_views.MountTapeView:1
+#: c2a7b71002f345609159a27954972c92 of
+msgid "Mount tape from slot to drive Similar to form.mount.tape.php in PHP GUI"
+msgstr ""
+
+#: 60cdf35a8fa7402993d4edbbf5b06233
+#: apps.libraries.tape_operations_views.UnmountTapeView:1 of
+msgid ""
+"Unmount tape from drive to slot Similar to form.unmount.tape.php in PHP "
+"GUI"
+msgstr ""
+
+#: a488e68e4aaa46d3b919cbd80abf63dc
+#: apps.libraries.tape_operations_views.MoveTapeView:1 of
+msgid "Move tape between slots Similar to form.move.tape.php in PHP GUI"
+msgstr ""
+
+#: apps.libraries.tape_operations_views.LibraryOnlineView:1
+#: c40d7190ad164daeb2bf6efb193bb191 of
+msgid "Set library online Similar to form.vtlcmd.online.php in PHP GUI"
+msgstr ""
+
+#: 58089b4a804e46e9873999678300ef19
+#: apps.libraries.tape_operations_views.LibraryOfflineView:1 of
+msgid "Set library offline Similar to form.vtlcmd.offline.php in PHP GUI"
+msgstr ""
+
+#: 17f3118e0ffd4d158c5bec8b1f1fd97d
+#: apps.libraries.tape_operations_views.library_status_ajax:1 of
+msgid ""
+"AJAX endpoint for library status Returns JSON with slot and drive "
+"information"
+msgstr ""
+
+#: 7dbd290ffd2d4c09a8e51c3f1ee67198
+#: apps.libraries.tape_operations_views.drive_status_ajax:1 of
+msgid "AJAX endpoint for drive status Returns JSON with drive state"
+msgstr ""
+
+#: apps.libraries.tape_operations_views.mount_tape_ajax:1
+#: fb67e3e2e84f45218682686d53cac0b2 of
+#, python-brace-format
+msgid ""
+"AJAX endpoint for mounting tape POST with JSON body: {library_id, slot, "
+"drive}"
+msgstr ""
+
+#: 49eb5f860e7745c9bf0ad528cfa1f2a6
+#: apps.libraries.tape_operations_views.unmount_tape_ajax:1 of
+#, python-brace-format
+msgid ""
+"AJAX endpoint for unmounting tape POST with JSON body: {library_id, slot,"
+" drive}"
+msgstr ""
+
+#: 697230b13e7f484a89fb36414f9b8378
+#: apps.libraries.tape_operations_views.move_tape_ajax:1 of
+#, python-brace-format
+msgid ""
+"AJAX endpoint for moving tape between slots POST with JSON body: "
+"{library_id, from_slot, to_slot}"
+msgstr ""
+
+#: apps.libraries.tape_operations_views.discover_devices_ajax:1
+#: b27016b71d2e47ca90abd731d1ba8bad of
+msgid ""
+"AJAX endpoint for discovering SCSI devices Returns lists of robots and "
+"tape drives"
+msgstr ""
+
+#: 4129c01604534c8abf94b797edc12cf2
+#: apps.libraries.tape_operations_views.TapeListView:1 of
+msgid "List all tapes in a library"
+msgstr ""
+
+#: 386e36c6a3d7427bb243808673c40ca2
+#: apps.libraries.tape_operations_views.CreateTapeView:1 of
+msgid "Create a new tape"
+msgstr ""
+
+#: apps.libraries.tape_operations_views.CreateTapesBulkView:1
+#: db6a48623e864238a2ba6a86120a0e7a of
+msgid "Create multiple tapes at once"
+msgstr ""
+
+#: 6bf766f238bf45aeb5402879db4c0d4e
+#: apps.libraries.tape_operations_views.DeleteTapeView:1 of
+msgid "Delete a tape from a library"
+msgstr ""
+
+#: 69f5a1569bcf4de7adbc406ecc1c93c4
+#: apps.libraries.tape_operations_views.AdoptTapeView:1 of
+msgid "Give a tape whose files are on disk back to a library."
+msgstr ""
+
+#: apps.libraries.tape_operations_views.AdoptTapeView:3
+#: c871437217824036a31441606fa3a7a5 of
+msgid ""
+"Nothing is written to the media: the barcode goes into a free slot and "
+"the tape comes back with everything that was on it. The library has to be"
+" restarted before its robot reports the tape, which this offers to do."
+msgstr ""
+
+#: apps.libraries.tape_operations_views.AdoptTapeView:7
+#: e1a4d3359ac341738d8c4f23fe4b15ff of
+msgid "It is the tape inventory's form, not a page: a GET goes back there."
+msgstr ""
+
+#: 1366cb7538354654a727196257ec5150
+#: apps.libraries.tape_operations_views.get_drive_service:1 of
+msgid "Get the drive service."
+msgstr ""
+
+#: 4835251e46274f60844d027ff641618f
+#: apps.libraries.tape_operations_views.get_drive_service:3 of
+msgid ""
+"Drive CRUD lives in services.drives, not on MHVTLLibraryService: the "
+"views called add_drive/remove_drive on that service for months and got an"
+" AttributeError every time, because the only implementations were in an "
+"unimported fork."
+msgstr ""
+
+#: 8708a67e40bb46cbb7a867acc51d20c1
+#: apps.libraries.tape_operations_views.DriveListView:1 of
+msgid "List all drives in a library"
+msgstr ""
+
+#: 1ebcf2e073524d698c5a7b1ea794e3a6
+#: apps.libraries.tape_operations_views.library_activity:1 of
+msgid "What this library's drives are doing, as the page shows it."
+msgstr ""
+
+#: 815891225cd14ede86cd080acd24aed7
+#: apps.libraries.tape_operations_views.library_activity:3 of
+msgid ""
+"The library page swaps this fragment in every few seconds (js/auto-"
+"refresh.js). The words and the sizes are decided by "
+"DriveService.activity(), not here and not in the browser, so `mhvtl "
+"status activity <library>` prints the same thing."
+msgstr ""
+
+#: 40980c6c667a4283819e0bbcb3bdc646
+#: apps.libraries.tape_operations_views.library_activity:8 of
+msgid ""
+"?format=json answers with the same data for anything that would rather "
+"read numbers than HTML."
+msgstr ""
+
+#: 0032bd708fd84ccda792482d611908a9
+#: apps.libraries.tape_operations_views.library_activity:11 of
+msgid ""
+"The counters come through MHVTL's message queue (`vtlcmd <drive> stats`, "
+"our patch 0004), so they keep answering while a backup holds the SCSI "
+"reservation and mt and mtx cannot."
+msgstr ""
+
+#: 795ecdb58d034f76b3716fbb48fbc916
+#: apps.libraries.tape_operations_views.drive_placement_ajax:1 of
+msgid "Where a new drive would land in this library, and what it may be."
+msgstr ""
+
+#: 323fff7d01524506ab698fee6d06b8e8
+#: apps.libraries.tape_operations_views.drive_placement_ajax:3 of
+msgid ""
+"The Add Drive page asks as soon as a library is chosen, so the operator "
+"sees the slot, the drive id, the SCSI target and the serial before "
+"committing - and the models offered are the ones that library takes."
+msgstr ""
+
+#: apps.libraries.tape_operations_views.AddDriveView:1
+#: eeeb9ccd375842c5a9782cd08df9e462 of
+msgid "Add a new drive to a library"
+msgstr ""
+
+#: apps.libraries.tape_operations_views.RemoveDriveView:1
+#: cba356bce7bf4032ad61e0f12b895453 of
+msgid "Remove a drive from a library"
+msgstr ""
+
+#: 6654d4eaf8b646dbae38e42240c5e910
+#: apps.libraries.tape_operations_views.list_tapes_ajax:1 of
+msgid "AJAX endpoint for listing tapes in a library"
+msgstr ""
+
+#: 687671cf9aa6420ca22c9ed0b821e297
+#: apps.libraries.tape_operations_views.create_tape_ajax:1 of
+#, python-brace-format
+msgid ""
+"AJAX endpoint for creating a tape POST with JSON body: {library_id, "
+"barcode, slot, size_mb, tape_type, density}"
+msgstr ""
+
+#: 8c2849aa1d464551942c9ddc3dadc52c
+#: apps.libraries.tape_operations_views.delete_tape_ajax:1 of
+#, python-brace-format
+msgid ""
+"AJAX endpoint for deleting a tape POST with JSON body: {library_id, "
+"barcode or slot, delete_data}"
+msgstr ""
+
+#: 4c5071235b8b445f8919f1f9f02428de
+#: apps.libraries.tape_operations_views.list_drives_ajax:1 of
+msgid "AJAX endpoint for listing drives"
+msgstr ""
+
+#: 95f16c0d5390482b911f1dbfc9f17c7c
+#: apps.libraries.tape_operations_views.add_drive_ajax:1 of
+#, python-brace-format
+msgid ""
+"AJAX endpoint for adding a drive POST with JSON body: {library_id, "
+"vendor, product, serial}"
+msgstr ""
+
+#: 785756d724ac4c079a6bb22a6700a5a6
+#: apps.libraries.tape_operations_views.remove_drive_ajax:1 of
+#, python-brace-format
+msgid "AJAX endpoint for removing a drive POST with JSON body: {drive_id}"
+msgstr ""
+
+#: 65455f19f5c647cd9b03175c380d8cec
+#: apps.libraries.tape_operations_views.density_suffix_mapping_ajax:1 of
+msgid ""
+"AJAX endpoint for getting density to barcode suffix mapping. GET - "
+"Returns the mapping dictionary."
+msgstr ""
+
+#: 7037d89273214077875d91e70846d954
+#: apps.libraries.tape_operations_views.validate_barcode_ajax:1 of
+msgid ""
+"AJAX endpoint for validating barcode uniqueness. GET with query param: "
+"?barcode=E01001L8"
+msgstr ""
+
+#: apps.libraries.tape_operations_views.next_barcode_ajax:1
+#: ecd8edb3497c4e25a929168bccdf61bd of
+msgid ""
+"AJAX endpoint for getting the next available barcode. GET with query "
+"params: ?prefix=E01&suffix=L8"
+msgstr ""
+
+#: ac781bb362594d53a92be5381828d591
+#: apps.libraries.tape_operations_views.existing_barcodes_ajax:1 of
+msgid ""
+"AJAX endpoint for getting all existing barcodes in a library. GET - "
+"Returns list of barcodes."
+msgstr ""
+
+#: apps.libraries.tape_operations_views.next_slot_ajax:1
+#: bda8955c70b4479ead1963e8888608d3 of
+msgid ""
+"AJAX endpoint for getting the next available slot. GET - Returns next "
+"available slot number."
+msgstr ""
+
+#: ../../libraries.rst:40 5ad767f6e8e94b22aaf17bf84512022e
+msgid "iSCSI Views"
+msgstr ""
+
+#: apps.libraries.iscsi_views:1 f3967ddb3e6742fbad7fc197aa802c0d of
+msgid "iSCSI Views Django views for iSCSI target management using LIO/targetcli."
+msgstr ""
+
+#: 171c9f5dc7344eee8c41cd693405be56 apps.libraries.iscsi_views:4 of
+msgid ""
+"Every view calls services/iscsi directly (and services/config for the "
+"SCSI addresses on the export page). The helpers below only shape the "
+"answers into what the templates and their JavaScript read; that used to "
+"be adapters/iscsi_service.py."
+msgstr ""
+
+#: a2972ddf881d449db0a26ba8523936cf apps.libraries.iscsi_views:9 of
+msgid "Location: apps/libraries/iscsi_views.py"
+msgstr ""
+
+#: 88cf6c1da3df47889c5e816e3ed38089
+#: apps.libraries.iscsi_views.ISCSI_SERVICE_AVAILABLE:1 of
+msgid ""
+"Kept for the templates, which show a banner when it is False. The service"
+" is part of this application now, so it always is."
+msgstr ""
+
+#: 8b4eee734a1945e584a6efd20b0866d3
+#: apps.libraries.iscsi_views.IscsiDashboardView:1 of
+msgid "iSCSI Dashboard - Overview of targets, backstores, and service status."
+msgstr ""
+
+#: 96281e74884e4a1ca815a38edbc91c87
+#: apps.libraries.iscsi_views.IscsiRebindView:1 of
+msgid "Bind a library's exported devices to the daemons running now."
+msgstr ""
+
+#: 601d7159bc674745985bcd7a2d922412
+#: apps.libraries.iscsi_views.IscsiRebindView:3 of
+msgid "The iSCSI page's form, not a page: a GET goes back there."
+msgstr ""
+
+#: 3c58945cc6c44d32a6b36e9923b220b9
+#: apps.libraries.iscsi_views.IscsiRecordBindingView:1 of
+msgid "Record a binding for a backstore the GUI did not create."
+msgstr ""
+
+#: 899147c43fe34d70856e02d88020ccdb
+#: apps.libraries.iscsi_views.IscsiRecordBindingView:3 of
+msgid ""
+"A backstore made with targetcli works, but the GUI has no record of which"
+" daemon start it bound to, so it reads *unknown* rather than *bound* and "
+"the boot-time check cannot tell whether it is still right. Recording says"
+" \"this one is correct as it stands\"; it changes nothing in the target."
+msgstr ""
+
+#: apps.libraries.iscsi_views.IscsiGuideView:1 fb541b5840b34fee967412c10d5904ec
+#: of
+msgid "iSCSI Export Guide - Step-by-step instructions for exporting libraries."
+msgstr ""
+
+#: apps.libraries.iscsi_views.IscsiTargetsView:1
+#: e6f060811bf44765b80057784744ac14 of
+msgid "List all iSCSI targets."
+msgstr ""
+
+#: 5ffa8b20e8874af2963b5cb0eddef516
+#: apps.libraries.iscsi_views.IscsiCreateTargetView:1 of
+msgid "Create a new iSCSI target."
+msgstr ""
+
+#: 5098f5cc81054938a86fbe35aeb5982d
+#: apps.libraries.iscsi_views.IscsiTargetDetailView:1 of
+msgid "View and manage a specific iSCSI target (LUNs, ACLs, portals)."
+msgstr ""
+
+#: 1f587407c342427d855483da9adc165a
+#: apps.libraries.iscsi_views.IscsiAttachView:1 of
+msgid "Log this host in to one of its own targets, or out again."
+msgstr ""
+
+#: 573af455c68f4cce9d003d585b1e6d74
+#: apps.libraries.iscsi_views.IscsiAttachView:3 of
+msgid ""
+"The targets page's form. Its own URL carries the iqn; the page does not, "
+"so the redirect drops it."
+msgstr ""
+
+#: 6eb4bd0cd0db4d1298fd020482d41ffd
+#: apps.libraries.iscsi_views.IscsiAttachView.page_arguments:1 of
+msgid "The arguments for that URL name; the same ones by default."
+msgstr ""
+
+#: 9fde8d4dbbf449ba8cd6b7cfe0c13b5a
+#: apps.libraries.iscsi_views.IscsiBackstoresView:1 of
+msgid "List and manage backstores."
+msgstr ""
+
+#: af36e3e5e10641b48e2139e21fce1a46
+#: apps.libraries.iscsi_views.IscsiExportLibraryView:1 of
+msgid "Quick export wizard - Export an entire library over iSCSI."
+msgstr ""
+
+#: apps.libraries.iscsi_views.IscsiServiceView:1
+#: df30d8872435452a88ace46da6fdea07 of
+msgid "Control target.service (start/stop/restart/enable/disable)."
+msgstr ""
+
+#: 2958d2dc08a84fbfba102b1fd9850b9c
+#: apps.libraries.iscsi_views.IscsiStatusAjaxView:1 of
+msgid "AJAX endpoint to get current iSCSI status."
+msgstr ""
+
+#: 2d6bcb20eb4f42648bdf55cb53c15719
+#: apps.libraries.iscsi_views.CreateTargetAjaxView:1 of
+msgid "AJAX endpoint to create a target."
+msgstr ""
+
+#: 1cf4bab1e96d42adb0f8aee84c1e4f3e
+#: apps.libraries.iscsi_views.DeleteTargetAjaxView:1 of
+msgid "AJAX endpoint to delete a target."
+msgstr ""
+
+#: apps.libraries.iscsi_views.DeleteTargetAjaxView:3
+#: e43e45fd840c4aeab382a8798283a996 of
+msgid ""
+"With ``remove_backstores`` and the library it belongs to, this unexports "
+"the library instead: the target and the devices it exported. Deleting the"
+" target alone leaves the backstores holding a /dev/sg node, which is what"
+" the page's checkbox is about."
+msgstr ""
+
+#: apps.libraries.iscsi_views.AddLunAjaxView:1 b90a1b267e29441ead6a6e7885435301
+#: of
+msgid "AJAX endpoint to add a LUN to a target."
+msgstr ""
+
+#: 52c8b8b85eca448d9660387e792e42da
+#: apps.libraries.iscsi_views.DeleteLunAjaxView:1 of
+msgid "AJAX endpoint to delete a LUN from a target."
+msgstr ""
+
+#: a325105cf6be4e7a94c22ef7b9fbf7ce apps.libraries.iscsi_views.ChapAjaxView:1
+#: of
+msgid "Set or clear CHAP on one ACL, or target-wide when no initiator is named."
+msgstr ""
+
+#: 178fcc83ab634244bcb33115a0ba663e apps.libraries.iscsi_views.ChapAjaxView:3
+#: of
+msgid ""
+"Passwords come in here and go to targetcli; they are never sent back to "
+"the page, which only ever shows whether CHAP is set and the user name."
+msgstr ""
+
+#: apps.libraries.iscsi_views.AddAclAjaxView:1 eec0d7145bfe41699465773d9aa6621e
+#: of
+msgid "AJAX endpoint to add an ACL to a target."
+msgstr ""
+
+#: 42ff17da412144d3b33878508b1bb1e9
+#: apps.libraries.iscsi_views.DeleteAclAjaxView:1 of
+msgid "AJAX endpoint to delete an ACL from a target."
+msgstr ""
+
+#: apps.libraries.iscsi_views.AddPortalAjaxView:1
+#: cbbb1199b25843e3af9260f2b0c4c949 of
+msgid "AJAX endpoint to add a portal to a target."
+msgstr ""
+
+#: apps.libraries.iscsi_views.DeletePortalAjaxView:1
+#: f2979869b0404ab2ad372a1e368eccde of
+msgid "AJAX endpoint to delete a portal from a target."
+msgstr ""
+
+#: apps.libraries.iscsi_views.CreateBackstoreAjaxView:1
+#: bfe4fd88f5164f71962b4480ddadcc66 of
+msgid "AJAX endpoint to create a backstore."
+msgstr ""
+
+#: ad113217a4ed420181fb9e674680ddc6
+#: apps.libraries.iscsi_views.DeleteBackstoreAjaxView:1 of
+msgid "AJAX endpoint to delete a backstore."
+msgstr ""
+
+#: 04d4763eb907400990677df3d73daf00
+#: apps.libraries.iscsi_views.SetGenerateNodeAclsAjaxView:1 of
+msgid "AJAX endpoint to set generate_node_acls attribute."
+msgstr ""
+
+#: ../../libraries.rst:48 add201a500274b8fa629f86b7da3cc5c
+msgid "Console Views"
+msgstr ""
+
+#: 37ea9d230b2a40baa0e2da85afcc3ec8 apps.libraries.console_views:1 of
+msgid "Console Views - System Information and Diagnostics"
+msgstr ""
+
+#: 9e4c01d5f5e046d28e2bfdced5cdf5cd apps.libraries.console_views:3 of
+msgid ""
+"Provides views for the MHVTL Console module: - System dashboard - Log "
+"viewer - Service status - Kernel modules - Disk usage"
+msgstr ""
+
+#: 33f76467761542688c4679c173f64cb7 apps.libraries.console_views:10 of
+msgid ""
+"Every view calls services/console (and services/scsi for the device list)"
+" directly. The helpers below only shape the answers into the names the "
+"console templates and their JavaScript read; they used to live in "
+"adapters/console_service.py."
+msgstr ""
+
+#: 4942fc7e37a84fd89eb6496d91a9f6d2
+#: apps.libraries.console_views.ConsoleDashboardView:1 of
+msgid "Main console dashboard with system overview"
+msgstr ""
+
+#: 23b002de25564ce89b41396453a1d79d
+#: apps.libraries.console_views.LogViewerView:1 of
+msgid "View system and MHVTL logs"
+msgstr ""
+
+#: 08e692f15bfa4d289475e23554910855
+#: apps.libraries.console_views.ServiceStatusView:1 of
+msgid "View MHVTL service status"
+msgstr ""
+
+#: apps.libraries.console_views.KernelModulesView:1
+#: b94933e5a26d4a4290516c40a2bc8fab of
+msgid "View kernel modules status"
+msgstr ""
+
+#: 47cddd4b05c6474b9bdd0d0b67d1716f
+#: apps.libraries.console_views.DiskUsageView:1 of
+msgid "View disk usage information"
+msgstr ""
+
+#: apps.libraries.console_views.ScsiDevicesView:1
+#: c01499ea526842438efbac3984a6cd54 of
+msgid "View SCSI devices"
+msgstr ""
+
+#: apps.libraries.console_views.console_refresh_ajax:1
+#: dc6e266452fa4da084669f9c2970d25f of
+msgid "AJAX endpoint to refresh console data"
+msgstr ""
+
+#: 5b8eb7850831416990a98a8b6b854e3e
+#: apps.libraries.console_views.service_status_ajax:1 of
+msgid "AJAX endpoint for service status"
+msgstr ""
+
+#: ../../libraries.rst:56 c01356b832344de48fc7adb68964d2c3
+msgid "Forms"
+msgstr ""
+
+#: 25b572122f904313a09a7547b41566ec apps.libraries.forms.LibraryCreateForm:1 of
+msgid "Form for creating a new library"
+msgstr ""
+
+#: 13bbe11028434297b31d868f69c81f07
+#: apps.libraries.forms.LibraryConfigForm.clean:1
+#: apps.libraries.forms.LibraryCreateForm.clean:1
+#: f5fd0d50ce614091a926191336bdaf84 of
+msgid ""
+"Hook for doing any extra form-wide cleaning after Field.clean() has been "
+"called on every field. Any ValidationError raised by this method will not"
+" be associated with a particular field; it will have a special-case "
+"association with the field named '__all__'."
+msgstr ""
+
+#: 1ec4b9e468c049c687a3d10054fcc4ea 53e0de70b6394ab69879a0a7e4200585
+#: 958e7cd15bb34e599a58734eb2db5d1f 9ab844fdfe954b04a480c9d66f1c0213
+#: apps.libraries.forms.DriveCreateForm.media:1
+#: apps.libraries.forms.LibraryConfigForm.media:1
+#: apps.libraries.forms.LibraryCreateForm.media:1
+#: apps.libraries.forms.LibraryRemoveForm.media:1
+#: apps.libraries.forms.ResetDefaultForm.media:1
+#: e12f66f63199449ebd8053fdcf54369c of
+msgid "Return all media required to render the widgets on this form."
+msgstr ""
+
+#: apps.libraries.forms.LibraryConfigForm:1 f5489dd019e74488972a1fee14205019 of
+msgid "Form for configuring a library with brand-specific options"
+msgstr ""
+
+#: apps.libraries.forms.LibraryRemoveForm:1 dfba47f236dc481f84befca334220596 of
+msgid "Form for removing a library"
+msgstr ""
+
+#: a2bff9500ef64cbc91abb342af78aa9a apps.libraries.forms.ResetDefaultForm:1 of
+msgid "Form for resetting all libraries to default"
+msgstr ""
+
+#: a79261fa5b0a44ed91763f2184451e2d apps.libraries.forms.DriveCreateForm:1 of
+msgid "Form for creating drives"
+msgstr ""
+

@@ -1,0 +1,274 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../start/the-console.rst:2 b3ccad9716eb4ad4983590c3038936ad
+msgid "Finding your way around"
+msgstr ""
+
+#: ../../start/the-console.rst:4 d5ce7bf67ae3495e8428a7c48064ad52
+msgid "Five places, and which one you want."
+msgstr ""
+
+#: ../../start/the-console.rst:11 e3897919ee1744daa30f720b78557935
+msgid "The header"
+msgstr ""
+
+#: ../../start/the-console.rst:13 8f21faaa56c942518415cd85e627da22
+msgid ""
+"Every page carries the same header: **Dashboard**, **Libraries**, "
+"**Operator**, **Console**, **Logout**, and the theme picker."
+msgstr ""
+
+#: ../../start/the-console.rst:17 894e95d49ac94f43bfb0b806f8430441
+msgid "Dashboard"
+msgstr ""
+
+#: ../../start/the-console.rst:19 a12f3b05e1a74dfcb868b4fabc22d81d
+msgid ""
+"``/auth/dashboard/`` - the overview. How many libraries there are, how "
+"many are running, what the host is, and links into everything else."
+msgstr ""
+
+#: ../../start/the-console.rst:23 b252dd3cb3274893a5455bb995186d21
+msgid "Libraries"
+msgstr ""
+
+#: ../../start/the-console.rst:25 057e4763b826450982bcd22867ae4fed
+msgid ""
+"``/libraries/list/`` - every library, from MHVTL's own configuration. "
+"Each card has its id, model, serial, and buttons for the things done most"
+" often."
+msgstr ""
+
+#: ../../start/the-console.rst:28 6fc512446c75480abd2bb11b06520ac8
+msgid ""
+"Clicking one opens :doc:`../libraries/the-library-page`, which is the hub"
+" for a single library: what it is, what its drives are doing, what tapes "
+"it holds, and links to every action, with the library already chosen."
+msgstr ""
+
+#: ../../start/the-console.rst:33 ab630a7515dc4912b6c162868d05c0db
+msgid "Operator"
+msgstr ""
+
+#: ../../start/the-console.rst:35 f4c50f4a4bdd44ee82d28a8fe073e9ea
+msgid ""
+"``/libraries/operator/`` - the panel for tape work across libraries: "
+"mount, unmount, move, create tapes, the inventory, add and remove drives,"
+" bring a library online or offline."
+msgstr ""
+
+#: ../../start/the-console.rst:39 9a8bf32b2be048798bd8216d246ed029
+msgid "The operator panel"
+msgstr ""
+
+#: ../../start/the-console.rst:43 9c6c235b48c2440ab68ac1b8e9a3603b
+msgid ""
+"Every page here has a library picker at the top. Arriving from a library "
+"page sets it for you."
+msgstr ""
+
+#: ../../start/the-console.rst:47 41d505c35ee54aaf89eeb50f2d7e6e7a
+msgid "Console"
+msgstr ""
+
+#: ../../start/the-console.rst:49 db8df9f839ae4f4f959bf3d9177fee6f
+msgid "``/libraries/console/`` - the host rather than the libraries. Six pages:"
+msgstr ""
+
+#: ../../start/the-console.rst:52 2c4159e560ae4373b7193bcf56993e82
+msgid "Page"
+msgstr ""
+
+#: ../../start/the-console.rst:52 f9cfcff17d81489d82478e8f7c95d17a
+msgid "What it shows"
+msgstr ""
+
+#: ../../start/the-console.rst:54 a6195100a5934e5b8b0d1ba5d6b2323e
+msgid "**Console**"
+msgstr ""
+
+#: ../../start/the-console.rst:54 124ad5d2a72940519d0f28ce2ad8a2bb
+msgid "System facts, MHVTL services, kernel modules, SCSI device count"
+msgstr ""
+
+#: ../../start/the-console.rst:55 f8c33f0698834512b1180450f72e46b4
+msgid "**Logs**"
+msgstr ""
+
+#: ../../start/the-console.rst:55 a37d1297586540d08885313e35109bc5
+msgid "An allowlisted set of logs, tailed"
+msgstr ""
+
+#: ../../start/the-console.rst:56 98aaf31aad814a13a6ab4823e893b492
+msgid "**Services**"
+msgstr ""
+
+#: ../../start/the-console.rst:56 e02a6627563f44739c806dc970688f66
+msgid "Every MHVTL unit: the target, the libraries, the drives"
+msgstr ""
+
+#: ../../start/the-console.rst:57 b321bfd34e834ae3a1a8cfa6f3fadc82
+msgid "**Devices**"
+msgstr ""
+
+#: ../../start/the-console.rst:57 2e1658dc08104b2c8b968d3206d7d230
+msgid "What the kernel sees: changers and drives, with their /dev nodes"
+msgstr ""
+
+#: ../../start/the-console.rst:58 86e8796ecda04969b91d7f16a1f2fd58
+msgid "**Modules**"
+msgstr ""
+
+#: ../../start/the-console.rst:58 ae2882f7d2614d4e8f2793be5e78f323
+msgid "Kernel module state, including the ones iSCSI needs"
+msgstr ""
+
+#: ../../start/the-console.rst:59 6fa50d951d7346298a2b18aee7f30311
+msgid "**Disk**"
+msgstr ""
+
+#: ../../start/the-console.rst:59 b6f53864def245e2a2e69b7a61da86da
+msgid "Space where the configuration and the tape files live"
+msgstr ""
+
+#: ../../start/the-console.rst:62 4c3fd88156ef4ab0bf51ac32cd19c381
+msgid "See :doc:`../running/console`."
+msgstr ""
+
+#: ../../start/the-console.rst:65 b6390b2bd2f84ec5b4915021adee1575
+msgid "Themes"
+msgstr ""
+
+#: ../../start/the-console.rst:67 f337bb5f08cf4cd0a157e56670f9e1e3
+msgid ""
+"Four, from the picker in the header: Console Navy, Graphite, Daylight and"
+" Sepia. The choice is remembered in your browser, and applies to every "
+"page."
+msgstr ""
+
+#: ../../start/the-console.rst:70 0d743a966d194baeb2979fa41a6e67dc
+msgid "Two of them are light and two are dark; nothing else changes."
+msgstr ""
+
+#: ../../start/the-console.rst:73 fd60763837a54ebf8bb989eef3a13953
+msgid "The command line"
+msgstr ""
+
+#: ../../start/the-console.rst:75 1bc72a41e19d4e168959a8634d0f4455
+msgid "``mhvtl`` covers the same ground, arranged as nouns and verbs:"
+msgstr ""
+
+#: ../../start/the-console.rst:78 47b7e853576f4315abea18b76c865824
+msgid "Noun"
+msgstr ""
+
+#: ../../start/the-console.rst:78 df49243c5db048a9b2975309c351e629
+msgid "What it is for"
+msgstr ""
+
+#: ../../start/the-console.rst:80 09720f2af40c4b6993d52ce6e68bb3bd
+msgid "``library``"
+msgstr ""
+
+#: ../../start/the-console.rst:80 e99198736c1846d5a19412b3d3d2c951
+msgid "list, show, create, delete, slots, orphans, next-id"
+msgstr ""
+
+#: ../../start/the-console.rst:81 b23bc13e1a134a78a23a62aabd8949f0
+msgid "``drive``"
+msgstr ""
+
+#: ../../start/the-console.rst:81 311dc06ac75b4ea39caa3594fa4c2334
+msgid "list, show, add, remove"
+msgstr ""
+
+#: ../../start/the-console.rst:82 4ffd984f1ed14e3fbdd4a7454d84fb8e
+msgid "``tape``"
+msgstr ""
+
+#: ../../start/the-console.rst:82 5ed6f17b39734207838dd37bdc64e6de
+msgid "list, media, slots, create, bulk, adopt, delete, next-barcode"
+msgstr ""
+
+#: ../../start/the-console.rst:83 40b729646f764c26be4ef489e3bb62a2
+msgid "``status``"
+msgstr ""
+
+#: ../../start/the-console.rst:83 2e08fb438d1343a492de7afb0deab4d5
+msgid "library, drive, activity, system, dashboard"
+msgstr ""
+
+#: ../../start/the-console.rst:84 b2a07574f4694455918989a1178c84fa
+msgid "``service``"
+msgstr ""
+
+#: ../../start/the-console.rst:84 80ec1d3c9815484f8429e27382fd149b
+msgid "start, stop, restart, status"
+msgstr ""
+
+#: ../../start/the-console.rst:85 7b6597b22cc94ed3bc78ef3bbd1e38bb
+msgid "``iscsi``"
+msgstr ""
+
+#: ../../start/the-console.rst:85 678024ab3ea542dcb9ad7a0422851444
+msgid "status, targets, export, target, lun, acl, portal, remap"
+msgstr ""
+
+#: ../../start/the-console.rst:86 da1b801e6e5741e99b72389e4007c9b6
+msgid "``config``"
+msgstr ""
+
+#: ../../start/the-console.rst:86 6f4d40d8a0114c149892499ddb4a6fd6
+msgid "list, show, validate, export, backup, restore, sync"
+msgstr ""
+
+#: ../../start/the-console.rst:87 899a383d21314bb5bc729f91f9ad9350
+msgid "``console``"
+msgstr ""
+
+#: ../../start/the-console.rst:87 85c0d3f99a1c4f95b76de2e7656242e8
+msgid "logs, modules, disk, system"
+msgstr ""
+
+#: ../../start/the-console.rst:88 cdd38a1aee414696995acaa017e9af72
+msgid "``scsi``"
+msgstr ""
+
+#: ../../start/the-console.rst:88 7f7c630232104ab7ba396c7f91003e5d
+msgid "devices, map"
+msgstr ""
+
+#: ../../start/the-console.rst:91 481d4959cb884dfc992807bb7490c8a8
+msgid ""
+"Every command takes ``--json`` for a machine-readable answer, and "
+"``--help`` at any level:"
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

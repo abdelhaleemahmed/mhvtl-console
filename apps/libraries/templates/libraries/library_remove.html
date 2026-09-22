@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Remove Library - MHVTL Console{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/library-remove.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="remove-card">
+        <div class="warning-header">
+            <div class="warning-icon">⚠️</div>
+            <h1 class="warning-title">Remove Library Configuration</h1>
+            <p class="warning-description">
+                This action will permanently remove a library configuration and cannot be undone.
+                Please review your selection carefully before proceeding.
+            </p>
+        </div>
+
+        <div class="danger-box">
+            <div class="danger-title">
+                <span>🚨</span>
+                DANGER - Permanent Action
+            </div>
+            <div class="danger-text">
+                This will permanently remove the selected library configuration, all associated drives,
+                and optionally all media. This action cannot be reversed!
+            </div>
+        </div>
+
+        {% if libraries %}
+            <form method="post" id="removeForm" data-dashboard-url="{% url 'libraries:dashboard' %}">
+                {% csrf_token %}
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Select Library to Remove <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <select name="library_id" class="form-select" required id="librarySelect">
+                            <option value="">Choose a library to remove...</option>
+                            {% for library in libraries %}
+                                <option value="{{ library.library_id }}"
+                                        data-brand="{{ library.vendor }}"
+                                        data-model="{{ library.product }}"
+                                        data-serial="{{ library.serial }}"
+                                        data-status="{{ library.status }}">
+                                    Library {{ library.library_id }}: {{ library.vendor }} {{ library.product }}
+                                    {% if not library.db_active %}(not in DB){% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-help">
+                            Select the library configuration you want to remove permanently
+                        </div>
+                    </div>
+
+                    <div id="libraryPreview" class="library-preview" style="display: none;">
+                        <div class="library-info">
+                            <div class="library-icon" id="previewIcon">📚</div>
+                            <div class="library-details">
+                                <div class="library-title" id="previewTitle">Library Details</div>
+                                <div class="library-meta" id="previewMeta">Select a library to see details</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Media Removal Option <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <select name="remove_media" class="form-select" required>
+                            <option value="NO">NO - Keep all tape media</option>
+                            <option value="YES">YES - Remove ALL tape media also</option>
+                        </select>
+                        <div class="form-help">
+                            Choose whether to keep or remove all media cartridges from the library
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" id="confirmRemoval" required>
+                            <span>I understand this will permanently remove the library configuration and cannot be undone</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="confirmationSection" class="confirmation-section" style="display: none;">
+                    <div class="confirmation-title">⚠️ Final Confirmation Required</div>
+                    <div class="confirmation-details">
+                        <p><strong>You are about to remove:</strong></p>
+                        <p id="confirmationText">Please select a library first</p>
+                        <p style="margin-top: 15px;"><strong>This action will:</strong></p>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Permanently delete the library configuration</li>
+                            <li>Remove all associated tape drives</li>
+                            <li id="mediaAction">Handle media based on your selection</li>
+                            <li>Update the MHVTL configuration files</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'libraries:dashboard' %}" class="btn btn-secondary">
+                        ← Cancel & Return to Dashboard
+                    </a>
+                    <button type="submit" class="btn btn-danger" id="removeBtn" disabled>
+                        <span id="removeText">🗑️ Remove Library</span>
+                        <span id="removeSpinner" class="spinner"></span>
+                    </button>
+                </div>
+            </form>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">✅</div>
+                <div class="empty-title">No Libraries to Remove</div>
+                <div class="empty-description">
+                    {% if library_count == 0 %}
+                        You don't have any library configurations to remove.
+                    {% else %}
+                        You cannot remove the last library configuration. At least one library must remain active.
+                    {% endif %}
+                </div>
+                <a href="{% url 'libraries:dashboard' %}" class="btn btn-secondary">
+                    ← Return to Dashboard
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/library-remove.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% comment %}
+Usage in child templates:
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb_items %}
+{% endblock %}
+
+Where breadcrumb_items is a list of dicts:
+[
+    {'url': 'dashboard', 'title': 'Dashboard'},
+    {'url': 'libraries:list', 'title': 'Libraries'},
+    {'title': 'Library 10'}  # No URL = current page
+]
+{% endcomment %}
+
+{% if items %}
+<nav class="breadcrumb-nav" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'authentication:dashboard' %}">
+                <span class="breadcrumb-icon">🏠</span>
+                Home
+            </a>
+        </li>
+        {% for item in items %}
+            {% if item.url %}
+                <li class="breadcrumb-item">
+                    <a href="{% url item.url %}">{{ item.title }}</a>
+                </li>
+            {% else %}
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{ item.title }}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</nav>
+{% endif %}

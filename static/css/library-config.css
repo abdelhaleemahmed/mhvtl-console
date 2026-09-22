@@ -1,0 +1,208 @@
+/**
+ * Library Configuration Page Styles
+ */
+
+/* Config Card */
+.config-card {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Brand Header */
+.brand-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--surface-deep);
+}
+
+.brand-logo {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.brand-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.brand-subtitle {
+    font-size: 16px;
+    color: var(--text-dim);
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-icon {
+    font-size: 20px;
+}
+
+/* Form Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Auto-generated Fields */
+.auto-generated {
+    background: rgba(39, 174, 96, 0.1);
+    border-color: var(--ok);
+    color: var(--ok);
+    font-weight: 600;
+}
+
+/* Model Selection */
+.model-info {
+    background: rgba(39, 174, 96, 0.1);
+    border: 1px solid rgba(39, 174, 96, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+    display: none;
+}
+
+.model-info-title {
+    font-weight: 600;
+    color: var(--ok);
+    margin-bottom: 8px;
+}
+
+/* Warning Box */
+.warning-box {
+    background: var(--warn-bg);
+    color: var(--alert-warn-text);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--warn-bg);
+}
+
+.warning-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+/* Slots Calculator */
+.slots-calculator {
+    background: var(--surface-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.total-slots {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.total-slots.valid {
+    color: var(--ok);
+}
+
+.total-slots.invalid {
+    color: var(--bad);
+}
+
+/* Configuration Preview */
+.preview-section {
+    background: rgba(102, 126, 234, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.preview-title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 15px;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.preview-item {
+    background: var(--surface);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.preview-label {
+    font-weight: 600;
+    color: var(--text-dim);
+}
+
+.preview-value {
+    color: var(--accent);
+    font-family: monospace;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .config-card {
+        padding: 30px 20px;
+    }
+
+    .brand-title {
+        font-size: 24px;
+    }
+
+    .preview-grid {
+        grid-template-columns: 1fr;
+    }
+}

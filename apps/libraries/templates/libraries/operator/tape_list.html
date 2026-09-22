@@ -1,0 +1,183 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Tape Inventory{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--surface-deep); font-weight: 600; color: var(--text); }
+    tr:hover { background: var(--surface-deep); }
+    .action-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+    .stat-item { text-align: center; padding: 15px; background: var(--surface-deep); border-radius: 8px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="section-title">Select Library</div>
+            <form method="get" action="{% url 'libraries:tape_list' %}">
+                <div class="form-group">
+                    <select name="library_id" id="library_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"
+                                    {% if selected_library and selected_library.library_id == library.library_id %}selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        {% if selected_library %}
+            <div class="action-bar">
+                <a href="{% url 'libraries:create_tape' %}?library_id={{ selected_library.library_id }}" class="btn btn-success">Create Tape</a>
+                <a href="{% url 'libraries:create_tapes_bulk' %}?library_id={{ selected_library.library_id }}" class="btn btn-primary">Create Multiple Tapes</a>
+                <a href="{% url 'libraries:delete_tape' %}?library_id={{ selected_library.library_id }}" class="btn btn-danger">Delete Tape</a>
+            </div>
+
+            {% if tapes_result %}
+                <div class="card">
+                    <div class="section-title">Library {{ selected_library.library_id }} - {{ tapes_result.count }} Tapes</div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ tapes_result.count }}</div>
+                            <div class="stat-label">Total Tapes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ in_slot_count }}</div>
+                            <div class="stat-label">In Slots</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ in_drive_count }}</div>
+                            <div class="stat-label">In Drives</div>
+                        </div>
+                    </div>
+
+                    {% if tapes_result.tapes %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Barcode</th>
+                                    <th>Location</th>
+                                    <th>Slot/Drive</th>
+                                    <th>Type</th>
+                                    <th>Density</th>
+                                    <th>Capacity</th>
+                                    <th>Used</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tape in tapes_result.tapes %}
+                                    <tr>
+                                        <td><strong>{{ tape.barcode }}</strong></td>
+                                        <td>
+                                            {% if tape.location == 'slot' %}
+                                                <span class="badge badge-success">In Slot</span>
+                                            {% elif tape.location == 'drive' %}
+                                                <span class="badge badge-warning">In Drive</span>
+                                            {% else %}
+                                                <span class="badge badge-info">{{ tape.location }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if tape.location == 'drive' %}
+                                                Drive {{ tape.drive }}
+                                            {% else %}
+                                                Slot {{ tape.slot }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ tape.tape_type }}</td>
+                                        <td>{{ tape.density }}</td>
+                                        <td>{{ tape.size_display }}</td>
+                                        <td>{{ tape.used_display }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p class="page-description">No tapes found in this library</p>
+                    {% endif %}
+                </div>
+            {% elif error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+        {% endif %}
+
+        {% comment %}
+        Tapes with files on disk that no library lists: what a delete keeping the
+        media leaves. Host-wide, so it shows with or without a library selected,
+        and each one can be put back with its data.
+        {% endcomment %}
+        {% if unassigned or unassigned_error %}
+            <div class="card">
+                <div class="section-title">Tapes on disk with no library</div>
+                {% if unassigned_error %}
+                    <div class="alert alert-danger">{{ unassigned_error }}</div>
+                {% else %}
+                    <p style="color: var(--text-dim); margin-bottom: 12px;">
+                        Their data is intact. Adopting one puts its barcode in a free
+                        slot; nothing is written to the tape.
+                    </p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Type</th>
+                                <th>Density</th>
+                                <th>Used</th>
+                                <th>Path</th>
+                                <th>Put it back</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tape in unassigned %}
+                                <tr>
+                                    <td><strong>{{ tape.barcode }}</strong></td>
+                                    <td>{{ tape.kind }}</td>
+                                    <td>{{ tape.density|default:"unknown" }}</td>
+                                    <td>{% if tape.used_mb is not None %}{{ tape.used_mb }} MB{% else %}-{% endif %}</td>
+                                    <td><code>{{ tape.path }}</code></td>
+                                    <td>
+                                        <form method="post" action="{% url 'libraries:adopt_tape' %}"
+                                              style="display: flex; gap: 6px; align-items: center;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="barcode" value="{{ tape.barcode }}">
+                                            <select name="library_id" class="form-control" style="width: auto;">
+                                                {% for library in libraries %}
+                                                    <option value="{{ library.library_id }}"
+                                                        {% if selected_library and library.library_id == selected_library.library_id %}selected{% endif %}>
+                                                        Library {{ library.library_id }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                            <input type="number" name="slot" min="1" placeholder="slot"
+                                                   class="form-control" style="width: 90px;">
+                                            <label style="font-size: 13px; white-space: nowrap;">
+                                                <input type="checkbox" name="restart" checked> restart
+                                            </label>
+                                            <button type="submit" class="btn btn-success">Adopt</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p style="color: var(--text-dim); margin-top: 12px; font-size: 13px;">
+                        The slot is optional - the first free one is used. The library
+                        must be restarted before its robot reports the tape; leave
+                        <em>restart</em> ticked to do it now.
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Back to Operator Panel</a>
+        </div>
+{% endblock %}

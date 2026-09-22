@@ -1,0 +1,724 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configure {{ brand.display_name }} Library - MHVTL{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/library-config.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb_items %}
+{% endblock %}
+
+{% block content %}
+<div class="config-card">
+    <div class="brand-header">
+        <div class="brand-logo">
+            {% if brand.name == 'STK' %}📼
+            {% elif brand.name == 'IBM' %}💻
+            {% elif brand.name == 'HP' %}🖨️
+            {% elif brand.name == 'Spectra' %}🔮
+            {% elif brand.name == 'Quantum' %}⚛️
+            {% elif brand.name == 'ADIC' %}🗃️
+            {% elif brand.name == 'Sony' %}📺
+            {% elif brand.name == 'Dell' %}💿
+            {% elif brand.name == 'Overland' %}🏔️
+            {% else %}📚{% endif %}
+        </div>
+        <h1 class="brand-title">{{ brand.display_name }} Library Configuration</h1>
+        <p class="brand-subtitle">
+            Configure your {{ brand.display_name }} virtual tape library with optimized settings
+        </p>
+    </div>
+
+    <form method="post" id="configForm" data-profile-key="{{ profile_key }}">
+        {% csrf_token %}
+
+        <!-- Basic Library Information -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>🔧</span>
+                Basic Configuration
+            </h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">
+                        Library ID <span class="required">*</span>
+                    </label>
+                    <input type="number" name="library_id" class="form-input auto-generated"
+                           value="{{ next_library_id }}" readonly
+                           min="1" max="999" required>
+                    <div class="form-help">Auto-generated unique identifier</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        SCSI Channel <span class="required">*</span>
+                    </label>
+                    <input type="number" name="channel" class="form-input auto-generated"
+                           value="{{ next_channel }}" readonly
+                           min="0" max="255" required>
+                    <div class="form-help">Auto-assigned SCSI channel</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        SCSI Target <span class="required">*</span>
+                    </label>
+                    <input type="number" name="target" class="form-input auto-generated"
+                           value="{{ next_target }}" readonly
+                           min="0" max="255" required>
+                    <div class="form-help">SCSI target ID (auto-calculated)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        SCSI LUN <span class="required">*</span>
+                    </label>
+                    <input type="number" name="lun" class="form-input auto-generated"
+                           value="{{ next_lun }}" readonly
+                           min="0" max="255" required>
+                    <div class="form-help">Logical Unit Number</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start from the tape -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>📼</span>
+                Start from the tape (optional)
+            </h3>
+
+            <div class="form-group">
+                <label class="form-label" for="wantedMedia">
+                    Tape you want this library to use
+                </label>
+                <select class="form-select" id="wantedMedia">
+                    <option value="">Any tape this vendor supports</option>
+                </select>
+                <div class="form-help" id="wantedMediaHelp">
+                    Choosing one leaves only the models and drives that take it,
+                    and picks the newest drive that writes it.
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Model Selection -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>📚</span>
+                Library Model
+            </h3>
+
+            <div class="form-group">
+                <label class="form-label">
+                    Select {{ brand.display_name }} Model <span class="required">*</span>
+                </label>
+                <select name="library_model" class="form-select" required id="libraryModelSelect">
+                    <option value="">Choose a model...</option>
+                    <!-- Populated by JavaScript from profile data -->
+                </select>
+                <div class="form-help">Select the specific library model to emulate</div>
+
+                <div id="modelInfo" class="model-info" style="display: none;">
+                    <div class="model-info-title">Model Information</div>
+                    <div id="modelDetails"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Specifications -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>📋</span>
+                Library Specifications
+            </h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">
+                        Vendor Identification <span class="required">*</span>
+                    </label>
+                    <input type="text" name="vendor_identification" class="form-input auto-generated"
+                           value="{{ brand.name }}" readonly maxlength="50" required>
+                    <div class="form-help">SCSI vendor identifier</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Product Identification <span class="required">*</span>
+                    </label>
+                    <input type="text" name="product_identification" class="form-input auto-generated"
+                           id="productId" readonly maxlength="100" required>
+                    <div class="form-help">SCSI product identifier (from model)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Product Revision <span class="required">*</span>
+                    </label>
+                    <input type="text" name="product_revision" class="form-input auto-generated"
+                           id="productRevision" readonly maxlength="20" required>
+                    <div class="form-help">Firmware revision level</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Unit Serial Number
+                    </label>
+                    <input type="text" name="unit_serial_number" class="form-input auto-generated"
+                           id="serialNumber" readonly maxlength="50">
+                    <div class="form-help">Auto-generated based on Library ID</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drive Configuration -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>💿</span>
+                Drive Configuration
+            </h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">
+                        Number of Drives <span class="required">*</span>
+                    </label>
+                    <input type="number" name="num_drives" class="form-input"
+                           id="numDrives" value="4" min="1" required>
+                    <div class="form-help" id="numDrivesHelp">Number of tape drives in this library</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Drive Model <span class="required">*</span>
+                    </label>
+                    <select name="drive_model" class="form-select" id="driveModelSelect" required disabled>
+                        <option value="">Select library model first...</option>
+                        <!-- Populated by JavaScript based on library model -->
+                    </select>
+                    <div class="form-help" id="driveHelp">Drive model (filtered by library compatibility)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        MAP Slots
+                    </label>
+                    <input type="number" name="map_count" class="form-input"
+                           id="mapCount" min="0">
+                    <div class="form-help" id="mapCountHelp">Import/export (mail slot) positions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Capacity Configuration -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>📼</span>
+                Media Configuration
+            </h3>
+
+            <div class="warning-box">
+                <div class="warning-title">Limits for this model</div>
+                <span id="limitsText">Select a library model to see how many drives,
+                slots and MAP slots MHVTL emulates for it.</span>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">
+                        Media Type <span class="required">*</span>
+                    </label>
+                    <select name="media_type" class="form-select" id="mediaTypeSelect" required disabled>
+                        <option value="">Select drive model first...</option>
+                        <!-- Populated by JavaScript based on drive model -->
+                    </select>
+                    <div class="form-help" id="mediaHelp">Media type (filtered by drive compatibility)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Barcode Prefix
+                    </label>
+                    <input type="text" name="barcode_prefix" class="form-input"
+                           id="barcodePrefix" value="{{ default_barcode_prefix }}" maxlength="5"
+                           style="text-transform: uppercase;">
+                    <div class="form-help">Prefix for auto-generated barcodes</div>
+                    <div id="barcodePreview" class="barcode-preview" style="margin-top: 5px; font-family: monospace; color: #0066cc; font-weight: bold;">Example: {{ default_barcode_prefix }}001L8</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Media Count <span class="required">*</span>
+                    </label>
+                    <input type="number" name="media_count" class="form-input"
+                           id="mediaCount" value="{{ default_media_count }}" min="0" required>
+                    <div class="form-help">Number of tapes to create initially</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Empty Slots <span class="required">*</span>
+                    </label>
+                    <input type="number" name="empty_slots" class="form-input"
+                           id="emptySlots" value="{{ default_empty_slots }}" min="0" required>
+                    <div class="form-help">Additional empty slots for future tapes</div>
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="slots-calculator">
+                        <div class="total-slots" id="totalSlots">
+                            Total Slots: <span id="totalValue">{{ default_media_count|add:default_empty_slots }}</span>
+                        </div>
+                        <div class="form-help" style="text-align: center; margin-top: 5px;" id="maxSlotsText">
+                            Maximum: select a library model
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Configuration -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>⚙️</span>
+                Advanced Settings
+            </h3>
+
+            <div class="form-group">
+                <label class="form-label">
+                    Home Directory <span class="required">*</span>
+                </label>
+                <input type="text" name="home_directory" class="form-input"
+                       value="/opt/mhvtl" maxlength="255" required>
+                <div class="form-help">Directory where library data will be stored</div>
+            </div>
+        </div>
+
+        <!-- Configuration Preview -->
+        <div class="preview-section">
+            <div class="preview-title">Configuration Preview</div>
+            <div class="preview-grid">
+                <div class="preview-item">
+                    <div class="preview-label">Library ID:</div>
+                    <div class="preview-value">{{ next_library_id }}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Brand:</div>
+                    <div class="preview-value">{{ brand.name }}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">SCSI Address:</div>
+                    <div class="preview-value">{{ next_channel }}:0:0</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">NAA:</div>
+                    <div class="preview-value">{{ next_library_id }}:11:22:33:ab:{{ next_channel|stringformat:"02d" }}:00:00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <a href="{% url 'libraries:brand_selection' %}" class="btn btn-secondary">
+                Back to Brand Selection
+            </a>
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <span id="submitText">Create Library</span>
+                <span id="submitSpinner" class="spinner" style="display: none;"></span>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/**
+ * Library Configuration - Cascading Dropdowns
+ * Profile data is embedded from Django context for fast loading
+ */
+(function() {
+    // Profile data from services/profiles/data.get_profile_options (embedded by Django)
+    const PROFILE = {{ profile_json|safe }};
+
+    // DOM elements
+    const libraryModelSelect = document.getElementById('libraryModelSelect');
+    const driveModelSelect = document.getElementById('driveModelSelect');
+    const mediaTypeSelect = document.getElementById('mediaTypeSelect');
+    const productIdInput = document.getElementById('productId');
+    const productRevisionInput = document.getElementById('productRevision');
+    const serialNumberInput = document.getElementById('serialNumber');
+    const modelInfo = document.getElementById('modelInfo');
+    const modelDetails = document.getElementById('modelDetails');
+    const mediaCountInput = document.getElementById('mediaCount');
+    const emptySlotsInput = document.getElementById('emptySlots');
+    const totalSlotsDiv = document.getElementById('totalSlots');
+    const totalValueSpan = document.getElementById('totalValue');
+    const barcodePreview = document.getElementById('barcodePreview');
+    const barcodePrefixInput = document.getElementById('barcodePrefix');
+    const configForm = document.getElementById('configForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const numDrivesInput = document.getElementById('numDrives');
+    const numDrivesHelp = document.getElementById('numDrivesHelp');
+    const mapCountInput = document.getElementById('mapCount');
+    const mapCountHelp = document.getElementById('mapCountHelp');
+    const driveHelp = document.getElementById('driveHelp');
+    const mediaHelp = document.getElementById('mediaHelp');
+    const limitsText = document.getElementById('limitsText');
+    const maxSlotsText = document.getElementById('maxSlotsText');
+
+    // What MHVTL emulates for the chosen model (profiles/personalities via
+    // get_profile_options). Checked again on the server, which is the check;
+    // these keep the form from offering what would be refused.
+    function limits() {
+        return (PROFILE.library_limits || {})[libraryModelSelect.value] || null;
+    }
+
+    function maxDrives() {
+        const lim = limits();
+        if (!lim) return null;
+        // One SCSI target for the library, one per drive.
+        const byTargets = PROFILE.free_targets == null ? Infinity : PROFILE.free_targets - 1;
+        return Math.max(0, Math.min(lim.max_drives, byTargets));
+    }
+
+    function applyLimits() {
+        const lim = limits();
+        if (!lim) return;
+        const drives = maxDrives();
+        numDrivesInput.max = drives;
+        numDrivesInput.value = Math.min(lim.default_num_drives, drives) || Math.min(1, drives);
+        const targetNote = PROFILE.free_targets == null ? ''
+            : `; ${PROFILE.free_targets} SCSI target(s) are free, one for the library and one per drive`;
+        numDrivesHelp.textContent = `1 to ${drives.toLocaleString()} ` +
+            `(the ${lim.layout} layout holds ${lim.max_drives.toLocaleString()}${targetNote})`;
+        mapCountInput.max = lim.max_maps;
+        mapCountInput.value = lim.default_num_maps;
+        mapCountHelp.textContent = `0 to ${lim.max_maps.toLocaleString()} for this model`;
+        mediaCountInput.max = lim.max_slots;
+        emptySlotsInput.max = lim.max_slots;
+        limitsText.textContent = `MHVTL emulates ${libraryModelSelect.value} with the ` +
+            `${lim.layout} layout (${lim.source}): up to ${lim.max_drives.toLocaleString()} drives, ` +
+            `${lim.max_slots.toLocaleString()} storage slots and ${lim.max_maps.toLocaleString()} MAP slots. ` +
+            'Anything past these is silently ignored by MHVTL, so the form will not offer it.';
+        maxSlotsText.textContent = `Maximum: ${lim.max_slots.toLocaleString()} slots`;
+        updateTotalSlots();
+    }
+
+    // -- starting from the tape ------------------------------------------
+    //
+    // "I want an LTO-10 library" is the question this form could not answer:
+    // the operator had to know that LTO-10 needs a TDA drive and pick the
+    // model, the drive and the media in that order. The tape chosen here (or
+    // carried in from the vendor page's filter) leaves only the models and
+    // drives that take it.
+
+    const wantedMediaSelect = document.getElementById('wantedMedia');
+    const wantedMediaHelp = document.getElementById('wantedMediaHelp');
+
+    function drivesFor(model) {
+        return PROFILE.library_drive_mapping[model] || PROFILE.drive_models || [];
+    }
+
+    function driveTakes(drive, media) {
+        return !media || (PROFILE.drive_media_mapping[drive] || []).includes(media);
+    }
+
+    function modelTakes(model, media) {
+        return !media || drivesFor(model).some(drive => driveTakes(drive, media));
+    }
+
+    function wantedMedia() {
+        return wantedMediaSelect ? wantedMediaSelect.value : '';
+    }
+
+    //: the newest drive that writes this tape - the one an operator means
+    function bestDriveFor(model, media) {
+        const drives = drivesFor(model).filter(drive => driveTakes(drive, media));
+        if (!drives.length) return null;
+        const writes = drives.filter(
+            drive => !(PROFILE.read_only_media[drive] || []).includes(media));
+        return (writes.length ? writes : drives)[writes.length ? writes.length - 1
+                                                               : drives.length - 1];
+    }
+
+    function initWantedMedia() {
+        if (!wantedMediaSelect) return;
+        (PROFILE.media_types || []).forEach(media => {
+            const option = document.createElement('option');
+            option.value = media;
+            option.textContent = (PROFILE.media_labels || {})[media] || media;
+            wantedMediaSelect.appendChild(option);
+        });
+        if (PROFILE.wanted_media) {
+            wantedMediaSelect.value = PROFILE.wanted_media;
+        }
+        wantedMediaSelect.addEventListener('change', function () {
+            initLibraryModels();
+            describeWantedMedia();
+        });
+        describeWantedMedia();
+    }
+
+    function describeWantedMedia() {
+        if (!wantedMediaHelp) return;
+        const media = wantedMedia();
+        if (!media) {
+            wantedMediaHelp.textContent = 'Choosing one leaves only the models and '
+                + 'drives that take it, and picks the newest drive that writes it.';
+            return;
+        }
+        const models = (PROFILE.library_models || []).filter(m => modelTakes(m, media));
+        const drives = new Set();
+        models.forEach(m => drivesFor(m).filter(d => driveTakes(d, media))
+                                        .forEach(d => drives.add(d)));
+        wantedMediaHelp.textContent =
+            `${models.length} model(s) and ${drives.size} drive(s) here take ${media}.`;
+    }
+
+    // Initialize library model dropdown
+    function initLibraryModels() {
+        if (!PROFILE.library_models) return;
+
+        const media = wantedMedia();
+        const models = PROFILE.library_models.filter(model => modelTakes(model, media));
+        const previous = libraryModelSelect.value;
+
+        libraryModelSelect.innerHTML = '<option value="">Choose a model...</option>';
+        models.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model;
+            option.textContent = model;
+            libraryModelSelect.appendChild(option);
+        });
+
+        libraryModelSelect.value = models.includes(previous) ? previous
+            : (models.includes(PROFILE.defaults.library_model)
+               ? PROFILE.defaults.library_model : (models[0] || ''));
+
+        if (libraryModelSelect.value) {
+            updateDriveModels();
+        }
+    }
+
+    // Update drive models based on selected library model
+    function updateDriveModels() {
+        const libraryModel = libraryModelSelect.value;
+
+        if (!libraryModel) {
+            driveModelSelect.innerHTML = '<option value="">Select library model first...</option>';
+            driveModelSelect.disabled = true;
+            mediaTypeSelect.innerHTML = '<option value="">Select drive model first...</option>';
+            mediaTypeSelect.disabled = true;
+            return;
+        }
+
+        // Only the drives that take the tape the operator asked for
+        const media = wantedMedia();
+        const validDrives = drivesFor(libraryModel).filter(d => driveTakes(d, media));
+
+        driveModelSelect.innerHTML = '<option value="">Choose a drive...</option>';
+        validDrives.forEach(drive => {
+            const option = document.createElement('option');
+            option.value = drive;
+            option.textContent = drive;
+            driveModelSelect.appendChild(option);
+        });
+        driveModelSelect.disabled = false;
+
+        // The model's default drive, as the server picks it
+        // (get_default_drive_for_library): the profile default if this model
+        // takes it, else the newest LTO it takes. The last drive listed is
+        // not the newest - STK L700's list ends with DLT7000.
+        const preferred = media ? bestDriveFor(libraryModel, media)
+                                : (PROFILE.default_drive_by_library || {})[libraryModel];
+        if (validDrives.length > 0) {
+            driveModelSelect.value = validDrives.includes(preferred)
+                ? preferred : validDrives[validDrives.length - 1];
+            updateMediaTypes();
+        }
+        applyLimits();
+
+        // Update product ID and revision
+        productIdInput.value = libraryModel;
+        productRevisionInput.value = PROFILE.defaults.library_model === libraryModel
+            ? (PROFILE.defaults.library_revision || 'D.02')
+            : 'D.02';
+
+        // Generate serial number
+        const libraryIdInput = document.querySelector('input[name="library_id"]');
+        if (libraryIdInput) {
+            serialNumberInput.value = parseInt(libraryIdInput.value) + 80000000;
+        }
+
+        // Show model info
+        if (modelDetails) {
+            modelDetails.innerHTML = `
+                <strong>Product ID:</strong> ${libraryModel}<br>
+                <strong>Revision:</strong> ${productRevisionInput.value}<br>
+                <strong>Compatible Drives:</strong> ${validDrives.length}
+            `;
+        }
+        if (modelInfo) {
+            modelInfo.style.display = 'block';
+        }
+    }
+
+    // Update media types based on selected drive model
+    function updateMediaTypes() {
+        const driveModel = driveModelSelect.value;
+
+        if (!driveModel) {
+            mediaTypeSelect.innerHTML = '<option value="">Select drive model first...</option>';
+            mediaTypeSelect.disabled = true;
+            return;
+        }
+
+        // Get valid media for this drive model
+        const validMedia = PROFILE.drive_media_mapping[driveModel] || [];
+        const readOnly = (PROFILE.read_only_media || {})[driveModel] || [];
+
+        mediaTypeSelect.innerHTML = '<option value="">Choose media type...</option>';
+        validMedia.forEach(media => {
+            const option = document.createElement('option');
+            option.value = media;
+            const suffix = PROFILE.media_suffixes[media] || media.substring(0, 2);
+            option.textContent = `${media} (suffix: ${suffix})` +
+                (readOnly.includes(media) ? ' - read-only in this drive' : '');
+            mediaTypeSelect.appendChild(option);
+        });
+        mediaTypeSelect.disabled = false;
+
+        const writable = validMedia.filter(m => !readOnly.includes(m));
+        const personality = (PROFILE.drive_personality || {})[driveModel];
+        driveHelp.textContent = `${driveModel} is emulated as ${personality || 'a generic drive'}; ` +
+            `it writes ${writable.join(', ') || 'nothing'}` +
+            (readOnly.length ? ` and only reads ${readOnly.join(', ')}` : '') + '.';
+
+        // The tape the operator asked for, else the drive's native one
+        if (validMedia.length > 0) {
+            const media = wantedMedia();
+            mediaTypeSelect.value = validMedia.includes(media) ? media : validMedia[0];
+            updateBarcodePreview();
+        }
+    }
+
+    function updateMediaHelp() {
+        const readOnly = (PROFILE.read_only_media || {})[driveModelSelect.value] || [];
+        mediaHelp.textContent = readOnly.includes(mediaTypeSelect.value)
+            ? `${mediaTypeSelect.value} is read-only in ${driveModelSelect.value}: ` +
+              'the library can be restored from but not backed up to.'
+            : 'Media type (filtered by drive compatibility)';
+    }
+
+    // Update barcode preview
+    function updateBarcodePreview() {
+        updateMediaHelp();
+        if (!barcodePreview) return;
+
+        const prefix = (barcodePrefixInput ? barcodePrefixInput.value : 'E01').toUpperCase();
+        const mediaType = mediaTypeSelect ? mediaTypeSelect.value : '';
+        const suffix = PROFILE.media_suffixes[mediaType] || 'L8';
+
+        barcodePreview.textContent = `Example: ${prefix}001${suffix}`;
+    }
+
+    // Update total slots calculation
+    function updateTotalSlots() {
+        if (!mediaCountInput || !emptySlotsInput || !totalValueSpan || !totalSlotsDiv) {
+            return;
+        }
+
+        const mediaCount = parseInt(mediaCountInput.value) || 0;
+        const emptySlots = parseInt(emptySlotsInput.value) || 0;
+        const total = mediaCount + emptySlots;
+        const lim = limits();
+
+        totalValueSpan.textContent = total.toLocaleString();
+
+        if (lim && total > lim.max_slots) {
+            totalSlotsDiv.className = 'total-slots invalid';
+            totalValueSpan.textContent += ' (EXCEEDS LIMIT!)';
+        } else {
+            totalSlotsDiv.className = 'total-slots valid';
+        }
+    }
+
+    // Event listeners
+    libraryModelSelect.addEventListener('change', updateDriveModels);
+    driveModelSelect.addEventListener('change', function() {
+        updateMediaTypes();
+        updateBarcodePreview();
+    });
+    mediaTypeSelect.addEventListener('change', updateBarcodePreview);
+
+    if (barcodePrefixInput) {
+        barcodePrefixInput.addEventListener('input', updateBarcodePreview);
+    }
+    if (mediaCountInput) {
+        mediaCountInput.addEventListener('input', updateTotalSlots);
+    }
+    if (emptySlotsInput) {
+        emptySlotsInput.addEventListener('input', updateTotalSlots);
+    }
+
+    // Form submission
+    if (configForm) {
+        configForm.addEventListener('submit', function(e) {
+            // Validate against the model's layout
+            const lim = limits();
+            if (lim && mediaCountInput && emptySlotsInput) {
+                const total = (parseInt(mediaCountInput.value) || 0) + (parseInt(emptySlotsInput.value) || 0);
+                if (total > lim.max_slots) {
+                    e.preventDefault();
+                    alert(`${libraryModelSelect.value} holds at most ${lim.max_slots.toLocaleString()} slots; ` +
+                          `${total.toLocaleString()} requested.`);
+                    return;
+                }
+            }
+            const drives = maxDrives();
+            if (drives != null && (parseInt(numDrivesInput.value) || 0) > drives) {
+                e.preventDefault();
+                alert(`At most ${drives} drive(s) can be added here.`);
+                return;
+            }
+
+            // Validate selections
+            if (!libraryModelSelect.value) {
+                e.preventDefault();
+                alert('Please select a library model.');
+                return;
+            }
+            if (!driveModelSelect.value) {
+                e.preventDefault();
+                alert('Please select a drive model.');
+                return;
+            }
+            if (!mediaTypeSelect.value) {
+                e.preventDefault();
+                alert('Please select a media type.');
+                return;
+            }
+
+            // Show loading state
+            if (submitBtn) submitBtn.disabled = true;
+            if (submitText) submitText.style.display = 'none';
+            if (submitSpinner) submitSpinner.style.display = 'inline-block';
+            document.body.classList.add('loading');
+        });
+    }
+
+    // Initialize on page load
+    initWantedMedia();
+    initLibraryModels();
+    updateTotalSlots();
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,880 @@
+{% extends 'libraries/base.html' %}
+{% load static %}
+
+{% block header_title %}📋 Library {{ library.library_id }} Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .main-container {
+                max-width: 1200px;
+                margin: 30px auto;
+                padding: 0 20px;
+            }
+    /* Discovery Status Header */
+            .discovery-header {
+                background: linear-gradient(135deg, var(--info), var(--info));
+                color: white;
+                border-radius: 15px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            }
+    .discovery-header.created {
+                background: linear-gradient(135deg, var(--ok), var(--ok));
+            }
+    .discovery-status-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+    .discovery-main-info h2 {
+                margin: 0 0 5px 0;
+                font-size: 24px;
+            }
+    .discovery-main-info p {
+                margin: 0;
+                opacity: 0.9;
+                font-size: 14px;
+            }
+    .discovery-actions {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+    .discovery-btn {
+                padding: 8px 16px;
+                background: rgba(255,255,255,0.2);
+                border: 1px solid rgba(255,255,255,0.3);
+                color: white;
+                border-radius: 6px;
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+    .discovery-btn:hover {
+                background: rgba(255,255,255,0.3);
+                color: white;
+            }
+    .detail-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+    .detail-card {
+                background: var(--surface);
+                border-radius: 15px;
+                padding: 25px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+            }
+    .detail-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            }
+    .detail-card.full-width {
+                grid-column: 1 / -1;
+            }
+    /* Discovery-enhanced cards */
+            .detail-card.discovery-integration {
+                border-left: 4px solid var(--info);
+            }
+    .detail-card.django-created {
+                border-left: 4px solid var(--ok);
+            }
+    .card-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid var(--surface-deep);
+            }
+    .card-icon {
+                font-size: 24px;
+            }
+    .card-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: var(--text);
+            }
+    .library-overview {
+                text-align: center;
+                margin-bottom: 25px;
+            }
+    .library-id-display {
+                font-size: 48px;
+                font-weight: bold;
+                color: var(--accent);
+                margin-bottom: 10px;
+            }
+    .library-brand-display {
+                font-size: 24px;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+    .library-model-display {
+                font-size: 16px;
+                color: var(--text-dim);
+                margin-bottom: 20px;
+            }
+    /* Discovery Status Badge */
+            .discovery-status-badge {
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                margin-left: 10px;
+            }
+    .discovery-discovered {
+                background: rgba(23, 162, 184, 0.15);
+                color: var(--info);
+                border: 1px solid rgba(23, 162, 184, 0.3);
+            }
+    .discovery-created {
+                background: rgba(40, 167, 69, 0.15);
+                color: var(--ok);
+                border: 1px solid rgba(40, 167, 69, 0.3);
+            }
+    .discovery-pending {
+                background: rgba(255, 193, 7, 0.15);
+                color: var(--warn);
+                border: 1px solid rgba(255, 193, 7, 0.3);
+            }
+    .specs-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+    .spec-item {
+                background: var(--surface-deep);
+                padding: 15px;
+                border-radius: 8px;
+                text-align: center;
+            }
+    .spec-value {
+                font-size: 24px;
+                font-weight: bold;
+                color: var(--accent);
+                margin-bottom: 5px;
+            }
+    .spec-label {
+                font-size: 12px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+    .slots-form {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 20px;
+                flex-wrap: wrap;
+            }
+    .slots-form label {
+                color: var(--text-dim);
+                font-size: 13px;
+            }
+    .slots-form input[type="number"] {
+                width: 90px;
+                padding: 8px 10px;
+                border-radius: 6px;
+                border: 1px solid var(--border-soft);
+                background: var(--surface-deep);
+                color: var(--text);
+            }
+    .slots-form .restart-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
+    .slots-help {
+                margin-top: 8px;
+                font-size: 12px;
+                color: var(--text-dim);
+            }
+    .manage-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px;
+    }
+    .manage-group h4 {
+        font-size: 12px; text-transform: uppercase; letter-spacing: .05em;
+        color: var(--text-dim); margin-bottom: 8px;
+    }
+    .manage-group a {
+        display: block; padding: 7px 0; color: var(--accent);
+        text-decoration: none; border-bottom: 1px solid var(--surface-deep);
+    }
+    .manage-group a:last-child { border-bottom: none; }
+    .manage-group a:hover { color: var(--accent-strong); }
+
+    .tape-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+    .tape-table th {
+                text-align: left;
+                padding: 8px 12px 8px 0;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+                color: var(--text-dim);
+                border-bottom: 1px solid var(--border-soft);
+            }
+    .tape-table td {
+                padding: 10px 12px 10px 0;
+                border-bottom: 1px solid var(--surface-deep);
+                color: var(--text);
+            }
+    .tape-table td.barcode {
+                font-family: monospace;
+                font-weight: 600;
+            }
+    /* Discovery Integration Info Table */
+            .discovery-info-section {
+                background: rgba(23, 162, 184, 0.05);
+                border: 1px solid rgba(23, 162, 184, 0.1);
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+    .discovery-info-section h6 {
+                color: var(--info);
+                margin-bottom: 10px;
+                font-weight: 600;
+            }
+    .discovery-info-section.django-created {
+                background: rgba(40, 167, 69, 0.05);
+                border-color: rgba(40, 167, 69, 0.1);
+            }
+    .discovery-info-section.django-created h6 {
+                color: var(--ok);
+            }
+    .drives-list {
+                margin-bottom: 20px;
+            }
+    .drive-item {
+                background: var(--surface-deep);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 10px;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+    .drive-item:hover {
+                background: var(--border);
+                transform: translateX(5px);
+            }
+    /* Discovery status indicator for drives */
+            .drive-item::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background: var(--ok);
+                border-radius: 4px 0 0 4px;
+            }
+    .drive-item.discovered::before {
+                background: var(--info);
+            }
+    .drive-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+    .drive-id {
+                font-weight: 600;
+                color: var(--text);
+            }
+    .drive-status {
+                font-size: 12px;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-weight: 600;
+            }
+    .drive-status.discovered {
+                background: rgba(23, 162, 184, 0.15);
+                color: var(--info);
+            }
+    .drive-status.created {
+                background: rgba(40, 167, 69, 0.15);
+                color: var(--ok);
+            }
+    .drive-details {
+                font-size: 12px;
+                color: var(--text-dim);
+            }
+    .operations-list {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+    .operation-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+            }
+    .operation-icon.discovery {
+                background: linear-gradient(135deg, var(--info), var(--info));
+            }
+    .operation-content {
+                flex: 1;
+            }
+    .operation-type {
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 3px;
+            }
+    .operation-time {
+                font-size: 11px;
+                color: var(--text-dim);
+            }
+    .action-buttons {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+    .action-btn {
+                padding: 10px 20px;
+                background: linear-gradient(135deg, var(--surface-deep), var(--border));
+                color: var(--text-dim);
+                text-decoration: none;
+                border: none;
+                border-radius: 8px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
+                cursor: pointer;
+            }
+    .action-btn:hover {
+                background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+                color: white;
+                transform: translateY(-2px);
+            }
+    .action-btn.danger {
+                background: linear-gradient(135deg, var(--bad), var(--accent));
+                color: white;
+            }
+    .action-btn.danger:hover {
+                background: linear-gradient(135deg, var(--bad), var(--accent));
+            }
+    .action-btn.warning {
+                background: linear-gradient(135deg, var(--warn-bg), var(--warn));
+                color: var(--alert-warn-text);
+            }
+    .action-btn.warning:hover {
+                background: linear-gradient(135deg, var(--warn), var(--warn));
+                color: white;
+            }
+    /* Discovery-specific action buttons */
+            .action-btn.discovery {
+                background: linear-gradient(135deg, var(--info), var(--info));
+                color: white;
+            }
+    .action-btn.discovery:hover {
+                background: linear-gradient(135deg, var(--info), var(--info));
+            }
+    .empty-state {
+                text-align: center;
+                padding: 40px;
+                color: var(--text-dim);
+            }
+    .empty-icon {
+                font-size: 48px;
+                margin-bottom: 15px;
+            }
+    /* Mobile responsiveness */
+            @media (max-width: 768px) {
+                .detail-grid {
+                    grid-template-columns: 1fr;
+                }
+    
+                .header-content {
+                    flex-direction: column;
+                    gap: 15px;
+                    text-align: center;
+                }
+    
+                .header-actions {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+    
+                .action-buttons {
+                    flex-direction: column;
+                }
+    
+                .specs-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+    
+                .discovery-status-info {
+                    flex-direction: column;
+                    gap: 15px;
+                    text-align: center;
+                }
+    
+                .discovery-actions {
+                    justify-content: center;
+                }
+            }
+    /* Loading states */
+            .loading .action-icon {
+                animation: spin 1s linear infinite;
+            }
+    @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+    @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+    @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="discovery-header {% if library.discovery_status != 'discovered' %}created{% endif %}">
+            <div class="discovery-status-info">
+                <div class="discovery-main-info">
+                    {% if library.discovery_status == 'discovered' %}
+                    <h2>🔍 MHVTL Discovered Library</h2>
+                    <p>This library was discovered from existing MHVTL configuration files and is synchronized with the system.</p>
+                    {% elif library.discovery_status == 'pending' %}
+                    <h2>⏳ Synchronization Pending</h2>
+                    <p>This library is pending synchronization with the MHVTL system.</p>
+                    {% else %}
+                    <h2>➕ Django Created Library</h2>
+                    <p>This library was created through the Django interface and can be exported to MHVTL.</p>
+                    {% endif %}
+                    
+                    {% if library.last_synced %}
+                    <p style="margin-top: 5px; font-size: 12px;">Last synchronized: {{ library.last_synced|timesince }} ago</p>
+                    {% endif %}
+                </div>
+                
+                <div class="discovery-actions">
+                    {% if library.discovery_status == 'discovered' %}
+                    <button class="discovery-btn" onclick="syncLibrary({{ library.library_id }})">
+                        🔄 Sync Now
+                    </button>
+                    {% else %}
+                    <button class="discovery-btn" onclick="exportToMHVTL()">
+                        📤 Export to MHVTL
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-grid">
+            <div class="detail-card {% if library.discovery_status == 'discovered' %}discovery-integration{% else %}django-created{% endif %}">
+                <div class="card-header">
+                    <span class="card-icon">🏛️</span>
+                    <h3 class="card-title">Library Overview</h3>
+                </div>
+
+                <div class="library-overview">
+                    <div class="library-id-display">{{ library.library_id }}</div>
+                    <div class="library-brand-display">
+                        <span>
+                            {% with vendor=mhvtl_info.vendor|default:library.brand.name %}
+                            {% if 'STK' in vendor %}📼
+                            {% elif 'IBM' in vendor %}💻
+                            {% elif 'HP' in vendor or 'HPE' in vendor %}🖨️
+                            {% elif 'Spectra' in vendor %}🔮
+                            {% elif 'QUANTUM' in vendor or 'Quantum' in vendor %}⚛️
+                            {% elif 'ADIC' in vendor %}🗃️
+                            {% elif 'SONY' in vendor or 'Sony' in vendor %}📺
+                            {% elif 'Dell' in vendor %}💿
+                            {% elif 'Overland' in vendor %}🏔️
+                            {% else %}📚{% endif %}
+                            {% endwith %}
+                        </span>
+                        {{ mhvtl_info.vendor|default:library.brand.display_name }}
+                    </div>
+                    <div class="library-model-display">{{ mhvtl_info.product|default:library.model.name }}</div>
+                    
+                    <div>
+                        <div class="status-badge {% if library.is_active %}status-active{% else %}status-inactive{% endif %}">
+                            {% if library.is_active %}✅ Active{% else %}❌ Inactive{% endif %}
+                        </div>
+                        
+                        <div class="discovery-status-badge discovery-{{ library.discovery_status|default:'created'|lower }}">
+                            {% if library.discovery_status == 'discovered' %}
+                                🔍 Discovered from MHVTL
+                            {% elif library.discovery_status == 'pending' %}
+                                ⏳ Sync Pending
+                            {% else %}
+                                ➕ Created in Django
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{% url 'libraries:tape_list' %}?library_id={{ library.library_id }}"
+                       class="action-btn">
+                        <span>📼</span> Tapes
+                    </a>
+
+                    <a href="/libraries/monitor/{{ library.library_id }}/" 
+                       class="action-btn">
+                        <span>📊</span> Monitor
+                    </a>
+
+                    {% if library.discovery_status == 'discovered' %}
+                    <button class="action-btn discovery" onclick="syncLibrary({{ library.library_id }})">
+                        <span class="action-icon">🔄</span> Sync
+                    </button>
+                    <button class="action-btn discovery" onclick="refreshFromMHVTL()">
+                        <span>🔍</span> Refresh
+                    </button>
+                    {% else %}
+                    <button class="action-btn discovery" onclick="exportToMHVTL()">
+                        <span>📤</span> Export
+                    </button>
+                    {% endif %}
+                    
+                    <form method="post" action="/libraries/control/{{ library.library_id }}/" 
+                          style="display: inline;" onsubmit="return confirm('Are you sure you want to stop this library?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="stop">
+                        <button type="submit" class="action-btn warning">
+                            <span>⏸️</span> Stop
+                        </button>
+                    </form>
+                    
+                    <a href="/libraries/remove/?library_id={{ library.library_id }}" 
+                       class="action-btn danger"
+                       onclick="return confirmLibraryRemoval()">
+                        <span>🗑️</span> Remove
+                    </a>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <h3 class="card-title">Capacity & Statistics</h3>
+                </div>
+
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <div class="spec-value">{{ slot_stats.total|default_if_none:0 }}</div>
+                        <div class="spec-label">Total Slots</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">{{ slot_stats.occupied|default_if_none:0 }}</div>
+                        <div class="spec-label">Used Slots</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">{{ slot_stats.free|default_if_none:0 }}</div>
+                        <div class="spec-label">Free Slots</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">{{ drives_count }}</div>
+                        <div class="spec-label">Drives</div>
+                    </div>
+                    {% if library.discovery_status == 'discovered' and library.last_synced %}
+                    <div class="spec-item">
+                        <div class="spec-value">{{ library.last_synced|timesince }}</div>
+                        <div class="spec-label">Last Sync</div>
+                    </div>
+                    {% endif %}
+                    {% if library.discovery_status == 'created' %}
+                    <div class="spec-item">
+                        <div class="spec-value">{{ library.created_at|timesince }}</div>
+                        <div class="spec-label">Created</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% comment %}
+                Empty slots are the room for tapes added later. They live in
+                library_contents, which the daemon reads once at start, so the
+                change needs a restart to reach the robot.
+                {% endcomment %}
+                <form method="post" action="{% url 'libraries:library_control' library.library_id %}"
+                      class="slots-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="slots">
+                    <label for="emptySlots">Empty slots</label>
+                    <input type="number" id="emptySlots" name="empty_slots" min="0"
+                           value="{{ slot_stats.free|default_if_none:0 }}">
+                    <label class="restart-label">
+                        <input type="checkbox" name="restart" checked> restart
+                    </label>
+                    <button type="submit" class="action-btn">Apply</button>
+                </form>
+                <p class="slots-help">
+                    Room for tapes added later. Shrinking only removes slots after
+                    the last tape.
+                </p>
+            </div>
+
+            <div class="detail-card full-width">
+                <div class="card-header">
+                    <span class="card-icon">🛠️</span>
+                    <h3 class="card-title">Manage this library</h3>
+                </div>
+                {% comment %}
+                Everything that can be done to one library, from the page
+                about that library. Each link carries the library, so the page
+                it opens is already on it.
+                {% endcomment %}
+                <div class="manage-grid">
+                    <div class="manage-group">
+                        <h4>Tapes</h4>
+                        <a href="{% url 'libraries:tape_list' %}?library_id={{ library.library_id }}">Inventory</a>
+                        <a href="{% url 'libraries:create_tape' %}?library_id={{ library.library_id }}">Create a tape</a>
+                        <a href="{% url 'libraries:create_tapes_bulk' %}?library_id={{ library.library_id }}">Create a run</a>
+                        <a href="{% url 'libraries:delete_tape' %}?library_id={{ library.library_id }}">Delete a tape</a>
+                    </div>
+                    <div class="manage-group">
+                        <h4>Drives</h4>
+                        <a href="{% url 'libraries:drive_list' %}?library_id={{ library.library_id }}">The drives</a>
+                        <a href="{% url 'libraries:add_drive' %}?library_id={{ library.library_id }}">Add a drive</a>
+                        <a href="{% url 'libraries:remove_drive' %}?library_id={{ library.library_id }}">Remove a drive</a>
+                    </div>
+                    <div class="manage-group">
+                        <h4>The robot</h4>
+                        <a href="{% url 'libraries:library_status' %}?library_id={{ library.library_id }}">Slots and drives</a>
+                        <a href="{% url 'libraries:mount_tape' %}?library_id={{ library.library_id }}">Mount a tape</a>
+                        <a href="{% url 'libraries:unmount_tape' %}?library_id={{ library.library_id }}">Unmount</a>
+                        <a href="{% url 'libraries:move_tape' %}?library_id={{ library.library_id }}">Move a tape</a>
+                    </div>
+                    <div class="manage-group">
+                        <h4>The library</h4>
+                        <a href="{% url 'libraries:library_monitor' library_id=library.library_id %}">Monitor</a>
+                        <a href="{% url 'libraries:library_online' %}?library_id={{ library.library_id }}">Bring online</a>
+                        <a href="{% url 'libraries:library_offline' %}?library_id={{ library.library_id }}">Take offline</a>
+                        <a href="{% url 'libraries:iscsi_dashboard' %}">Export over iSCSI</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <div class="card-header">
+                    <span class="card-icon">🔧</span>
+                    <h3 class="card-title">Technical Specifications</h3>
+                </div>
+
+                {% if library.discovery_status == 'discovered' %}
+                <div class="discovery-info-section">
+                    <h6>🔍 MHVTL Integration Details</h6>
+                    <table class="info-table">
+                        {% if library.mhvtl_id %}
+                        <tr>
+                            <td>MHVTL ID:</td>
+                            <td>{{ library.mhvtl_id }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if library.config_source %}
+                        <tr>
+                            <td>Config Source:</td>
+                            <td>{{ library.config_source }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if library.sync_hash %}
+                        <tr>
+                            <td>Sync Hash:</td>
+                            <td>{{ library.sync_hash|truncatechars:16 }}...</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Discovery Status:</td>
+                            <td>Synchronized with MHVTL</td>
+                        </tr>
+                        {% if library.last_synced %}
+                        <tr>
+                            <td>Last Synchronized:</td>
+                            <td>{{ library.last_synced|date:"M d, Y H:i" }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                {% else %}
+                <div class="discovery-info-section django-created">
+                    <h6>➕ Django Management Details</h6>
+                    <table class="info-table">
+                        <tr>
+                            <td>Creation Method:</td>
+                            <td>Django Interface</td>
+                        </tr>
+                        <tr>
+                            <td>Created Date:</td>
+                            <td>{{ library.created_at|date:"M d, Y H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Last Modified:</td>
+                            <td>{{ library.updated_at|date:"M d, Y H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <td>MHVTL Export:</td>
+                            <td>{% if library.config_generated %}Generated{% else %}Pending{% endif %}</td>
+                        </tr>
+                    </table>
+                </div>
+                {% endif %}
+
+                <table class="info-table">
+                    <tr>
+                        <td>Library ID:</td>
+                        <td>{{ library.library_id }}</td>
+                    </tr>
+                    <tr>
+                        <td>SCSI Address:</td>
+                        <td>{{ library.channel }}:{{ library.target }}:{{ library.lun }}</td>
+                    </tr>
+                    <tr>
+                        <td>Vendor ID:</td>
+                        <td>{{ mhvtl_info.vendor|default:library.vendor_identification }}</td>
+                    </tr>
+                    <tr>
+                        <td>Product ID:</td>
+                        <td>{{ mhvtl_info.product|default:library.product_identification }}</td>
+                    </tr>
+                    <tr>
+                        <td>Revision:</td>
+                        <td>{{ library.product_revision }}</td>
+                    </tr>
+                    <tr>
+                        <td>Serial Number:</td>
+                        <td>{{ library.unit_serial_number }}</td>
+                    </tr>
+                    <tr>
+                        <td>NAA:</td>
+                        <td>{{ library.naa }}</td>
+                    </tr>
+                    <tr>
+                        <td>Home Directory:</td>
+                        <td>{{ library.home_directory }}</td>
+                    </tr>
+                    <tr>
+                        <td>Configuration Type:</td>
+                        <td>{% if library.is_standard_config %}Standard{% else %}Custom{% endif %}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="detail-card">
+                <div class="card-header">
+                    <span class="card-icon">💽</span>
+                    <h3 class="card-title">Tape Drives ({{ drives_count }})</h3>
+                </div>
+
+                {% comment %}
+                What each drive is doing, read through MHVTL's message queue,
+                so it keeps answering while a backup holds the SCSI
+                reservation. The whole panel is rendered by the server and
+                swapped in by js/auto-refresh.js; nothing here is worked out
+                in the browser, so `mhvtl status activity` prints the same
+                words.
+                {% endcomment %}
+                <div class="drive-activity"
+                     data-refresh-url="{% url 'libraries:library_activity' library.library_id %}"
+                     data-refresh-seconds="5">
+                    {% include 'libraries/partials/_library_activity.html' with drives=activity_drives only %}
+                </div>
+
+                {% if drives %}
+                    <div class="drives-list">
+                        {% for drive in drives %}
+                            <div class="drive-item discovered">
+                                <div class="drive-header">
+                                    <div class="drive-id">Drive {{ drive.drive_id }}</div>
+                                    <div class="drive-status discovered">
+                                        Slot {{ drive.slot }}
+                                    </div>
+                                </div>
+                                <div class="drive-details">
+                                    <strong>SCSI:</strong> {{ drive.channel }}:{{ drive.target }}:{{ drive.lun }}
+                                    {% if drive.vendor %} | <strong>Vendor:</strong> {{ drive.vendor }}{% endif %}
+                                    {% if drive.product %} | <strong>Product:</strong> {{ drive.product }}{% endif %}
+                                    {% if drive.serial %} | <strong>S/N:</strong> {{ drive.serial }}{% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">💽</div>
+                        <p>No drives configured for this library yet.</p>
+                        <p>Drives are part of the library's configuration in <code>device.conf</code>.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="detail-card">
+                <div class="card-header">
+                    <span class="card-icon">📼</span>
+                    <h3 class="card-title">Tapes ({{ tapes|length }})</h3>
+                </div>
+
+                {% if tapes %}
+                    {% comment %}
+                    A tile per tape, the way a file manager shows drives: how
+                    full it is, and how much room is left. The table this
+                    replaced listed slot, barcode, type and density and said
+                    nothing about the one thing a tape runs out of.
+                    {% endcomment %}
+                    {% include 'libraries/partials/_tape_tiles.html' with tapes=tapes only %}
+                    <p style="margin-top: 12px;">
+                        <a href="{% url 'libraries:tape_list' %}?library_id={{ library.library_id }}">
+                            Tape inventory
+                        </a> - create, delete and adopt tapes.
+                    </p>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">📼</div>
+                        <p>This library has no tapes in its slots.</p>
+                        <p>
+                            <a href="{% url 'libraries:create_tape' %}?library_id={{ library.library_id }}">Create one</a>,
+                            or put a tape that still has its data back from the
+                            <a href="{% url 'libraries:tape_list' %}?library_id={{ library.library_id }}">tape inventory</a>.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/library-sync.js' %}"></script>
+{# the id first: the script reads it as it loads #}
+<script src="{% static 'js/auto-refresh.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,178 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../start/what-it-is.rst:2 cd8686829b04447f87d8c043109cd933
+msgid "What this is"
+msgstr ""
+
+#: ../../start/what-it-is.rst:4 59859c2591d14b2f9e35245fc69c6d58
+msgid ""
+"MHVTL is a Linux kernel module and a set of daemons that pretend to be a "
+"tape library: a robot that moves cartridges between slots and drives, and"
+" drives that write to files on disk. Backup software talks to it exactly "
+"as it would to a real library, over SCSI or iSCSI."
+msgstr ""
+
+#: ../../start/what-it-is.rst:9 0f756b53762f4b5d86b873c95ce884af
+msgid ""
+"This console is a web interface for it, and a command called ``mhvtl``. "
+"They do the same things, because they are the same code: both call one "
+"service layer, so neither can do something the other cannot."
+msgstr ""
+
+#: ../../start/what-it-is.rst:14 6202b304ccc148d58132703979f23cf9
+msgid "What you can do with it"
+msgstr ""
+
+#: ../../start/what-it-is.rst:16 108982f1d3464998a4db2c857e7b92c5
+msgid ""
+"**Create libraries** from the models MHVTL can emulate - an IBM TS3500, "
+"an STK SL500, a Quantum Scalar i500 - with the drives and cartridges "
+"those models really take."
+msgstr ""
+
+#: ../../start/what-it-is.rst:19 4e26ea1e7e2f41dbad475500407a1739
+msgid ""
+"**Fill them with tapes**, one at a time or a barcode run at a time, and "
+"put a tape that still has its data back into a library."
+msgstr ""
+
+#: ../../start/what-it-is.rst:21 c93b05144cff448d95f830fbff5be543
+msgid "**Drive the robot**: mount, unmount, move a cartridge between slots."
+msgstr ""
+
+#: ../../start/what-it-is.rst:22 dc7777f53fb2427588c9e721a43c3f3a
+msgid "**Export a library over iSCSI**, so another machine can back up to it."
+msgstr ""
+
+#: ../../start/what-it-is.rst:23 d31310c07f604d218b62cc389d5fafa3
+msgid ""
+"**Watch a drive while it writes**, which no other tool on the host can do"
+" during a backup."
+msgstr ""
+
+#: ../../start/what-it-is.rst:25 f6f4106f813a4563adea15f6c6592c93
+msgid ""
+"**See what the host thinks**: the daemons, the kernel modules, the SCSI "
+"devices, the logs, the disk."
+msgstr ""
+
+#: ../../start/what-it-is.rst:29 c3f4efb81a324d399149927a23b073d4
+msgid "What it is not"
+msgstr ""
+
+#: ../../start/what-it-is.rst:31 21abd50a118b48bfbaf6c20f91a0af4e
+msgid ""
+"It is not backup software. It gives you a library; what writes to that "
+"library is ``tar``, Bacula, NetBackup, Veeam or whatever you already use."
+msgstr ""
+
+#: ../../start/what-it-is.rst:34 03416486c3294a2c8aa9fb0f2896a20f
+msgid ""
+"It does not store your backups anywhere clever: a tape is a directory of "
+"files under ``/opt/mhvtl``, and its size is the size you gave it when you"
+" made it."
+msgstr ""
+
+#: ../../start/what-it-is.rst:39 251e0ea9d49a4c82998a0464beb7fc66
+msgid "Why a virtual library"
+msgstr ""
+
+#: ../../start/what-it-is.rst:41 88ce125748644ab2aa967328e98bb648
+msgid ""
+"Because tape is awkward to test against. A virtual library lets you "
+"rehearse a restore, prove a retention policy, train someone, or develop "
+"backup software, without a drive, without cartridges, and without waiting"
+" for a robot to move anything."
+msgstr ""
+
+#: ../../start/what-it-is.rst:47 d717a59634f143fca882e2730c26f19f
+msgid "The words used here"
+msgstr ""
+
+#: ../../start/what-it-is.rst:49 1341b378f852496b9d4e0e3c832168ed
+msgid "**Library**"
+msgstr ""
+
+#: ../../start/what-it-is.rst:50 5503bc6ea77e480a8daeb83808032a38
+msgid ""
+"The whole thing: a robot, some drives, and slots to hold cartridges. Has "
+"an id - 10, 20, 30 - which is how every command refers to it."
+msgstr ""
+
+#: ../../start/what-it-is.rst:53 5f3025db1b3c4a70956d2b4bd2df971e
+msgid "**Drive**"
+msgstr ""
+
+#: ../../start/what-it-is.rst:54 4a57ecdbc68d4ef5b7745083a3a7c0b3
+msgid ""
+"Writes and reads a cartridge. Has its own id, and belongs to one library."
+" MHVTL runs one daemon per drive."
+msgstr ""
+
+#: ../../start/what-it-is.rst:57 e09faa2cc6ad4504a079f395fb21a895
+msgid "**Slot**"
+msgstr ""
+
+#: ../../start/what-it-is.rst:58 7216a376198b46c08119b9b17470a9d0
+msgid ""
+"Where a cartridge sits when it is not in a drive. A library has a fixed "
+"number; empty ones are room for tapes added later."
+msgstr ""
+
+#: ../../start/what-it-is.rst:61 bd09e518663841af94d1d2ccc8583d90
+msgid "**Tape**, or cartridge, or medium"
+msgstr ""
+
+#: ../../start/what-it-is.rst:62 279cb66e586e4bbeb936c294ba6b5239
+msgid ""
+"Identified by a barcode like ``E01001L8``. The last two characters say "
+"which generation it is - ``L8`` is LTO-8 - and that decides which drives "
+"can load it."
+msgstr ""
+
+#: ../../start/what-it-is.rst:66 4f020560a66149de86773677b1582f94
+msgid "**MAP**"
+msgstr ""
+
+#: ../../start/what-it-is.rst:67 d6c479c1a2934a818b05e627efd890fa
+msgid ""
+"The mail slot: where a real operator would put a cartridge into the "
+"library from outside. MHVTL emulates it."
+msgstr ""
+
+#: ../../start/what-it-is.rst:70 1e6f044ae45c4ee39ae8895fdd04f2f3
+msgid "**Changer**"
+msgstr ""
+
+#: ../../start/what-it-is.rst:71 96015d154bde4514acb652b9fe4078df
+msgid "The robot, as the kernel sees it: a SCSI device of type ``mediumx``."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

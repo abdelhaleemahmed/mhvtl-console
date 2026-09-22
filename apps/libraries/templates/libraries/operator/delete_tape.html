@@ -1,0 +1,150 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Delete Tape{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; color: var(--bad); }
+    .warning-box { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+    .warning-box h4 { color: var(--alert-warn-text); margin-bottom: 10px; }
+    .warning-box ul { margin-left: 20px; color: var(--alert-warn-text); }
+    .checkbox-group { display: flex; align-items: center; gap: 10px; }
+    .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="operation-icon">&#128465;</div>
+            <div class="section-title">Delete Tape from Library</div>
+            <p class="page-description">
+                Remove a tape from a library slot.
+            </p>
+
+            <div class="warning-box">
+                <h4>Warning:</h4>
+                <ul>
+                    <li>Removing a tape will delete it from the library inventory</li>
+                    <li>Optionally, you can also delete the tape data file</li>
+                    <li>This action cannot be undone</li>
+                </ul>
+            </div>
+
+            <form method="post" action="{% url 'libraries:delete_tape' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="library_id">Select Library</label>
+                    <select name="library_id" id="library_id" class="form-control" required onchange="loadTapes()">
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"{% if selected_library_id == library.library_id %} selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tape_select">Tape</label>
+                    <select id="tape_select" class="form-control" disabled>
+                        <option value="">-- Select a library first --</option>
+                    </select>
+                    <p class="form-help" id="tape_help">The tapes this library holds</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="barcode">Tape Barcode</label>
+                    <input type="text" name="barcode" id="barcode" class="form-control"
+                           placeholder="Enter barcode or leave empty to use slot"
+                           style="text-transform: uppercase;">
+                    <p class="form-help">Filled in by the list above; type one to override</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="slot">Or Slot Number</label>
+                    <input type="number" name="slot" id="slot" class="form-control"
+                           min="1" max="15000" placeholder="Enter slot number">
+                    <p class="form-help">Alternatively, specify the slot number</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="delete_data" id="delete_data">
+                        <label for="delete_data" style="margin-bottom: 0;">
+                            Also delete tape data file from /opt/mhvtl
+                        </label>
+                    </div>
+                    <p class="form-help" style="margin-left: 28px;">
+                        If unchecked, only removes from library inventory (data preserved).
+                        The tape then appears under <em>Tapes on disk with no library</em>
+                        in the <a href="{% url 'libraries:tape_list' %}">tape inventory</a>,
+                        where it can be put back into a library with its data.
+                    </p>
+                </div>
+
+                <div class="btn-group">
+                    <a href="{% url 'libraries:tape_list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Delete Tape</button>
+                </div>
+            </form>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        // The library's tapes, so an operator picks one instead of typing a
+        // barcode from memory. The select's onchange called loadTapes() and
+        // this page had no script at all, so choosing a library did nothing.
+        function loadTapes() {
+            const libraryId = document.getElementById('library_id').value;
+            const select = document.getElementById('tape_select');
+            const help = document.getElementById('tape_help');
+            select.innerHTML = '<option value="">-- Select a tape --</option>';
+            select.disabled = true;
+            document.getElementById('barcode').value = '';
+            document.getElementById('slot').value = '';
+            if (!libraryId) {
+                select.innerHTML = '<option value="">-- Select a library first --</option>';
+                return;
+            }
+
+            help.textContent = 'Reading the library...';
+            fetch(`/libraries/ajax/tapes/${libraryId}/`)
+                .then(response => response.json())
+                .then(answer => {
+                    const tapes = (answer.data && answer.data.tapes) || [];
+                    if (!answer.success || !tapes.length) {
+                        help.textContent = answer.success
+                            ? 'This library holds no tapes.'
+                            : `Could not read the library: ${answer.message || answer.error}`;
+                        return;
+                    }
+                    tapes.forEach(tape => {
+                        const option = document.createElement('option');
+                        option.value = tape.barcode;
+                        option.dataset.slot = tape.slot;
+                        option.textContent = `${tape.barcode} - slot ${tape.slot}` +
+                            (tape.kind && tape.kind !== 'data' ? ` (${tape.kind})` : '') +
+                            (tape.media_exists === false ? ' - no data files' : '');
+                        select.appendChild(option);
+                    });
+                    select.disabled = false;
+                    help.textContent = `${tapes.length} tape(s) in this library`;
+                })
+                .catch(error => { help.textContent = `Could not read the library: ${error}`; });
+        }
+
+        document.getElementById('tape_select').addEventListener('change', function () {
+            const chosen = this.selectedOptions[0];
+            document.getElementById('barcode').value = this.value;
+            document.getElementById('slot').value = this.value ? chosen.dataset.slot : '';
+        });
+
+        // The page now keeps the library the link carried, so its tapes are
+        // loaded at once rather than only when the picker is touched.
+        if (document.getElementById('library_id').value) { loadTapes(); }
+    </script>
+{% endblock %}

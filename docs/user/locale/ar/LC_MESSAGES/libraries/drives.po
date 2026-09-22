@@ -1,0 +1,129 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../libraries/drives.rst:2 08b33bda149c4ac69583afa49d75e68f
+msgid "Adding and removing drives"
+msgstr ""
+
+#: ../../libraries/drives.rst:4 d14b90dba7264f2eb34bd703da774a53
+msgid ""
+"A library's drives are part of its configuration, so adding or removing "
+"one rewrites ``device.conf`` and restarts the library."
+msgstr ""
+
+#: ../../libraries/drives.rst:12 f8ef836e80604feaaa53571973696c9e
+msgid "Adding a drive"
+msgstr ""
+
+#: ../../libraries/drives.rst:14 da3931210bf443498b70f7fcff9f3958
+msgid ""
+"**Operator → Add Drive**, or **Drives → Add a drive** on the library "
+"page, which arrives with the library already chosen."
+msgstr ""
+
+#: ../../libraries/drives.rst:17 8640190ae0624540bb5b6d1861a6f0a8
+msgid ""
+"The page shows what the drive will be before you commit to it: the model,"
+" the serial it will be given, the slot it will occupy, and its SCSI "
+"address. Change the library and all of that changes with it."
+msgstr ""
+
+#: ../../libraries/drives.rst:21 4a8b7a7bb2cb4a1abf72200c12d2a158
+msgid ""
+"Only drives this library's model takes are offered - plus any model the "
+"library already holds, because a library on a real host does not always "
+"match its profile, and refusing a drive identical to the ones already in "
+"it would help nobody."
+msgstr ""
+
+#: ../../libraries/drives.rst:26 a457536acd9e4f0cb44d0c8ad40d96a9
+msgid "Add Drive: the models this library takes, and where the drive will go"
+msgstr ""
+
+#: ../../libraries/drives.rst:39 13d302e0384c40bb9a7f367a3d2a439a
+msgid ""
+"The slot, the drive id and the SCSI target are chosen for you: they are "
+"the next free ones. Overriding them is not offered, because a drive at an"
+" address something else already uses will not start."
+msgstr ""
+
+#: ../../libraries/drives.rst:44 2b01faaf89804acab8c4cbef7ff6f5f9
+msgid "Removing a drive"
+msgstr ""
+
+#: ../../libraries/drives.rst:46 5467bec7b130424b9612e18ab64c503b
+msgid ""
+"**Operator → Remove Drive**, or **Drives → Remove a drive** on the "
+"library page."
+msgstr ""
+
+#: ../../libraries/drives.rst:49 e4bb64faaf2c4ca89faace14f59dcea0
+msgid ""
+"The page says what is in the drive before you remove it. A drive holding "
+"a tape has that tape put back in its slot first."
+msgstr ""
+
+#: ../../libraries/drives.rst:52 36c06f4a7830417b98c1acb6dacf5d74
+msgid "Remove Drive: which drive, and what it is holding"
+msgstr ""
+
+#: ../../libraries/drives.rst:63 77e149700a934d87b2aa01869b1de0f8
+msgid ""
+"This cannot be undone, although the drive can be added again. What it "
+"removes is the drive's entry in ``device.conf``; no tape is deleted."
+msgstr ""
+
+#: ../../libraries/drives.rst:67 1e4ac8f894974a2b9caad82c1c3b2d62
+msgid "What it does to the running library"
+msgstr ""
+
+#: ../../libraries/drives.rst:69 78f1689cc117451bb628b9560cd5ad87
+msgid ""
+"Both restart the library, because MHVTL reads ``device.conf`` once, when "
+"a daemon starts. Until it restarts, its robot reports the drives it had "
+"when it started."
+msgstr ""
+
+#: ../../libraries/drives.rst:73 010485bfbd6041f8803b9aeb4e322bd0
+msgid ""
+"``--no-restart`` writes the configuration and leaves the daemons alone, "
+"for when you are making several changes and want one restart at the end:"
+msgstr ""
+
+#: ../../libraries/drives.rst:82 2a6d8251f096423999b48fea1030f39e
+msgid ""
+"The console says the same thing, on the page: a library whose "
+"configuration and whose robot disagree is flagged until it is restarted."
+msgstr ""
+
+#: ../../libraries/drives.rst:86 a73aea58e4e6476e97af702fce19ec65
+msgid "Seeing the drives"
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

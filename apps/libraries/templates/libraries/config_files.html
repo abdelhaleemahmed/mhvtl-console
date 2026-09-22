@@ -1,0 +1,712 @@
+{% extends 'libraries/base.html' %}
+
+
+{% block header_title %}📄 {{ title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .main-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+    .config-card {
+                background: var(--surface);
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                margin-bottom: 30px;
+            }
+    .card-header {
+                background: var(--surface-deep);
+                padding: 25px;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+    .card-title {
+                margin: 0;
+                font-size: 1.5rem;
+                color: var(--text);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+    .mode-badge {
+                padding: 6px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                margin-left: 15px;
+            }
+    .mode-dev {
+                background: var(--warn-bg);
+                color: var(--alert-warn-text);
+            }
+    .mode-prod {
+                background: var(--info-bg);
+                color: var(--info);
+            }
+    .card-actions {
+                display: flex;
+                gap: 10px;
+            }
+    /* NEW: MHVTL Status Section */
+            .mhvtl-status {
+                background: var(--surface-deep);
+                padding: 20px 25px;
+                border-bottom: 1px solid var(--border);
+            }
+    .status-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+    .status-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+    .status-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                background: var(--surface);
+                border-radius: 8px;
+                border: 1px solid var(--border);
+            }
+    .status-label {
+                font-size: 14px;
+                color: var(--text-dim);
+            }
+    .status-value {
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+    .status-available {
+                color: var(--ok);
+            }
+    .status-unavailable {
+                color: var(--bad);
+            }
+    .info-section {
+                padding: 25px;
+                border-bottom: 1px solid var(--border);
+            }
+    .info-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 15px;
+            }
+    .info-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+    .info-item {
+                background: var(--surface);
+                padding: 15px;
+                border-radius: 8px;
+            }
+    .info-label {
+                font-size: 12px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                margin-bottom: 5px;
+            }
+    .info-value {
+                font-weight: 600;
+                color: var(--text);
+                font-family: monospace;
+            }
+    .files-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 20px;
+                padding: 25px;
+            }
+    .file-card {
+                background: var(--surface-deep);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 20px;
+                transition: all 0.3s ease;
+            }
+    .file-card:hover {
+                background: var(--surface);
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+    .file-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+    .file-icon {
+                font-size: 24px;
+            }
+    .file-name {
+                font-weight: 600;
+                color: var(--text);
+                flex: 1;
+            }
+    .file-type {
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 10px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+    .type-config {
+                background: var(--ok-bg);
+                color: var(--alert-ok-text);
+            }
+    .type-summary {
+                background: var(--warn-bg);
+                color: var(--alert-warn-text);
+            }
+    .type-other {
+                background: var(--border);
+                color: var(--text-dim);
+            }
+    .file-details {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-bottom: 15px;
+                font-size: 12px;
+            }
+    .file-detail {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+    .file-actions {
+                display: flex;
+                gap: 10px;
+            }
+    .file-btn {
+                padding: 8px 15px;
+                border-radius: 6px;
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--text-dim);
+            }
+    .file-btn:hover {
+                background: var(--info);
+                color: white;
+                text-decoration: none;
+                border-color: var(--info);
+            }
+    .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: var(--text-dim);
+            }
+    .empty-icon {
+                font-size: 4rem;
+                margin-bottom: 20px;
+            }
+    .empty-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 10px;
+                color: var(--text);
+            }
+    .empty-description {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+    /* NEW: Error List Styling */
+            .error-list {
+                margin: 10px 0;
+                padding: 0;
+                list-style: none;
+            }
+    .error-list li {
+                padding: 5px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+    .error-list li:last-child {
+                border-bottom: none;
+            }
+    /* Mobile responsiveness */
+            @media (max-width: 768px) {
+                .files-grid {
+                    grid-template-columns: 1fr;
+                }
+    
+                .card-header {
+                    flex-direction: column;
+                    gap: 15px;
+                    align-items: flex-start;
+                }
+    
+                .card-actions {
+                    width: 100%;
+                    justify-content: stretch;
+                }
+    
+                .card-actions .btn {
+                    flex: 1;
+                    justify-content: center;
+                }
+            }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Display messages -->
+        
+
+        <div class="config-card">
+            <!-- NEW: MHVTL System Status Section -->
+            <div class="mhvtl-status">
+                <div class="status-title">
+                    🔧 MHVTL System Status
+                </div>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="status-label">MHVTL Available</span>
+                        <span class="status-value {% if mhvtl_available %}status-available{% else %}status-unavailable{% endif %}">
+                            {% if mhvtl_available %}
+                                ✅ Available
+                            {% else %}
+                                ❌ Not Available
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Config Directory</span>
+                        <span class="status-value {% if directory_exists %}status-available{% else %}status-unavailable{% endif %}">
+                            {% if directory_exists %}
+                                ✅ {{ config_dir }}
+                            {% else %}
+                                ❌ {{ config_dir }} (Not Found)
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Configuration Files</span>
+                        <span class="status-value">
+                            📄 {{ files_info|length }} files
+                        </span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">File Source</span>
+                        <span class="status-value status-available">
+                            🎯 MHVTL Native
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Display configuration directory errors -->
+                {% if error_message %}
+                    <div class="alert alert-error" style="margin-top: 15px; padding: 15px; background: var(--bad-bg); border-left: 4px solid var(--bad); border-radius: 4px;">
+                        <strong>⚠️ Configuration Directory Issue:</strong>
+                        <p style="margin: 10px 0 0 0; color: var(--alert-bad-text);">{{ error_message }}</p>
+                        {% if not directory_exists %}
+                        <p style="margin: 10px 0 0 0; color: var(--alert-bad-text); font-size: 13px;">
+                            <strong>Note:</strong> This usually means MHVTL is not installed or the configuration path is incorrect.
+                            Libraries created through this Django interface will still be tracked in the database, but MHVTL configuration files cannot be displayed until the directory exists.
+                        </p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <!-- Display MHVTL Errors if any -->
+                {% if not mhvtl_available and mhvtl_errors %}
+                    <div class="alert alert-error" style="margin-top: 15px;">
+                        <strong>MHVTL Issues Detected:</strong>
+                        <ul class="error-list">
+                            {% for error in mhvtl_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">
+                        <span>⚙️</span>
+                        MHVTL Configuration Files
+                        <span class="mode-badge mode-prod">
+                            Native MHVTL Files
+                        </span>
+                    </h2>
+                    <p style="margin: 10px 0 0 0; color: var(--text-dim); font-size: 14px;">
+                        These are the actual MHVTL configuration files, managed by MHVTL scripts.
+                    </p>
+                </div>
+                <div class="card-actions">
+                    <!-- UPDATED: Regenerate using MHVTL scripts -->
+                    <form method="post" action="{% url 'libraries:regenerate_configs_ajax' %}" style="display: inline;" id="regenerate-form">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-primary" onclick="regenerateConfigs()">
+                            <span>🔄</span> Regenerate All
+                        </button>
+                    </form>
+                    {% if files_info %}
+                        <a href="{% url 'libraries:download_all_configs' %}" class="btn btn-success">
+                            <span>📦</span> Download All (ZIP)
+                        </a>
+                    {% endif %}
+                    <!-- NEW: MHVTL System Health Check -->
+                    <button type="button" class="btn btn-warning" onclick="checkMHVTLHealth()" style="background: var(--warn); color: var(--text);">
+                        <span>🔍</span> Health Check
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">📊 Configuration Information</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Source</div>
+                        <div class="info-value">MHVTL Native Scripts</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Config Directory</div>
+                        <div class="info-value">{{ config_dir|default:"/etc/mhvtl/" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Active Files</div>
+                        <div class="info-value">{{ files_info|length }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Management</div>
+                        <div class="info-value">Script-Based</div>
+                    </div>
+                </div>
+            </div>
+
+            {% if files_info %}
+                <div class="files-grid">
+                    {% for file in files_info %}
+                        <div class="file-card">
+                            <div class="file-header">
+                                <div class="file-icon">
+                                    {% if file.name == 'device.conf' %}🔧
+                                    {% elif file.name|slice:":16" == 'library_contents' %}📚
+                                    {% elif file.name == 'mhvtl.conf' %}⚙️
+                                    {% else %}📄{% endif %}
+                                </div>
+                                <div class="file-name">{{ file.name }}</div>
+                                <div class="file-type {% if file.source == 'mhvtl_native' %}type-config{% else %}type-other{% endif %}">
+                                    {% if file.name == 'device.conf' %}Device Config
+                                    {% elif file.name|slice:":16" == 'library_contents' %}Library Content
+                                    {% elif file.name == 'mhvtl.conf' %}MHVTL Config
+                                    {% else %}Other{% endif %}
+                                </div>
+                            </div>
+
+                            <div class="file-details">
+                                <div class="file-detail">
+                                    <span>Size:</span>
+                                    <span>
+                                        {% if file.size > 0 %}
+                                            {{ file.size|filesizeformat }}
+                                        {% else %}
+                                            Empty
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="file-detail">
+                                    <span>Modified:</span>
+                                    <span>
+                                        {% if file.modified %}
+                                            {{ file.modified|date:"M d, H:i" }}
+                                        {% else %}
+                                            Never
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="file-detail">
+                                    <span>Readable:</span>
+                                    <span class="{% if file.readable %}status-available{% else %}status-unavailable{% endif %}">
+                                        {% if file.readable %}✅ Yes{% else %}❌ No{% endif %}
+                                    </span>
+                                </div>
+                                <div class="file-detail">
+                                    <span>Source:</span>
+                                    <span class="status-available">{{ file.source|default:"MHVTL" }}</span>
+                                </div>
+                            </div>
+
+                            <div class="file-actions">
+                                {% if file.readable %}
+                                    <a href="{% url 'libraries:download_config' filename=file.name %}" class="file-btn">
+                                        💾 Download
+                                    </a>
+                                    <a href="#" class="file-btn" onclick="previewFile('{{ file.name }}')">
+                                        👁️ Preview
+                                    </a>
+                                {% else %}
+                                    <span class="file-btn" style="opacity: 0.5; cursor: not-allowed;">
+                                        🚫 Not Accessible
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📄</div>
+                    <div class="empty-title">No MHVTL Configuration Files Found</div>
+                    <div class="empty-description">
+                        {% if not mhvtl_available %}
+                            MHVTL system is not available or accessible.<br>
+                            Please check the system status and ensure MHVTL is properly installed.
+                        {% else %}
+                            No MHVTL configuration files have been found.<br>
+                            Create a library using MHVTL scripts or regenerate configurations to get started.
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- NEW: JavaScript for MHVTL script operations -->
+<script>
+        function regenerateConfigs() {
+            if (confirm('Are you sure you want to regenerate all MHVTL configuration files?\n\nThis will use MHVTL scripts to recreate all configuration files.')) {
+                const form = document.getElementById('regenerate-form');
+                const formData = new FormData(form);
+                
+                // Show loading state
+                const button = form.querySelector('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<span>⏳</span> Regenerating...';
+                button.disabled = true;
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('✅ ' + data.message);
+                        location.reload();
+                    } else {
+                        alert('❌ Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('❌ Network error: ' + error.message);
+                })
+                .finally(() => {
+                    // Restore button state
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                });
+            }
+        }
+        
+        function checkMHVTLHealth() {
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span>⏳</span> Checking...';
+            button.disabled = true;
+
+            fetch('{% url "libraries:mhvtl_status_ajax" %}', {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    showModal('Health Check Error', `<p style="color:var(--bad);">❌ ${data.error}</p>`);
+                    return;
+                }
+
+                let html = '<div style="font-family:monospace; font-size:13px; line-height:1.8;">';
+
+                // System overview
+                html += '<h3 style="margin:0 0 10px; color:var(--text); border-bottom:2px solid var(--accent); padding-bottom:5px;">System Overview</h3>';
+                html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">`;
+                html += statusRow('MHVTL Available', data.mhvtl_available);
+                html += statusRow('Config Directory', data.config_dir_exists);
+                html += statusRow('Data Directory', data.data_dir_exists);
+                html += statusRow('Config Valid', data.config_valid);
+                html += `</div>`;
+
+                // Libraries & Drives
+                html += '<h3 style="margin:15px 0 10px; color:var(--text); border-bottom:2px solid var(--accent); padding-bottom:5px;">Libraries & Drives</h3>';
+                html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">`;
+                html += infoRow('Libraries in MHVTL', data.libraries_in_mhvtl || 0);
+                html += infoRow('Libraries in DB', data.libraries_in_db || 0);
+                html += infoRow('Drives in MHVTL', data.drives_in_mhvtl || 0);
+                html += infoRow('Drives in DB', data.drives_in_db || 0);
+                html += `</div>`;
+
+                // Services
+                if (data.services) {
+                    html += '<h3 style="margin:15px 0 10px; color:var(--text); border-bottom:2px solid var(--accent); padding-bottom:5px;">Services</h3>';
+                    html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">`;
+                    for (const [svc, status] of Object.entries(data.services)) {
+                        html += statusRow(svc, status === 'active');
+                    }
+                    html += `</div>`;
+                }
+
+                // Kernel Modules
+                if (data.kernel_modules) {
+                    html += '<h3 style="margin:15px 0 10px; color:var(--text); border-bottom:2px solid var(--accent); padding-bottom:5px;">Kernel Modules</h3>';
+                    html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">`;
+                    for (const [mod, loaded] of Object.entries(data.kernel_modules)) {
+                        html += statusRow(mod, loaded);
+                    }
+                    html += `</div>`;
+                }
+
+                // Disk Usage
+                if (data.disk_usage && Object.keys(data.disk_usage).length > 0) {
+                    html += '<h3 style="margin:15px 0 10px; color:var(--text); border-bottom:2px solid var(--accent); padding-bottom:5px;">Disk Usage</h3>';
+                    for (const [path, usage] of Object.entries(data.disk_usage)) {
+                        const color = usage.percent > 90 ? 'var(--bad)' : usage.percent > 70 ? 'var(--warn)' : 'var(--ok)';
+                        html += `<div style="margin-bottom:8px;">`;
+                        html += `<strong>${path}</strong>: ${usage.used_gb} GB / ${usage.total_gb} GB (${usage.free_gb} GB free)`;
+                        html += `<div style="background:var(--border); border-radius:4px; height:8px; margin-top:4px;">`;
+                        html += `<div style="background:${color}; width:${usage.percent}%; height:100%; border-radius:4px;"></div></div></div>`;
+                    }
+                }
+
+                // Errors
+                if (data.mhvtl_errors && data.mhvtl_errors.length > 0) {
+                    html += '<h3 style="margin:15px 0 10px; color:var(--bad); border-bottom:2px solid var(--bad); padding-bottom:5px;">Issues</h3>';
+                    data.mhvtl_errors.forEach(e => { html += `<div style="color:var(--bad);">⚠️ ${e}</div>`; });
+                }
+                if (data.config_issues && data.config_issues.length > 0) {
+                    data.config_issues.forEach(e => { html += `<div style="color:var(--alert-warn-text);">⚠️ ${e}</div>`; });
+                }
+
+                html += '</div>';
+                showModal('🔍 MHVTL System Health Check', html);
+            })
+            .catch(error => {
+                showModal('Health Check Error', `<p style="color:var(--bad);">❌ Network error: ${error.message}</p>`);
+            })
+            .finally(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            });
+        }
+
+        function statusRow(label, ok) {
+            const icon = ok ? '✅' : '❌';
+            const color = ok ? 'var(--ok)' : 'var(--bad)';
+            return `<div style="display:flex; justify-content:space-between; padding:4px 8px; background:var(--surface-deep); border-radius:4px;">
+                <span>${label}</span><span style="color:${color}; font-weight:bold;">${icon} ${ok ? 'OK' : 'FAIL'}</span></div>`;
+        }
+
+        function infoRow(label, value) {
+            return `<div style="display:flex; justify-content:space-between; padding:4px 8px; background:var(--surface-deep); border-radius:4px;">
+                <span>${label}</span><span style="font-weight:bold; color:var(--text);">${value}</span></div>`;
+        }
+
+        function previewFile(filename) {
+            showModal('Loading...', '<p style="text-align:center;">⏳ Loading file...</p>');
+
+            fetch(`{% url 'libraries:preview_config_file_ajax' %}?filename=${encodeURIComponent(filename)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    showModal('Preview Error', `<p style="color:var(--bad);">❌ ${data.error}</p>`);
+                    return;
+                }
+
+                // Syntax highlight the config content
+                const highlighted = highlightConfig(data.content);
+                const html = `
+                    <div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; color:var(--text-dim);">${data.size} bytes</span>
+                        <a href="{% url 'libraries:download_config' filename='PLACEHOLDER' %}".replace('PLACEHOLDER', '${filename}')
+                           style="padding:5px 12px; background:var(--info); color:white; border-radius:4px; text-decoration:none; font-size:12px;">
+                            💾 Download
+                        </a>
+                    </div>
+                    <pre style="background:var(--surface-deep); color:var(--text); padding:20px; border-radius:8px; overflow-x:auto;
+                                font-size:13px; line-height:1.6; max-height:70vh; overflow-y:auto; margin:0;
+                                border:1px solid var(--border-soft);">${highlighted}</pre>`;
+                showModal(`📄 ${filename}`, html);
+            })
+            .catch(error => {
+                showModal('Preview Error', `<p style="color:var(--bad);">❌ Network error: ${error.message}</p>`);
+            });
+        }
+
+        function highlightConfig(text) {
+            // Escape HTML
+            let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            // Comments: lines starting with # (green)
+            html = html.replace(/^(#.*)$/gm, '<span style="color:var(--ok);">$1</span>');
+
+            // Section headers: lines like "Library: 10 ..." or "Drive: 11 ..." (blue bold)
+            html = html.replace(/^((?:Library|Drive|VERSION|Slot):.*)$/gm, '<span style="color:var(--accent); font-weight:bold;">$1</span>');
+
+            // Key-value pairs: "key value" where key is a known keyword (yellow key, white value)
+            const keywords = ['Vendor_identification', 'Product_identification', 'Product_revision',
+                'Unit_serial_number', 'NAA', 'Home_directory', 'Compression', 'SCSI_SN',
+                'channel', 'target', 'lun', 'Backoff', 'Density', 'Firmware',
+                'Media_access_device', 'Media_changer'];
+            keywords.forEach(kw => {
+                const re = new RegExp('^(\\s*' + kw + ')(\\s+.*)$', 'gm');
+                html = html.replace(re, '<span style="color:var(--warn);">$1</span><span style="color:var(--text);">$2</span>');
+            });
+
+            // Numbers after colons (peach)
+            html = html.replace(/: (\d+)/g, ': <span style="color:var(--warn);">$1</span>');
+
+            return html;
+        }
+
+        function showModal(title, bodyHtml) {
+            // Remove existing modal
+            const existing = document.getElementById('config-preview-modal');
+            if (existing) existing.remove();
+
+            const overlay = document.createElement('div');
+            overlay.id = 'config-preview-modal';
+            overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center;';
+            overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+
+            overlay.innerHTML = `
+                <div style="background: var(--surface); border-radius:12px; width:90%; max-width:800px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid var(--border);">
+                        <h3 style="margin:0; color:var(--text); font-size:16px;">${title}</h3>
+                        <button onclick="document.getElementById('config-preview-modal').remove()"
+                                style="background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-dim); padding:0 5px;">✕</button>
+                    </div>
+                    <div style="padding:20px; overflow-y:auto; flex:1;">${bodyHtml}</div>
+                </div>`;
+
+            document.body.appendChild(overlay);
+        }
+    </script>
+{% endblock %}

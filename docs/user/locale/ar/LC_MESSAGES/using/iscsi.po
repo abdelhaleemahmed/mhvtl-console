@@ -1,0 +1,160 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../using/iscsi.rst:2 61d806c546ef48a080aab5c25d61dd36
+msgid "Exporting a library over iSCSI"
+msgstr ""
+
+#: ../../using/iscsi.rst:4 7bafd346cf4d48b58e3ec82ea75c2235
+msgid ""
+"Exporting makes a library visible to another machine, which then sees a "
+"tape library on its own SCSI bus and backs up to it as if it were plugged"
+" in."
+msgstr ""
+
+#: ../../using/iscsi.rst:12 966be65ad61f45b6b99aabe6022553f2
+msgid "What gets exported"
+msgstr ""
+
+#: ../../using/iscsi.rst:14 cd5289be9982438e9a4fa710bd8196e8
+msgid ""
+"Three devices per library, at least: the robot, and each drive. Backup "
+"software needs all of them - the robot to move cartridges, the drives to "
+"write."
+msgstr ""
+
+#: ../../using/iscsi.rst:23 5f83ed72688b467aab6992a95ffc3ea2
+msgid ""
+"That is library 50, which has two drives: one changer and two drives make"
+" three LUNs."
+msgstr ""
+
+#: ../../using/iscsi.rst:26 05f521c9f94a4e0ca49d5b2c5c9f4305
+msgid ""
+"In the console it is **iSCSI → Export Library**, or **The library → "
+"Export over iSCSI** on the library page."
+msgstr ""
+
+#: ../../using/iscsi.rst:29 b1e3c5a0ba4f43f9948a18b4da0f5f78
+msgid "The iSCSI page, showing two exported libraries and their backstores"
+msgstr ""
+
+#: ../../using/iscsi.rst:34 a8e212ad544c44deaad1cbd81c402ba7
+msgid "What it made"
+msgstr ""
+
+#: ../../using/iscsi.rst:53 1c8cc2e2118247399d5169db5f586dad
+msgid "**IQN** is the target's name, which the other machine uses to find it."
+msgstr ""
+
+#: ../../using/iscsi.rst:55 76fd8f14227d4804a8f4aae5700b2467
+msgid "The targets page: each export and what it holds"
+msgstr ""
+
+#: ../../using/iscsi.rst:59 e38309d05460469a9c8359bb79408094
+msgid ""
+"**ANY INITIATOR** means no access list: anything that can reach the port "
+"may use it. To restrict it, export with ``--initiator``, or add an ACL:"
+msgstr ""
+
+#: ../../using/iscsi.rst:67 e2259cb370d648429b802ecab81db684
+msgid "Connecting from another machine"
+msgstr ""
+
+#: ../../using/iscsi.rst:69 9fccc3b32db143408960948aa1d304c9
+msgid "On the client, with ``iscsi-initiator-utils`` installed:"
+msgstr ""
+
+#: ../../using/iscsi.rst:83 836eb40579f3452f85e95baa94d1954a
+msgid ""
+"From there it is an ordinary tape library: ``mtx`` drives the robot, "
+"``mt`` and ``tar`` the drives. The tutorial *Exporting a library with "
+"Linux tools* in the *Guides* walks through a full backup and restore "
+"across the wire."
+msgstr ""
+
+#: ../../using/iscsi.rst:88 237b102c5a72458282159c7384520136
+msgid "After a reboot, or after recreating a library"
+msgstr ""
+
+#: ../../using/iscsi.rst:90 0ff5c45527394069952395bf18fbb7c4
+msgid ""
+"An export names devices by their ``/dev/sg`` node, and those numbers are "
+"not stable: they change when the MHVTL module reloads, and when a library"
+" is recreated. An export pointing at the wrong node is worse than one "
+"that is missing."
+msgstr ""
+
+#: ../../using/iscsi.rst:95 cf0509dc37c243018d3ccf35d28b4d69
+msgid ""
+"The console keeps a record of which daemon each backstore was made for, "
+"and repoints them by SCSI address:"
+msgstr ""
+
+#: ../../using/iscsi.rst:108 4d1483524abe4e85bbd393202f14a505
+msgid ""
+"The iSCSI page shows the same thing per device: **Created on** is the "
+"node the backstore was made with, **Device now** is where that daemon "
+"actually is, and **State** is ``BOUND`` when they agree. A stale one says"
+" so."
+msgstr ""
+
+#: ../../using/iscsi.rst:112 d25c6f2e4aea426ca75daee31231d108
+msgid "This runs automatically at boot, through ``mhvtl-iscsi-remap.service``."
+msgstr ""
+
+#: ../../using/iscsi.rst:115 e60bea3ec6924c56bbaea2d5615c6f6b
+msgid "Removing an export"
+msgstr ""
+
+#: ../../using/iscsi.rst:122 1389b20ba43a426eb0779befaf1b8179
+msgid "Log the client out first, or it keeps a session to a target that has gone."
+msgstr ""
+
+#: ../../using/iscsi.rst:124 4005f4eeb59c4bac839d2374a7c66acf
+msgid ""
+"The target goes; its **backstores stay**. They are the devices, and "
+"deleting a target does not assume you meant to stop exporting them - the "
+"same devices can be mapped into another target. ``mhvtl iscsi "
+"backstores`` still lists them afterwards, and they are removed with "
+"targetcli:"
+msgstr ""
+
+#: ../../using/iscsi.rst:137 f2c83b182ae44c9ab3e31356ad005d3e
+msgid "Is the service even running?"
+msgstr ""
+
+#: ../../using/iscsi.rst:151 874bfac02bc442a99b1057539fd53e3f
+msgid ""
+"``config saved`` matters: LIO keeps its configuration in "
+"``/etc/target/saveconfig.json``, and an export that was never saved is "
+"gone at the next reboot. The console saves after every change."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

@@ -1,0 +1,1005 @@
+{% extends 'libraries/base.html' %}
+
+
+{% block header_title %}📋 {{ title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    /* Discovery Integration Header Button */
+            .header-btn.discovery {
+                background: rgba(23, 162, 184, 0.3);
+                border: 1px solid rgba(23, 162, 184, 0.5);
+            }
+    .main-container {
+                max-width: 1200px;
+                margin: 30px auto;
+                padding: 0 20px;
+            }
+    /* Discovery Status Panel */
+            .discovery-panel {
+                background: linear-gradient(135deg, var(--info) 0%, var(--info) 100%);
+                color: white;
+                border-radius: 15px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            }
+    .discovery-controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+    .discovery-info h3 {
+                margin: 0 0 5px 0;
+                font-size: 18px;
+            }
+    .discovery-info p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+    .discovery-actions {
+                display: flex;
+                gap: 10px;
+            }
+    .discovery-btn {
+                padding: 8px 16px;
+                background: rgba(255,255,255,0.2);
+                border: 1px solid rgba(255,255,255,0.3);
+                color: white;
+                border-radius: 6px;
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+    .discovery-btn:hover {
+                background: rgba(255,255,255,0.3);
+                color: white;
+            }
+    .discovery-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 15px;
+            }
+    .discovery-stat {
+                text-align: center;
+                padding: 10px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 8px;
+            }
+    .discovery-stat-number {
+                font-size: 20px;
+                font-weight: bold;
+            }
+    .discovery-stat-label {
+                font-size: 11px;
+                opacity: 0.9;
+            }
+    .list-card {
+                background: var(--surface);
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                margin-bottom: 30px;
+            }
+    .list-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 2px solid var(--surface-deep);
+            }
+    .list-title {
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--text);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+    .list-stats {
+                display: flex;
+                gap: 20px;
+                align-items: center;
+                font-size: 14px;
+                color: var(--text-dim);
+            }
+    .stat-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+    /* Enhanced filters with discovery options */
+            .filters-section {
+                display: flex;
+                gap: 15px;
+                align-items: center;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+    .filter-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+    .filter-select {
+                padding: 8px 12px;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                background: var(--surface);
+                font-size: 14px;
+            }
+    .search-box {
+                flex: 1;
+                min-width: 200px;
+                padding: 8px 12px;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                font-size: 14px;
+                background: var(--surface-deep);
+                color: var(--text);
+            }
+    /* Discovery Status Tabs */
+            .discovery-tabs {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+    .discovery-tab {
+                padding: 10px 20px;
+                background: var(--surface-deep);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                color: var(--text-dim);
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+    .discovery-tab:hover,
+            .discovery-tab.active {
+                background: var(--accent);
+                color: white;
+                border-color: var(--accent);
+            }
+    .discovery-tab.discovered {
+                border-color: var(--info);
+            }
+    .discovery-tab.discovered:hover,
+            .discovery-tab.discovered.active {
+                background: var(--info);
+                border-color: var(--info);
+            }
+    .discovery-tab.created {
+                border-color: var(--ok);
+            }
+    .discovery-tab.created:hover,
+            .discovery-tab.created.active {
+                background: var(--ok);
+                border-color: var(--ok);
+            }
+    .libraries-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 20px;
+            }
+    /* Discovery status styling for cards */
+            .library-card.discovered::before {
+                background: linear-gradient(90deg, var(--info), var(--info));
+                opacity: 1;
+            }
+    .library-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 15px;
+            }
+    .library-status {
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+    /* Discovery Status Badge */
+            .discovery-status-badge {
+                position: absolute;
+                top: 34px;          /* below the card's own status badge */
+                right: 10px;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 10px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+    .discovery-discovered {
+                background: rgba(23, 162, 184, 0.15);
+                color: var(--info);
+                border: 1px solid rgba(23, 162, 184, 0.3);
+            }
+    .discovery-created {
+                background: rgba(40, 167, 69, 0.15);
+                color: var(--ok);
+                border: 1px solid rgba(40, 167, 69, 0.3);
+            }
+    .discovery-pending {
+                background: rgba(255, 193, 7, 0.15);
+                color: var(--warn);
+                border: 1px solid rgba(255, 193, 7, 0.3);
+            }
+    .library-brand {
+                font-size: 18px;
+                font-weight: 600;
+                color: var(--text-dim);
+                margin-bottom: 5px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+    .brand-icon {
+                font-size: 20px;
+            }
+    .library-model {
+                font-size: 14px;
+                color: var(--text-dim);
+                margin-bottom: 15px;
+            }
+    /* Enhanced library specs with discovery info */
+            .library-specs {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-bottom: 15px;
+                font-size: 13px;
+            }
+    .spec-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px;
+                background: rgba(255, 255, 255, 0.7);
+                border-radius: 6px;
+            }
+    .spec-label {
+                color: var(--text-dim);
+                font-weight: 500;
+            }
+    .spec-value {
+                color: var(--text);
+                font-weight: 600;
+                font-family: monospace;
+            }
+    /* Discovery metadata section */
+            .discovery-metadata {
+                background: rgba(23, 162, 184, 0.05);
+                border: 1px solid rgba(23, 162, 184, 0.1);
+                border-radius: 6px;
+                padding: 8px;
+                margin-bottom: 15px;
+                font-size: 11px;
+                color: var(--text-dim);
+            }
+    .discovery-metadata.created {
+                background: rgba(40, 167, 69, 0.05);
+                border-color: rgba(40, 167, 69, 0.1);
+            }
+    .discovery-metadata strong {
+                color: var(--text);
+            }
+    .library-actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 15px;
+            }
+    .action-btn {
+                flex: 1;
+                padding: 8px 12px;
+                background: rgba(102, 126, 234, 0.1);
+                color: var(--accent);
+                text-decoration: none;
+                border: none;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 500;
+                text-align: center;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+    .action-btn:hover {
+                background: var(--accent);
+                color: white;
+                transform: translateY(-1px);
+            }
+    .action-btn.danger {
+                background: rgba(231, 76, 60, 0.1);
+                color: var(--bad);
+            }
+    .action-btn.danger:hover {
+                background: var(--bad);
+                color: white;
+            }
+    /* Discovery-specific actions */
+            .action-btn.discovery {
+                background: rgba(23, 162, 184, 0.1);
+                color: var(--info);
+            }
+    .action-btn.discovery:hover {
+                background: var(--info);
+                color: white;
+            }
+    .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: var(--text-dim);
+            }
+    .empty-icon {
+                font-size: 64px;
+                margin-bottom: 20px;
+            }
+    .empty-title {
+                font-size: 24px;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+    .empty-description {
+                font-size: 16px;
+                margin-bottom: 30px;
+                line-height: 1.5;
+            }
+    .btn-discovery {
+                background: linear-gradient(135deg, var(--info), var(--info));
+                color: white;
+                padding: 15px 30px;
+                border: none;
+                border-radius: 10px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+            }
+    .btn-discovery:hover {
+                background: linear-gradient(135deg, var(--info), var(--info));
+                transform: translateY(-2px);
+                color: white;
+            }
+    /* Mobile responsiveness */
+            @media (max-width: 768px) {
+                .libraries-grid {
+                    grid-template-columns: 1fr;
+                }
+    
+                .list-header {
+                    flex-direction: column;
+                    gap: 15px;
+                    align-items: flex-start;
+                }
+    
+                .library-specs {
+                    grid-template-columns: 1fr;
+                }
+    
+                .filters-section {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+    
+                .search-box {
+                    min-width: auto;
+                }
+    
+                .discovery-tabs {
+                    flex-wrap: wrap;
+                }
+    
+                .discovery-stats {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+    
+                .discovery-controls {
+                    flex-direction: column;
+                    gap: 15px;
+                    align-items: stretch;
+                }
+    
+                .discovery-actions {
+                    justify-content: center;
+                }
+            }
+    .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                margin-top: 30px;
+            }
+    .page-btn {
+                padding: 8px 12px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                text-decoration: none;
+                color: var(--text-dim);
+                transition: all 0.3s ease;
+            }
+    .page-btn:hover,
+            .page-btn.active {
+                background: var(--accent);
+                color: white;
+                border-color: var(--accent);
+            }
+    /* Loading states */
+            .loading .btn-icon {
+                animation: spin 1s linear infinite;
+            }
+    @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Display messages -->
+        
+
+        <!-- Discovery Status Panel -->
+        <div class="discovery-panel">
+            <div class="discovery-controls">
+                <div class="discovery-info">
+                    <h3>🔍 MHVTL Discovery Integration</h3>
+                    <p>
+                        Real-time synchronization: {{ discovered_libraries|default:0 }} discovered, {{ created_libraries|default:0 }} created
+                        {% if last_discovery %}| Last scan: {{ last_discovery|timesince }} ago{% endif %}
+                    </p>
+                </div>
+                <div class="discovery-actions">
+                    <button class="discovery-btn" onclick="refreshDiscovery()">
+                        Refresh
+                    </button>
+                    <button class="discovery-btn" onclick="runFullDiscovery()">
+                        Full Scan
+                    </button>
+                    <a href="{% url 'libraries:cleanup_orphaned' %}" class="discovery-btn" style="text-decoration: none; display: inline-block;">
+                        Cleanup
+                    </a>
+                </div>
+            </div>
+            
+            <div class="discovery-stats">
+                <div class="discovery-stat">
+                    <div class="discovery-stat-number">{{ discovered_libraries|default:0 }}</div>
+                    <div class="discovery-stat-label">Discovered</div>
+                </div>
+                <div class="discovery-stat">
+                    <div class="discovery-stat-number">{{ created_libraries|default:0 }}</div>
+                    <div class="discovery-stat-label">Created</div>
+                </div>
+                <div class="discovery-stat">
+                    <div class="discovery-stat-number">{{ total_drives|default:0 }}</div>
+                    <div class="discovery-stat-label">Drives</div>
+                </div>
+                <div class="discovery-stat">
+                    <div class="discovery-stat-number">{{ total_media|default:0 }}</div>
+                    <div class="discovery-stat-label">Media</div>
+                </div>
+                {% if recent_operations %}
+                <div class="discovery-stat">
+                    <div class="discovery-stat-number">{{ recent_operations }}</div>
+                    <div class="discovery-stat-label">Recent Ops</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="list-card">
+            <div class="list-header">
+                <div>
+                    <h2 class="list-title">
+                        <span>🏛️</span>
+                        Library Configurations
+                    </h2>
+                </div>
+                <div class="list-stats">
+                    <div class="stat-item">
+                        <span>📚</span>
+                        <span>{{ libraries|length }} in MHVTL config</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discovery Status Tabs -->
+            <div class="discovery-tabs">
+                <a href="#" class="discovery-tab active" data-filter="all">
+                    📚 All Libraries ({{ libraries|length }})
+                </a>
+                <a href="#" class="discovery-tab discovered" data-filter="discovered">
+                    ✅ In Database
+                </a>
+                <a href="#" class="discovery-tab" data-filter="pending">
+                    ⏳ Not in Database
+                </a>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label>Vendor:</label>
+                    <select class="filter-select" id="brandFilter">
+                        <option value="">All Vendors</option>
+                        <option value="ibm">IBM</option>
+                        <option value="stk">STK</option>
+                        <option value="hp">HP</option>
+                        <option value="adic">ADIC</option>
+                        <option value="spectra">Spectra</option>
+                        <option value="quantum">Quantum</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>DB Status:</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">All</option>
+                        <option value="active">Active in DB</option>
+                        <option value="inactive">Inactive in DB</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Database:</label>
+                    <select class="filter-select" id="discoveryFilter">
+                        <option value="">All</option>
+                        <option value="discovered">In Database</option>
+                        <option value="pending">Not in Database</option>
+                    </select>
+                </div>
+                <input type="text" class="search-box" placeholder="Search libraries..." id="searchBox">
+            </div>
+
+            {% if libraries %}
+                <div class="libraries-grid" id="librariesGrid">
+                    {% for library in libraries %}
+                        <div class="library-card {% if library.in_database %}discovered{% else %}pending{% endif %}"
+                             data-brand="{{ library.vendor }}"
+                             data-status="{% if library.db_active %}active{% else %}inactive{% endif %}"
+                             data-discovery="{% if library.in_database %}discovered{% else %}pending{% endif %}"
+                             data-search="{{ library.library_id }} {{ library.vendor }} {{ library.product }} {{ library.serial }}">
+
+                            <!-- Status Badge -->
+                            <div class="discovery-status-badge {% if library.in_database %}discovery-discovered{% else %}discovery-pending{% endif %}">
+                                {% if library.in_database %}
+                                    {% if library.db_active %}✅ Active{% else %}⚠️ Inactive{% endif %}
+                                {% else %}
+                                    ⏳ Not in DB
+                                {% endif %}
+                            </div>
+
+                            <div class="library-header">
+                                <div class="library-id">Library {{ library.library_id }}</div>
+                                <div class="library-status {% if library.status == 'online' %}status-active{% else %}status-inactive{% endif %}">
+                                    {{ library.status|default:"Unknown" }}
+                                </div>
+                            </div>
+
+                            <div class="library-brand">
+                                <span class="brand-icon">
+                                    {% if 'STK' in library.vendor %}📼
+                                    {% elif 'IBM' in library.vendor %}💻
+                                    {% elif 'HP' in library.vendor %}🖨️
+                                    {% elif 'Spectra' in library.vendor %}🔮
+                                    {% elif 'Quantum' in library.vendor %}⚛️
+                                    {% elif 'ADIC' in library.vendor %}🗃️
+                                    {% elif 'Sony' in library.vendor %}📺
+                                    {% elif 'Dell' in library.vendor %}💿
+                                    {% elif 'Overland' in library.vendor %}🏔️
+                                    {% else %}📚{% endif %}
+                                </span>
+                                {{ library.vendor }}
+                            </div>
+
+                            <div class="library-model">{{ library.product }}</div>
+
+                            <!-- MHVTL Config Info -->
+                            <div class="discovery-metadata">
+                                <strong>Serial:</strong> {{ library.serial|default:"N/A" }}
+                                <br><strong>NAA:</strong> {{ library.naa|default:"N/A"|truncatechars:25 }}
+                            </div>
+
+                            <div class="library-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">Channel:</span>
+                                    <span class="spec-value">{{ library.channel }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Target:</span>
+                                    <span class="spec-value">{{ library.target }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">LUN:</span>
+                                    <span class="spec-value">{{ library.lun }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Home Dir:</span>
+                                    <span class="spec-value">{{ library.home_directory|default:"/opt/mhvtl"|truncatechars:15 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="library-actions">
+                                <!-- View Button -->
+                                <a href="{% url 'libraries:library_detail' library.library_id %}" class="action-btn">
+                                    👁️ View
+                                </a>
+
+                                <!-- Tapes: what Configure used to be reached for -->
+                                <a href="{% url 'libraries:tape_list' %}?library_id={{ library.library_id }}" class="action-btn">
+                                    📼 Tapes
+                                </a>
+
+                                <!-- Monitor Button -->
+                                <a href="{% url 'libraries:library_monitor' library.library_id %}" class="action-btn">
+                                    📊 Monitor
+                                </a>
+
+                                <!-- Remove Button -->
+                                <a href="{% url 'libraries:remove' %}" class="action-btn danger">
+                                    🗑️ Remove
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📚</div>
+                    <div class="empty-title">No Libraries Configured</div>
+                    <div class="empty-description">
+                        You haven't configured any virtual tape libraries yet.<br>
+                        Get started by adding your first library or discovering existing MHVTL libraries.
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <a href="/libraries/setup/" class="btn-primary">
+                            <span>🏗️</span>
+                            Add Your First Library
+                        </a>
+                        <button class="btn-discovery" onclick="runFullDiscovery()">
+                            <span>🔍</span>
+                            Discover Existing Libraries
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const brandFilter = document.getElementById('brandFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const discoveryFilter = document.getElementById('discoveryFilter');
+            const searchBox = document.getElementById('searchBox');
+            const librariesGrid = document.getElementById('librariesGrid');
+            const libraryCards = document.querySelectorAll('.library-card');
+            const discoveryTabs = document.querySelectorAll('.discovery-tab');
+
+            // Discovery tab functionality
+            discoveryTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active tab
+                    discoveryTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update discovery filter
+                    const filter = this.dataset.filter;
+                    discoveryFilter.value = filter === 'all' ? '' : filter;
+                    filterLibraries();
+                });
+            });
+
+            function filterLibraries() {
+                const brandValue = brandFilter.value.toLowerCase();
+                const statusValue = statusFilter.value.toLowerCase();
+                const discoveryValue = discoveryFilter.value.toLowerCase();
+                const searchValue = searchBox.value.toLowerCase();
+
+                libraryCards.forEach(card => {
+                    const cardBrand = card.dataset.brand.toLowerCase();
+                    const cardStatus = card.dataset.status.toLowerCase();
+                    const cardDiscovery = card.dataset.discovery.toLowerCase();
+                    const cardSearch = card.dataset.search.toLowerCase();
+
+                    const matchesBrand = !brandValue || cardBrand === brandValue;
+                    const matchesStatus = !statusValue || cardStatus === statusValue;
+                    const matchesDiscovery = !discoveryValue || cardDiscovery === discoveryValue;
+                    const matchesSearch = !searchValue || cardSearch.includes(searchValue);
+
+                    if (matchesBrand && matchesStatus && matchesDiscovery && matchesSearch) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            }
+
+            // Add event listeners
+            brandFilter.addEventListener('change', filterLibraries);
+            statusFilter.addEventListener('change', filterLibraries);
+            discoveryFilter.addEventListener('change', filterLibraries);
+            searchBox.addEventListener('input', filterLibraries);
+
+            // Add smooth animations
+            libraryCards.forEach((card, index) => {
+                card.style.animation = `fadeInUp 0.5s ease ${index * 0.1}s forwards`;
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    searchBox.focus();
+                }
+                if (e.key === 'Escape') {
+                    searchBox.value = '';
+                    brandFilter.value = '';
+                    statusFilter.value = '';
+                    discoveryFilter.value = '';
+                    // Reset active tab
+                    discoveryTabs.forEach(t => t.classList.remove('active'));
+                    discoveryTabs[0].classList.add('active');
+                    filterLibraries();
+                }
+            });
+        });
+
+        // Discovery integration functions
+        function refreshDiscovery() {
+            showNotification('Refreshing MHVTL discovery...', 'info');
+            const btn = event.target;
+            btn.classList.add('loading');
+            
+            fetch('/libraries/ajax/refresh-discovery/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Discovery refreshed successfully!', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification('Discovery refresh failed: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Network error during discovery', 'error');
+            })
+            .finally(() => {
+                btn.classList.remove('loading');
+            });
+        }
+
+        function runFullDiscovery() {
+            showNotification('Running full MHVTL discovery scan...', 'info');
+            
+            fetch('/libraries/ajax/run-discovery/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(`Discovery completed! Found ${data.libraries} libraries, ${data.drives} drives, ${data.media} media items`, 'success');
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showNotification('Discovery failed: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Network error during discovery', 'error');
+            });
+        }
+
+        function syncLibrary(libraryId) {
+            showNotification(`Syncing library ${libraryId}...`, 'info');
+
+            fetch(`/libraries/ajax/sync-library/${libraryId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(`Library ${libraryId} synced successfully!`, 'success');
+                    // Update the card display
+                    updateLibraryCard(libraryId, data);
+                } else {
+                    showNotification('Sync failed: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Network error during sync', 'error');
+            });
+        }
+
+        function cleanupOrphaned(dryRun = true) {
+            const action = dryRun ? 'Checking for' : 'Removing';
+            showNotification(`${action} orphaned libraries...`, 'info');
+
+            if (!dryRun) {
+                // Confirm before actual deletion
+                if (!confirm('This will permanently delete libraries from the database that no longer exist in MHVTL config files. Are you sure?')) {
+                    return;
+                }
+            }
+
+            fetch('/libraries/ajax/cleanup-orphaned/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ dry_run: dryRun })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.orphaned_libraries && data.orphaned_libraries.length > 0) {
+                        let msg = dryRun
+                            ? `Found ${data.orphaned_libraries.length} orphaned libraries:\n`
+                            : `Deleted ${data.deleted_libraries} libraries and ${data.deleted_drives} drives`;
+
+                        if (dryRun) {
+                            data.orphaned_libraries.forEach(lib => {
+                                msg += `\n- Library ${lib.library_id}: ${lib.vendor} ${lib.product} (${lib.drives_count} drives)`;
+                            });
+                            showNotification(msg, 'warning');
+                            // Show in alert for better visibility
+                            alert('Orphaned Libraries Found:\n' + msg + '\n\nClick "Cleanup" to remove them.');
+                        } else {
+                            showNotification(msg, 'success');
+                            setTimeout(() => location.reload(), 1500);
+                        }
+                    } else {
+                        showNotification('No orphaned libraries found. Database is in sync with MHVTL config.', 'success');
+                    }
+                } else {
+                    showNotification('Cleanup failed: ' + (data.error || data.errors.join(', ')), 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Network error during cleanup: ' + error, 'error');
+            });
+        }
+
+        function updateLibraryCard(libraryId, data) {
+            // Update the library card with new sync information
+            const card = document.querySelector(`[data-search*="Library ${libraryId}"]`);
+            if (card && data.last_synced) {
+                const metadata = card.querySelector('.discovery-metadata');
+                if (metadata) {
+                    // Update sync time in metadata
+                    const syncTime = new Date(data.last_synced).toLocaleString();
+                    metadata.innerHTML = metadata.innerHTML.replace(
+                        /Synced.*?ago/,
+                        `Synced just now`
+                    );
+                }
+            }
+        }
+
+        function showNotification(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                              type === 'error' ? 'alert-error' : 'alert-warning';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.innerHTML = `
+                ${message}
+                <button type="button" onclick="this.parentElement.remove()" 
+                        style="float: right; background: none; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Auto-refresh discovery stats every 60 seconds
+        setInterval(() => {
+            fetch('/libraries/ajax/discovery-stats/')
+            .then(response => response.json())
+            .then(data => {
+                // Update discovery stats in the panel
+                updateDiscoveryStats(data);
+            })
+            .catch(error => {
+                console.log('Stats update failed:', error);
+            });
+        }, 60000);
+
+        function updateDiscoveryStats(data) {
+            const stats = document.querySelectorAll('.discovery-stat-number');
+            if (stats.length >= 4) {
+                stats[0].textContent = data.discovered_count || 0;
+                stats[1].textContent = data.created_count || 0;
+                stats[2].textContent = data.total_drives || 0;
+                stats[3].textContent = data.total_media || 0;
+            }
+        }
+    </script>
+{% endblock %}

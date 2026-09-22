@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}MHVTL Console{% endblock %} - Linux Virtual Tape Library</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
+    <!-- Theme variables first: base.css and the page stylesheets below are
+         written in terms of them, so the theme picker reaches these pages too.
+         The component rules in this file are scoped to body.mhvtl-console,
+         which these pages do not set, so only the variables apply here. -->
+    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
+    <script src="{% static 'js/theme.js' %}"></script>
+
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <!-- Page-specific CSS -->
+    {% block extra_css %}{% endblock %}
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="MHVTL Web Console - Modern Host Virtual Tape Library Management">
+    <meta name="author" content="MHVTL Community">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Header -->
+    {% block header %}
+        {% include 'includes/_header.html' %}
+    {% endblock %}
+
+    <!-- Main Content Area -->
+    <main class="main-container {% block main_class %}{% endblock %}">
+        <!-- Breadcrumb Navigation -->
+        {% block breadcrumb %}{% endblock %}
+
+        <!-- Django Messages -->
+        {% include 'includes/_messages.html' %}
+
+        {% include 'includes/_default_password_warning.html' %}
+
+        <!-- Page Content -->
+        {% block content %}
+        <!-- Override this block in child templates -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% block footer %}
+        {% include 'includes/_footer.html' %}
+    {% endblock %}
+
+    <script src="{% static 'js/csrf.js' %}"></script>
+    <!-- Panels that re-fetch themselves; this replaced htmx, which was loaded
+         from unpkg.com and so did nothing on a host without internet. -->
+    <script src="{% static 'js/auto-refresh.js' %}" defer></script>
+
+    <!-- Base JavaScript -->
+    <script src="{% static 'js/app.js' %}"></script>
+
+    <!-- Page-specific JavaScript -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

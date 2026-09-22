@@ -1,0 +1,169 @@
+{% extends 'libraries/operator/base.html' %}
+{% load ch_policy %}
+{% load static %}
+
+{% block title %}iSCSI Service Control{% endblock %}
+
+{% block extra_css %}
+<style>
+    .service-status-card {
+        text-align: center;
+        padding: 40px;
+        margin-bottom: 30px;
+    }
+    .service-status-card .status-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+    }
+    .service-status-card.running .status-icon { color: var(--ok); }
+    .service-status-card.stopped .status-icon { color: var(--bad); }
+    .service-status-card h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .service-status-card .status-details {
+        color: var(--text-dim);
+        margin-bottom: 20px;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .info-item {
+        background: var(--surface-deep);
+        padding: 15px;
+        border-radius: 8px;
+    }
+    .info-item label {
+        display: block;
+        font-size: 12px;
+        color: var(--text-dim);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+    .info-item .value {
+        font-size: 16px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>iSCSI Service Control</h1>
+    <p class="page-description">Manage the target.service systemd unit</p>
+</div>
+
+{% ch_policy_box %}
+
+{% if service_status %}
+<!-- Service Status Card -->
+<div class="card service-status-card {% if service_status.running %}running{% else %}stopped{% endif %}">
+    <div class="status-icon">
+        {% if service_status.running %}&#9989;{% else %}&#10060;{% endif %}
+    </div>
+    <h2>target.service is {{ service_status.active_state|upper }}</h2>
+    <p class="status-details">
+        Sub-state: {{ service_status.sub_state }} |
+        Boot: {% if service_status.enabled %}Enabled{% else %}Disabled{% endif %}
+    </p>
+
+    <div class="control-buttons">
+        {% if service_status.running %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="stop">
+            <button type="submit" class="btn btn-danger">Stop Service</button>
+        </form>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="restart">
+            <button type="submit" class="btn btn-warning">Restart Service</button>
+        </form>
+        {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="start">
+            <button type="submit" class="btn btn-success">Start Service</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Service Details -->
+<div class="card">
+    <h3 class="section-title">Service Details</h3>
+    <div class="info-grid">
+        <div class="info-item">
+            <label>Active State</label>
+            <div class="value">{{ service_status.active_state }}</div>
+        </div>
+        <div class="info-item">
+            <label>Sub State</label>
+            <div class="value">{{ service_status.sub_state }}</div>
+        </div>
+        <div class="info-item">
+            <label>Enabled on Boot</label>
+            <div class="value">{% if service_status.enabled %}Yes{% else %}No{% endif %}</div>
+        </div>
+        <div class="info-item">
+            <label>Service Name</label>
+            <div class="value">target.service</div>
+        </div>
+    </div>
+</div>
+
+<!-- Boot Configuration -->
+<div class="card">
+    <h3 class="section-title">Boot Configuration</h3>
+    <p style="margin-bottom: 20px; color: var(--text-dim);">
+        Control whether iSCSI targets are automatically started when the system boots.
+    </p>
+    <div class="control-buttons">
+        {% if service_status.enabled %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="disable">
+            <button type="submit" class="btn btn-warning">Disable on Boot</button>
+        </form>
+        {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="enable">
+            <button type="submit" class="btn btn-success">Enable on Boot</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Configuration Management -->
+<div class="card">
+    <h3 class="section-title">Configuration Management</h3>
+    <p style="margin-bottom: 20px; color: var(--text-dim);">
+        Save or restore the iSCSI configuration. The configuration is stored in <code>/etc/target/saveconfig.json</code>.
+    </p>
+    <div class="control-buttons">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="save_config">
+            <button type="submit" class="btn btn-primary">Save Configuration</button>
+        </form>
+        <form method="post" onsubmit="return confirm('This will restore the configuration from the saved file. Current in-memory configuration will be replaced. Continue?');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="restore_config">
+            <button type="submit" class="btn btn-secondary">Restore Configuration</button>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-danger">
+    Unable to retrieve service status. Make sure target.service exists and you have permissions.
+</div>
+{% endif %}
+
+<div class="btn-group">
+    <a href="{% url 'libraries:iscsi_dashboard' %}" class="btn btn-secondary">Back to iSCSI Dashboard</a>
+</div>
+{% endblock %}

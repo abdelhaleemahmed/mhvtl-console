@@ -1,0 +1,570 @@
+{% extends 'libraries/operator/base.html' %}
+{% load static %}
+
+{% block title %}Target: {{ iqn }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .target-header {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+        color: var(--accent-ink);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .target-header h2 {
+        font-size: 16px;
+        word-break: break-all;
+        font-family: monospace;
+    }
+    .config-section {
+        margin-bottom: 20px;
+    }
+    .config-section h4 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 30px;
+        color: var(--text-dim);
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+    .modal-content {
+        background: var(--surface);
+        max-width: 500px;
+        margin: 80px auto;
+        padding: 30px;
+        border-radius: 10px;
+    }
+    .modal-content h3 {
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Target Details</h1>
+    <p class="page-description">Manage LUNs, ACLs, and portals for this iSCSI target</p>
+</div>
+
+<div class="target-header">
+    <h2>{{ iqn }}</h2>
+</div>
+
+<!-- This host as an initiator: a loopback login to its own export -->
+<div class="card config-section" id="attach-here">
+    <h4 class="section-title">
+        On this host
+        <form method="post" action="{% url 'libraries:iscsi_attach' iqn=iqn %}" style="display:inline">
+            {% csrf_token %}
+            {% if local.attached %}
+            <input type="hidden" name="action" value="detach">
+            <button type="submit" id="detach-btn" class="btn btn-secondary" style="padding: 5px 15px; font-size: 12px;">Detach</button>
+            {% else %}
+            <input type="hidden" name="action" value="attach">
+            <button type="submit" id="attach-btn" class="btn btn-success" style="padding: 5px 15px; font-size: 12px;">Attach on this host</button>
+            {% endif %}
+        </form>
+    </h4>
+    {% if local.error %}
+    <div class="alert alert-warning">The sessions could not be read: {{ local.error }}</div>
+    {% elif local.attached %}
+    <p>Logged in over 127.0.0.1 as SCSI host {{ local.host }}. These are the library's
+       devices as an initiator sees them:</p>
+    <table class="table" id="attached-devices">
+        <thead><tr><th>LUN</th><th>Type</th><th>Device</th><th>Tape node</th><th>Generic node</th><th>On this host it is</th></tr></thead>
+        <tbody>
+        {% for d in local.devices %}
+        <tr>
+            <td>{{ d.lun }}</td>
+            <td>{{ d.type }}</td>
+            <td>{{ d.vendor }} {{ d.model }}</td>
+            <td><code>{{ d.device_path|default:"-" }}</code></td>
+            <td><code>{{ d.generic_path|default:"-" }}</code></td>
+            <td>{{ d.is }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">Logged in, but no LUNs are visible.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Not attached. <strong>Attach on this host</strong> logs in over 127.0.0.1, so the
+       exported library can be used here - by the backup/restore test with
+       <em>Through the library's iSCSI export</em> ticked, for one.</p>
+    {% endif %}
+</div>
+
+{% if target.tpgs %}
+{% with tpg=target.tpgs.0 %}
+
+<!-- LUNs Section -->
+<div class="card config-section">
+    <h4 class="section-title">
+        LUN Mappings
+        <button class="btn btn-success" style="padding: 5px 15px; font-size: 12px;" onclick="showAddLunModal()">+ Add LUN</button>
+    </h4>
+
+    {% if tpg.luns %}
+    <table>
+        <thead>
+            <tr>
+                <th>LUN ID</th>
+                <th>Backstore</th>
+                <th>Plugin</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lun in tpg.luns %}
+            <tr>
+                <td>{{ lun.lun_id }}</td>
+                <td><code>{{ lun.backstore_name }}</code></td>
+                <td><span class="badge badge-info">{{ lun.backstore_plugin }}</span></td>
+                <td>
+                    <button class="btn btn-danger" style="padding: 3px 8px; font-size: 11px;" onclick="deleteLun({{ lun.lun_id }})">Remove</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No LUNs configured. Add a LUN to export a device.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Portals Section -->
+<div class="card config-section">
+    <h4 class="section-title">
+        Network Portals
+        <button class="btn btn-success" style="padding: 5px 15px; font-size: 12px;" onclick="showAddPortalModal()">+ Add Portal</button>
+    </h4>
+
+    {% if tpg.portals %}
+    <table>
+        <thead>
+            <tr>
+                <th>IP Address</th>
+                <th>Port</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for portal in tpg.portals %}
+            <tr>
+                <td>{{ portal.ip_address }}</td>
+                <td>{{ portal.port }}</td>
+                <td>
+                    <button class="btn btn-danger" style="padding: 3px 8px; font-size: 11px;" onclick="deletePortal('{{ portal.ip_address }}', {{ portal.port }})">Remove</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No portals configured. Add a portal to make this target accessible.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- ACLs Section -->
+<div class="card config-section">
+    <h4 class="section-title">
+        Initiator ACLs
+        <button class="btn btn-success" style="padding: 5px 15px; font-size: 12px;" onclick="showAddAclModal()">+ Add ACL</button>
+    </h4>
+
+    <div style="margin-bottom: 15px;">
+        <label style="display: flex; align-items: center; gap: 10px;">
+            <input type="checkbox" id="allowAllInitiators" {% if tpg.generate_node_acls %}checked{% endif %} onchange="toggleAllowAll()">
+            <span>Allow all initiators (generate_node_acls)</span>
+        </label>
+        <p class="form-help">When enabled, any initiator can connect without explicit ACL entry.</p>
+    </div>
+
+    <!-- CHAP: required or not, and the target-wide credentials -->
+    <div id="chap-summary" style="margin-bottom: 15px;">
+        <strong>CHAP authentication:</strong>
+        {% if tpg.authentication %}<span class="badge badge-success">required</span>{% else %}<span class="badge badge-warning">not required</span>{% endif %}
+        <p class="form-help" style="margin-top: 6px;">
+            Target-wide CHAP - used by initiators without an ACL of their own, i.e. with
+            "Allow all initiators":
+            {% if tpg.chap_userid %}
+                user <code>{{ tpg.chap_userid }}</code>{% if tpg.chap_mutual_userid %}, mutual as <code>{{ tpg.chap_mutual_userid }}</code>{% endif %}
+                <button class="btn btn-secondary" id="clear-chap-target" style="padding: 2px 10px; font-size: 11px;" onclick="clearChap('')">Remove</button>
+            {% else %}
+                not set
+            {% endif %}
+            <button class="btn btn-primary" id="set-chap-target" style="padding: 2px 10px; font-size: 11px;" onclick="showChapModal('')">Set target-wide CHAP</button>
+        </p>
+    </div>
+
+    {% if not tpg.generate_node_acls %}
+        {% if tpg.acls %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Initiator IQN</th>
+                    <th>Authentication</th>
+                    <th>Mapped LUNs</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acl in tpg.acls %}
+                <tr>
+                    <td><code style="font-size: 12px; word-break: break-all;">{{ acl.initiator_iqn }}</code></td>
+                    <td>
+                        {% if acl.userid %}
+                            <span class="badge badge-success">{% if acl.mutual_userid %}Mutual CHAP{% else %}CHAP{% endif %}</span>
+                            <span style="font-size: 12px;">user <code>{{ acl.userid }}</code></span>
+                        {% else %}
+                            <span class="badge badge-warning">None</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for lun in acl.mapped_luns %}
+                            LUN {{ lun }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            Auto-mapped
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" id="set-chap-{{ forloop.counter }}" style="padding: 3px 8px; font-size: 11px;" onclick="showChapModal('{{ acl.initiator_iqn }}')">CHAP…</button>
+                        {% if acl.userid %}<button class="btn btn-secondary" id="clear-chap-{{ forloop.counter }}" style="padding: 3px 8px; font-size: 11px;" onclick="clearChap('{{ acl.initiator_iqn }}')">Remove CHAP</button>{% endif %}
+                        <button class="btn btn-danger" style="padding: 3px 8px; font-size: 11px;" onclick="deleteAcl('{{ acl.initiator_iqn }}')">Remove</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No ACLs configured. Either enable "Allow all initiators" or add specific initiator ACLs.</p>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="alert alert-info">
+        All initiators are allowed to connect. Individual ACLs are not required.
+    </div>
+    {% endif %}
+</div>
+
+{% endwith %}
+{% else %}
+<div class="alert alert-warning">
+    No TPG found for this target. This shouldn't happen - the target may be misconfigured.
+</div>
+{% endif %}
+
+<div class="btn-group">
+    <a href="{% url 'libraries:iscsi_targets' %}" class="btn btn-secondary">Back to Targets</a>
+    <a href="{% url 'libraries:iscsi_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+
+<!-- CHAP Modal -->
+<div id="chapModal" class="modal">
+    <div class="modal-content">
+        <h3>CHAP authentication</h3>
+        <p class="form-help" id="chapFor"></p>
+        <input type="hidden" id="chapInitiator">
+        <div class="form-group">
+            <label>User name</label>
+            <input type="text" id="chapUser" class="form-control" autocomplete="off" placeholder="e.g. backupserver">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="chapPassword" class="form-control" autocomplete="new-password" placeholder="12 to 16 characters">
+            <p class="form-help">12 to 16 characters, without spaces, quotes or "=". The initiator must be given the same.</p>
+        </div>
+        <div class="form-group">
+            <label>Mutual CHAP (optional) - the target proves itself to the initiator</label>
+            <input type="text" id="chapMutualUser" class="form-control" autocomplete="off" placeholder="target's user name">
+            <input type="password" id="chapMutualPassword" class="form-control" autocomplete="new-password" placeholder="target's password, 12 to 16 characters" style="margin-top: 6px;">
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" id="save-chap" onclick="saveChap()">Require CHAP</button>
+            <button class="btn btn-secondary" onclick="closeModal('chapModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add LUN Modal -->
+<div id="addLunModal" class="modal">
+    <div class="modal-content">
+        <h3>Add LUN Mapping</h3>
+        <div class="form-group">
+            <label>Backstore</label>
+            <select id="lunBackstore" class="form-control">
+                <option value="">Select a backstore...</option>
+                {% for bs in backstores %}
+                <option value="{{ bs.plugin }}|{{ bs.name }}">{{ bs.name }} ({{ bs.plugin }}) - {{ bs.device_path|default:"N/A" }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>LUN ID (optional)</label>
+            <input type="number" id="lunId" class="form-control" placeholder="Auto-assign if empty" min="0">
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="addLun()">Add LUN</button>
+            <button class="btn btn-secondary" onclick="closeModal('addLunModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Portal Modal -->
+<div id="addPortalModal" class="modal">
+    <div class="modal-content">
+        <h3>Add Network Portal</h3>
+        <div class="form-group">
+            <label>IP Address</label>
+            <input type="text" id="portalIp" class="form-control" value="0.0.0.0" placeholder="0.0.0.0 for all interfaces">
+        </div>
+        <div class="form-group">
+            <label>Port</label>
+            <input type="number" id="portalPort" class="form-control" value="3260" min="1" max="65535">
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="addPortal()">Add Portal</button>
+            <button class="btn btn-secondary" onclick="closeModal('addPortalModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add ACL Modal -->
+<div id="addAclModal" class="modal">
+    <div class="modal-content">
+        <h3>Add Initiator ACL</h3>
+        <div class="form-group">
+            <label>Initiator IQN</label>
+            <input type="text" id="initiatorIqn" class="form-control" placeholder="iqn.2026-01.com.example:initiator">
+            <p class="form-help">The IQN of the initiator that should be allowed to connect.</p>
+            {% if local_initiator %}
+            <p class="form-help" id="local-initiator">This host (from /etc/iscsi/initiatorname.iscsi):
+                <code>{{ local_initiator }}</code>
+                <button type="button" class="btn btn-secondary" id="use-local-initiator"
+                        style="padding: 2px 10px; font-size: 12px"
+                        onclick="document.getElementById('initiatorIqn').value = '{{ local_initiator }}'">Use</button>
+            </p>
+            {% endif %}
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="addAcl()">Add ACL</button>
+            <button class="btn btn-secondary" onclick="closeModal('addAclModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const targetIqn = '{{ iqn }}';
+
+    function showAddLunModal() {
+        document.getElementById('addLunModal').style.display = 'block';
+    }
+
+    function showAddPortalModal() {
+        document.getElementById('addPortalModal').style.display = 'block';
+    }
+
+    function showAddAclModal() {
+        document.getElementById('addAclModal').style.display = 'block';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function addLun() {
+        const backstoreVal = document.getElementById('lunBackstore').value;
+        const lunId = document.getElementById('lunId').value;
+
+        if (!backstoreVal) {
+            alert('Please select a backstore');
+            return;
+        }
+
+        const [plugin, name] = backstoreVal.split('|');
+
+        fetch('{% url "libraries:iscsi_add_lun_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                iqn: targetIqn,
+                backstore_plugin: plugin,
+                backstore_name: name,
+                lun_id: lunId ? parseInt(lunId) : null
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed: ' + (data.errors ? data.errors.join(', ') : data.message));
+            }
+        });
+    }
+
+    function deleteLun(lunId) {
+        if (!confirm('Remove LUN ' + lunId + '?')) return;
+
+        fetch('{% url "libraries:iscsi_delete_lun_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ iqn: targetIqn, lun_id: lunId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else alert('Failed: ' + data.message);
+        });
+    }
+
+    function addPortal() {
+        const ip = document.getElementById('portalIp').value;
+        const port = parseInt(document.getElementById('portalPort').value);
+
+        fetch('{% url "libraries:iscsi_add_portal_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ iqn: targetIqn, ip_address: ip, port: port })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else alert('Failed: ' + (data.errors ? data.errors.join(', ') : data.message));
+        });
+    }
+
+    function deletePortal(ip, port) {
+        if (!confirm('Remove portal ' + ip + ':' + port + '?')) return;
+
+        fetch('{% url "libraries:iscsi_delete_portal_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ iqn: targetIqn, ip_address: ip, port: port })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else alert('Failed: ' + data.message);
+        });
+    }
+
+    function showChapModal(initiator) {
+        document.getElementById('chapInitiator').value = initiator;
+        document.getElementById('chapFor').textContent = initiator
+            ? 'For the initiator ' + initiator + '.'
+            : 'Target-wide: for every initiator that has no ACL of its own ("Allow all initiators").';
+        ['chapUser', 'chapPassword', 'chapMutualUser', 'chapMutualPassword']
+            .forEach(id => document.getElementById(id).value = '');
+        document.getElementById('chapModal').style.display = 'block';
+    }
+
+    function saveChap() {
+        fetch('{% url "libraries:iscsi_chap_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                iqn: targetIqn, action: 'set',
+                initiator: document.getElementById('chapInitiator').value,
+                userid: document.getElementById('chapUser').value,
+                password: document.getElementById('chapPassword').value,
+                mutual_userid: document.getElementById('chapMutualUser').value,
+                mutual_password: document.getElementById('chapMutualPassword').value
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else alert('CHAP was not set: ' + (data.errors ? data.errors.join(', ') : (data.message || data.error)));
+        });
+    }
+
+    function clearChap(initiator) {
+        if (!confirm('Remove CHAP ' + (initiator ? 'for ' + initiator : 'target-wide') + '?')) return;
+        fetch('{% url "libraries:iscsi_chap_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ iqn: targetIqn, action: 'clear', initiator: initiator })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else alert('Failed: ' + (data.errors ? data.errors.join(', ') : data.message));
+        });
+    }
+
+    function addAcl() {
+        const initiator = document.getElementById('initiatorIqn').value.trim();
+
+        if (!initiator) {
+            alert('Please enter an initiator IQN');
+            return;
+        }
+
+        fetch('{% url "libraries:iscsi_add_acl_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ iqn: targetIqn, initiator_iqn: initiator })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else alert('Failed: ' + (data.errors ? data.errors.join(', ') : data.message));
+        });
+    }
+
+    function deleteAcl(initiator) {
+        if (!confirm('Remove ACL for ' + initiator + '?')) return;
+
+        fetch('{% url "libraries:iscsi_delete_acl_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ iqn: targetIqn, initiator_iqn: initiator })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else alert('Failed: ' + data.message);
+        });
+    }
+
+    function toggleAllowAll() {
+        const enabled = document.getElementById('allowAllInitiators').checked;
+
+        fetch('{% url "libraries:iscsi_set_generate_node_acls_ajax" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ iqn: targetIqn, enabled: enabled })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) location.reload();
+            else {
+                alert('Failed: ' + data.message);
+                document.getElementById('allowAllInitiators').checked = !enabled;
+            }
+        });
+    }
+</script>
+{% endblock %}

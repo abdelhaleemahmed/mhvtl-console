@@ -1,0 +1,12 @@
+# Tools to build the Sphinx documentation, on top of requirements.txt.
+#
+# conf.py sets Django up so autodoc can import the application, so install these
+# into the application's virtualenv (Python 3.12), or into another 3.12
+# environment with the application's packages on PYTHONPATH:
+#
+#     pip install -r requirements.txt -r docs/requirements.txt
+#     make -C docs/user html        (or any tree: docs/api, ...)
+#
+# The documentation is reStructuredText only; MyST is not needed.
+sphinx==9.1.0
+sphinx-rtd-theme==3.1.0

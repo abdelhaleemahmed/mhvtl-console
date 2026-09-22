@@ -1,0 +1,234 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-22 05:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../libraries/the-library-page.rst:2 fe0f06153b4c42979619322c23049af0
+msgid "The library page"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:4 f5be5d953d5047669dc974e4e3888013
+msgid ""
+"One library, and everything that can be done to it. If you are working on"
+" a library, this is the page to be on."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:7 1fb8dae26431457c8ea6ad5e7b498597
+msgid ""
+"Open it from **Libraries** in the header and click a library, or go "
+"straight to ``/libraries/detail/<id>/``."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:10 50e9664e825a4028b86e5269b70c74d8
+msgid "The library page for library 50"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:19 0dfb93eecd7b411ba14755da533fda5b
+msgid "What is on it"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:21 c8c5edac4198403fbff6fecd55bb605c
+msgid "**Library Overview**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:22 978109663b6c4f32bdb1aa001153a1d3
+msgid ""
+"What the library is - its id, vendor and model - and the buttons that act"
+" on the whole of it: Tapes, Monitor, Sync, Refresh, Stop and Remove."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:25 66770d82efb74fffbe432ecea409f975
+msgid "**Capacity & Statistics**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:26 1e81c980cfd34a5fab3f2e228b019a4c
+msgid ""
+"Slots, how many hold a tape, how many are free, how many drives, and when"
+" the console last read the configuration. The **Empty slots** box changes"
+" how many spare slots the library has; see :doc:`../tapes/create`."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:30 430a0c27dae54254a721388b24fed8a3
+msgid "**Manage this library**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:31 32939ce6ba2d44408ba27326527d1708
+msgid ""
+"Fifteen links, in four groups - Tapes, Drives, The robot, The library. "
+"Each one carries the library with it, so the page it opens is already set"
+" to this one. This is the hub: you should rarely need to pick the library"
+" again once you are here."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:36 2dffceb3e45540d188c848eed02dbcb5
+msgid "Manage this library: fifteen links in four groups"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:40 0360c59666aa44e79b4aac66b1bd841f
+msgid "**Tape Drives**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:41 ab5b66b6502449ac8c1571878c311450
+msgid ""
+"What each drive is doing, refreshed every five seconds, then a card per "
+"drive with its SCSI address and serial. See :doc:`../using/watching`."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:44 8e4e10a707d24ecdb3315644be7065af
+msgid "The drive panel: what each drive is doing"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:48 fd0979dbd4ad4e3986d8b2d4c2ee6b2c
+msgid "**Tapes**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:49 898db3d3f9db4f3398990c041abe2708
+msgid "A tile per tape, with a bar for how full it is and how much room is left."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:51 ae71a8a45a37496784f04f7d9e033e19
+msgid "Two tape tiles, each with a bar for how full the cartridge is"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:55 459d8197f0964ff2adfb5d3d6e353492
+msgid "**Technical Specifications**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:56 aa67ddf3a4cc49c1bcea406c25601fb1
+msgid ""
+"The SCSI address, the serial, the NAA, and where MHVTL keeps this "
+"library's files. Useful when something else on the host disagrees with "
+"the console."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:61 5c3509fd00794dc8b4538d34cce6b445
+msgid "The same thing from the terminal"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:63 d24068cfd90c43f6b77f770528199e65
+msgid ""
+"There is no single command that prints the whole page, because the page "
+"answers four questions. These are them:"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:73 e7a669df913644f4926f26a75ac3799f
+msgid ""
+"``library show`` reads ``device.conf``; ``status library`` asks the robot"
+" through ``mtx``; ``status activity`` asks the drive daemons directly. "
+"When the first two disagree, the library was changed without being "
+"restarted - the console says so on the page, and ``mhvtl`` says so on the"
+" command line."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:79 448651b42e324ce8b34373f63b369440
+msgid "The buttons, and what they run"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:82 d0fd36a30d9b4be4afb7f5255b17d968
+msgid "Button"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:82 55a5aedd0c9d47bf91c7c03877e5db2c
+msgid "What it does"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:84 b9ff551ba9ce489499bf2722fe73c9ce
+msgid "**Sync**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:84 f2ca90f8157349628847ace051fccaf0
+msgid ""
+"Reads the MHVTL configuration again and updates the console's record of "
+"it. Changes nothing on the host."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:86 beec7c4da3914f09a7614f16373f540c
+msgid "**Refresh**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:86 86c850c2722845b8b57a0b17654d74ee
+msgid "Reloads the page."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:87 f3936788db0743219b3ed1d08a0441dc
+msgid "**Stop**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:87 92779b59c5d3479d8194c958beacce9f
+msgid ""
+"Stops this library's daemons - the robot and its drives. The same as "
+"``sudo mhvtl service stop --library 50``."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:89 ed34bdc6476849cf853f4ac1f46d8905
+msgid "**Monitor**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:89 a29a640cecd14e74926d9abdf5087ac8
+msgid ""
+"Opens the monitor page: service state, drives online, slots, errors, and "
+"what the drives are doing."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:91 eb058facd3a4414a99b1cd4d8abfb83b
+msgid "**Remove**"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:91 3b28598a4eee4b6db9a1275cfc3eb5de
+msgid ""
+"Deletes the library from ``device.conf``. Its tapes are not deleted "
+"unless you ask for that. The same as ``sudo mhvtl library delete 50``; "
+"read :doc:`remove` first."
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:97 53c162627305436490cfbc524687def3
+msgid "If the page says 404"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:99 762bc512f76e45249b65c10884fb14ba
+msgid ""
+"A library created from the command line exists in ``device.conf`` before "
+"the console's database has heard of it. Opening the page syncs it first, "
+"so this should not happen; if it does, press **Sync** on the library "
+"list, or check that the library is really there:"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:108 deb286d3fe7b4113bcd408071250506d
+msgid ""
+"If it is in that list and the page still refuses, the console cannot read"
+" ``/etc/mhvtl``. It runs as the user ``mhvtl-gui`` in the group "
+"``mhvtl``; check that it can read the directory:"
+msgstr ""
+
+#: ../../libraries/the-library-page.rst:116 f00bed7d9e1b4daeb8f5f6ec8fcab7a2
+msgid ""
+"If that fails - reinstalling MHVTL can reset the directory's owner - give"
+" it back the group the package set when it was installed:"
+msgstr ""
+
+#~ msgid ""
+#~ "If it is in that list and "
+#~ "the page still refuses, the console "
+#~ "cannot read ``/etc/mhvtl`` - see "
+#~ "*Working against a real MHVTL* in "
+#~ "the Developer Guide."
+#~ msgstr ""
+

@@ -1,0 +1,163 @@
+{% extends 'libraries/operator/base.html' %}
+
+{% block title %}iSCSI Backstores{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>iSCSI Backstores</h1>
+    <p class="page-description">Manage storage backends for iSCSI targets</p>
+</div>
+
+<!-- Available SCSI Devices -->
+<div class="card">
+    <h3 class="section-title">Available SCSI Devices</h3>
+    <p style="color: var(--text-dim); margin-bottom: 15px;">These MHVTL devices can be exported via iSCSI.</p>
+
+    {% if available_devices %}
+    <table>
+        <thead>
+            <tr>
+                <th>Host</th>
+                <th>Belongs to</th>
+                <th>Type</th>
+                <th>Vendor</th>
+                <th>Model</th>
+                <th>Device</th>
+                <th>Generic</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in available_devices %}
+            <tr>
+                <td><code>{{ device.host }}</code></td>
+                <td>{{ device.belongs_to|default:"-" }}</td>
+                <td>
+                    {% if device.type == 'changer' %}
+                        <span class="badge badge-info">Changer</span>
+                    {% else %}
+                        <span class="badge badge-success">Tape</span>
+                    {% endif %}
+                </td>
+                <td>{{ device.vendor }}</td>
+                <td>{{ device.model }}</td>
+                <td>{{ device.device_path|default:"-" }}</td>
+                <td><code>{{ device.generic_path }}</code></td>
+                <td>
+                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;"
+                            id="make-{{ device.suggested_name }}"
+                            onclick="createBackstoreFromDevice('{{ device.generic_path }}', '{{ device.suggested_name }}')">
+                        Create Backstore
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 30px; color: var(--text-dim);">
+        <p>No SCSI devices found. Make sure MHVTL is running.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Configured Backstores -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 class="section-title" style="margin-bottom: 0; border: none;">Configured Backstores</h3>
+        <button class="btn btn-success" onclick="showCreateModal()">+ Create Backstore</button>
+    </div>
+
+    {% if backstores %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Plugin</th>
+                <th>Device Path</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bs in backstores %}
+            <tr>
+                <td><code>{{ bs.name }}</code></td>
+                <td><span class="badge badge-info">{{ bs.plugin }}</span></td>
+                <td>{{ bs.device_path|default:"-" }}</td>
+                <td>
+                    <form method="post" style="display: inline;" onsubmit="return confirm('Delete backstore {{ bs.name }}?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="name" value="{{ bs.name }}">
+                        <input type="hidden" name="plugin" value="{{ bs.plugin }}">
+                        <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 30px; color: var(--text-dim);">
+        <p>No backstores configured yet.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="btn-group">
+    <a href="{% url 'libraries:iscsi_dashboard' %}" class="btn btn-secondary">Back to iSCSI Dashboard</a>
+</div>
+
+<!-- Create Backstore Modal -->
+<div id="createModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="background: var(--surface); max-width: 500px; margin: 80px auto; padding: 30px; border-radius: 10px;">
+        <h3 style="margin-bottom: 20px;">Create Backstore</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create">
+
+            <div class="form-group">
+                <label>Backstore Name</label>
+                <input type="text" name="name" id="bsName" class="form-control" required placeholder="e.g., library70_changer">
+            </div>
+
+            <div class="form-group">
+                <label>Plugin Type</label>
+                <select name="plugin" class="form-control">
+                    <option value="pscsi">pscsi (for SCSI devices like tape)</option>
+                    <option value="block">block (for block devices)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Device Path</label>
+                <input type="text" name="device_path" id="bsDevicePath" class="form-control" required placeholder="/dev/sg3">
+                <p class="form-help">Use the generic SCSI device path (e.g., /dev/sg3) for pscsi backstores.</p>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="button" class="btn btn-secondary" onclick="hideCreateModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showCreateModal() {
+        document.getElementById('createModal').style.display = 'block';
+    }
+
+    function hideCreateModal() {
+        document.getElementById('createModal').style.display = 'none';
+    }
+
+    function createBackstoreFromDevice(devicePath, suggestedName) {
+        document.getElementById('bsDevicePath').value = devicePath;
+        document.getElementById('bsName').value = suggestedName.replace(/[^a-zA-Z0-9_]/g, '_');
+        showCreateModal();
+    }
+</script>
+{% endblock %}

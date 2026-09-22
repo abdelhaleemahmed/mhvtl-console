@@ -1,0 +1,119 @@
+{% extends 'libraries/console/base.html' %}
+{% comment %}
+What the kernel says is attached: the SCSI address, the type, and the /dev
+nodes to drive it with.
+
+The page was the last stand-alone one in the console - its own <head>, its own
+navy gradient written into a <style>, no theme picker - so it stayed dark
+whatever theme was chosen. It also printed an empty address on every row:
+the template asked for device.host, .channel, .target and .lun, and for
+.type, none of which ScsiDevice has. The address is one object with a
+__str__, and the type is device_type. Django renders a missing attribute as
+nothing, so it read "[:::]" with an empty badge beside it and never raised.
+{% endcomment %}
+
+{% block header_title %}SCSI Devices{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .device-table { width: 100%; border-collapse: collapse; }
+    .device-table th, .device-table td {
+        padding: 12px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .device-table th {
+        color: var(--text-dim); font-weight: 600; background: var(--surface-deep);
+    }
+    .device-table tr:hover { background: var(--surface-deep); }
+    .device-kind {
+        padding: 4px 10px; border-radius: 4px; font-size: 12px;
+        font-weight: 600; display: inline-block;
+    }
+    .device-kind.tape { background: var(--info-bg); color: var(--info); }
+    .device-kind.mediumx { background: var(--ok-bg); color: var(--ok); }
+    .device-kind.disk { background: var(--warn-bg); color: var(--alert-warn-text); }
+    .device-kind.other { background: var(--surface-deep); color: var(--text-dim); }
+    .device-node { font-family: 'Consolas', monospace; color: var(--ok); }
+    .device-address { font-family: 'Consolas', monospace; }
+    .devices-empty { text-align: center; padding: 40px; color: var(--text-dim); }
+    .devices-empty-icon { font-size: 48px; margin-bottom: 15px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="filter-bar">
+        <a href="{% url 'libraries:console_scsi_devices' %}"
+           class="btn {% if not show_all %}btn-active{% else %}btn-secondary{% endif %}">MHVTL Devices Only</a>
+        <a href="{% url 'libraries:console_scsi_devices' %}?all=true"
+           class="btn {% if show_all %}btn-active{% else %}btn-secondary{% endif %}">All SCSI Devices</a>
+        <a href="{% url 'libraries:console_dashboard' %}"
+           class="btn btn-secondary" style="margin-left: auto;">Back to Console</a>
+    </div>
+
+    <div class="summary-box">
+        <div class="summary-item">
+            <div class="summary-number">{{ device_count }}</div>
+            <div class="summary-label">{% if show_all %}Total Devices{% else %}MHVTL Devices{% endif %}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="section-title">{% if show_all %}All SCSI Devices{% else %}MHVTL Virtual Devices{% endif %}</div>
+
+    {% if devices %}
+    <table class="device-table">
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Type</th>
+                <th>Vendor</th>
+                <th>Model</th>
+                <th>Revision</th>
+                <th>Device</th>
+                <th>Generic</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in devices %}
+            <tr>
+                <td class="device-address"><strong>{{ device.address }}</strong></td>
+                <td>
+                    <span class="device-kind {% if device.is_tape %}tape{% elif device.is_changer %}mediumx{% elif 'disk' in device.device_type %}disk{% else %}other{% endif %}">
+                        {{ device.device_type }}
+                    </span>
+                </td>
+                <td>{{ device.vendor }}</td>
+                <td>{{ device.model }}</td>
+                <td>{{ device.revision }}</td>
+                <td><span class="device-node">{{ device.device_path|default:"-" }}</span></td>
+                {% comment %}
+                The node mtx and our own commands are given: a changer has no
+                /dev/st, and the generic node is the one that always works.
+                {% endcomment %}
+                <td><span class="device-node">{{ device.generic_path|default:"-" }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="devices-empty">
+        <div class="devices-empty-icon">&#128190;</div>
+        <p>{% if show_all %}No SCSI devices found{% else %}No MHVTL devices found. Is the service running?{% endif %}</p>
+        {% if not show_all %}
+        <p style="margin-top: 10px;">
+            <a href="{% url 'libraries:console_service_status' %}" class="btn btn-primary">Check Service Status</a>
+        </p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% if not show_all and devices %}
+<div class="alert alert-info">
+    Showing only MHVTL virtual devices (tape drives and medium changers).
+    <a href="{% url 'libraries:console_scsi_devices' %}?all=true" class="alert-action">View all SCSI devices</a>
+</div>
+{% endif %}
+{% endblock %}

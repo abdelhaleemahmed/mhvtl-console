@@ -1,0 +1,278 @@
+/**
+ * Library Remove Page Styles
+ * Dangerous operation with warning UI
+ */
+
+.main-container {
+    max-width: 800px;
+    margin: 50px auto;
+}
+
+.remove-card {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Warning Header */
+.warning-header {
+    margin-bottom: 40px;
+}
+
+.warning-icon {
+    font-size: 64px;
+    color: var(--bad);
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.warning-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--bad);
+    margin-bottom: 15px;
+}
+
+.warning-description {
+    font-size: 18px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Danger Box */
+.danger-box {
+    background: linear-gradient(135deg, var(--bad), var(--accent));
+    color: var(--surface);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 30px 0;
+    border: 2px solid var(--bad);
+}
+
+.danger-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.danger-text {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Form Section */
+.form-section {
+    margin: 30px 0;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.form-select {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 16px;
+    background: var(--surface);
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: var(--bad);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    outline: none;
+}
+
+.form-help {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 8px;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    background: var(--warn-bg);
+    border: 2px solid var(--warn-bg);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--alert-warn-text);
+}
+
+.checkbox-input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--bad);
+}
+
+/* Library Preview */
+.library-preview {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.library-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.library-icon {
+    font-size: 32px;
+}
+
+.library-details {
+    flex: 1;
+}
+
+.library-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.library-meta {
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
+/* Confirmation Section */
+.confirmation-section {
+    background: var(--bad-bg);
+    border: 2px solid var(--bad-bg);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+}
+
+.confirmation-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--alert-bad-text);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.confirmation-details {
+    font-size: 14px;
+    color: var(--alert-bad-text);
+    line-height: 1.5;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid var(--surface-deep);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--bad), var(--bad));
+    color: var(--surface);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, var(--bad), var(--bad));
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(231, 76, 60, 0.4);
+}
+
+.btn-danger:disabled {
+    background: var(--text-dim);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.empty-description {
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* Spinner */
+.spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: var(--surface);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .remove-card {
+        padding: 30px 20px;
+    }
+
+    .warning-title {
+        font-size: 28px;
+    }
+}

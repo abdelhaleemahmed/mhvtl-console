@@ -1,0 +1,145 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../using/backup.rst:2 70978cc1dda9490f9a3317e0eed7f0cb
+msgid "Writing a backup to a tape"
+msgstr ""
+
+#: ../../using/backup.rst:4 87f47bf0614c43069874e0dcac1b164f
+msgid ""
+"The console gives you a library; what writes to it is ``tar``, Bacula, "
+"NetBackup, or whatever you already use. This is the smallest complete "
+"example: put a cartridge in a drive, write to it, read it back."
+msgstr ""
+
+#: ../../using/backup.rst:8 60de3be33c0647ad9fa3d6339aab884a
+msgid ""
+"Everything below was run against library 30, an STK L80 with four T10000B"
+" drives."
+msgstr ""
+
+#: ../../using/backup.rst:16 5a7cd82e6da54c548448645ab66a84ec
+msgid "1. Find the drive's device"
+msgstr ""
+
+#: ../../using/backup.rst:18 a02b919760b24abc81848c969c90eae1
+msgid ""
+"Backup software writes to a device node, not to a library. Ask which node"
+" a drive is:"
+msgstr ""
+
+#: ../../using/backup.rst:34 e31f38ca74064b909663eb617b5f085f
+msgid ""
+"``/dev/nst5`` is the *non-rewinding* node, which is the one to use: "
+"closing ``/dev/st5`` rewinds the tape, so a second ``tar`` would write "
+"over the first."
+msgstr ""
+
+#: ../../using/backup.rst:37 8419c66292bb43978fb9b77ba232349c
+msgid "``mhvtl scsi map`` lists every library and drive with its nodes at once."
+msgstr ""
+
+#: ../../using/backup.rst:40 5ff72076fca84954a974c3648e50b283
+msgid "2. Put a cartridge in the drive"
+msgstr ""
+
+#: ../../using/backup.rst:54 6f2396721d144ea483527dd326477bc9
+msgid ""
+"The ``0`` is the robot's drive number, counting from zero - not the drive"
+" id. ``mhvtl status library 30`` shows both."
+msgstr ""
+
+#: ../../using/backup.rst:57 a6e2f22ad5a34fb299d45ffdb11c31aa
+msgid "In the console this is **The robot → Mount a tape** on the library page."
+msgstr ""
+
+#: ../../using/backup.rst:60 5b9af361f0b241c4a5c7c1837f1a201c
+msgid "3. Write"
+msgstr ""
+
+#: ../../using/backup.rst:67 83ab878b3bca4c828030ba1610c63f06
+msgid ""
+"``-b 128`` writes 64 KB records, which suits tape far better than tar's "
+"default of 10 KB. The leading-slash warning is tar being careful, not a "
+"problem."
+msgstr ""
+
+#: ../../using/backup.rst:71 2529b60500ed4a4cbccabfc97db473c6
+msgid "While it runs, the drive can be watched - see :doc:`watching`:"
+msgstr ""
+
+#: ../../using/backup.rst:82 906938502e224cc9a7aee91a12ab54f1
+msgid "4. Read it back"
+msgstr ""
+
+#: ../../using/backup.rst:94 5906560f0fc046c1853b54667d1d7ce1
+msgid ""
+"A restore is ``tar -xf`` with the same block size. Rewind first: a tape "
+"is a position as much as a medium, and ``tar`` reads from wherever the "
+"head is."
+msgstr ""
+
+#: ../../using/backup.rst:98 806178593a8943149dc5ab1e2d0064d9
+msgid "5. Put the cartridge away"
+msgstr ""
+
+#: ../../using/backup.rst:107 d4c9fa545cc044b0a8bc2776dd44985b
+msgid "Several backups on one tape"
+msgstr ""
+
+#: ../../using/backup.rst:109 5582904798e44ce09e381e971fda26f3
+msgid ""
+"Each ``tar`` writes a file mark and stops. Writing again from where the "
+"last one ended puts a second archive on the same cartridge - which is "
+"what the non-rewinding node is for:"
+msgstr ""
+
+#: ../../using/backup.rst:118 967c9c68331341c7b373a6b595d90559
+msgid "To read the second, skip the first:"
+msgstr ""
+
+#: ../../using/backup.rst:127 7c28d2f7d97b487a93f5be478edc7dfc
+msgid "Why the tape says it used no megabytes"
+msgstr ""
+
+#: ../../using/backup.rst:129 451a8889e18445a6aa0da49d579349da
+msgid ""
+"The bash documentation is about half a megabyte, and ``USED MB`` counts "
+"whole megabytes, so a small backup shows as ``0``. The tape's files are "
+"really there:"
+msgstr ""
+
+#: ../../using/backup.rst:140 70e6c1a4494a4926bfc195c516dca815
+msgid ""
+"MHVTL compresses what it writes - this backup compressed 2.56 to 1 - so a"
+" cartridge holds more than its size in data, and ``used`` is the "
+"compressed figure, because that is what occupies the disk."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

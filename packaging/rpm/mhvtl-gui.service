@@ -1,0 +1,67 @@
+[Unit]
+Description=MHVTL GUI Web Interface
+Documentation=https://github.com/abdelhaleemahmed/mhvtl-console
+After=network.target mhvtl.target
+Wants=mhvtl.target
+
+[Service]
+Type=notify
+User=mhvtl-gui
+Group=mhvtl
+WorkingDirectory=/opt/mhvtl-gui
+EnvironmentFile=/etc/mhvtl-gui/env
+Environment="DJANGO_SETTINGS_MODULE=mhvtl_system.settings.production"
+# targetcli keeps its preferences and history in ~/.targetcli, and creates the
+# directory on every run. ProtectSystem=strict and ProtectHome=true leave it
+# nowhere to write - not the service user's home under /opt, not root's - so it
+# exits 1 before doing anything and every iSCSI page read "the running LIO
+# configuration cannot be read". This is a directory it may write, and the
+# sudoers file keeps the variable across sudo.
+Environment="TARGETCLI_HOME=/var/lib/mhvtl-gui/targetcli"
+
+# nginx holds the ports the browser talks to (8443 for HTTPS, 8080 to
+# redirect) and proxies here, so gunicorn listens on the loopback only and is
+# never reachable from outside without the TLS in front of it.
+ExecStart=/opt/mhvtl-gui/venv/bin/gunicorn \
+    --bind 127.0.0.1:8000 \
+    --workers 3 \
+    --timeout 120 \
+    --access-logfile /var/log/mhvtl/gunicorn-access.log \
+    --error-logfile /var/log/mhvtl/gunicorn-error.log \
+    --capture-output \
+    mhvtl_system.wsgi:application
+
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=5
+
+# Security hardening
+# NoNewPrivileges must be false — the service uses sudo for MHVTL commands
+# (mktape, vtlcmd, mtx, lsscsi, systemctl, targetcli, etc.)
+NoNewPrivileges=false
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# ProtectSystem=strict mounts everything read-only but the paths named here,
+# and that includes the commands the service runs through sudo. Each of these
+# is something the GUI writes as root:
+#   /var/www/mhvtl, /var/log/mhvtl   static files and logs
+#   /var/lib/mhvtl-gui               its database, binding records, targetcli's home
+#   /opt/mhvtl, /etc/mhvtl           the tapes' data and MHVTL's configuration
+#   /etc/target                      targetcli saveconfig, so an export survives a reboot
+#   /var/lib/iscsi                   iscsiadm's node records, when a library is attached
+#   /run/targetcli.lock              targetcli takes this lock on every run; without it
+#                                    it exits 1 and every iSCSI page says the running
+#                                    configuration cannot be read
+#   /opt/mhvtl-gui/.gunicorn         gunicorn's own control socket directory
+ReadWritePaths=/var/www/mhvtl /var/log/mhvtl /var/lib/mhvtl-gui /opt/mhvtl /etc/mhvtl
+ReadWritePaths=-/etc/target -/var/lib/iscsi -/run/targetcli.lock /opt/mhvtl-gui/.gunicorn
+
+# The lock file lives on a tmpfs, so it is gone after a reboot; + runs this
+# outside the sandbox, which is the only way to create it.
+ExecStartPre=+/usr/bin/touch /run/targetcli.lock
+
+[Install]
+WantedBy=multi-user.target

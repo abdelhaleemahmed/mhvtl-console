@@ -1,0 +1,65 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Bring Library Online{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
+    .info-box { background: var(--info-bg); border: 1px solid var(--info); border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+    .info-box h4 { color: var(--info); margin-bottom: 10px; }
+    .info-box ul { margin-left: 20px; color: var(--info); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="operation-icon">&#9654;</div>
+            <div class="section-title">Bring Library Online</div>
+            <p class="page-description">
+                Start a virtual tape library and make it available to the system.
+            </p>
+
+            <div class="info-box">
+                <h4>What this does:</h4>
+                <ul>
+                    <li>Starts the virtual tape library daemon</li>
+                    <li>Makes the library's drives available as SCSI devices</li>
+                    <li>Enables tape mount/unmount operations</li>
+                </ul>
+            </div>
+
+            <form method="post" action="{% url 'libraries:library_online' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="library_id">Select Library</label>
+                    <select name="library_id" id="library_id" class="form-control" required>
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"{% if selected_library_id == library.library_id %} selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <p class="form-help">Choose the library to bring online</p>
+                </div>
+
+                <div class="btn-group">
+                    <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-success">Bring Online</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="section-title">Notes</div>
+            <ul class="page-description" style="margin-left: 20px;">
+                <li>The library must be configured before it can be brought online</li>
+                <li>This operation may require root privileges</li>
+                <li>Use <a href="{% url 'libraries:library_status' %}">Library Status</a> to verify the library is online</li>
+                <li>If the library fails to come online, check the MHVTL service status</li>
+            </ul>
+        </div>
+{% endblock %}

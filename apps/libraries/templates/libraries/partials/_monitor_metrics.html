@@ -1,0 +1,37 @@
+{% comment %}
+Partial template for library monitoring metrics.
+Loaded via HTMX for auto-refresh without JavaScript.
+{% endcomment %}
+
+<!-- Service Status Card -->
+<div class="status-card">
+    <div class="status-icon {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
+        {% if metrics.is_running %}✅{% else %}⏹️{% endif %}
+    </div>
+    <div class="status-value {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
+        {% if metrics.is_running %}Running{% else %}Stopped{% endif %}
+    </div>
+    <div class="status-label">Service Status</div>
+</div>
+
+<div class="status-card">
+    <div class="status-icon status-info">💽</div>
+    <div class="status-value status-info">{{ metrics.drive_status.online }}/{{ metrics.drive_status.total }}</div>
+    <div class="status-label">Drives Online</div>
+</div>
+
+<div class="status-card">
+    <div class="status-icon status-info">🗃️</div>
+    <div class="status-value status-info">{{ total_slots|default:"0" }}</div>
+    <div class="status-label">Total Slots</div>
+</div>
+
+<div class="status-card">
+    <div class="status-icon {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
+        {% if metrics.error_count > 0 %}⚠️{% else %}✅{% endif %}
+    </div>
+    <div class="status-value {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
+        {{ metrics.error_count }}
+    </div>
+    <div class="status-label">Errors</div>
+</div>

@@ -1,0 +1,236 @@
+{% extends 'libraries/operator/base.html' %}
+{% load static %}
+
+{% block title %}iSCSI Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .target-list { margin-top: 20px; }
+    .binding-library { margin-bottom: 18px; }
+    .binding-head {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; flex-wrap: wrap; margin-bottom: 6px;
+    }
+    .binding-rebind { margin: 0; }
+    .binding-table { width: 100%; font-size: 0.92em; }
+    .binding-reason { font-size: 0.85em; opacity: 0.75; margin-top: 2px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>iSCSI Target Management</h1>
+    <p class="page-description">Manage iSCSI targets to export virtual tape libraries over the network</p>
+</div>
+
+{% if not iscsi_service_available %}
+<div class="alert alert-warning">
+    iSCSI service is not available. Make sure targetcli is installed.
+</div>
+{% else %}
+
+<!-- Status Cards -->
+<div class="status-grid">
+    <div class="status-card {% if iscsi_status.service.running %}service-running{% else %}service-stopped{% endif %}">
+        <h3>Service Status</h3>
+        <div class="value">{{ iscsi_status.service.active_state|default:"unknown"|upper }}</div>
+        <p style="margin-top: 10px; color: var(--text-dim);">target.service</p>
+    </div>
+    <div class="status-card">
+        <h3>Active Targets</h3>
+        <div class="value">{{ iscsi_status.target_count|default:"0" }}</div>
+        <p style="margin-top: 10px; color: var(--text-dim);">iSCSI targets configured</p>
+    </div>
+    <div class="status-card">
+        <h3>Backstores</h3>
+        <div class="value">{{ iscsi_status.backstore_count|default:"0" }}</div>
+        <p style="margin-top: 10px; color: var(--text-dim);">Devices exported</p>
+    </div>
+    <div class="status-card">
+        <h3>Config Saved</h3>
+        <div class="value">{% if iscsi_status.config_saved %}YES{% else %}NO{% endif %}</div>
+        <p style="margin-top: 10px; color: var(--text-dim);">/etc/target/saveconfig.json</p>
+    </div>
+</div>
+
+<!-- Exported devices: does each one still reach a running daemon? -->
+{% if exports %}
+<div class="card" id="iscsi-exports">
+    <h3 class="section-title">Exported Devices</h3>
+    {% if exports.error %}
+    <div class="alert alert-warning">The exports could not be checked: {{ exports.error }}</div>
+    {% elif not exports.libraries %}
+    <p>No library devices are exported.</p>
+    {% else %}
+    {% if exports.stale %}
+    <div class="alert alert-danger">
+        {{ exports.stale }} exported device{{ exports.stale|pluralize }} no longer
+        reach{{ exports.stale|pluralize:"es," }} a running daemon. Initiators still log in,
+        but see no LUNs for {{ exports.stale|pluralize:"it,them" }}. This happens when a
+        library's daemons restart; Re-bind points the export at the devices running now.
+    </div>
+    {% endif %}
+    {% for library in exports.libraries %}
+    <div class="binding-library">
+        <div class="binding-head">
+            <strong>{% if library.library_id %}Library {{ library.library_id }}{% else %}Not an MHVTL device{% endif %}</strong>
+            {% if library.needs_rebind %}
+            <form method="post" action="{% url 'libraries:iscsi_rebind' %}" class="binding-rebind">
+                {% csrf_token %}
+                <input type="hidden" name="library_id" value="{{ library.library_id }}">
+                <button type="submit" class="btn btn-warning btn-sm">Re-bind library {{ library.library_id }}</button>
+            </form>
+            {% endif %}
+        </div>
+        <table class="table binding-table">
+            <thead><tr><th>Backstore</th><th>Daemon</th><th>Created on</th><th>Device now</th><th>State</th><th></th></tr></thead>
+            <tbody>
+            {% for b in library.bindings %}
+            <tr>
+                <td><code>{{ b.name }}</code></td>
+                <td>{{ b.unit|default:"-" }}</td>
+                <td><code>{{ b.dev|default:"-" }}</code></td>
+                <td><code>{{ b.current|default:"-" }}</code></td>
+                <td><span class="binding-state binding-{{ b.status }}" title="{{ b.reason }}">{{ b.status }}</span>
+                    <div class="binding-reason">{{ b.reason }}</div></td>
+                <td>
+                    {% comment %}
+                    A backstore made with targetcli reads "unknown": it works, but
+                    the GUI never saw which daemon start it bound to. Recording it
+                    says it is right as it stands, and changes nothing in the target.
+                    {% endcomment %}
+                    {% if b.status == 'unknown' and b.current and b.current == b.dev %}
+                    <form method="post" action="{% url 'libraries:iscsi_record_binding' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="name" value="{{ b.name }}">
+                        <button type="submit" class="btn btn-secondary btn-sm"
+                                title="Remember this binding as it is">Record</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Quick Actions -->
+<div class="card">
+    <h3 class="section-title">Quick Actions</h3>
+    <div class="quick-actions">
+        <a href="{% url 'libraries:iscsi_export_library' %}" class="action-card">
+            <div class="icon">&#128230;</div>
+            <h4>Export Library</h4>
+            <p>Quick export a library via iSCSI</p>
+        </a>
+        <a href="{% url 'libraries:iscsi_create_target' %}" class="action-card">
+            <div class="icon">&#10133;</div>
+            <h4>Create Target</h4>
+            <p>Create a new iSCSI target</p>
+        </a>
+        <a href="{% url 'libraries:iscsi_backstores' %}" class="action-card">
+            <div class="icon">&#128190;</div>
+            <h4>Manage Backstores</h4>
+            <p>Configure storage backends</p>
+        </a>
+        <a href="{% url 'libraries:iscsi_service' %}" class="action-card">
+            <div class="icon">&#9881;</div>
+            <h4>Service Control</h4>
+            <p>Start/stop target.service</p>
+        </a>
+        <a href="{% url 'libraries:iscsi_guide' %}" class="action-card" style="border: 2px solid var(--accent);">
+            <div class="icon">&#128214;</div>
+            <h4>Setup Guide</h4>
+            <p>Step-by-step instructions</p>
+        </a>
+    </div>
+</div>
+
+<!-- Targets List -->
+<div class="card">
+    <h3 class="section-title">Configured Targets</h3>
+    {% if iscsi_status.targets %}
+    <table>
+        <thead>
+            <tr>
+                <th>Target IQN</th>
+                <th>TPGs</th>
+                <th>LUNs</th>
+                <th>ACLs</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for target in iscsi_status.targets %}
+            <tr>
+                <td><code>{{ target.iqn }}</code></td>
+                <td>{{ target.tpgs|length }}</td>
+                <td>
+                    {% for tpg in target.tpgs %}
+                        {{ tpg.luns|length }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        0
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for tpg in target.tpgs %}
+                        {% if tpg.generate_node_acls %}
+                            <span class="badge badge-info">Allow All</span>
+                        {% else %}
+                            {{ tpg.acls|length }}
+                        {% endif %}
+                        {% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        0
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'libraries:iscsi_target_detail' iqn=target.iqn %}" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">Manage</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-dim); text-align: center; padding: 30px;">
+        No iSCSI targets configured. <a href="{% url 'libraries:iscsi_export_library' %}">Export a library</a> to get started.
+    </p>
+    {% endif %}
+</div>
+
+<!-- Backstores Summary -->
+<div class="card">
+    <h3 class="section-title">Configured Backstores</h3>
+    {% if iscsi_status.backstores %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Plugin</th>
+                <th>Device Path</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for backstore in iscsi_status.backstores %}
+            <tr>
+                <td><code>{{ backstore.name }}</code></td>
+                <td><span class="badge badge-info">{{ backstore.plugin }}</span></td>
+                <td>{{ backstore.device_path|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-dim); text-align: center; padding: 30px;">
+        No backstores configured. <a href="{% url 'libraries:iscsi_backstores' %}">Add a backstore</a> first.
+    </p>
+    {% endif %}
+</div>
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+#!/bin/sh
+# mhvtl - command line interface to the MHVTL tape library.
+#
+# Runs the CLI from the application tree with its own virtualenv. The working
+# directory is left alone, so relative paths given to the CLI (config export
+# out.zip) mean what the caller expects; settings find .env relative to the
+# application, not to the caller.
+#
+# MHVTL_APP overrides where the application lives - a working tree, for
+# instance. The default is where the package installs it.
+APP="${MHVTL_APP:-/opt/mhvtl-gui}"
+PYTHONPATH="$APP${PYTHONPATH:+:$PYTHONPATH}" exec "$APP/venv/bin/python" -m mhvtl_cli.main "$@"

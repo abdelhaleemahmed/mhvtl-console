@@ -1,0 +1,191 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Add Drive{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
+    .info-box { background: var(--info-bg); border: 1px solid var(--info-bg); border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+    .info-box h4 { color: var(--info); margin-bottom: 10px; }
+    .info-box ul { margin-left: 20px; color: var(--info); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="operation-icon">&#128190;</div>
+            <div class="section-title">Add Drive to Library</div>
+            <p class="page-description">
+                Add a new tape drive to a library. The drive will be added to the library configuration.
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>Note:</strong> The library's daemons are restarted for you, so the new drive appears straight away.
+            </div>
+
+            <form method="post" action="{% url 'libraries:add_drive' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="library_id">Select Library</label>
+                    <select name="library_id" id="library_id" class="form-control" required>
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"
+                                    {% if selected_library_id == library.library_id %}selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product">Drive model</label>
+                        <select name="product" id="product" class="form-control" required>
+                            {% for model in plan.supported %}
+                                <option value="{{ model }}"
+                                        {% if model == plan.product %}selected{% endif %}>{{ model }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help" id="product-help">
+                            The models this library takes. MHVTL emulates each one by name;
+                            anything else would be a generic drive.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vendor">Vendor</label>
+                        <input type="text" name="vendor" id="vendor" class="form-control"
+                               value="{{ plan.vendor|default:'IBM' }}" maxlength="8" required>
+                        <p class="form-help">As the drive reports itself.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="serial">Serial number</label>
+                    <input type="text" name="serial" id="serial" class="form-control"
+                           placeholder="{{ plan.serial|default:'from the library and slot' }}"
+                           maxlength="10">
+                    <p class="form-help">
+                        Left empty it is
+                        <code id="serial-suggestion">{{ plan.serial|default:'the library serial, then D and the slot' }}</code>.
+                    </p>
+                </div>
+
+                {% comment %}
+                Where it lands. The service decides all of it - the first free
+                slot, the drive id, the lowest free SCSI target - so the page
+                shows what will happen rather than asking for numbers it would
+                then ignore, which is what it used to do.
+                {% endcomment %}
+                <div class="card" id="placement" style="margin: 18px 0;">
+                    <div class="section-title" style="font-size: 15px;">Where it will go</div>
+                    <table class="info-table" style="width: 100%;">
+                        <tr><td>Library</td><td id="p-library">{{ plan.library|default:"-" }}</td></tr>
+                        <tr><td>Drive slot</td><td id="p-slot">{{ plan.slot|default:"-" }}</td></tr>
+                        <tr><td>Drive id</td><td id="p-drive-id">{{ plan.drive_id|default:"-" }}</td></tr>
+                        <tr><td>SCSI target</td><td id="p-target">{{ plan.target|default:"-" }}</td></tr>
+                        <tr><td>Drives</td>
+                            <td id="p-drives" title="{{ plan.layout }}">{% if plan.max_drives %}{{ plan.drives_now }} of {{ plan.max_drives }}{% else %}-{% endif %}</td></tr>
+                    </table>
+                    <p class="form-help" id="p-note" style="margin-top: 10px;">
+                        {% if plan.full %}This library is full: remove a drive first.{% endif %}
+                    </p>
+                </div>
+
+                <div class="btn-group">
+                    <a href="{% url 'libraries:drive_list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-success">Add Drive</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="info-box">
+            <h4>How the drive is placed</h4>
+            <ul>
+                <li>The <strong>models</strong> offered are the ones this library's
+                    model takes, plus whatever it already holds.</li>
+                <li>The <strong>slot</strong> is the first free one, and the
+                    <strong>drive id</strong> and <strong>SCSI target</strong> are the
+                    next free of each - no two devices may share an address.</li>
+                <li>The <strong>serial</strong> is the library's own with the slot
+                    after it, unless you give one.</li>
+                <li>The library's daemons are restarted, so the drive appears at once.</li>
+            </ul>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* The library decides everything else on this page: which drive models it
+ * takes, which slot and drive id the new drive gets, its SCSI target and its
+ * serial. Choosing another library asks the server again rather than leaving
+ * the last library's numbers on the screen. */
+(function () {
+    var picker = document.getElementById('library_id');
+    var product = document.getElementById('product');
+    var vendor = document.getElementById('vendor');
+    var serial = document.getElementById('serial');
+    var suggestion = document.getElementById('serial-suggestion');
+    var note = document.getElementById('p-note');
+    var cells = {
+        library: document.getElementById('p-library'),
+        slot: document.getElementById('p-slot'),
+        drive_id: document.getElementById('p-drive-id'),
+        target: document.getElementById('p-target')
+    };
+    if (!picker) { return; }
+
+    function clear(message) {
+        Object.keys(cells).forEach(function (key) { cells[key].textContent = '-'; });
+        document.getElementById('p-drives').textContent = '-';
+        product.innerHTML = '';
+        note.textContent = message || '';
+    }
+
+    function fill(plan) {
+        cells.library.textContent = plan.library || '-';
+        cells.slot.textContent = plan.slot != null ? plan.slot : '-';
+        cells.drive_id.textContent = plan.drive_id != null ? plan.drive_id : '-';
+        cells.target.textContent = plan.target != null ? plan.target : '-';
+        var drives = document.getElementById('p-drives');
+        drives.textContent = plan.max_drives
+            ? plan.drives_now + ' of ' + plan.max_drives : '-';
+        drives.title = plan.layout || '';
+
+        product.innerHTML = '';
+        (plan.supported || []).forEach(function (model) {
+            var option = document.createElement('option');
+            option.value = model;
+            option.textContent = model;
+            if (model === plan.product) { option.selected = true; }
+            product.appendChild(option);
+        });
+        if (plan.vendor) { vendor.value = plan.vendor; }
+        if (plan.serial) {
+            serial.placeholder = plan.serial;
+            if (suggestion) { suggestion.textContent = plan.serial; }
+        }
+    }
+
+    picker.addEventListener('change', function () {
+        var id = picker.value;
+        if (!id) { clear('Choose a library.'); return; }
+        note.textContent = 'Reading the library...';
+        fetch('/libraries/ajax/drive-placement/' + id + '/', {
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                if (data.plan && Object.keys(data.plan).length) { fill(data.plan); }
+                note.textContent = data.success ? '' :
+                    (data.message || 'This library cannot take another drive.');
+            })
+            .catch(function () { clear('Could not read the library.'); });
+    });
+})();
+</script>
+{% endblock %}

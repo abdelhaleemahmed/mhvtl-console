@@ -1,0 +1,441 @@
+"""
+Phase 1: Model & Data Integrity Testing
+Testing all 6 models with their actual fields and relationships
+"""
+from django.test import TestCase
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
+from apps.libraries.models import (
+    LibraryBrand, 
+    LibraryModel, 
+    Library, 
+    Drive, 
+    MediaSlot, 
+    LibraryOperation
+)
+from django.contrib.auth import get_user_model  # Import get_user_model
+from datetime import datetime
+
+# Get the custom User model
+User = get_user_model()
+
+# Rest of the test code remains the same...
+class LibraryBrandModelTest(TestCase):
+    """Test LibraryBrand model"""
+
+    def setUp(self):
+        """Create test brand"""
+        self.brand = LibraryBrand.objects.create(
+            name='STK',
+            display_name='StorageTek',
+            color_code='#FF5733',
+            is_active=True
+        )
+
+    def test_brand_creation(self):
+        """Test brand is created with all fields"""
+        self.assertEqual(self.brand.name, 'STK')
+        self.assertEqual(self.brand.display_name, 'StorageTek')
+        self.assertEqual(self.brand.color_code, '#FF5733')
+        self.assertTrue(self.brand.is_active)
+        self.assertIsNotNone(self.brand.created_at)
+
+    def test_brand_str_method(self):
+        """Test string representation"""
+        self.assertIn('STK', str(self.brand))
+
+    def test_multiple_brands(self):
+        """Test we can create all 9 vendor brands"""
+        brands = ['IBM', 'HP', 'Quantum', 'Spectra', 'ADIC', 'Sony', 'Dell', 'Overland']
+        for brand_name in brands:
+            LibraryBrand.objects.create(
+                name=brand_name,
+                display_name=f'{brand_name} Libraries',
+                is_active=True
+            )
+        # Including the one from setUp, we should have 9 brands
+        self.assertEqual(LibraryBrand.objects.count(), 9)
+
+
+class LibraryModelModelTest(TestCase):
+    """Test LibraryModel model"""
+
+    def setUp(self):
+        """Create test brand and model"""
+        self.brand = LibraryBrand.objects.create(
+            name='HP',
+            display_name='HP Libraries'
+        )
+        self.model = LibraryModel.objects.create(
+            brand=self.brand,
+            name='MSL G3 Series',
+            product_identification='MSL-G3',
+            default_revision='1.0',
+            is_active=True
+        )
+
+    def test_model_creation(self):
+        """Test model is created with all fields"""
+        self.assertEqual(self.model.brand, self.brand)
+        self.assertEqual(self.model.name, 'MSL G3 Series')
+        self.assertEqual(self.model.product_identification, 'MSL-G3')
+        self.assertEqual(self.model.default_revision, '1.0')
+        self.assertTrue(self.model.is_active)
+
+    def test_brand_relationship(self):
+        """Test foreign key relationship to LibraryBrand"""
+        self.assertEqual(self.model.brand.name, 'HP')
+        # Test reverse relationship
+        self.assertIn(self.model, self.brand.librarymodel_set.all())
+
+    def test_cascade_on_brand_delete(self):
+        """Test what happens when brand is deleted"""
+        model_id = self.model.id
+        self.brand.delete()
+        # Model should also be deleted (check your CASCADE settings)
+        self.assertFalse(LibraryModel.objects.filter(id=model_id).exists())
+
+
+class LibraryModelTest(TestCase):
+    """Test Library model - the main model with 25 fields"""
+
+    def setUp(self):
+        """Create test library with all required fields"""
+        self.brand = LibraryBrand.objects.create(
+            name='IBM',
+            display_name='IBM Libraries'
+        )
+        self.model = LibraryModel.objects.create(
+            brand=self.brand,
+            name='TS3500',
+            product_identification='IBM-TS3500'
+        )
+        self.library = Library.objects.create(
+            library_id=10,
+            channel=0,
+            target=0,
+            lun=0,
+            brand=self.brand,
+            model=self.model,
+            vendor_identification='IBM',
+            product_identification='TS3500',
+            product_revision='2.0',
+            unit_serial_number='IBM123456',
+            naa='naa.5000000000000001',
+            home_directory='/opt/mhvtl',
+            media_count=100,
+            empty_slots=20,
+            is_active=True,
+            is_standard_config=True,
+            discovery_status='django_created'
+        )
+
+    def test_library_creation(self):
+        """Test library is created with all fields"""
+        self.assertEqual(self.library.library_id, 10)
+        self.assertEqual(self.library.channel, 0)
+        self.assertEqual(self.library.vendor_identification, 'IBM')
+        self.assertEqual(self.library.media_count, 100)
+        self.assertEqual(self.library.empty_slots, 20)
+        self.assertTrue(self.library.is_active)
+        self.assertEqual(self.library.discovery_status, 'django_created')
+
+    def test_slot_limit_validation(self):
+        """Test 15,000 slot limit enforcement"""
+        # This should work - under limit
+        library_ok = Library.objects.create(
+            library_id=20,
+            media_count=10000,
+            empty_slots=4999,  # Total: 14,999
+            brand=self.brand,
+            model=self.model
+        )
+        self.assertEqual(library_ok.media_count + library_ok.empty_slots, 14999)
+
+        # This should fail - over limit
+        with self.assertRaises(ValidationError):
+            library_bad = Library(
+                library_id=30,
+                media_count=10000,
+                empty_slots=5001,  # Total: 15,001 - should fail
+                brand=self.brand,
+                model=self.model
+            )
+            library_bad.full_clean()  # This triggers validation
+
+    def test_discovery_status_choices(self):
+        """Test discovery status field choices"""
+        valid_statuses = ['discovered', 'django_created', 'modified', 'synced']
+        for status in valid_statuses:
+            self.library.discovery_status = status
+            self.library.save()
+            self.assertEqual(self.library.discovery_status, status)
+
+    def test_timestamps(self):
+        """Test created_at and updated_at fields"""
+        self.assertIsNotNone(self.library.created_at)
+        self.assertIsNotNone(self.library.updated_at)
+
+        # Test updated_at changes
+        old_updated = self.library.updated_at
+        self.library.media_count = 150
+        self.library.save()
+        self.library.refresh_from_db()
+        self.assertNotEqual(old_updated, self.library.updated_at)
+
+
+class DriveModelTest(TestCase):
+    """Test Drive model with library relationship"""
+
+    def setUp(self):
+        """Create test library and drives"""
+        self.brand = LibraryBrand.objects.create(name='HP')
+        self.model = LibraryModel.objects.create(
+            brand=self.brand,
+            name='MSL G3'
+        )
+        self.library = Library.objects.create(
+            library_id=40,
+            brand=self.brand,
+            model=self.model
+        )
+        self.drive = Drive.objects.create(
+            library=self.library,
+            drive_id=41,
+            channel=0,
+            target=1,
+            lun=0,
+            vendor_identification='HP',
+            product_identification='ULTRIUM-8',
+            product_revision='1.0',
+            unit_serial_number='DRV001',
+            is_active=True,
+            discovery_status='django_created'
+        )
+
+    def test_drive_creation(self):
+        """Test drive is created with all fields"""
+        self.assertEqual(self.drive.drive_id, 41)
+        self.assertEqual(self.drive.library, self.library)
+        self.assertEqual(self.drive.vendor_identification, 'HP')
+        self.assertTrue(self.drive.is_active)
+
+    def test_library_relationship(self):
+        """Test foreign key relationship to Library"""
+        self.assertEqual(self.drive.library.library_id, 40)
+        # Test reverse relationship
+        self.assertIn(self.drive, self.library.drive_set.all())
+
+    def test_multiple_drives_per_library(self):
+        """Test library can have multiple drives"""
+        for i in range(2, 5):  # Create 3 more drives
+            Drive.objects.create(
+                library=self.library,
+                drive_id=40 + i,
+                channel=0,
+                target=i,
+                lun=0
+            )
+        self.assertEqual(self.library.drive_set.count(), 4)
+
+    def test_cascade_delete(self):
+        """Test drives are deleted when library is deleted"""
+        drive_id = self.drive.id
+        self.library.delete()
+        self.assertFalse(Drive.objects.filter(id=drive_id).exists())
+
+
+class MediaSlotModelTest(TestCase):
+    """Test MediaSlot model"""
+
+    def setUp(self):
+        """Create test library and media slots"""
+        self.brand = LibraryBrand.objects.create(name='STK')
+        self.model = LibraryModel.objects.create(brand=self.brand, name='L700')
+        self.library = Library.objects.create(
+            library_id=50,
+            brand=self.brand,
+            model=self.model
+        )
+        self.slot = MediaSlot.objects.create(
+            library=self.library,
+            slot_number=1,
+            is_empty=False,
+            media_barcode='STK001L8',
+            media_type='LTO8',
+            is_import_export=False,
+            discovery_status='discovered'
+        )
+
+    def test_slot_creation(self):
+        """Test media slot is created with all fields"""
+        self.assertEqual(self.slot.slot_number, 1)
+        self.assertFalse(self.slot.is_empty)
+        self.assertEqual(self.slot.media_barcode, 'STK001L8')
+        self.assertEqual(self.slot.media_type, 'LTO8')
+        self.assertFalse(self.slot.is_import_export)
+
+    def test_empty_slot(self):
+        """Test empty slot creation"""
+        empty_slot = MediaSlot.objects.create(
+            library=self.library,
+            slot_number=2,
+            is_empty=True
+        )
+        self.assertTrue(empty_slot.is_empty)
+        self.assertIsNone(empty_slot.media_barcode)
+
+    def test_import_export_slot(self):
+        """Test I/E slot creation"""
+        ie_slot = MediaSlot.objects.create(
+            library=self.library,
+            slot_number=100,
+            is_import_export=True
+        )
+        self.assertTrue(ie_slot.is_import_export)
+
+    def test_library_slot_count(self):
+        """Test library tracks correct slot counts"""
+        # Create 10 filled slots and 5 empty slots
+        for i in range(3, 13):
+            MediaSlot.objects.create(
+                library=self.library,
+                slot_number=i,
+                is_empty=False,
+                media_barcode=f'STK{i:03d}L8'
+            )
+        for i in range(13, 18):
+            MediaSlot.objects.create(
+                library=self.library,
+                slot_number=i,
+                is_empty=True
+            )
+
+        total_slots = self.library.mediaslot_set.count()
+        filled_slots = self.library.mediaslot_set.filter(is_empty=False).count()
+        empty_slots = self.library.mediaslot_set.filter(is_empty=True).count()
+
+        self.assertEqual(total_slots, 17)  # 1 + 10 + 5 + 1 from setUp
+        self.assertEqual(filled_slots, 11)
+        self.assertEqual(empty_slots, 5)
+
+
+class LibraryOperationModelTest(TestCase):
+    """Test LibraryOperation audit trail model"""
+
+    def setUp(self):
+        """Create test library and operation"""
+        self.brand = LibraryBrand.objects.create(name='Quantum')
+        self.model = LibraryModel.objects.create(brand=self.brand, name='i6000')
+        self.library = Library.objects.create(
+            library_id=60,
+            brand=self.brand,
+            model=self.model
+        )
+        self.operation = LibraryOperation.objects.create(
+            library=self.library,
+            operation='create',
+            description='Library created via Django admin',
+            user_session='session123',
+            media_barcode='QTM001L8'
+        )
+
+    def test_operation_creation(self):
+        """Test operation is logged correctly"""
+        self.assertEqual(self.operation.library, self.library)
+        self.assertEqual(self.operation.operation, 'create')
+        self.assertIsNotNone(self.operation.timestamp)
+        self.assertEqual(self.operation.user_session, 'session123')
+
+    def test_operation_types(self):
+        """Test different operation types"""
+        operations = ['modify', 'delete', 'discover', 'sync', 'export']
+        for op in operations:
+            LibraryOperation.objects.create(
+                library=self.library,
+                operation=op,
+                description=f'Test {op} operation'
+            )
+        self.assertEqual(self.library.libraryoperation_set.count(), 6)
+
+
+class ModelRelationshipTest(TestCase):
+    """Test all model relationships work correctly"""
+
+    def setUp(self):
+        """Create complete test data hierarchy"""
+        # Create brand
+        self.brand = LibraryBrand.objects.create(
+            name='TestBrand',
+            display_name='Test Brand'
+        )
+
+        # Create model
+        self.model = LibraryModel.objects.create(
+            brand=self.brand,
+            name='TestModel'
+        )
+
+        # Create library
+        self.library = Library.objects.create(
+            library_id=100,
+            brand=self.brand,
+            model=self.model
+        )
+
+        # Create drives
+        for i in range(4):
+            Drive.objects.create(
+                library=self.library,
+                drive_id=101 + i
+            )
+
+        # Create slots
+        for i in range(10):
+            MediaSlot.objects.create(
+                library=self.library,
+                slot_number=i + 1,
+                is_empty=(i >= 5)
+            )
+
+        # Create operation
+        LibraryOperation.objects.create(
+            library=self.library,
+            operation='create'
+        )
+
+    def test_complete_hierarchy(self):
+        """Test complete model hierarchy"""
+        # Brand has models
+        self.assertEqual(self.brand.librarymodel_set.count(), 1)
+
+        # Library has brand and model
+        self.assertEqual(self.library.brand, self.brand)
+        self.assertEqual(self.library.model, self.model)
+
+        # Library has drives
+        self.assertEqual(self.library.drive_set.count(), 4)
+
+        # Library has slots
+        self.assertEqual(self.library.mediaslot_set.count(), 10)
+
+        # Library has operations
+        self.assertEqual(self.library.libraryoperation_set.count(), 1)
+
+    def test_cascade_deletion(self):
+        """Test cascade deletion works correctly"""
+        # Get IDs before deletion
+        drive_ids = list(self.library.drive_set.values_list('id', flat=True))
+        slot_ids = list(self.library.mediaslot_set.values_list('id', flat=True))
+
+        # Delete library
+        self.library.delete()
+
+        # Check all related objects are deleted
+        self.assertEqual(Drive.objects.filter(id__in=drive_ids).count(), 0)
+        self.assertEqual(MediaSlot.objects.filter(id__in=slot_ids).count(), 0)
+
+        # Brand and model should still exist
+        self.assertTrue(LibraryBrand.objects.filter(id=self.brand.id).exists())
+        self.assertTrue(LibraryModel.objects.filter(id=self.model.id).exists())
+

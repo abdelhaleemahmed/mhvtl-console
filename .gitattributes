@@ -1,0 +1,17 @@
+# Treat Python files as text and ensure LF line endings in the repository
+*.py text eol=lf
+
+# You might want to do this for other common text file types as well
+*.js text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+#*.sh text eol=lf # For shell scripts, often critical for LF
+
+# Binary files should not have line ending conversions
+*.png binary
+*.jpg binary
+*.zip binary
+# etc.

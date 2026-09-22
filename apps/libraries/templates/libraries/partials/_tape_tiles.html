@@ -1,0 +1,46 @@
+{% comment %}
+Tapes as tiles, the way a file manager shows drives: a bar for how full it
+is, and how much room is left underneath.
+
+Everything on a tile was decided by the service - the percentage, the
+wording, and whether the bar should look alarming - so the library page, the
+tape inventory and `mhvtl tape list` describe a tape the same way. The
+template picks no colours and does no arithmetic.
+
+Takes `tapes` (TapeInfo dicts) and optionally `library_id` for the links.
+{% endcomment %}
+{% comment %}
+|unlocalize on every width: Django prints numbers in the reader's language,
+and in Arabic 81.9 is "81,9" - which CSS ignores, so the bar would draw
+empty the day the Arabic interface is switched on.
+{% endcomment %}{% load l10n %}
+<div class="tape-tiles">
+    {% for tape in tapes %}
+    <div class="tape-tile {{ tape.fullness }}">
+        <div class="tape-tile-head">
+            <span class="tape-tile-barcode">{{ tape.barcode }}</span>
+            <span class="lto-chip {{ tape.density_class }}">{{ tape.density|default:"?" }}</span>
+        </div>
+
+        <div class="tape-bar {{ tape.fullness }}" role="img"
+             aria-label="{{ tape.used_percent|default:0 }} percent full">
+            {% comment %}
+            The width is the one number this template puts on the page, and
+            the service worked it out.
+            {% endcomment %}
+            <div class="tape-bar-fill" style="width: {{ tape.used_percent|default:0|unlocalize }}%"></div>
+        </div>
+
+        <div class="tape-tile-summary">{{ tape.summary }}</div>
+        <div class="tape-tile-where">
+            {% if tape.drive is not None %}In drive {{ tape.drive }}
+            {% elif tape.slot is not None %}Slot {{ tape.slot }}
+            {% else %}Not in this library{% endif %}
+            {% if tape.kind != 'data' %} &middot; {{ tape.kind }}{% endif %}
+            {% if not tape.media_exists %} &middot; <span class="tape-tile-missing">no data on disk</span>{% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p class="tape-tiles-empty">No tapes to show.</p>
+    {% endfor %}
+</div>

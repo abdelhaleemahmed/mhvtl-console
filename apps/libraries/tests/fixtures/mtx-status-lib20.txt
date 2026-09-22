@@ -1,0 +1,49 @@
+  Storage Changer /dev/sg5:4 Drives, 44 Slots ( 4 Import/Export )
+Data Transfer Element 0:Empty
+Data Transfer Element 1:Empty
+Data Transfer Element 2:Empty
+Data Transfer Element 3:Empty
+      Storage Element 1:Full :VolumeTag=Y20001X4                        
+      Storage Element 2:Full :VolumeTag=Y20002X4                        
+      Storage Element 3:Full :VolumeTag=Y20003X4                        
+      Storage Element 4:Full :VolumeTag=Y20004X4                        
+      Storage Element 5:Full :VolumeTag=Y20005X4                        
+      Storage Element 6:Full :VolumeTag=Y20006X4                        
+      Storage Element 7:Full :VolumeTag=Y20007X4                        
+      Storage Element 8:Full :VolumeTag=Y20008X4                        
+      Storage Element 9:Full :VolumeTag=Y20009X4                        
+      Storage Element 10:Full :VolumeTag=Y20010X4                        
+      Storage Element 11:Full :VolumeTag=Y20011X4                        
+      Storage Element 12:Full :VolumeTag=Y20012X4                        
+      Storage Element 13:Full :VolumeTag=Y20013X4                        
+      Storage Element 14:Full :VolumeTag=Y20014X4                        
+      Storage Element 15:Full :VolumeTag=Y20015X4                        
+      Storage Element 16:Full :VolumeTag=Y20016X4                        
+      Storage Element 17:Full :VolumeTag=Y20017X4                        
+      Storage Element 18:Full :VolumeTag=Y20018X4                        
+      Storage Element 19:Full :VolumeTag=Y20019X4                        
+      Storage Element 20:Full :VolumeTag=Y20020X4                        
+      Storage Element 21:Full :VolumeTag=Y20021X4                        
+      Storage Element 22:Full :VolumeTag=Y20022X4                        
+      Storage Element 23:Full :VolumeTag=Y20023X4                        
+      Storage Element 24:Full :VolumeTag=Y20024X4                        
+      Storage Element 25:Full :VolumeTag=Y20025X4                        
+      Storage Element 26:Empty
+      Storage Element 27:Empty
+      Storage Element 28:Empty
+      Storage Element 29:Empty
+      Storage Element 30:Empty
+      Storage Element 31:Empty
+      Storage Element 32:Empty
+      Storage Element 33:Empty
+      Storage Element 34:Empty
+      Storage Element 35:Empty
+      Storage Element 36:Empty
+      Storage Element 37:Empty
+      Storage Element 38:Empty
+      Storage Element 39:Empty
+      Storage Element 40:Empty
+      Storage Element 41 IMPORT/EXPORT:Empty
+      Storage Element 42 IMPORT/EXPORT:Empty
+      Storage Element 43 IMPORT/EXPORT:Empty
+      Storage Element 44 IMPORT/EXPORT:Empty

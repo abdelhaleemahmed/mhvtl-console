@@ -1,0 +1,253 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../libraries/create.rst:2 d05312395a77460a876795de02eed378
+msgid "Creating a library"
+msgstr ""
+
+#: ../../libraries/create.rst:4 d0e160489a59479b8d382999655f67bf
+msgid ""
+"A library is a model - an IBM TS3500, an STK SL500 - with a number of "
+"drives, a number of slots, and cartridges of a generation those drives "
+"can load. The console only offers combinations MHVTL can really emulate, "
+"so a library it lets you build is one that will work."
+msgstr ""
+
+#: ../../libraries/create.rst:14 66dce4d499284ee38599df86eaad31f7
+msgid "In the console"
+msgstr ""
+
+#: ../../libraries/create.rst:16 a7dda83864854c009d42f2e55993c7b8
+msgid "**Libraries → Create Library**, at ``/libraries/setup/``. Two ways in:"
+msgstr ""
+
+#: ../../libraries/create.rst:18 56551c706fde40cb8f403f3717dbdcb3
+msgid "Create Library: choose a vendor, or start from the tape"
+msgstr ""
+
+#: ../../libraries/create.rst:22 0c723e02f2904788a86410428a8763a5
+msgid "**From a vendor** (recommended)"
+msgstr ""
+
+#: ../../libraries/create.rst:23 ca0e6b04f7a84aeb827cac9d19dc4df0
+msgid ""
+"Pick a vendor, then a model. The drive list then shows only the drives "
+"that model takes, with its default chosen; the media list only the "
+"cartridges that drive writes. The limits on drives, slots and MAP slots "
+"are the model's own."
+msgstr ""
+
+#: ../../libraries/create.rst:28 e644ffea6c684a63a6479b07d580383a
+msgid "**From the tape**"
+msgstr ""
+
+#: ../../libraries/create.rst:29 fb2aa0745b9d46668e0b45bce46b9db0
+msgid ""
+"If you know which cartridge you need, say so first: **Show vendors whose "
+"libraries can take** leaves only the vendors that can, and carries the "
+"choice into the form. Choosing ``LTO10`` gets you a model with an "
+"``ULT3580-TDA`` drive, ``LTO10`` media and barcodes ending ``LA``."
+msgstr ""
+
+#: ../../libraries/create.rst:34 c0ec78cabbde40e1984a34c317ed4852
+msgid ""
+"Then set how many drives, how many slots, and how many empty slots to "
+"leave for tapes added later. Four empty slots is the default; a library "
+"with none cannot take a new tape without being reconfigured."
+msgstr ""
+
+#: ../../libraries/create.rst:38 4b75357d31624e4bb2e9acc18ca5370c
+msgid "The library form: model, drives, media and slots"
+msgstr ""
+
+#: ../../libraries/create.rst:42 ffa19b95c099457b9ff64b26530fd86f
+msgid ""
+"Press **Create**. The console writes ``device.conf`` and "
+"``library_contents.<id>``, starts the daemons, and creates the tape "
+"files."
+msgstr ""
+
+#: ../../libraries/create.rst:46 4ff0c4d45b9a40e4aa2c0d67f0a66b44
+msgid "From the terminal"
+msgstr ""
+
+#: ../../libraries/create.rst:60 c3812c9cba104fb796e644e104ea07d2
+msgid ""
+"Each step is reported, and a failure says which step failed and leaves "
+"the configuration as it was."
+msgstr ""
+
+#: ../../libraries/create.rst:64 7b7536f0764d48bc86325aaa2008664a
+msgid "Option"
+msgstr ""
+
+#: ../../libraries/create.rst:64 5b4ebc2aca2944c0a1f13dc7b5a61203
+msgid "What it does"
+msgstr ""
+
+#: ../../libraries/create.rst:66 66b46a1f57db46b6a604b2608113a9dc
+msgid "``--profile``"
+msgstr ""
+
+#: ../../libraries/create.rst:66 8916ef16332345b7bb0970ab07fa437d
+msgid "The vendor: IBM, STK, SONY, QUANTUM, ADIC, DELL, HP, OVERLAND, SPECTRA"
+msgstr ""
+
+#: ../../libraries/create.rst:68 312b602c7632452baf89bd57b93ef19d
+msgid "``--id``"
+msgstr ""
+
+#: ../../libraries/create.rst:68 8f9ff9cc782942bab376e53cd2854673
+msgid "The library id; the next free one if you leave it out"
+msgstr ""
+
+#: ../../libraries/create.rst:69 78347a5d5b8e48c39e287cd4b9f280cf
+msgid "``--model``"
+msgstr ""
+
+#: ../../libraries/create.rst:69 aa5b017f4c8f43a49ff21247fb789fcd
+msgid "The library model, if not the profile's default"
+msgstr ""
+
+#: ../../libraries/create.rst:70 97abbd98888e4f59affb16c082294805
+msgid "``--drives``"
+msgstr ""
+
+#: ../../libraries/create.rst:70 cc860cb16473425baa515fe7aca390a0
+msgid "How many drives"
+msgstr ""
+
+#: ../../libraries/create.rst:71 96cd2b17022941dca305a4464c00b3b9
+msgid "``--drive-model``"
+msgstr ""
+
+#: ../../libraries/create.rst:71 13cadc90197947479e7a74d417f688d3
+msgid "The drive model, if not the model's default"
+msgstr ""
+
+#: ../../libraries/create.rst:72 7fac44de453341fa934121f303268f61
+msgid "``--media-type``"
+msgstr ""
+
+#: ../../libraries/create.rst:72 9d1c60da29d745d28c548ea774d897f1
+msgid "LTO8, LTO9, AIT4 … must be one the drives take"
+msgstr ""
+
+#: ../../libraries/create.rst:73 7479af9bc6664debb71cf7409b526305
+msgid "``--tapes``"
+msgstr ""
+
+#: ../../libraries/create.rst:73 326ae6f318b54cf4b20eecf6a003f85e
+msgid "How many cartridges to create and put in slots"
+msgstr ""
+
+#: ../../libraries/create.rst:74 e3d52094eae7495d805638b023acea8d
+msgid "``--empty-slots``"
+msgstr ""
+
+#: ../../libraries/create.rst:74 77ea464530e443dcb55ddbcdb8e22645
+msgid "Slots to leave free; the profile's default if omitted"
+msgstr ""
+
+#: ../../libraries/create.rst:75 57c7fbb5efc34940b6e0286fc33d2d31
+msgid "``--no-media``"
+msgstr ""
+
+#: ../../libraries/create.rst:75 b3d7d097542e4f93b2bde133863e6c07
+msgid "Create the library but no tape files"
+msgstr ""
+
+#: ../../libraries/create.rst:76 e9b6e35db2ae43e2a0187bd23cd1b9dd
+msgid "``--no-start``"
+msgstr ""
+
+#: ../../libraries/create.rst:76 ab2189fb5c564dd187815e6f89a8ecac
+msgid "Write the configuration, start nothing"
+msgstr ""
+
+#: ../../libraries/create.rst:77 1f510e18966f465b9761209f2e7edcc2
+msgid "``--dry-run``"
+msgstr ""
+
+#: ../../libraries/create.rst:77 056f01fb39fb4327900edb0b8f8ce220
+msgid "Print the ``device.conf`` it would write, and stop"
+msgstr ""
+
+#: ../../libraries/create.rst:81 2f78ab05d59144bd81fdf57d0fdb0711
+msgid "Which combinations exist"
+msgstr ""
+
+#: ../../libraries/create.rst:83 f7eae144dad3418d974de1ffee110b6f
+msgid "Ask, rather than guess:"
+msgstr ""
+
+#: ../../libraries/create.rst:97 7fc69758f7bf49b3940d94ad61a4fa05
+msgid ""
+"If a combination is refused, the message says why: *Media type 'LTO8' is "
+"not supported by drive model 'T10000C'* means that model's default drive "
+"does not take LTO; choose a drive that does with ``--drive-model``."
+msgstr ""
+
+#: ../../libraries/create.rst:102 84e34f4be6044957bd95bccc0b199081
+msgid "What it wrote"
+msgstr ""
+
+#: ../../libraries/create.rst:121 a42b1c4bd5ad4192bcf5fcddf4401870
+msgid "``/etc/mhvtl/device.conf`` gained the library and its drives."
+msgstr ""
+
+#: ../../libraries/create.rst:122 e03f7897aba04ef39cb1c3a3be800887
+msgid "``/etc/mhvtl/library_contents.50`` describes its slots."
+msgstr ""
+
+#: ../../libraries/create.rst:123 72b64969770847c4beb9379be575456e
+msgid "``/opt/mhvtl/<barcode>/`` holds each tape's files."
+msgstr ""
+
+#: ../../libraries/create.rst:124 32ccc1288c0e48f896bf1fb6ad142694
+msgid "``vtllibrary@50`` and ``vtltape@51``, ``vtltape@52`` are running."
+msgstr ""
+
+#: ../../libraries/create.rst:127 972d78e2e01042a989627597f8713839
+msgid "Afterwards"
+msgstr ""
+
+#: ../../libraries/create.rst:129 535a787e5d7c47a78fe7a392bde79748
+msgid ":doc:`the-library-page` - where the library is worked on"
+msgstr ""
+
+#: ../../libraries/create.rst:130 bf2806b7c5354835bb399eb197a9b28d
+msgid ":doc:`../tapes/create` - more cartridges"
+msgstr ""
+
+#: ../../libraries/create.rst:131 771a610921b146c29e105c4ef0ebc1b4
+msgid ":doc:`../using/iscsi` - let another machine use it"
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

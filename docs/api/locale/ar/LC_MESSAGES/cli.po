@@ -1,0 +1,664 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI API
+# Reference package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI API Reference 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:12+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../cli.rst:2 f29e862f674642718ce274b034e01d15
+msgid "Command line"
+msgstr ""
+
+#: ../../cli.rst:4 e7840b4bbde447a3845745dd451934c4
+msgid ""
+"The ``mhvtl`` command, ``mhvtl_cli``. It holds no logic: each command "
+"parses arguments, calls one service method and prints the result."
+msgstr ""
+
+#: ../../cli.rst:8 45b11f8b27e24f6697b17fcbace15ab2
+msgid "``main``"
+msgstr ""
+
+#: ../../cli.rst:10 76d3edf46d994cce90988fc0b23123d4
+#: ca959b6e8a4948259216bafd9e1fd1cd mhvtl_cli.main:1 of
+msgid "Entry point and argument parser."
+msgstr ""
+
+#: 1b4b00a6bca24b2b98e4a766fd61ff26 mhvtl_cli.main:3 of
+msgid ""
+"The CLI is a consumer of apps.libraries.services and holds no logic of "
+"its own: a command parses arguments, calls one service method, and prints"
+" the result. If a command starts making decisions, the decision belongs "
+"in a service where the web UI can reach it too."
+msgstr ""
+
+#: 9f77197b80da494296bc70a86968fcdd mhvtl_cli.main:8 of
+msgid ""
+"Django is set up before any service is imported, because the services "
+"read their paths from settings - MHVTL_CONFIG_DIR and MHVTL_HOME_DIR. "
+"That is also why --config-dir works: it overrides the setting before "
+"anything reads it."
+msgstr ""
+
+#: 025a32ec908f4793a153c4300a126f31 mhvtl_cli.main:12 of
+msgid ""
+"The CLI reads /etc/mhvtl by default, whatever the Django settings say. "
+"That is not a detail: the development settings point MHVTL_CONFIG_DIR at "
+"a ./generated_configs/ copy, and a CLI that decides what to do from a "
+"stale copy and then acts on real systemd units and real SCSI devices is "
+"dangerous. It happened during step 9 - `library orphans --clean` read the"
+" copy and stopped three real units. They were genuinely orphaned in both,"
+" so the outcome was right by luck. Every command prints which directory "
+"it used when asked, and --config-dir overrides it deliberately."
+msgstr ""
+
+#: aa1f0b0ed9294e4eac43b4fa3224230c mhvtl_cli.main:21 of
+msgid "mhvtl library list mhvtl library show 10 mhvtl status system --json"
+msgstr ""
+
+#: aefde25becb34fe8afb20c3f7b0b7d36 mhvtl_cli.main.DEFAULT_SETTINGS:1 of
+msgid "Where the Django project lives, relative to this package."
+msgstr ""
+
+#: af63e8ef75664d4394533823c7639099 mhvtl_cli.main.SYSTEM_CONFIG_DIR:1 of
+msgid ""
+"the system's configuration, not whatever a development settings file "
+"points at."
+msgstr ""
+
+#: 0e323f29ff6f46f094ad3fa6f95d9a7a mhvtl_cli.main.SYSTEM_CONFIG_DIR of
+msgid "type"
+msgstr ""
+
+#: 0bdf0992c20445d7a9a7fcb244e50e19 mhvtl_cli.main.SYSTEM_CONFIG_DIR:4 of
+msgid "What a system administration tool manages"
+msgstr ""
+
+#: be06b4707e7f464d9eea237a2e5ea17c mhvtl_cli.main.build_parser:1 of
+msgid "The whole command tree."
+msgstr ""
+
+#: 5fe5ab852461445ea673c53cd3e34a18 mhvtl_cli.main.build_parser:3 of
+msgid ""
+"Built before Django is set up, so it must not import anything from the "
+"services. Command modules are imported here for their register() only; "
+"they import services inside their handlers."
+msgstr ""
+
+#: 4d652ad369f24154843f967590b7ddc1 mhvtl_cli.main.setup_django:1 of
+msgid "Configure Django so the services can read their settings."
+msgstr ""
+
+#: a29773f154514239942f68cf7521e3bc mhvtl_cli.main.setup_django:3 of
+msgid ""
+"Called after parsing, so --config-dir is in place before any service "
+"reads a path. Importing services before this raises ImproperlyConfigured,"
+" which is a worse error message than anything here."
+msgstr ""
+
+#: c6f1abe26fe34bcab8995ea666243c7c mhvtl_cli.main.main:1 of
+msgid "Parse, set up Django, run one command, return an exit code."
+msgstr ""
+
+#: ../../cli.rst:18 36b36d050df3464fb439d1a50668660e
+msgid "``output``"
+msgstr ""
+
+#: ../../cli.rst:20 716643c042794e8db633b75fc79759be
+#: eaa579eddd6449b393c056c7301939ea mhvtl_cli.output:1 of
+msgid "Printing: human tables by default, JSON on request."
+msgstr ""
+
+#: c81a38f58c6a44ecae8405a9de71f5ad mhvtl_cli.output:3 of
+msgid ""
+"Every service result is a dataclass with .to_dict(), so this module stays"
+" small: it decides shape and stream, not content. Nothing here knows what"
+" a library is."
+msgstr ""
+
+#: 302d4866eabb439e8e15122e3c079d51 mhvtl_cli.output:6 of
+msgid "Two rules that matter more than they look:"
+msgstr ""
+
+#: 136c8e2b2c8947e991aaebd8ce29da0f mhvtl_cli.output:8 of
+msgid ""
+"Data goes to stdout, diagnostics to stderr. `mhvtl library list --json | "
+"jq` has to work, and a warning printed into the middle of the JSON breaks"
+" it. The exit code, not the text, says whether it worked."
+msgstr ""
+
+#: 578bba5806db443eb4ce4370110e29ac mhvtl_cli.output:12 of
+msgid ""
+"A column is never truncated. A barcode or a device path cut to fit a "
+"terminal is a barcode or a device path that cannot be copied and pasted, "
+"and the person reading it has no way to know it was shortened."
+msgstr ""
+
+#: edb5f20225c743b485ebd27a021ac493 mhvtl_cli.output:16 of
+msgid "Exit codes::"
+msgstr ""
+
+#: 758e5bb02f7d4e6bbe41de47e1a64d3e mhvtl_cli.output.EMPTY:1 of
+msgid ""
+"Printed where a value is absent. An em dash rather than an empty cell, so"
+" a missing value and a value that is the empty string look different."
+msgstr ""
+
+#: 2066b22e4bc440e68715a58e5c3f6daa mhvtl_cli.output.fail:1 of
+msgid "Report a failure on stderr and return the exit code to hand back."
+msgstr ""
+
+#: 3d4a619db731494db39f0f2e2d697715 mhvtl_cli.output.note:1 of
+msgid "A diagnostic. Always stderr, so it never lands in piped output."
+msgstr ""
+
+#: b1f42ce6befd400f836b3dc83a104276 mhvtl_cli.output.emit_json:1 of
+msgid "Print a JSON document on stdout."
+msgstr ""
+
+#: 67bf7417148244399eb7bead2bf55d83 mhvtl_cli.output.emit_json:3 of
+msgid ""
+"default=str so a datetime or a Path in a result does not turn a working "
+"command into a TypeError at the last moment."
+msgstr ""
+
+#: 957cb8d2c3dd4cd1b1f940f860f8f30d mhvtl_cli.output.table:1 of
+msgid "Print rows as an aligned table, or nothing at all if there are none."
+msgstr ""
+
+#: f4e2739b41ab49c08046caf3506ce352 mhvtl_cli.output.table:3 of
+msgid ""
+"Nothing rather than empty headers: a caller that prints \"no libraries\" "
+"says it better than a table with a head and no body."
+msgstr ""
+
+#: 9582d7ce4c364f51bf36b630d52b2880 mhvtl_cli.output.pairs:1 of
+msgid "Print one record as aligned `label: value` lines."
+msgstr ""
+
+#: a6368ef6f76e44f78f97aa7ab01a4453 mhvtl_cli.output.pairs:3 of
+msgid ""
+"For showing a single thing, where a table of one row reads worse than a "
+"list of its fields."
+msgstr ""
+
+#: 00baaf9351214349b359c365f3d0f3d8 mhvtl_cli.output.result:1 of
+msgid "Print a ServiceResult and return the exit code for it."
+msgstr ""
+
+#: cd33092f46eb47d0994d091639b581dd mhvtl_cli.output.result:3 of
+msgid ""
+"The whole reason the result contract exists: any command can hand its "
+"service result here and get correct output and a correct exit code "
+"without knowing what the command did."
+msgstr ""
+
+#: ../../cli.rst:28 ccec87ccb8f9478dade07348771c7ba4
+msgid "``privileges``"
+msgstr ""
+
+#: ../../cli.rst:30 a201519b608a4e3a984ea1411dceaa38
+#: b7e4a2e23dc742cfaa50a65a452e6b29 mhvtl_cli.privileges:1 of
+msgid "Who is allowed to run a mutating command."
+msgstr ""
+
+#: b4eab53092b742d4ab26ddb16d29e61f mhvtl_cli.privileges:3 of
+msgid ""
+"The access model, which the user chose over a password prompt and which "
+"is worth stating once:"
+msgstr ""
+
+#: 97f0f30e51e64b9e9a50a21c462727eb mhvtl_cli.privileges:6 of
+msgid ""
+"Reading needs read access to the configuration directory, which on this "
+"host means membership of the mhvtl group: /etc/mhvtl is 2750 root:mhvtl. "
+"If you can read it you can list libraries, and if you cannot, no amount "
+"of authenticating will help."
+msgstr ""
+
+#: de932766b11841878bafeb084caafab9 mhvtl_cli.privileges:11 of
+msgid ""
+"Changing anything needs the same group, or root. Every mutation already "
+"goes through sudo - mktape, targetcli, systemctl, writing device.conf - "
+"and /etc/sudoers.d/mhvtl-operators grants the group exactly those "
+"commands, so the sudoers rules are the real authority. A password prompt "
+"on top would add ceremony rather than safety: it would protect nothing "
+"sudo does not already protect, and it would train the operator to type a "
+"password into a program that does not need one."
+msgstr ""
+
+#: 55a01eb20a9b4c21bf2679db7ed33fe4 mhvtl_cli.privileges:19 of
+msgid ""
+"That means the CLI's job here is to fail early and clearly. Running eight"
+" steps and then discovering at the sudo call that the caller is not "
+"allowed is worse than saying so at the start, and a traceback is worse "
+"than either."
+msgstr ""
+
+#: b4b6aebe78ea409bb059283624fc9bcc mhvtl_cli.privileges.SERVICE_GROUP:1 of
+msgid ""
+"The account the web service runs as. A member of this group may change "
+"things because the sudoers rules are written for it."
+msgstr ""
+
+#: 7aecbdd5ba7d46069626391cee52bf27 mhvtl_cli.privileges.PermissionDenied:1 of
+msgid "The caller may not do this. Carries what would let them."
+msgstr ""
+
+#: 8273de74bd074fbca5a37c4f12d04f4e mhvtl_cli.privileges.current_identity:1 of
+msgid "Who is running this, in the terms the access model is written in."
+msgstr ""
+
+#: ddadd74970e9456296f2a70b73e418ba mhvtl_cli.privileges.can_write:1 of
+msgid "Is this caller allowed to change the configuration?"
+msgstr ""
+
+#: ac98d28e37eb4f108cd7d5642d261f0d mhvtl_cli.privileges.require_write_access:1
+#: of
+msgid "Refuse a mutating command early, saying what would allow it."
+msgstr ""
+
+#: c961b8f56cae4886b0dbf32502ce4fd3 mhvtl_cli.privileges.require_write_access:3
+#: of
+msgid ""
+"Raises PermissionDenied rather than exiting, so main() decides the exit "
+"code and the message goes through the same output module as everything "
+"else."
+msgstr ""
+
+#: 4305028a14be4b02a57e8f0be79daa0d mhvtl_cli.privileges.can_read_config:1 of
+msgid "Can this caller read the configuration directory at all?"
+msgstr ""
+
+#: cf6d6f7abce64b66a1b67d17603ee97d mhvtl_cli.privileges.can_read_config:3 of
+msgid ""
+"Checked before a read command rather than letting each service report "
+"\"could not read device.conf\" for every library in turn."
+msgstr ""
+
+#: 387151bb375d47b0827b55e23f153113 mhvtl_cli.privileges.require_read_access:1
+#: of
+msgid "Refuse a read command whose answer would be \"nothing\", misleadingly."
+msgstr ""
+
+#: ../../cli.rst:38 ee19d3491d6b4416b05eff72bdaa32fd
+msgid "``config``"
+msgstr ""
+
+#: ../../cli.rst:40 17a4a1d496e44245a6114fd0a9a027a5
+#: 49d37fdbd22f451da9d8b25c9814e365 mhvtl_cli.commands.config:1 of
+msgid "list, show, validate, export, backup, restore, regenerate, sync."
+msgstr ""
+
+#: 591db17115bf4d67852408e67b3405fe mhvtl_cli.commands.config:3 of
+msgid ""
+"The configuration files themselves. Every verb is one call into "
+"services/config, which applies the allowlist - only device.conf, "
+"mhvtl.conf and library_contents.N - and reads through sudo when a file is"
+" not readable directly."
+msgstr ""
+
+#: dc8e68e9082b4b11bffdae498fd3cd75 mhvtl_cli.commands.config:8 of
+msgid ""
+"`sync` is the one verb that writes to the web UI's database rather than "
+"to the configuration. The files are authoritative and the database is a "
+"cache of them, so sync only ever goes that way: files into the database."
+msgstr ""
+
+#: 9f2acdcbe8a548e88daef0f2857e40eb mhvtl_cli.commands.config.do_restore:1 of
+msgid "Restore only from a directory inside this configuration's backups/."
+msgstr ""
+
+#: 66d8ccdbf0d843afb7d51de900cf15c3 mhvtl_cli.commands.config.do_restore:3 of
+msgid ""
+"restore() copies every file it finds over the live configuration, so the "
+"source is held to the place backup() writes to rather than taken from "
+"anywhere on the filesystem."
+msgstr ""
+
+#: ../../cli.rst:48 b2f87b43462a48ee87f499bcabe849ea
+msgid "``console``"
+msgstr ""
+
+#: ../../cli.rst:50 babbe545dc70442bb29c35f3b0ef1aa3
+#: d2f3c35eb94a4662bb613ffd23400902 mhvtl_cli.commands.console:1 of
+msgid "logs, modules, disk, system."
+msgstr ""
+
+#: e274a45f3350433caf76272a27e06014 mhvtl_cli.commands.console:3 of
+msgid "The host, rather than the library: what the console pages show."
+msgstr ""
+
+#: 87fc0b2ef8ad48f5b99057a51e6dd7be mhvtl_cli.commands.console:5 of
+msgid ""
+"`logs` reads an allowlisted file through services/console/logs, which is "
+"the whole point of it being there - the path used to be interpolated into"
+" a shell=True command, so a log name was a way to run anything."
+msgstr ""
+
+#: ../../cli.rst:58 2008cf9d578f4920aed4838314db5edd
+msgid "``drive``"
+msgstr ""
+
+#: ../../cli.rst:60 e3c1a9381b2042c1b986f25dafa7c140
+#: f0512073adfb4a519a53fa70dba9738d mhvtl_cli.commands.drive:1 of
+msgid "list, show, add, remove."
+msgstr ""
+
+#: b07a97f8d2004a5cb71c2c1295250ccd mhvtl_cli.commands.drive:3 of
+msgid ""
+"Argument handling and printing only; every verb is one call into "
+"services/drives."
+msgstr ""
+
+#: 79fc0689913d41b28b55c1d81c7756a2 mhvtl_cli.commands.drive:6 of
+msgid ""
+"Worth knowing about add and remove: a drive is a device.conf record *and*"
+" a `Drive N:` line in the library's contents file, and the daemons read "
+"both. The service writes both together; these verbs would be a good place"
+" to get that wrong, so they do nothing but pass arguments through."
+msgstr ""
+
+#: ../../cli.rst:68 5a7b893ccb094447ade1f5a4c8c5535e
+msgid "``iscsi``"
+msgstr ""
+
+#: ../../cli.rst:70 c0e7b7fbc43942f8902aaf0f3b3725ec
+msgid ""
+"status, targets, backstores, export, remap, target, lun, acl, portal, "
+"service."
+msgstr ""
+
+#: fb49416f585d4ce7aeb1277ef27fd1f3 mhvtl_cli.commands.iscsi:1 of
+msgid ""
+"status, targets, backstores, export, unexport, remap, target, lun, acl, "
+"portal, service."
+msgstr ""
+
+#: 0986108066044fddad9566215c76f37b mhvtl_cli.commands.iscsi:3 of
+msgid ""
+"Exporting the library over iSCSI. Every verb is one call into "
+"services/iscsi, where the IQN and device-path checks live."
+msgstr ""
+
+#: edb7c609fbb84d8b8f4f13f70a4e5eb4 mhvtl_cli.commands.iscsi:6 of
+msgid ""
+"`status` says which source it read. saveconfig.json describes what was "
+"configured; the running tree is what is exported now, and after the SCSI "
+"modules reload a pscsi backstore naming /dev/sgN does not come back - so "
+"the two can disagree, and on this host they did."
+msgstr ""
+
+#: 2cc2f4fd68ac43a19e8e4bfb04272bfc mhvtl_cli.commands.iscsi.do_unexport:1 of
+msgid "Stop exporting a library: its target, and the devices it exported."
+msgstr ""
+
+#: 215a6c919c054871902feb72a44ee9a5 mhvtl_cli.commands.iscsi.do_unexport:3 of
+msgid ""
+"The inverse of `export`. Deleting the target alone leaves the pscsi "
+"backstores behind, holding the /dev/sg node each was made with - see "
+"workflow.unexport_library for why that matters."
+msgstr ""
+
+#: 91afbca503fa486298b3b0d8336a249e mhvtl_cli.commands.iscsi.do_export:1 of
+msgid "Export every device of a library that the kernel can see."
+msgstr ""
+
+#: 7943172f2e794c0e921ee7331006d68e mhvtl_cli.commands.iscsi.do_remap:1 of
+msgid "Fix saveconfig.json by address; optionally reload the running export."
+msgstr ""
+
+#: b257099ef8244a8192470aaa64cddbca mhvtl_cli.commands.iscsi.do_remap:3 of
+msgid ""
+"At boot mhvtl-iscsi-remap.service runs this with --wait and without "
+"--apply, before target.service reads the file. By hand, --apply restarts "
+"target.service, which is `targetctl clear` then `targetctl restore`."
+msgstr ""
+
+#: ../../cli.rst:78 320e36aa2ee94078ace193b1b2a02b04
+msgid "``library``"
+msgstr ""
+
+#: ../../cli.rst:80 1e342d7e1c7245909a2b15f180d30ab2
+#: 96a0185c20f54fb8bd75bb62128e905e mhvtl_cli.commands.library:1 of
+msgid "list, show, create, update, delete, orphans, next-id."
+msgstr ""
+
+#: 9bc1681b051f48f8a11caabd71253aa0 mhvtl_cli.commands.library:3 of
+msgid ""
+"Argument handling and printing only; every verb is one call into "
+"services/libraries. Where a verb changes something it asks privileges "
+"first, so the refusal names the group rather than arriving as a sudo "
+"error eight steps in."
+msgstr ""
+
+#: 12b3c9deaa9641878e1eaaf7fc8de22b mhvtl_cli.commands.library.do_create:1 of
+msgid ""
+"The same sequence the web form runs: validate, write, start, verify, make"
+" the tape files (services/libraries/workflow). It used to stop after "
+"writing, so a library created here had barcodes and no tapes."
+msgstr ""
+
+#: 4bd0d948b3364af08765a156144cdb90 mhvtl_cli.commands.library.do_slots:1 of
+msgid "Read the slot counts, or change how many are empty."
+msgstr ""
+
+#: e0f672313f0347fdb01757d2dc010c48 mhvtl_cli.commands.library.do_slots:3 of
+msgid ""
+"The daemon reads library_contents once at start, so a change only reaches"
+" the robot after a restart; --restart does it, and without it the command"
+" says so rather than leaving the operator with a file the library "
+"ignores."
+msgstr ""
+
+#: ../../cli.rst:88 442a1ebd9d534188aa8756236447c01d
+msgid "``operations``"
+msgstr ""
+
+#: ../../cli.rst:90 eb7f01b0f8bc4039bf5f07afc3ed975f
+msgid ""
+"mount, unmount, move, online, offline, map, inventory. ``mount`` refuses "
+"a tape the drive's MHVTL personality does not load; ``--force`` mounts it"
+" anyway."
+msgstr ""
+
+#: b36862a7c1fb4297a1d5c34873b42d98 mhvtl_cli.commands.operations:1 of
+msgid "mount, unmount, move, online, offline, map, inventory."
+msgstr ""
+
+#: 7e6bad803131462a8de2a9757b4cb6d9 mhvtl_cli.commands.operations:3 of
+msgid ""
+"Moving tapes. Every verb is one call into services/operations, which "
+"addresses the robot through mtx and the daemons through vtlcmd."
+msgstr ""
+
+#: 8a5fc66f3cb84e5b82723d2866e26e2f mhvtl_cli.commands.operations:6 of
+msgid ""
+"Two things this noun exists to get right, both of which the web UI got "
+"wrong before the refactor:"
+msgstr ""
+
+#: 0074718ae9014738a7c429fe5ae5b608 mhvtl_cli.commands.operations:9 of
+msgid ""
+"A drive number is not a drive id. mtx numbers a library's drives from 0; "
+"device.conf numbers them globally, so library 20's first drive is 21 to "
+"device.conf and 0 to mtx. These verbs take the mtx number, because that "
+"is what an operator reads off `mhvtl status library`."
+msgstr ""
+
+#: 9caab7a2ad3746fbbb77bcd8240fe175 mhvtl_cli.commands.operations:14 of
+msgid ""
+"vtlcmd takes the device.conf id as its queue id, not a derived index. The"
+" version this replaces computed `library_id // 10`, so every online, "
+"offline and MAP command addressed a queue that did not exist."
+msgstr ""
+
+#: e5fe9a81047c46a19860b446a67b144e
+#: mhvtl_cli.commands.operations.do_inventory:1 of
+msgid "Slower than a status read: the robot physically scans every slot."
+msgstr ""
+
+#: ../../cli.rst:99 fd57464ec302461a9f1b89960fe9a99c
+msgid "``scsi``"
+msgstr ""
+
+#: ../../cli.rst:101 3af98c7c2598453388658b3cd5825fcd
+#: 94e994633d2246489fa794e9d49d3893 mhvtl_cli.commands.scsi:1 of
+msgid "devices, map."
+msgstr ""
+
+#: c83bf93d0c694c399e533b4cee8f73ed mhvtl_cli.commands.scsi:3 of
+msgid ""
+"What the kernel sees, and how device.conf's libraries and drives resolve "
+"to it."
+msgstr ""
+
+#: 41c3048b0a814c1fb0453beeb87a9456 mhvtl_cli.commands.scsi:5 of
+msgid ""
+"`map` is the diagnostic that matters. A library whose address is in "
+"device.conf but that no SCSI device reports is a library whose daemon has"
+" not started, and every operation on it will fail with \"could not find "
+"device\". The map shows that as a missing node rather than as a guess: "
+"device mapping matches on CHANNEL/TARGET/LUN, never on position."
+msgstr ""
+
+#: ../../cli.rst:109 2618ee6069044c03a6c6a4e08d1f0c8a
+msgid "``service``"
+msgstr ""
+
+#: ../../cli.rst:111 4da3e876f1f44ac180d3a7534d511ed3
+#: ab98a5337b684bcbb55466919e131a26 mhvtl_cli.commands.service:1 of
+msgid "start, stop, restart, status."
+msgstr ""
+
+#: f54e06ad33e14254b0cb7410ebc94761 mhvtl_cli.commands.service:3 of
+msgid ""
+"The systemd side: mhvtl.target and the per-library and per-drive "
+"instances."
+msgstr ""
+
+#: 4ce6b99058e44be3b422ae8f012a2087 mhvtl_cli.commands.service:5 of
+msgid ""
+"Stopping the target stops every library and every drive on the host. That"
+" is what an operator asking to stop MHVTL means, but it is worth the "
+"confirmation saying so, because \"stop\" reads as narrower than it is."
+msgstr ""
+
+#: 3cbc67932b3541e588ec22bded23786e mhvtl_cli.commands.service.do_status:1 of
+msgid ""
+"The same answer as `mhvtl status system`, under the verb an operator "
+"reaches for after start or stop."
+msgstr ""
+
+#: ../../cli.rst:119 b72c6c3ec398427faf2d74f89688c3aa
+msgid "``status``"
+msgstr ""
+
+#: ../../cli.rst:121 3fa31aa596114ca3bf71894de0cb893b
+#: 57a9f6cf327243748a143b6e46c4f95a mhvtl_cli.commands.status:1 of
+msgid "library, drive, dashboard, system."
+msgstr ""
+
+#: 369e94f44b064a109d14c47f48bc8061 mhvtl_cli.commands.status:3 of
+msgid ""
+"Read-only, so none of it asks for privileges: if you can read the "
+"configuration you can ask what state things are in. What each verb reads "
+"is worth knowing, because they disagree in a way that is informative "
+"rather than a bug:"
+msgstr ""
+
+#: 2e3a565d4c0542078bb7b1cf2d4b9202 mhvtl_cli.commands.status:7 of
+msgid ""
+"status library   the robot, through mtx - what is physically where status"
+" drive     the drive daemon, through mt - what it thinks it holds status "
+"activity  what each drive is doing, through MHVTL's message queue status "
+"system    systemd and the kernel modules status dashboard everything the "
+"web overview shows, in one answer"
+msgstr ""
+
+#: 27f8367f229f4f08a5061e9762f92aec mhvtl_cli.commands.status:13 of
+msgid ""
+"`status activity` is the only one that answers during a backup: the "
+"kernel holds the SCSI reservation for the initiator, so mt and mtx say "
+"\"device busy\", while the drive daemon's own counters come over its "
+"message queue and are not affected by it."
+msgstr ""
+
+#: 3ada983815c242f8a32bb8342dcfc294 mhvtl_cli.commands.status:18 of
+msgid ""
+"mtx is the authority on what is loaded where. A drive daemon's idea of "
+"its own state can be stale after a restart, which is an MHVTL bug "
+"upstream, so when the two disagree `status library` is the one to "
+"believe."
+msgstr ""
+
+#: b49df0d1270a4cd890fa6e08db2e7a00 mhvtl_cli.commands.status.do_activity:1 of
+msgid "What each drive is doing, in the words the library page uses."
+msgstr ""
+
+#: 84a983db7a2e4967ad95a3d634249feb mhvtl_cli.commands.status.do_activity:3 of
+msgid ""
+"MHVTL counts totals rather than a rate, so this reads twice, `--settle` "
+"seconds apart, and reports a drive as writing when the second reading is "
+"larger. The decision and the wording are the service's - the same call "
+"the web page makes - so the two cannot drift apart."
+msgstr ""
+
+#: ../../cli.rst:129 2a86a6e49e124dd7b85cbd785727ba79
+msgid "``tape``"
+msgstr ""
+
+#: ../../cli.rst:131 90afc57949204bd98a28a0c76f03b4fa
+msgid ""
+"list, media, create, bulk, delete, next-barcode, slots. ``media`` shows "
+"which densities a library's drives load; ``create`` and ``bulk`` take "
+"``--density`` and ``--kind`` and refuse a density no drive loads."
+msgstr ""
+
+#: 744151cd663b4292a8335ee50c5b2e79 mhvtl_cli.commands.tape:1 of
+msgid "list, media, create, bulk, delete, next-barcode, slots."
+msgstr ""
+
+#: e0652fe57a284e6f8a2010fd957a8a98 mhvtl_cli.commands.tape:3 of
+msgid ""
+"Argument handling and printing only; every verb is one call into "
+"services/tapes, which validates the barcode before it reaches `sudo "
+"mktape` or `sudo rm -rf`."
+msgstr ""
+
+#: 0e6c363aca3d42aead1796578da59642 mhvtl_cli.commands.tape:6 of
+msgid ""
+"`delete --remove-media` is the only verb here that destroys data. It is "
+"spelled out rather than defaulted, and the confirmation says how many "
+"tapes went, because \"the tape is no longer in the library\" and \"the "
+"tape's data is gone\" are different outcomes and an operator should not "
+"discover which they chose afterwards."
+msgstr ""
+
+#: 1c2b03e6c6ea475c9dcab2b4ac9442c9 mhvtl_cli.commands.tape.do_adopt:1 of
+msgid "Give an orphaned tape back to a library, data and all."
+msgstr ""
+
+#: a5e4a13f078e410e886523c2d9a43377 mhvtl_cli.commands.tape.do_adopt:3 of
+msgid ""
+"`library orphans` lists the tapes on disk no library claims - what a "
+"delete without --remove-media leaves behind. Nothing is written to the "
+"media here."
+msgstr ""
+

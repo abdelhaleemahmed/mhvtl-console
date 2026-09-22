@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title }} - MHVTL{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
+    <script src="{% static 'js/theme.js' %}"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="mhvtl-console">
+    <div class="header">
+        <div class="header-content">
+            <div class="header-title">{% block header_title %}{{ title }}{% endblock %}</div>
+            <nav>
+                <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Operator</a>
+                <a href="{% url 'libraries:config_files' %}" class="nav-link">Config Files</a>
+                <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
+                <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
+            </nav>
+        </div>
+    </div>
+
+    <div class="content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% include 'includes/_default_password_warning.html' %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+<script src="{% static 'js/csrf.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,165 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../running/console.rst:2 7b014e7368734b0485ceddd2f975bb38
+msgid "The system console"
+msgstr ""
+
+#: ../../running/console.rst:4 03fb05cac8e944f4a50ac25267c5b605
+msgid ""
+"Six pages about the host rather than about the libraries: what is "
+"running, what the kernel sees, what is in the logs, and whether the disk "
+"is filling up. This is where to look when a library misbehaves and the "
+"library pages look fine."
+msgstr ""
+
+#: ../../running/console.rst:9 9da683906f6a46a2b632c8b9cbe124fe
+msgid "The system console, showing host facts, MHVTL services and modules"
+msgstr ""
+
+#: ../../running/console.rst:18 c4a749c535e743c1bd16e05029e5b448
+msgid "Console"
+msgstr ""
+
+#: ../../running/console.rst:20 d6fd9a3e7118415bb35ee9f84ae7944b
+msgid ""
+"``/libraries/console/`` - the summary: the host, the MHVTL services, the "
+"kernel modules, and how many SCSI devices there are."
+msgstr ""
+
+#: ../../running/console.rst:39 0330152618a7400e8a5269b1aa496fd3
+msgid "Services"
+msgstr ""
+
+#: ../../running/console.rst:41 d555351038ef404981a9c80369f8da5e
+msgid "Every MHVTL unit: the target, one daemon per library, one per drive."
+msgstr ""
+
+#: ../../running/console.rst:55 fdb9ddbc2ff6471f8c969b126a80e389
+msgid ""
+"``healthy no`` with a count short of the total means a daemon is down. "
+"The page names which, and so does ``systemctl``:"
+msgstr ""
+
+#: ../../running/console.rst:58 a4addd1025da441f8aa5edb1f760ea08
+msgid "The services page: the target, the libraries and the drives"
+msgstr ""
+
+#: ../../running/console.rst:68 21d1cd53056b47f580e2be315eabe420
+msgid "Devices"
+msgstr ""
+
+#: ../../running/console.rst:70 b19ff7ea8f604b0f9ac3dcc4a357d7f5
+msgid ""
+"What the kernel sees, which is the ground truth underneath everything "
+"MHVTL claims."
+msgstr ""
+
+#: ../../running/console.rst:83 2a2dca17096b4489bdb777aa2f6c9b80
+msgid ""
+"``mediumx`` is a robot, ``tape`` a drive. A changer has no ``/dev/st``, "
+"so its generic node is the one everything uses."
+msgstr ""
+
+#: ../../running/console.rst:86 fd8fcc90926d425e933d74052eabbba6
+msgid "The devices page: what the kernel sees"
+msgstr ""
+
+#: ../../running/console.rst:90 a823af6a932240488f53ad1d6512f0de
+msgid "To go the other way - from a library or drive id to its device:"
+msgstr ""
+
+#: ../../running/console.rst:105 c3af8ab0c4904d7c957dd413557dfdf3
+msgid ""
+"These numbers are not stable. They change when the MHVTL module reloads "
+"and when a library is recreated, which is why anything that remembers a "
+"device - an iSCSI export, for instance - has to be repointed afterwards. "
+"See :doc:`../using/iscsi`."
+msgstr ""
+
+#: ../../running/console.rst:111 af153c2a278240ff9822a3e5dc6fdea2
+msgid "Modules"
+msgstr ""
+
+#: ../../running/console.rst:128 101f9dfdf6b849c79c416ca16b9cb2b1
+msgid ""
+"Only ``mhvtl`` is required. The rest matter when exporting over iSCSI: "
+"LIO loads what it needs, and a module that is missing shows up there as "
+"an export that cannot be made."
+msgstr ""
+
+#: ../../running/console.rst:132 79c05762e220494c804ce607dfb2d72b
+msgid ""
+"The ``ch`` module is deliberately **not** in this list, and is "
+"blacklisted on this host. It takes a reference on every drive a changer "
+"reports and never gives it back, which makes those drives' SCSI addresses"
+" unusable until the machine reboots. The guide *The kernel ch driver "
+"leak* explains it."
+msgstr ""
+
+#: ../../running/console.rst:138 e81ca283b54f44d591348365f7354e43
+msgid "Logs"
+msgstr ""
+
+#: ../../running/console.rst:140 22b139016c5a42a0b255ac231e08286f
+msgid ""
+"An allowlisted set of logs, tailed - the console never reads an arbitrary"
+" path off the disk."
+msgstr ""
+
+#: ../../running/console.rst:151 3303a62279344272b833e8cd0004b180
+msgid ""
+"MHVTL logs every SCSI command it is given, so this is verbose and useful "
+"in equal measure: when a backup fails, the last few lines say what the "
+"drive was asked to do and what it answered."
+msgstr ""
+
+#: ../../running/console.rst:156 601c10d4548c4f0f8e18ad5900180b30
+msgid "Disk"
+msgstr ""
+
+#: ../../running/console.rst:158 05845e75d03343ed8b073b97146d44cb
+msgid ""
+"Tapes are files. When the disk fills, writes fail in ways that look like "
+"drive faults."
+msgstr ""
+
+#: ../../running/console.rst:171 fa6b7739de6b481c9fba3c93a50e170a
+msgid ""
+"``/opt/mhvtl`` holds the cartridges, ``/etc/mhvtl`` the configuration. A "
+"cartridge only occupies what has been written to it, not the size it was "
+"created with - so a library of ten 500 GB tapes does not need five "
+"terabytes until somebody writes that much."
+msgstr ""
+
+#: ../../running/console.rst:176 0fcdf89bbf0d465da3c2d753fe3e36a0
+msgid "The disk page"
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

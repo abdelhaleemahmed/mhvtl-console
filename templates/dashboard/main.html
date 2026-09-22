@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|default:"Dashboard" }} - MHVTL Console{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-welcome">
+    <div class="dashboard-content">
+        <h2>Welcome to MHVTL Dashboard</h2>
+        <p>You have successfully logged into the MHVTL (Linux Virtual Tape Library) Web Console.</p>
+
+        <div class="dashboard-placeholder">
+            <p>This is where you would add the main functionality from your PHP application.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../start/first-look.rst:2 753384057b4f436abf56194c7813f7fe
+msgid "A first look"
+msgstr ""
+
+#: ../../start/first-look.rst:4 b68aead0584f44f4a8e3bbbb56161130
+msgid ""
+"This walks through opening the console for the first time and checking "
+"that MHVTL underneath it is running. Installing it is in the *Guides* - "
+"*Installation*."
+msgstr ""
+
+#: ../../start/first-look.rst:13 3d06d45b115a419c9064c419ae689f76
+msgid "Log in"
+msgstr ""
+
+#: ../../start/first-look.rst:15 12760faecb2042619b7838965d3f5ef8
+msgid ""
+"Open ``https://your-server/``. The certificate the installer creates is "
+"self-signed, so a browser asks about it once."
+msgstr ""
+
+#: ../../start/first-look.rst:18 7c6c9af658a14c778fae498ec01273a2
+msgid ""
+"There is one password for the whole console, and it starts as ``mhvtl``. "
+"While it is still that, every page carries a warning saying so, with a "
+"link that changes it. See :doc:`../running/password`."
+msgstr ""
+
+#: ../../start/first-look.rst:22 4809be6f31064657995baab6d8771344
+msgid "``http://your-server/`` redirects to the HTTPS address."
+msgstr ""
+
+#: ../../start/first-look.rst:26 e41197e6499d46c183148ece9757e462
+msgid ""
+"If something else on the host already uses port 80 or 443 - another web "
+"application, a reverse proxy - the installer's nginx configuration will "
+"not start beside it, and whoever installed it will have moved the console"
+" to another port, usually 8443 with 8080 redirecting. Then the address is"
+" ``https://your-server:8443/``. *Installation* in the *Guides* has the "
+"two lines to change."
+msgstr ""
+
+#: ../../start/first-look.rst:34 ad42cef41e83426f958390c4b70bf679
+msgid "Is MHVTL running?"
+msgstr ""
+
+#: ../../start/first-look.rst:36 5db9f9f3bfd74de6a6ba7dff7715d6b6
+msgid ""
+"The console is a window onto MHVTL, so if MHVTL is not running there is "
+"nothing to see. **Console → Services** answers it:"
+msgstr ""
+
+#: ../../start/first-look.rst:48 edf2533308954157947dca58f504db33
+msgid "If the target is not active:"
+msgstr ""
+
+#: ../../start/first-look.rst:55 3b63452bef0446c7aeec17072ba1e8a6
+msgid "What you see first"
+msgstr ""
+
+#: ../../start/first-look.rst:57 7455b1eb807a40ff8eea45df2afa13b3
+msgid ""
+"**Dashboard** is the overview: how many libraries, how many are running, "
+"what the host is."
+msgstr ""
+
+#: ../../start/first-look.rst:60 8550bf5498154881885af6395d8039c5
+msgid "The dashboard: libraries, their state, and the host"
+msgstr ""
+
+#: ../../start/first-look.rst:64 6e14ef83c7424290a3b95c803eed2f7d
+msgid ""
+"**Libraries** lists every library MHVTL has, read from its configuration "
+"rather than from the console's own records - so a library somebody "
+"created from the command line a minute ago is in the list."
+msgstr ""
+
+#: ../../start/first-look.rst:68 628b5688c7224816be4095ed12bac78f
+msgid "The Libraries page, listing four libraries"
+msgstr ""
+
+#: ../../start/first-look.rst:72 5e1ac07464d24794b0d12dd133b668c5
+msgid ""
+"Click one and you are on :doc:`../libraries/the-library-page`, which is "
+"where most work happens."
+msgstr ""
+
+#: ../../start/first-look.rst:76 098a50aaaa96491998c4bb82ce433bc9
+msgid "The same thing from the terminal"
+msgstr ""
+
+#: ../../start/first-look.rst:88 c1386f38537b44b79c10a69a4a44dd16
+msgid ""
+"``mhvtl`` reads the same configuration the console does and needs no web "
+"server running. Everything in this guide can be done either way; each "
+"page shows both."
+msgstr ""
+
+#: ../../start/first-look.rst:93 1ac11fd66c0a4f30bc343cfba0fbbd50
+msgid "If there are no libraries yet"
+msgstr ""
+
+#: ../../start/first-look.rst:95 7ed3b96bea2041c1b06bd32ee28fd55e
+msgid ""
+"That is the ordinary state after installing. Go to "
+":doc:`../libraries/create`."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

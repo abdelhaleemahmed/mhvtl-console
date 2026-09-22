@@ -1,0 +1,37 @@
+{% load static %}
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4 class="footer-title">About MHVTL</h4>
+            <p class="footer-text">
+                Modern Host Virtual Tape Library - Open source tape library emulation for Linux
+            </p>
+        </div>
+
+        <div class="footer-section">
+            <h4 class="footer-title">Resources</h4>
+            <ul class="footer-links">
+                <li><a href="http://sites.google.com/site/linuxvtl2/" target="_blank" rel="noopener">Official Website</a></li>
+                <li><a href="https://github.com/markh794/mhvtl" target="_blank" rel="noopener">GitHub Repository</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h4 class="footer-title">Web Console</h4>
+            <p class="footer-text">
+                Django-based GUI for MHVTL management
+            </p>
+            <p class="footer-version">
+                Version {{ gui_version }} • {% now "Y" %}
+            </p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p class="footer-credits">
+            MHVTL by <strong>Mark Harvey</strong> •
+            Web Console by <strong>Ahmed Abdelhaleem Ahmed</strong>
+        </p>
+    </div>
+</footer>

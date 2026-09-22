@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mhvtl-gui"
+version = "2.1.1"
+description = "Web-based GUI for MHVTL (Virtual Tape Library)"
+readme = "README.md"
+license = {text = "GPL-2.0-only"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Ahmed Abdelhaleem Ahmed", email = "ahmedhal@gmail.com"},
+]
+
+dependencies = [
+    # Core Django. 5.2 is the LTS, supported until April 2028; 4.2 went
+    # end-of-life in April 2026. 5.x needs Python 3.10 or newer.
+    "Django>=5.2,<6.0",
+    "djangorestframework>=3.18",
+    "django-cors-headers>=4.9",
+
+    # Forms and UI
+    "django-crispy-forms>=2.7",
+    "crispy-bootstrap5>=2026.9",
+
+    # Environment
+    "django-environ>=0.14",
+
+    # Production
+    "gunicorn>=26.2",
+    "whitenoise>=6.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "django-debug-toolbar>=8.0",
+    "pytest-django>=4.14",
+]
+
+docs = [
+    "sphinx>=7.4",
+    "sphinx-rtd-theme>=3.0",
+    "myst-parser>=3.0",
+]
+
+[tool.setuptools]
+packages = ["apps", "mhvtl_system"]

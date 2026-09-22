@@ -1,0 +1,131 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../libraries/remove.rst:2 1f84e99da3a04fd4ac34bf1b8e767c36
+msgid "Removing a library"
+msgstr ""
+
+#: ../../libraries/remove.rst:4 1bff5fb0ca634f03b5673f27909098a8
+msgid ""
+"Removing a library takes it out of ``device.conf``, stops its daemons, "
+"and leaves its tapes on disk unless you ask for them to be deleted too."
+msgstr ""
+
+#: ../../libraries/remove.rst:12 88d2188f0ae74fb3a571c7ab55cb1463
+msgid "Before you do"
+msgstr ""
+
+#: ../../libraries/remove.rst:14 88c732c59ba1479ca7a0301274a7dc91
+msgid ""
+"**Is anything using it?** A library exported over iSCSI may be mounted by"
+" another machine. Remove the export first (:doc:`../using/iscsi`), or "
+"that machine keeps a target that points at nothing."
+msgstr ""
+
+#: ../../libraries/remove.rst:18 d41badb9d18440b8af7542538163af80
+msgid ""
+"**Is a tape in a drive?** Removal refuses while a drive holds one - put "
+"it back in its slot first, or pass ``--force``."
+msgstr ""
+
+#: ../../libraries/remove.rst:21 1d29e6b6dd1f466e8c21298a727c4c59
+msgid ""
+"**Do you want the tapes?** By default they stay on disk, and can be put "
+"into another library later with ``tape adopt`` (:doc:`../tapes/adopt`). "
+"That is usually what you want: they are data."
+msgstr ""
+
+#: ../../libraries/remove.rst:26 73f4db7be7f447aa8fa37adea20718ed
+msgid "In the console"
+msgstr ""
+
+#: ../../libraries/remove.rst:28 e420d0cfed1a49768b338bb2db5740b3
+msgid ""
+"The **Remove** button on the library page, or **Libraries → Remove**. You"
+" are asked to confirm, and told what will happen to the tapes."
+msgstr ""
+
+#: ../../libraries/remove.rst:31 f5f59ca8e01e4485ac0059876c5c8c50
+msgid "Removing a library, and what happens to its tapes"
+msgstr ""
+
+#: ../../libraries/remove.rst:36 c5ab2545933d4b3c94057fc4749868f7
+msgid "From the terminal"
+msgstr ""
+
+#: ../../libraries/remove.rst:49 49bc165195ab4afe9fd052399f25a6a9
+msgid "Option"
+msgstr ""
+
+#: ../../libraries/remove.rst:49 d4e48b9544944b228186b377c31721a9
+msgid "What it does"
+msgstr ""
+
+#: ../../libraries/remove.rst:51 6dbe69f8b8044fb98290a3c5dcf97403
+msgid "``--remove-media``"
+msgstr ""
+
+#: ../../libraries/remove.rst:51 e0f649b6af2f427198885dde2bf9e65c
+msgid "Delete the tape files too. Not reversible."
+msgstr ""
+
+#: ../../libraries/remove.rst:52 a199b7b8ae364af88f5943e4439c79e4
+msgid "``--force``"
+msgstr ""
+
+#: ../../libraries/remove.rst:52 d7e877e531fb46898784324a826db15b
+msgid "Delete even with a tape loaded in a drive"
+msgstr ""
+
+#: ../../libraries/remove.rst:56 344612412c024c7f9187f064db9e1c90
+msgid "What is left behind"
+msgstr ""
+
+#: ../../libraries/remove.rst:58 81d8f42b2cc34a0f855bb4218e37236d
+msgid ""
+"Without ``--remove-media``, the tape directories stay under "
+"``/opt/mhvtl`` and no library lists them. They are *orphans*, and the "
+"console knows it:"
+msgstr ""
+
+#: ../../libraries/remove.rst:72 697c2898e3c44acfbbf0fe3e634ecff3
+msgid ""
+"Orphans are never cleaned up automatically, because they are data. To "
+"take one back into a library, see :doc:`../tapes/adopt`."
+msgstr ""
+
+#: ../../libraries/remove.rst:75 0894c677ec314290a62d03809ca02113
+msgid "``--clean`` removes what it finds, and asks first:"
+msgstr ""
+
+#: ../../libraries/remove.rst:81 075f7966ae804332828c2ea3e9988251
+msgid "A library id can be reused immediately; nothing remembers it was taken."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

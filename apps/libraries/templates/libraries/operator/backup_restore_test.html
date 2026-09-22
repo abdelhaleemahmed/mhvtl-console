@@ -1,0 +1,244 @@
+{% extends 'libraries/operator/base.html' %}
+{% load static %}
+
+{% block header_title %}Backup/Restore Test{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Library Backup/Restore Test</h1>
+    <p class="page-description">End-to-end verification test for tape backup and restore operations</p>
+</div>
+
+{% if not service_available %}
+<div class="alert alert-danger">
+    <strong>Service Unavailable:</strong> The backup/restore test service is not available.
+</div>
+{% else %}
+
+<div class="card">
+    <div class="section-title">Test Configuration</div>
+    <p class="page-description">
+        This test will: generate test data, create checksums, backup to tape, unmount,
+        remount, restore, and verify all checksums match.
+    </p>
+
+    <form method="post" action="{% url 'libraries:backup_restore_test' %}" id="test-form">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="library_id">Select Library</label>
+                <select name="library_id" id="library_id" class="form-control" required>
+                    <option value="">-- Select Library --</option>
+                    {% for lib_data in libraries %}
+                        <option value="{{ lib_data.library.library_id }}"
+                                data-drives="{{ lib_data.drive_count }}">
+                            Library {{ lib_data.library.library_id }} -
+                            {{ lib_data.vendor }}
+                            {{ lib_data.product }}
+                            ({{ lib_data.tapes|length }} tapes, {{ lib_data.drive_count }} drives)
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="slot">Select Tape Slot</label>
+                <select name="slot" id="slot" class="form-control" required disabled>
+                    <option value="">-- Select library first --</option>
+                </select>
+                <p class="form-help">Select a tape to use for the test</p>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="drive">Select Drive</label>
+                <select name="drive" id="drive" class="form-control" required disabled>
+                    <option value="">-- Select library first --</option>
+                </select>
+                <p class="form-help">Drive to use for backup/restore</p>
+            </div>
+
+            <div class="form-group">
+                <label for="size_mb">Test Data Size (MB)</label>
+                <input type="number" name="size_mb" id="size_mb" class="form-control"
+                       value="10" min="1" max="1000" required>
+                <p class="form-help">Total size of test data to generate (1-1000 MB)</p>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="num_files">Number of Files</label>
+                <input type="number" name="num_files" id="num_files" class="form-control"
+                       value="5" min="1" max="100" required>
+                <p class="form-help">Number of test files to create (1-100)</p>
+            </div>
+
+            <div class="form-group">
+                <label>Estimated Test Duration</label>
+                <div id="duration-estimate" class="preview-box">
+                    Select options to see estimate...
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="checkbox-label" for="via_iscsi">
+                <input type="checkbox" name="via_iscsi" id="via_iscsi" value="1">
+                Through the library's iSCSI export, attached on this host
+            </label>
+            <p class="form-help">Moves the tape with the exported changer and writes and
+                reads with the exported drive, so the whole test crosses the iSCSI path.
+                Attach the target first from its page under iSCSI &gt; Targets.</p>
+        </div>
+
+        <div class="btn-group">
+            <a href="{% url 'libraries:tape_list' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary" id="run-test-btn" disabled>
+                Run Test
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <div class="section-title">Test Steps</div>
+    <div class="test-steps">
+        <ol style="line-height: 2; color: #555; padding-left: 20px;">
+            <li><strong>Generate Test Data</strong> - Create random files with specified size</li>
+            <li><strong>Create Checksums</strong> - Calculate SHA256 for each file</li>
+            <li><strong>Mount Tape</strong> - Load tape from slot to drive</li>
+            <li><strong>Backup to Tape</strong> - Write data using tar</li>
+            <li><strong>Unmount Tape</strong> - Unload tape back to slot</li>
+            <li><strong>Mount Tape (Again)</strong> - Reload tape for restore</li>
+            <li><strong>Restore from Tape</strong> - Extract data to temp directory</li>
+            <li><strong>Unmount Tape (Final)</strong> - Unload tape</li>
+            <li><strong>Verify Checksums</strong> - Compare restored files against originals</li>
+            <li><strong>Cleanup</strong> - Remove temporary test files</li>
+        </ol>
+    </div>
+</div>
+
+<div class="alert alert-warning">
+    <strong>Warning:</strong> This test will write data to the selected tape.
+    Make sure you select a tape that can be overwritten.
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .preview-box {
+        background: var(--surface-deep);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 10px;
+        font-family: monospace;
+    }
+    .test-steps {
+        background: var(--surface-deep);
+        padding: 15px 15px 15px 30px;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Store library tape data
+    const libraryTapes = {
+        {% for lib_data in libraries %}
+        {{ lib_data.library.library_id }}: {
+            tapes: [
+                {% for tape in lib_data.tapes %}
+                {slot: {{ tape.slot }}, barcode: "{{ tape.barcode }}"}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            drives: {{ lib_data.drive_count }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    // Update tape and drive dropdowns when library changes
+    document.getElementById('library_id').addEventListener('change', function() {
+        const libraryId = this.value;
+        const slotSelect = document.getElementById('slot');
+        const driveSelect = document.getElementById('drive');
+        const runBtn = document.getElementById('run-test-btn');
+
+        if (!libraryId) {
+            slotSelect.innerHTML = '<option value="">-- Select library first --</option>';
+            slotSelect.disabled = true;
+            driveSelect.innerHTML = '<option value="">-- Select library first --</option>';
+            driveSelect.disabled = true;
+            runBtn.disabled = true;
+            return;
+        }
+
+        const libData = libraryTapes[libraryId];
+
+        // Populate tapes
+        if (libData && libData.tapes.length > 0) {
+            slotSelect.innerHTML = '<option value="">-- Select tape --</option>' +
+                libData.tapes.map(t =>
+                    `<option value="${t.slot}">Slot ${t.slot}: ${t.barcode}</option>`
+                ).join('');
+            slotSelect.disabled = false;
+        } else {
+            slotSelect.innerHTML = '<option value="">No tapes available</option>';
+            slotSelect.disabled = true;
+        }
+
+        // Populate drives
+        if (libData && libData.drives > 0) {
+            driveSelect.innerHTML = '';
+            for (let i = 0; i < libData.drives; i++) {
+                driveSelect.innerHTML += `<option value="${i}">Drive ${i + 1}</option>`;
+            }
+            driveSelect.disabled = false;
+        } else {
+            driveSelect.innerHTML = '<option value="">No drives available</option>';
+            driveSelect.disabled = true;
+        }
+
+        updateEstimate();
+        checkFormValid();
+    });
+
+    // Update estimate when values change
+    document.getElementById('slot').addEventListener('change', checkFormValid);
+    document.getElementById('size_mb').addEventListener('input', updateEstimate);
+    document.getElementById('num_files').addEventListener('input', updateEstimate);
+
+    function updateEstimate() {
+        const sizeMb = parseInt(document.getElementById('size_mb').value) || 10;
+        const numFiles = parseInt(document.getElementById('num_files').value) || 5;
+
+        // Rough estimate: ~2 seconds per MB for backup + restore
+        const estimatedSeconds = (sizeMb * 2) + 30; // base overhead
+        const minutes = Math.ceil(estimatedSeconds / 60);
+
+        document.getElementById('duration-estimate').innerHTML =
+            `<strong>~${minutes} minute${minutes > 1 ? 's' : ''}</strong><br>` +
+            `<small>${sizeMb}MB in ${numFiles} files</small>`;
+    }
+
+    function checkFormValid() {
+        const libraryId = document.getElementById('library_id').value;
+        const slot = document.getElementById('slot').value;
+        const runBtn = document.getElementById('run-test-btn');
+
+        runBtn.disabled = !(libraryId && slot);
+    }
+
+    // Show loading state when form is submitted
+    document.getElementById('test-form').addEventListener('submit', function() {
+        const btn = document.getElementById('run-test-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Running Test...';
+    });
+</script>
+{% endblock %}

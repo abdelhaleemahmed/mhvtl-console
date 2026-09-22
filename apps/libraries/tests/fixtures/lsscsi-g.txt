@@ -1,0 +1,18 @@
+[0:0:0:0]    cd/dvd  VBOX     CD-ROM           1.0   /dev/sr0   /dev/sg0 
+[2:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sda   /dev/sg1 
+[3:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdb   /dev/sg2 
+[16:0:0:0]   mediumx STK      L700             0108  /dev/sch1  /dev/sg4 
+[16:0:1:0]   tape    IBM      ULT3580-TD8      0108  /dev/st0   /dev/sg6 
+[16:0:2:0]   tape    IBM      ULT3580-TD8      0108  /dev/st4   /dev/sg10
+[16:0:3:0]   tape    IBM      ULT3580-TD6      0108  /dev/st8   /dev/sg14
+[16:0:4:0]   tape    IBM      ULT3580-TD6      0108  /dev/st2   /dev/sg8 
+[16:0:8:0]   mediumx STK      L80              0108  /dev/sch0  /dev/sg3 
+[16:0:9:0]   tape    STK      T10000B          0108  /dev/st1   /dev/sg7 
+[16:0:10:0]  tape    STK      T10000B          0108  /dev/st10  /dev/sg16
+[16:0:11:0]  tape    STK      T10000B          0108  /dev/st6   /dev/sg12
+[16:0:12:0]  tape    STK      T10000B          0108  /dev/st11  /dev/sg17
+[16:0:13:0]  mediumx SONY     LIB-302          0500  /dev/sch2  /dev/sg5 
+[16:0:14:0]  tape    SONY     SDX-900V         0500  /dev/st5   /dev/sg11
+[16:0:15:0]  tape    SONY     SDX-900V         0500  /dev/st3   /dev/sg9 
+[16:0:16:0]  tape    SONY     SDX-900V         0500  /dev/st7   /dev/sg13
+[16:0:17:0]  tape    SONY     SDX-900V         0500  /dev/st9   /dev/sg15

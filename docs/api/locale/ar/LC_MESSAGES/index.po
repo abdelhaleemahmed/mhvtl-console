@@ -1,0 +1,93 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI API
+# Reference package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI API Reference 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-22 05:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../index.rst:2 1032bed92c704262bcbae82a16d86519
+msgid "MHVTL GUI — API Reference"
+msgstr ""
+
+#: ../../index.rst:4 3665460c326d48b4b4693cab967ad346
+msgid ""
+"The Python API, generated from the docstrings in the source. Nothing here"
+" is written twice: if a paragraph is wrong, it is wrong in the module it "
+"documents."
+msgstr ""
+
+#: ../../index.rst:8 33015cb1ffe24ca7b79388361a379a30
+msgid ""
+"The layer to start from is ``apps.libraries.services``. Every feature of "
+"the console and of the ``mhvtl`` command is a call into it, and it is the"
+" only place where a decision about MHVTL is made."
+msgstr ""
+
+#: ../../index.rst:21 43bfe454b4654902a9e81dadaffc76be
+msgid "Reading these pages"
+msgstr ""
+
+#: ../../index.rst:23 cddd896176d14622acdf4a23449b35d8
+msgid "``ServiceResult``"
+msgstr ""
+
+#: ../../index.rst:24 ae367e16c677478fa3c6a0a35362657b
+msgid ""
+"What every service method returns: ``success``, ``message``, ``data``, "
+"``errors`` and an operation id. A caller checks ``success`` and prints "
+"``message``; it does not catch exceptions for ordinary failures."
+msgstr ""
+
+#: ../../index.rst:28 073e91a1eb5240ffa43664ab4c6d15c6
+msgid "Module docstrings"
+msgstr ""
+
+#: ../../index.rst:29 059a4654b18444c6aca84e494c0e1011
+msgid ""
+"Most modules open with why they exist, and often with what was wrong "
+"before them - which host it was found on, and what it looked like. That "
+"is deliberate. The behaviour is in the code; the reason is only here."
+msgstr ""
+
+#: ../../index.rst:33 d2e5e195b50c4121971a0b0fa579cfb8
+msgid "``[source]``"
+msgstr ""
+
+#: ../../index.rst:34 66e7c2acd6734a85a30e8d612f52d19a
+msgid ""
+"Every entry links to the source. When the prose and the code disagree, "
+"the code is right and the prose is a bug."
+msgstr ""
+
+#: ../../index.rst:38 92f1abf656fb4278a0d98769fded02d3
+msgid "Where else to look"
+msgstr ""
+
+#: ../../index.rst:40 eac283bbbcf04ff49f168d4affd77b09
+msgid "**User Guide** — what the console does, from the operator's side."
+msgstr ""
+
+#~ msgid ""
+#~ "**Developer Guide** — setting up, the"
+#~ " layer rules, and a worked example."
+#~ msgstr ""
+
+#~ msgid "**Guides** — architecture, packaging, known issues, the tutorials."
+#~ msgstr ""
+

@@ -1,0 +1,192 @@
+{% extends 'libraries/console/base.html' %}
+{% load ch_policy %}
+
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+{% ch_policy_box %}
+
+<!-- Overall Status -->
+<div class="card">
+    <div class="status-header">
+        <div class="status-icon {% if service.all_services_healthy %}healthy{% elif service.target_active %}partial{% else %}unhealthy{% endif %}">
+            {% if service.all_services_healthy %}&#10003;{% elif service.target_active %}&#9888;{% else %}&#10007;{% endif %}
+        </div>
+        <div class="status-details">
+            <h2>MHVTL Services</h2>
+            <p>systemd Target and Services Status</p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-item">
+            <div class="summary-number {% if service.all_services_healthy %}healthy{% elif service.target_active %}warning{% else %}danger{% endif %}">
+                {{ service.active_services }}/{{ service.total_services }}
+            </div>
+            <div class="summary-label">Services Active</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-number {% if service.library_services_active == service.library_services_count %}healthy{% else %}warning{% endif %}">
+                {{ service.library_services_active }}/{{ service.library_services_count }}
+            </div>
+            <div class="summary-label">Libraries</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-number {% if service.tape_services_active == service.tape_services_count %}healthy{% else %}warning{% endif %}">
+                {{ service.tape_services_active }}/{{ service.tape_services_count }}
+            </div>
+            <div class="summary-label">Tape Drives</div>
+        </div>
+    </div>
+
+    <form method="post" class="control-buttons">
+        {% csrf_token %}
+        {% if service.target_active %}
+            <button type="submit" name="action" value="stop" class="btn btn-danger">Stop All Services</button>
+            <button type="submit" name="action" value="restart" class="btn btn-warning">Restart All Services</button>
+        {% else %}
+            <button type="submit" name="action" value="start" class="btn btn-success">Start All Services</button>
+        {% endif %}
+        <a href="{% url 'libraries:console_dashboard' %}" class="btn btn-secondary">Back to Console</a>
+    </form>
+</div>
+
+<!-- Main Target and Module Loader -->
+<div class="card">
+    <div class="section-title">Core Services</div>
+    <table class="info-table">
+        <tr>
+            <th>mhvtl.target</th>
+            <td>
+                <span class="status-badge {% if service.target_active %}status-active{% else %}status-inactive{% endif %}">
+                    {% if service.target_active %}Active{% else %}Inactive{% endif %}
+                </span>
+                <span class="status-badge {% if service.target_enabled %}status-enabled{% else %}status-disabled{% endif %}" style="margin-left: 10px;">
+                    {% if service.target_enabled %}Enabled{% else %}Disabled{% endif %}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th>mhvtl-load-modules.service</th>
+            <td>
+                <span class="status-badge {% if service.modules_service_active %}status-active{% else %}status-inactive{% endif %}">
+                    {% if service.modules_service_active %}Active{% else %}Inactive{% endif %}
+                </span>
+                <span style="color: var(--text-dim); margin-left: 10px;">Kernel module loader</span>
+            </td>
+        </tr>
+    </table>
+
+    {% if service.target_status_text %}
+    <div class="section-title" style="margin-top: 20px;">Target Status Output</div>
+    <div class="status-output">{{ service.target_status_text }}</div>
+    {% endif %}
+</div>
+
+<!-- Library and Tape Services -->
+<div class="two-col">
+    <!-- Library Services -->
+    <div class="card">
+        <div class="section-title">Library Services (vtllibrary@)</div>
+        {% if service.library_services %}
+        <div class="service-list">
+            {% for lib in service.library_services %}
+            <div class="service-item">
+                <div>
+                    <span class="service-name">{{ lib.name }}</span>
+                    <span class="service-id">ID: {{ lib.library_id }}</span>
+                </div>
+                <span>
+                <span class="status-badge {% if lib.active %}status-active{% else %}status-inactive{% endif %}">
+                    {% if lib.active %}{{ lib.sub_state }}{% else %}Inactive{% endif %}
+                </span>
+                <form method="post" style="display:inline; margin-left:8px">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="restart_library">
+                    <input type="hidden" name="library_id" value="{{ lib.library_id }}">
+                    <button type="submit" class="btn btn-warning btn-sm" id="restart-library-{{ lib.library_id }}"
+                            style="padding:2px 10px; font-size:12px">Restart</button>
+                </form>
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color: var(--text-dim);">No library services found.</p>
+        {% endif %}
+    </div>
+
+    <!-- Tape Services -->
+    <div class="card">
+        <div class="section-title">Tape Drive Services (vtltape@)</div>
+        {% if service.tape_services %}
+        <div class="service-list">
+            {% for tape in service.tape_services %}
+            <div class="service-item">
+                <div>
+                    <span class="service-name">{{ tape.name }}</span>
+                    <span class="service-id">ID: {{ tape.tape_id }}</span>
+                </div>
+                <span class="status-badge {% if tape.active %}status-active{% else %}status-inactive{% endif %}">
+                    {% if tape.active %}{{ tape.sub_state }}{% else %}Inactive{% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color: var(--text-dim);">No tape drive services found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Kernel Modules -->
+<div class="card">
+    <div class="section-title">Kernel Modules</div>
+    <p style="color: var(--text-dim); margin-bottom: 15px;">
+        Required modules must be loaded for MHVTL to function properly. iSCSI modules are needed for targetcli/LIO.
+    </p>
+
+    <!-- MHVTL Modules -->
+    <h4 style="color: var(--bad); margin-bottom: 10px;">MHVTL Modules</h4>
+    <div class="module-grid">
+        {% for name, info in kernel_modules.modules.items %}
+            {% if info.category == 'MHVTL' %}
+            <div class="module-card">
+                <div class="module-name">{{ name }}</div>
+                <div class="module-status">
+                    <span class="status-badge {% if info.loaded %}status-active{% else %}status-inactive{% endif %}">
+                        {% if info.loaded %}Loaded{% else %}Not Loaded{% endif %}
+                    </span>
+                    {% if info.required %}
+                    <br><small style="color: var(--alert-warn-text);">Required</small>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- iSCSI/LIO Modules -->
+    <h4 style="color: var(--info); margin-top: 20px; margin-bottom: 10px;">iSCSI Modules (LIO/targetcli)</h4>
+    <div class="module-grid">
+        {% for name, info in kernel_modules.modules.items %}
+            {% if info.category == 'iSCSI (LIO)' %}
+            <div class="module-card">
+                <div class="module-name">{{ name }}</div>
+                <div class="module-status">
+                    <span class="status-badge {% if info.loaded %}status-active{% else %}status-inactive{% endif %}">
+                        {% if info.loaded %}Loaded{% else %}Not Loaded{% endif %}
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% if not kernel_modules.all_required_loaded %}
+    <div class="alert alert-danger" style="margin-top: 20px; margin-bottom: 0;">
+        Some required kernel modules are not loaded. MHVTL may not function correctly.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

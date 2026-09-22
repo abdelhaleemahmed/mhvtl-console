@@ -1,0 +1,101 @@
+{% extends 'libraries/operator/base.html' %}
+
+{% block title %}Create iSCSI Target{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Create iSCSI Target</h1>
+    <p class="page-description">Create a new iSCSI target for exporting devices</p>
+</div>
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Target IQN *</label>
+            <input type="text" name="iqn" class="form-control" required
+                   placeholder="iqn.2026-01.com.mhvtl:library70"
+                   pattern="iqn\.[0-9]{4}-[0-9]{2}\..+">
+            <p class="form-help">
+                IQN format: <code>iqn.YYYY-MM.reverse.domain:identifier</code><br>
+                Example: <code>iqn.2026-01.com.mhvtl:library70</code>
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" name="allow_all_initiators" checked>
+                <span>Allow all initiators (no ACL required)</span>
+            </label>
+            <p class="form-help">
+                When enabled, sets <code>generate_node_acls=1</code> so any initiator can connect.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" name="add_default_portal" checked>
+                <span>Add default portal (0.0.0.0:3260)</span>
+            </label>
+            <p class="form-help">
+                Creates a portal listening on all interfaces on the standard iSCSI port.
+            </p>
+        </div>
+
+        <div class="alert alert-info">
+            <strong>After creating the target:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Add backstores for your tape devices</li>
+                <li>Create LUN mappings to expose devices</li>
+                <li>Configure ACLs if not allowing all initiators</li>
+                <li>Save the configuration for persistence</li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success">Create Target</button>
+            <a href="{% url 'libraries:iscsi_targets' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<!-- Quick IQN Generator -->
+<div class="card">
+    <h3 class="section-title">IQN Generator</h3>
+    <p style="margin-bottom: 15px; color: var(--text-dim);">Generate a valid IQN based on common patterns.</p>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label>Domain</label>
+            <input type="text" id="genDomain" class="form-control" value="com.mhvtl" placeholder="com.example">
+        </div>
+        <div class="form-group">
+            <label>Identifier</label>
+            <input type="text" id="genId" class="form-control" placeholder="library70">
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="generateIqn()">Generate & Fill</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function generateIqn() {
+        const domain = document.getElementById('genDomain').value.trim();
+        const identifier = document.getElementById('genId').value.trim();
+
+        if (!domain || !identifier) {
+            alert('Please fill in both domain and identifier');
+            return;
+        }
+
+        const now = new Date();
+        const yearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        const iqn = 'iqn.' + yearMonth + '.' + domain + ':' + identifier;
+
+        document.querySelector('input[name="iqn"]').value = iqn;
+    }
+</script>
+{% endblock %}

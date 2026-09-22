@@ -1,0 +1,206 @@
+{% extends 'libraries/base.html' %}
+
+
+{% block header_title %}MHVTL Dashboard{% endblock %}
+
+{% block content %}
+<div class="section-title">
+            System Overview
+            {% if mhvtl_status == 'running' %}
+                <span class="status-badge status-success">MHVTL Running</span>
+            {% elif mhvtl_status == 'stopped' %}
+                <span class="status-badge status-warning">MHVTL Stopped</span>
+            {% else %}
+                <span class="status-badge status-info">Status Unknown</span>
+            {% endif %}
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="stat-card total-libraries">
+                <div class="stat-value">{{ library_count|default:0 }}</div>
+                <div class="stat-label">Total Libraries</div>
+            </div>
+            <div class="stat-card drives">
+                <div class="stat-value">{{ total_drives|default:0 }}</div>
+                <div class="stat-label">Total Drives</div>
+            </div>
+            <div class="stat-card discovered">
+                <div class="stat-value">{{ operations_count|default:0 }}</div>
+                <div class="stat-label">Recent Operations</div>
+            </div>
+            {% if DISCOVERY_AVAILABLE %}
+            <div class="stat-card created">
+                <div class="stat-value">{{ last_discovery_count|default:0 }}</div>
+                <div class="stat-label">Last Discovery Items</div>
+            </div>
+            <div class="stat-card media">
+                <div class="stat-value">
+                    {% if last_discovery_minutes %}
+                        {% if last_discovery_minutes < 60 %}
+                            {{ last_discovery_minutes }}m
+                        {% elif last_discovery_minutes < 1440 %}
+                            {{ last_discovery_minutes|floatformat:"0"|add:"0"|slice:":2" }}h
+                        {% else %}
+                            {{ last_discovery_minutes|floatformat:"0"|add:"0"|slice:":2" }}d
+                        {% endif %}
+                    {% else %}
+                        --
+                    {% endif %}
+                </div>
+                <div class="stat-label">Since Last Discovery</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Operation Activity (Last 24 Hours) -->
+        {% if recent_create_count or recent_update_count or recent_delete_count %}
+        <div class="section-title" style="margin-top: 20px;">Activity (Last 24 Hours)</div>
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+            <div class="stat-card" style="background: var(--ok-bg);">
+                <div class="stat-value" style="color: var(--ok);">{{ recent_create_count|default:0 }}</div>
+                <div class="stat-label">Created</div>
+            </div>
+            <div class="stat-card" style="background: var(--warn-bg);">
+                <div class="stat-value" style="color: var(--warn);">{{ recent_update_count|default:0 }}</div>
+                <div class="stat-label">Updated</div>
+            </div>
+            <div class="stat-card" style="background: var(--bad-bg);">
+                <div class="stat-value" style="color: var(--bad);">{{ recent_delete_count|default:0 }}</div>
+                <div class="stat-label">Deleted</div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if DISCOVERY_AVAILABLE %}
+            {% if last_discovery %}
+                <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
+                    Last discovery: {{ last_discovery.completed_at|timesince }} ago
+                    ({{ last_discovery_count|default:0 }} items found)
+                </div>
+            {% else %}
+                <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
+                    No discovery sessions yet.
+                </div>
+            {% endif %}
+        {% endif %}
+        
+        <div class="section-title" style="margin-top: 20px;">
+            Active Libraries ({{ library_count }})
+            <a href="{% url 'libraries:setup_choice' %}" class="btn btn-primary" style="float: right;">+ Add New Library</a>
+            <a href="{% url 'libraries:cleanup_orphaned' %}" class="btn btn-secondary" style="float: right; margin-right: 10px;">Cleanup Orphaned</a>
+        </div>
+
+        <div class="library-card-grid">
+            {% for library in libraries %}
+            <div class="library-card">
+                <div class="discovery-status discovery-status-{{ library.discovery_status }}">
+                    {{ library.discovery_status }}
+                </div>
+                <div>
+                    <div class="library-card-header">
+                        <div class="library-card-title">
+                            Library {{ library.library_id }}
+                            {% if library.mhvtl_id %}
+                                <div class="mhvtl-id">ID: {{ library.mhvtl_id }}</div>
+                            {% endif %}
+                        </div>
+                        <span class="status-badge status-success">Active</span>
+                    </div>
+                    <div class="library-card-body">
+                        <p><strong>Brand:</strong> {{ library.vendor }}</p>
+                        <p><strong>Model:</strong> {{ library.product }}</p>
+                        <p><strong>Slots:</strong> {{ library.total_slots }}</p>
+                        <p><strong>Drives:</strong> {{ library.drives_count }}</p>
+                        <p>
+                            <strong>Last Synced:</strong>
+                            {% if library.last_synced %}
+                                {{ library.last_synced|timesince }} ago
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="library-card-footer">
+                    <a href="{% url 'libraries:tape_list' %}?library_id={{ library.library_id }}" class="btn btn-secondary">📼 Tapes</a>
+                    <a href="{% url 'libraries:library_monitor' library_id=library.library_id %}" class="btn btn-primary">Monitor</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No active libraries found. <a href="{% url 'libraries:setup_choice' %}">Add one now.</a></p>
+            {% endfor %}
+        </div>
+
+        <div class="section-title" style="margin-top: 20px;">
+            Recent Operations
+            {% if recent_operations %}
+                <a href="{% url 'libraries:dashboard' %}" class="btn btn-secondary" style="float: right;">View All</a>
+            {% endif %}
+        </div>
+        <div class="recent-operations">
+            {% for operation in recent_operations %}
+            <div class="operation-item">
+                <span class="operation-description">{{ operation.description }}</span>
+                <span class="operation-timestamp">{{ operation.created_at|timesince }} ago</span>
+            </div>
+            {% empty %}
+            <p>No recent operations.</p>
+            {% endfor %}
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        // JS for messages
+        document.addEventListener('DOMContentLoaded', () => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 5000);
+            });
+        });
+
+        // AJAX for dashboard stats refresh (optional)
+        const refreshInterval = setInterval(() => {
+            fetch('/libraries/ajax/discovery-stats/')
+            .then(response => response.json())
+            .then(data => {
+                // Update stats without page reload
+                updateStatValue('discovered', data.discovered_count);
+                updateStatValue('created', data.created_count);
+                updateStatValue('drives', data.total_drives);
+            })
+            .catch(error => {
+                console.log('Stats update failed:', error);
+            });
+        }, 60000);
+
+        function updateStatValue(type, value) {
+            const statElement = document.querySelector(`.stat-card.${type} .stat-value`);
+            if (statElement && statElement.textContent !== value.toString()) {
+                statElement.style.transform = 'scale(1.1)';
+                statElement.textContent = value;
+                setTimeout(() => {
+                    statElement.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
+        // Add CSS animation for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+{% endblock %}

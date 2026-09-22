@@ -1,0 +1,40 @@
+<div class="ch-policy ch-policy-{{ policy.state|default:'error' }}" id="ch-policy">
+<style>
+    .ch-policy { border: 1px solid rgba(127,127,127,.35); border-left-width: 5px;
+                 border-radius: 6px; padding: 12px 16px; margin: 0 0 18px;
+                 background: rgba(127,127,127,.06); font-size: .92em; }
+    .ch-policy-protected { border-left-color: #27ae60; }
+    .ch-policy-pending   { border-left-color: #e67e22; }
+    .ch-policy-exposed, .ch-policy-error { border-left-color: #c0392b; }
+    .ch-policy-unprotected { border-left-color: #e67e22; }
+    .ch-policy h4 { margin: 0 0 6px; font-size: 1em; }
+    .ch-policy ul { margin: 4px 0 6px 18px; padding: 0; }
+    .ch-policy code { font-size: .92em; }
+    .ch-policy .ch-note { opacity: .8; margin: 6px 0 0; }
+</style>
+    <h4>Kernel ch driver: {{ policy.state|default:"unknown"|upper }}</h4>
+    {% if error %}
+    <div>The ch policy could not be read: {{ error }}</div>
+    {% else %}
+    <div>{{ message }}.</div>
+    <div style="margin-top:6px"><strong>Rules in force</strong>
+    {% if policy.active %}
+        <ul>{% for rule in policy.active %}
+            <li><code>{{ rule.file }}:{{ rule.line }}</code> &nbsp; <code>{{ rule.text }}</code></li>
+        {% endfor %}</ul>
+    {% else %}
+        <span>- none active (no modprobe blacklist, no udev rule, nothing on the kernel command line).</span>
+    {% endif %}
+    </div>
+    <div>ch module: {% if policy.module_loaded %}loaded{% else %}not loaded{% endif %}.
+    {% for changer in policy.changers %}{% if changer.ch_bound %}
+        {% if forloop.first %}Bound to:{% endif %}
+        <code>{{ changer.address }}</code> {{ changer.vendor }} {{ changer.model }}{% if changer.at_risk %} <strong>(names its drives - at risk)</strong>{% endif %}{% if not forloop.last %},{% endif %}
+    {% endif %}{% endfor %}
+    </div>
+    <p class="ch-note">ch takes a reference on every drive a changer reports by SCSI id and never
+       releases it; removing or restarting such a library leaves the drive addresses unusable until
+       a reboot. Nothing here uses <code>/dev/sch*</code> - changers are driven through
+       <code>/dev/sg*</code> (<code>MHVTL_CHANGER_NODE</code>). See the <em>ch driver leak</em> guide.</p>
+    {% endif %}
+</div>

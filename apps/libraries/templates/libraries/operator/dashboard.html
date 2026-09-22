@@ -1,0 +1,93 @@
+{% extends 'libraries/operator/base.html' %}
+
+{% block header_title %}Library Operator Panel{% endblock %}
+
+{% block content %}
+{% if not tape_service_available %}
+            <div class="alert alert-warning">
+                Tape operations service is not available. Some features may not work.
+            </div>
+        {% endif %}
+
+        <div class="section-title">Operator Functions</div>
+
+        <div class="operation-grid">
+            <!-- Library Control -->
+            <div class="operation-group">
+                <h3>Library Control</h3>
+                <div class="btn-grid">
+                    <a href="{% url 'libraries:library_online' %}" class="btn btn-success">Set Online</a>
+                    <a href="{% url 'libraries:library_offline' %}" class="btn btn-warning">Set Offline</a>
+                </div>
+            </div>
+
+            <!-- Tape Operations -->
+            <div class="operation-group">
+                <h3>Tape Operations</h3>
+                <div class="btn-grid">
+                    <a href="{% url 'libraries:mount_tape' %}" class="btn btn-success">Mount Tape</a>
+                    <a href="{% url 'libraries:unmount_tape' %}" class="btn btn-warning">Unmount Tape</a>
+                    <a href="{% url 'libraries:move_tape' %}" class="btn btn-secondary">Move Tape</a>
+                </div>
+            </div>
+
+            <!-- Tape Management -->
+            <div class="operation-group">
+                <h3>Tape Management</h3>
+                <div class="btn-grid">
+                    <a href="{% url 'libraries:tape_list' %}" class="btn btn-primary">View Tapes</a>
+                    <a href="{% url 'libraries:create_tape' %}" class="btn btn-success">Create Tape</a>
+                    <a href="{% url 'libraries:create_tapes_bulk' %}" class="btn btn-success">Create Multiple</a>
+                    <a href="{% url 'libraries:delete_tape' %}" class="btn btn-danger">Delete Tape</a>
+                </div>
+            </div>
+
+            <!-- Drive Management -->
+            <div class="operation-group">
+                <h3>Drive Management</h3>
+                <div class="btn-grid">
+                    <a href="{% url 'libraries:drive_list' %}" class="btn btn-primary">View Drives</a>
+                    <a href="{% url 'libraries:add_drive' %}" class="btn btn-success">Add Drive</a>
+                    <a href="{% url 'libraries:remove_drive' %}" class="btn btn-danger">Remove Drive</a>
+                </div>
+            </div>
+
+            <!-- Testing -->
+            <div class="operation-group">
+                <h3>Testing</h3>
+                <div class="btn-grid">
+                    <a href="{% url 'libraries:backup_restore_test' %}" class="btn btn-primary">Backup/Restore Test</a>
+                </div>
+            </div>
+
+            <!-- iSCSI Export -->
+            <div class="operation-group">
+                <h3>iSCSI Export</h3>
+                <div class="btn-grid">
+                    <a href="{% url 'libraries:iscsi_dashboard' %}" class="btn btn-primary">iSCSI Dashboard</a>
+                    <a href="{% url 'libraries:iscsi_export_library' %}" class="btn btn-success">Quick Export</a>
+                    <a href="{% url 'libraries:iscsi_targets' %}" class="btn btn-secondary">Manage Targets</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Available Libraries</div>
+        <div class="library-list">
+            {% for library in libraries %}
+            <div class="library-item">
+                <div class="library-info">
+                    <span class="library-id">{{ library.library_id }}</span>
+                    <div class="library-details">
+                        <strong>{{ library.vendor }} {{ library.product }}</strong><br>
+                        Serial: {{ library.serial }}
+                    </div>
+                </div>
+                <div>
+                    <a href="{% url 'libraries:library_status_detail' library_id=library.library_id %}" class="btn btn-primary">View Status</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No libraries available. <a href="{% url 'libraries:setup_choice' %}">Create one first.</a></p>
+            {% endfor %}
+        </div>
+{% endblock %}

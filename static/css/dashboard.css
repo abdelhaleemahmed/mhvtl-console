@@ -1,0 +1,43 @@
+/**
+ * Dashboard Page Styles
+ * Styles specific to the main dashboard view
+ */
+
+.dashboard-welcome {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.dashboard-content {
+    background-color: var(--surface);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-content h2 {
+    color: var(--text);
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.dashboard-content p {
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin-bottom: 15px;
+}
+
+/* Dashboard placeholder styling */
+.dashboard-placeholder {
+    background-color: var(--surface-deep);
+    padding: 20px;
+    border-left: 4px solid var(--info);
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.dashboard-placeholder p {
+    margin: 0;
+    color: var(--text-dim);
+    font-style: italic;
+}

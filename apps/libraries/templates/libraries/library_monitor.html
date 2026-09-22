@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Monitor Library {{ library.library_id }} - MHVTL{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/monitor.css' %}">
+    <style>
+        /* The pulse shows only while a panel is being re-fetched. */
+        .refresh-pulse { display: none; }
+        .is-refreshing .refresh-pulse { display: inline-block; }
+        .status-offline { color: var(--bad); }
+
+        /* Fix metric item spacing */
+        .metric-item {
+            text-align: center;
+            padding: 15px;
+        }
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+        }
+        .metric-detail {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            font-weight: normal;
+        }
+        .metric-subtext {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            margin-top: 4px;
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb_items %}
+{% endblock %}
+
+{% block content %}
+<div class="monitor-header">
+    <h1 class="page-title">Monitor Library {{ library.library_id }}</h1>
+    <div class="header-actions">
+        <a href="{% url 'libraries:config_files' %}" class="btn btn-secondary">
+            Config Files
+        </a>
+        <a href="{% url 'libraries:library_detail' library.library_id %}" class="btn btn-primary">
+            Back to Detail
+        </a>
+    </div>
+</div>
+
+<!-- Re-fetched every 30 seconds by js/auto-refresh.js -->
+<div class="monitor-grid"
+     id="status-cards"
+     data-refresh-url="{% url 'libraries:library_monitor_metrics' library.library_id %}?partial=status"
+     data-refresh-seconds="30">
+
+    <!-- Service Status Card -->
+    <div class="status-card">
+        <div class="status-icon {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
+            {% if metrics.is_running %}✅{% else %}⏹️{% endif %}
+        </div>
+        <div class="status-value {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
+            {% if metrics.is_running %}Running{% else %}Stopped{% endif %}
+        </div>
+        <div class="status-label">Service Status</div>
+    </div>
+
+    <div class="status-card">
+        <div class="status-icon status-info">💽</div>
+        <div class="status-value status-info">
+            {% if metrics %}{{ metrics.drive_status.online }}/{{ metrics.drive_status.total }}{% else %}{{ drives.count }}/{{ drives.count }}{% endif %}
+        </div>
+        <div class="status-label">Drives Online</div>
+    </div>
+
+    <div class="status-card">
+        <div class="status-icon status-info">🗃️</div>
+        <div class="status-value status-info">{{ library.total_slots|default:"0" }}</div>
+        <div class="status-label">Total Slots</div>
+    </div>
+
+    <div class="status-card">
+        <div class="status-icon {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
+            {% if metrics.error_count > 0 %}⚠️{% else %}✅{% endif %}
+        </div>
+        <div class="status-value {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
+            {{ metrics.error_count|default:"0" }}
+        </div>
+        <div class="status-label">Errors</div>
+    </div>
+</div>
+
+<!-- System Metrics - HTMX auto-refresh every 30 seconds -->
+<div class="monitor-section">
+    <div class="section-header">
+        <div class="section-title">
+            <span class="section-icon">📈</span>
+            <span>System Metrics</span>
+        </div>
+        <div class="refresh-indicator">
+            <div class="pulse refresh-pulse"></div>
+            <span>Auto-refresh: 30s</span>
+        </div>
+    </div>
+
+    <div class="system-metrics"
+         id="system-metrics"
+         data-refresh-url="{% url 'libraries:library_monitor_metrics' library.library_id %}?partial=system"
+         data-refresh-seconds="30">
+
+        <div class="metric-item">
+            <div class="metric-value">
+                {% if metrics.is_running and metrics.metrics.cpu != None %}
+                    {{ metrics.metrics.cpu }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </div>
+            <div class="metric-label">CPU Usage</div>
+        </div>
+
+        <div class="metric-item">
+            <div class="metric-value">
+                {% if metrics.is_running and metrics.metrics.memory != None %}
+                    {{ metrics.metrics.memory }}%
+                    {% if metrics.metrics.memory_mb %}
+                    <span class="metric-detail">({{ metrics.metrics.memory_mb|floatformat:0 }} MB)</span>
+                    {% endif %}
+                {% else %}
+                    N/A
+                {% endif %}
+            </div>
+            <div class="metric-label">Process Memory</div>
+        </div>
+
+        <div class="metric-item">
+            <div class="metric-value">
+                {% if metrics.metrics.disk != None %}
+                    {{ metrics.metrics.disk }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </div>
+            <div class="metric-label">Disk Usage</div>
+            {% if metrics.metrics.disk_used_gb and metrics.metrics.disk_total_gb %}
+            <div class="metric-subtext">{{ metrics.metrics.disk_used_gb }}G / {{ metrics.metrics.disk_total_gb }}G</div>
+            {% endif %}
+        </div>
+
+        <div class="metric-item">
+            <div class="metric-value">
+                {% if metrics.is_running %}
+                    {{ metrics.metrics.uptime|default:"Running" }}
+                {% else %}
+                    Stopped
+                {% endif %}
+            </div>
+            <div class="metric-label">Uptime</div>
+        </div>
+    </div>
+</div>
+
+{% comment %}
+What each drive is doing, read through MHVTL's message queue - the only way to
+see it while a backup runs, because the kernel gives the SCSI reservation to
+the initiator and mt and mtx answer "device busy".
+
+Outside the {% if drives %} below on purpose: that lists what the database
+knows, and a library made from the command line has drives before the
+database hears of them.
+{% endcomment %}
+<div class="monitor-section">
+    <div class="section-header">
+        <div class="section-title">
+            <span class="section-icon">&#128300;</span>
+            <span>What the drives are doing</span>
+        </div>
+        <div class="refresh-indicator">
+            <div class="pulse refresh-pulse"></div>
+            <span>Auto-refresh: 5s</span>
+        </div>
+    </div>
+    <div class="drive-activity"
+         data-refresh-url="{% url 'libraries:library_activity' library.library_id %}"
+         data-refresh-seconds="5">
+        {% include 'libraries/partials/_library_activity.html' with drives=activity_drives only %}
+    </div>
+</div>
+
+<!-- Drives Status -->
+{% if drives %}
+<div class="monitor-section">
+    <div class="section-header">
+        <div class="section-title">
+            <span class="section-icon">💽</span>
+            <span>Drive Status ({{ drives.count }})</span>
+        </div>
+    </div>
+
+    <div class="drives-grid">
+        {% for drive in drives %}
+            <div class="drive-card" data-drive-id="{{ drive.id }}">
+                <div class="drive-header">
+                    <div class="drive-id">Drive {{ drive.drive_id }}</div>
+                    <div class="drive-status {% if metrics.is_running %}online{% else %}offline{% endif %}">
+                        {% if metrics.is_running %}Online{% else %}Offline{% endif %}
+                    </div>
+                </div>
+                <div class="drive-details">
+                    <strong>SCSI:</strong> {{ drive.channel }}:{{ drive.target }}:{{ drive.lun }}<br>
+                    <strong>Product:</strong> {{ drive.vendor_identification }} {{ drive.product_identification }}<br>
+                    <strong>S/N:</strong> {{ drive.serial_number|default:"N/A" }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Recent Operations -->
+<div class="monitor-section">
+    <div class="section-header">
+        <div class="section-title">
+            <span class="section-icon">📋</span>
+            <span>Recent Operations</span>
+        </div>
+    </div>
+
+    <div class="operations-list">
+        {% if library.operations.all %}
+            {% for operation in library.operations.all|slice:":10" %}
+                <div class="operation-item">
+                    <div class="operation-icon">
+                        {% if operation.operation == 'CREATE' %}📝
+                        {% elif operation.operation == 'UPDATE' %}✏️
+                        {% elif operation.operation == 'DELETE' %}🗑️
+                        {% elif operation.operation == 'MOUNT' %}📌
+                        {% elif operation.operation == 'UNMOUNT' %}📍
+                        {% elif operation.operation == 'DISCOVER' %}🔍
+                        {% else %}⚙️{% endif %}
+                    </div>
+                    <div class="operation-content">
+                        <div class="operation-type">{{ operation.get_operation_display }}</div>
+                        <div class="operation-description">{{ operation.description }}</div>
+                    </div>
+                    <div class="operation-time">{{ operation.timestamp|timesince }} ago</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="operation-item">
+                <div class="operation-icon">ℹ️</div>
+                <div class="operation-content">
+                    <div class="operation-type">No Operations</div>
+                    <div class="operation-description">No recent operations for this library</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- No custom JavaScript needed - HTMX handles auto-refresh -->
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'libraries/console/base.html' %}
+
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="section-title">Module Status Summary</div>
+    <div class="summary-box">
+        <div class="summary-item {% if module_check.all_required_loaded %}success{% else %}danger{% endif %}">
+            <div class="summary-number">{% if module_check.all_required_loaded %}OK{% else %}MISSING{% endif %}</div>
+            <div class="summary-label">Required Modules</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-number">{{ modules|length }}</div>
+            <div class="summary-label">Loaded Modules</div>
+        </div>
+    </div>
+
+    {% if not module_check.all_required_loaded %}
+    <div class="alert alert-danger">
+        Some required kernel modules are not loaded. Run <code>modprobe mhvtl</code> or start the MHVTL service.
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        All required kernel modules are loaded.
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="section-title">MHVTL-Related Kernel Modules</div>
+    <table class="module-table">
+        <thead>
+            <tr>
+                <th>Module Name</th>
+                <th>Size (bytes)</th>
+                <th>Used By</th>
+                <th>Dependencies</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for module in modules %}
+            <tr>
+                <td><strong>{{ module.name }}</strong></td>
+                <td>{{ module.size|filesizeformat }}</td>
+                <td>{{ module.used_by }}</td>
+                <td>{{ module.used_by_modules|join:", "|default:"-" }}</td>
+                <td><span class="status-badge status-loaded">Loaded</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-dim);">No MHVTL-related modules found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="section-title">Required Modules Check</div>
+    <table class="module-table">
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Required</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for name, info in module_check.modules.items %}
+            <tr>
+                <td><strong>{{ name }}</strong></td>
+                <td>{% if info.required %}Yes{% else %}Optional{% endif %}</td>
+                <td>
+                    <span class="status-badge {% if info.loaded %}status-loaded{% else %}status-not-loaded{% endif %}">
+                        {% if info.loaded %}Loaded{% else %}Not Loaded{% endif %}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'libraries:console_dashboard' %}" class="btn btn-secondary">Back to Console</a>
+</div>
+{% endblock %}

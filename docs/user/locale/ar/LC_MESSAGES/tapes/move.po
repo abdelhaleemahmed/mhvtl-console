@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL GUI User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../tapes/move.rst:2 8239650224314ef3b966de13356b3a30
+msgid "Moving a tape: mount, unmount, move"
+msgstr ""
+
+#: ../../tapes/move.rst:4 ad9e065624fb4bc2b5099501cfec2470
+msgid ""
+"The robot does three things: put a cartridge in a drive, take it out "
+"again, and move it between slots. Everything else is the drive's job."
+msgstr ""
+
+#: ../../tapes/move.rst:12 d67c72a7aa6d493c845c20b6f4ad2057
+msgid "Mount: slot into drive"
+msgstr ""
+
+#: ../../tapes/move.rst:14 3135ab50f5354fdcab258b3ab50c4d02
+msgid ""
+"**Operator → Mount Tape**, or **The robot → Mount a tape** on the library"
+" page."
+msgstr ""
+
+#: ../../tapes/move.rst:17 0cac23fdff964844ba650da922acef2f
+msgid ""
+"Pick the library, the slot and the drive. The page shows what is in each "
+"slot, coloured by generation, so an LTO-7 cartridge is not mounted into a"
+" drive that cannot write it by accident."
+msgstr ""
+
+#: ../../tapes/move.rst:21 69fbfc0a635e4216aa3c5cad3328fe65
+msgid "Mount Tape: the slots, coloured by generation"
+msgstr ""
+
+#: ../../tapes/move.rst:30 ffcdd6a0145c4d6995b529fe4cda91e1
+msgid ""
+"The drive number is the robot's, counting from 0 - the first drive in the"
+" library is 0, not its drive id. ``mhvtl status library 50`` shows both."
+msgstr ""
+
+#: ../../tapes/move.rst:33 72a68045a4674837af7c8d4edee4503a
+msgid ""
+"A drive that does not load that generation refuses, which is the point. "
+"``--force`` overrides it if you are testing what the refusal looks like."
+msgstr ""
+
+#: ../../tapes/move.rst:37 b2ebe42563304622aaee4702864ff70d
+msgid "Unmount: drive back to a slot"
+msgstr ""
+
+#: ../../tapes/move.rst:44 a20a6a480f574c228e18c83880baae86
+msgid ""
+"A tape goes back to the slot it came from unless you say otherwise. If "
+"that slot has since been filled, name a free one."
+msgstr ""
+
+#: ../../tapes/move.rst:47 55410603ac244b08a732b260948e6b18
+msgid "Unmount: which drive, and where the tape goes"
+msgstr ""
+
+#: ../../tapes/move.rst:52 b82f338282c4494aad358512c6448be5
+msgid "Move: slot to slot"
+msgstr ""
+
+#: ../../tapes/move.rst:58 145d30ad321a4ce9bff03f15b0e49ba2
+msgid ""
+"Tidying, mostly: putting a run of tapes in order, or clearing a slot for "
+"a cartridge that has to live somewhere particular."
+msgstr ""
+
+#: ../../tapes/move.rst:62 d6bad46bfb6c4994b34a2b88b70e89b3
+msgid "Online and offline"
+msgstr ""
+
+#: ../../tapes/move.rst:64 29723300ba35484d90d5247687db7b7f
+msgid ""
+"A library can be told to stop answering the robot without stopping its "
+"daemons:"
+msgstr ""
+
+#: ../../tapes/move.rst:72 fc93a61736dc422f9713889542190a72
+msgid ""
+"Offline is refused while a drive holds a tape, which is MHVTL's own rule,"
+" not this console's."
+msgstr ""
+
+#: ../../tapes/move.rst:76 bbfa0fee87c14ecab9f20bfd4d358bfb
+msgid "The MAP"
+msgstr ""
+
+#: ../../tapes/move.rst:78 f466d3ce5d7849f48ab9553873b86df7
+msgid ""
+"The mail slot, where an operator at a real library puts a cartridge in "
+"from outside. MHVTL emulates it, and the console can open it, close it, "
+"and have the robot re-read it:"
+msgstr ""
+
+#: ../../tapes/move.rst:87 11e90e4bc64f4dd0ada67520d26e04dc
+msgid "What the robot says is where"
+msgstr ""
+
+#: ../../tapes/move.rst:106 2e671a8933f14d79bde0d0170ef1bf96
+msgid ""
+"This is the robot's own answer, through ``mtx``. When it disagrees with "
+"``mhvtl tape list``, the library was changed without being restarted - "
+"the configuration says one thing and the running robot another."
+msgstr ""
+
+#~ msgid ""
+#~ "Not written yet. This page is part"
+#~ " of the User Guide and is being"
+#~ " filled in; until then, see the "
+#~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+

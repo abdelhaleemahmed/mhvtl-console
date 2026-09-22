@@ -1,0 +1,45 @@
+{% load static %}
+
+<header class="site-header">
+    <div class="header-content">
+        <div class="header-left">
+            <a href="{% url 'authentication:dashboard' %}" class="logo-link">
+                <div class="system-logo-small">
+                    <span class="logo-icon">📼</span>
+                </div>
+                <h1 class="site-title">MHVTL Console</h1>
+            </a>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{% url 'authentication:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <span class="nav-icon">🏠</span>
+                Dashboard
+            </a>
+            <a href="{% url 'libraries:dashboard' %}" class="nav-link {% if 'libraries' in request.resolver_match.app_name %}active{% endif %}">
+                <span class="nav-icon">📚</span>
+                Libraries
+            </a>
+            {% if '/auth/dashboard/' in request.path %}
+            <a href="{% url 'authentication:logout' %}" class="nav-link">
+                <span class="nav-icon">🚪</span>
+                Logout
+            </a>
+            {% endif %}
+        </nav>
+
+        <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
+
+        <div class="header-right">
+            {% if user.is_authenticated %}
+                <div class="user-menu">
+                    <span class="user-info">
+                        <span class="user-icon">👤</span>
+                        <span class="user-name">{{ user.username|default:"Admin" }}</span>
+                        <span class="user-role">{{ user.get_role_display|default:"Administrator" }}</span>
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>

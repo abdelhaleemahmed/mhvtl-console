@@ -1,0 +1,230 @@
+{% extends 'libraries/operator/base.html' %}
+{% load static %}
+
+{% block header_title %}Test Results{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Backup/Restore Test Results</h1>
+    <p class="page-description">Test ID: {{ result.test_id }}</p>
+</div>
+
+<!-- Overall Result -->
+<div class="result-card {% if result.success %}success{% else %}failed{% endif %}">
+    <div class="result-icon">
+        {% if result.success %}
+        <span style="font-size: 48px; color: var(--ok);">&#10004;</span>
+        {% else %}
+        <span style="font-size: 48px; color: var(--bad);">&#10008;</span>
+        {% endif %}
+    </div>
+    <div class="result-info">
+        <h2>{{ result.message }}</h2>
+        <p>
+            Duration: <strong>{{ result.total_duration|floatformat:1 }} seconds</strong>
+            &nbsp;|&nbsp;
+            Started: {{ result.start_time }}
+        </p>
+    </div>
+</div>
+
+<!-- Summary -->
+{% if result.summary %}
+<div class="card">
+    <div class="section-title">Test Summary</div>
+    <div class="summary-grid">
+        <div class="summary-item">
+            <span class="label">Library</span>
+            <span class="value">{{ result.summary.library_id }}</span>
+        </div>
+        <div class="summary-item">
+            <span class="label">Slot</span>
+            <span class="value">{{ result.summary.slot }}</span>
+        </div>
+        <div class="summary-item">
+            <span class="label">Drive</span>
+            <span class="value">{{ result.summary.drive }}</span>
+        </div>
+        {% if result.summary.iscsi_target %}
+        <div class="summary-item">
+            <span class="label">Over iSCSI</span>
+            <span class="value">{{ result.summary.iscsi_target }}</span>
+        </div>
+        {% endif %}
+        <div class="summary-item">
+            <span class="label">Test Size</span>
+            <span class="value">{{ result.summary.size_mb }} MB</span>
+        </div>
+        <div class="summary-item">
+            <span class="label">Files</span>
+            <span class="value">{{ result.summary.num_files }}</span>
+        </div>
+        <div class="summary-item">
+            <span class="label">Steps</span>
+            <span class="value">{{ result.summary.steps_passed }}/{{ result.summary.steps_completed }}</span>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Step Details -->
+<div class="card">
+    <div class="section-title">Test Steps</div>
+    <div class="steps-list">
+        {% for step in result.steps %}
+        <div class="step-item {% if step.success %}success{% else %}failed{% endif %}">
+            <div class="step-status">
+                {% if step.success %}
+                <span class="status-icon success">&#10004;</span>
+                {% else %}
+                <span class="status-icon failed">&#10008;</span>
+                {% endif %}
+            </div>
+            <div class="step-details">
+                <div class="step-name">{{ step.step|title }}</div>
+                <div class="step-message">{{ step.message }}</div>
+                <div class="step-duration">{{ step.duration|floatformat:2 }}s</div>
+                {% if step.errors %}
+                <div class="step-errors">
+                    {% for error in step.errors %}
+                    <div class="error-item">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Actions -->
+<div class="btn-group">
+    <a href="{% url 'libraries:backup_restore_test' %}" class="btn btn-primary">Run Another Test</a>
+    <a href="{% url 'libraries:tape_list' %}" class="btn btn-secondary">Back to Tape List</a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-card {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .result-card.success {
+        background: linear-gradient(135deg, var(--ok-bg), var(--ok-bg));
+        border: 2px solid var(--ok);
+    }
+    .result-card.failed {
+        background: linear-gradient(135deg, var(--bad-bg), var(--bad-bg));
+        border: 2px solid var(--bad);
+    }
+    .result-icon {
+        margin-right: 20px;
+    }
+    .result-info h2 {
+        margin: 0 0 5px 0;
+        font-size: 24px;
+    }
+    .result-info p {
+        margin: 0;
+        color: var(--text-dim);
+    }
+
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+    }
+    .summary-item {
+        text-align: center;
+        padding: 15px;
+        background: var(--surface-deep);
+        border-radius: 6px;
+    }
+    .summary-item .label {
+        display: block;
+        font-size: 12px;
+        color: var(--text-faint);
+        text-transform: uppercase;
+    }
+    .summary-item .value {
+        display: block;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+        margin-top: 5px;
+    }
+
+    .steps-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .step-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 12px;
+        border-radius: 6px;
+        background: var(--surface-deep);
+        border-left: 4px solid var(--border);
+    }
+    .step-item.success {
+        border-left-color: var(--ok);
+    }
+    .step-item.failed {
+        border-left-color: var(--bad);
+        background: var(--bad-bg);
+    }
+    .step-status {
+        margin-right: 12px;
+    }
+    .status-icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        border-radius: 50%;
+        font-size: 14px;
+    }
+    .status-icon.success {
+        background: var(--ok);
+        color: white;
+    }
+    .status-icon.failed {
+        background: var(--bad);
+        color: white;
+    }
+    .step-details {
+        flex: 1;
+    }
+    .step-name {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 2px;
+    }
+    .step-message {
+        color: var(--text-dim);
+        font-size: 14px;
+    }
+    .step-duration {
+        color: var(--text-faint);
+        font-size: 12px;
+        margin-top: 4px;
+    }
+    .step-errors {
+        margin-top: 8px;
+        padding: 8px;
+        background: var(--bad-bg);
+        border-radius: 4px;
+    }
+    .error-item {
+        color: var(--bad);
+        font-size: 13px;
+        font-family: monospace;
+    }
+</style>
+{% endblock %}

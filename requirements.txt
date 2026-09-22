@@ -1,0 +1,32 @@
+# mhvtl-gui runtime dependencies, pinned.
+#
+# Python 3.10 or newer is required: Django 5.x dropped 3.9. This project is
+# developed and deployed on Python 3.12.
+#
+# Django 5.2 is the current LTS, supported until April 2028. The 4.2 LTS used
+# before it reached end-of-life in April 2026.
+#
+# Install:
+#   python3.12 -m venv venv && venv/bin/pip install -r requirements.txt
+
+# Core Django
+Django==5.2.17
+djangorestframework==3.18.1
+django-cors-headers==4.9.0
+
+# Forms and UI
+django-crispy-forms==2.7
+crispy-bootstrap5==2026.9
+
+# Environment
+django-environ==0.14.0
+
+# Production
+gunicorn==26.2.0
+whitenoise==6.12.0
+
+# Dropped at the 5.2 upgrade because nothing imports them: celery and redis
+# (there is no task queue), psycopg2-binary (the app runs on SQLite),
+# django-extensions, and factory-boy. Add each back with the code that needs it.
+#
+# Development-only packages are in requirements-dev.txt.

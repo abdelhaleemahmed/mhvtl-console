@@ -1,0 +1,493 @@
+{% extends 'libraries/operator/base.html' %}
+{% load static %}
+
+{% block header_title %}Create Multiple Tapes{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
+    .preview-box { background: var(--surface-deep); padding: 15px; border-radius: 5px; font-family: monospace; font-size: 13px; margin-top: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+            <div class="section-title">Barcode Format</div>
+            <ul class="page-description" style="margin-left: 20px;">
+                <li><strong>Standard:</strong> 6 characters + 2 character suffix (e.g., E01001L8)</li>
+                <li><strong>Cleaning:</strong> Start with "CLN" (e.g., CLN001L8)</li>
+                <li><strong>WORM:</strong> Start with "W" (e.g., W01001LV)</li>
+                <li><strong>Suffix examples:</strong> L8=LTO8, L7=LTO7, L6=LTO6, S3=SDLT600</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="operation-icon">&#128230;&#128230;&#128230;</div>
+            <div class="section-title">Bulk Tape Creation</div>
+            <p class="page-description">
+                Create multiple virtual tapes at once with auto-generated barcodes.
+            </p>
+
+            <form method="post" action="{% url 'libraries:create_tapes_bulk' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="library_id">Select Library</label>
+                    <select name="library_id" id="library_id" class="form-control" required>
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"{% if selected_library_id == library.library_id %} selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <p id="slot-stats" class="form-help" style="display:none;"></p>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tape_type">Tape Type</label>
+                        <select name="tape_type" id="tape_type" class="form-control" required>
+                            {% for value, label in tape_types %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help">Data, Cleaning, or WORM tapes</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="count">Number of Tapes</label>
+                        <input type="number" name="count" id="count" class="form-control"
+                               value="10" min="1" max="999" required onchange="updatePreview()">
+                        <p class="form-help" id="count-help">Max: 999 for data, 9 for cleaning, 99 for WORM</p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="density">Tape Density</label>
+                        <select name="density" id="density" class="form-control" required>
+                            {% for value, label in densities %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help" id="density-help">Select a library to see the media its drives load.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="size_mb">Tape Size (MB)</label>
+                        <input type="number" name="size_mb" id="size_mb" class="form-control"
+                               value="500000" min="1000" max="50000000">
+                        <p class="form-help" id="size-help">Size per tape in megabytes; set to the density's native capacity when you pick one</p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="barcode_prefix">Barcode Prefix</label>
+                        <input type="text" name="barcode_prefix" id="barcode_prefix" class="form-control"
+                               value="" maxlength="3" oninput="updatePreview()"
+                               style="text-transform: uppercase;" placeholder="Select library first">
+                        <p class="form-help" id="prefix-help">Auto-set when library is selected</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="barcode_suffix">Barcode Suffix</label>
+                        <input type="text" name="barcode_suffix" id="barcode_suffix" class="form-control"
+                               value="L8" maxlength="2" readonly
+                               style="text-transform: uppercase; ">
+                        <p class="form-help" id="suffix-help">Auto-set from density selection</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Barcode Preview</label>
+                    <div id="barcode-preview" class="preview-box">
+                        Select a library to see barcode preview...
+                    </div>
+                    <p id="conflict-warning" class="form-help" class="form-error" style="display: none;"></p>
+                </div>
+
+                <div class="btn-group">
+                    <a href="{% url 'libraries:tape_list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">Create Tapes</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" id="existing-barcodes-card" style="display: none;">
+            <div class="section-title">Existing Barcodes in Library</div>
+            <p class="page-description">These barcodes are already in use. New barcodes will auto-increment to avoid conflicts.</p>
+            <div id="existing-barcodes" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 150px; overflow-y: auto;">
+                <!-- Populated via JavaScript -->
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <strong>Note:</strong> Tapes will be placed in the next available slots automatically.
+            The barcode numbers will be auto-generated starting from the next available number.
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+{# The media each library's drives load, for tape-media.js. #}
+{{ media_info|json_script:"media-info" }}
+<script src="{% static 'js/tape-media.js' %}"></script>
+<script>
+        let existingBarcodes = [];
+        let nextBarcodeInfo = null;
+
+        // Library to barcode prefix mapping - from backend
+        const libraryPrefixes = {
+            {% for lib_id, prefix in library_prefixes.items %}
+            {{ lib_id }}: "{{ prefix }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        // Offer only the densities the chosen library's drives load
+        // (static/js/tape-media.js), and say what the drives do with each.
+        function refreshDensities() {
+            const libraryId = document.getElementById('library_id').value;
+            TapeMedia.fill(document.getElementById('density'), libraryId);
+            densityChanged();
+        }
+
+        function densityChanged() {
+            const libraryId = document.getElementById('library_id').value;
+            const density = document.getElementById('density').value;
+            document.getElementById('density-help').textContent =
+                TapeMedia.describe(libraryId, density);
+            const size = TapeMedia.suggestedSize(density);
+            document.getElementById('size_mb').value = size.mb;
+            document.getElementById('size-help').textContent = size.text;
+            updateSuffixForTapeType();
+            updatePreview();
+        }
+
+        // Update suffix when density changes
+        document.getElementById('density').addEventListener('change', function() {
+            densityChanged();
+            fetchNextBarcode();
+        });
+
+        // Update when tape type changes
+        document.getElementById('tape_type').addEventListener('change', function() {
+            const tapeType = this.value;
+            const countInput = document.getElementById('count');
+            const prefixInput = document.getElementById('barcode_prefix');
+            const prefixHelp = document.getElementById('prefix-help');
+            const suffixHelp = document.getElementById('suffix-help');
+            const libraryId = document.getElementById('library_id').value;
+
+            // Update max count based on tape type
+            const maxCounts = {'data': 999, 'clean': 9, 'WORM': 99};
+            countInput.max = maxCounts[tapeType] || 999;
+            if (parseInt(countInput.value) > countInput.max) {
+                countInput.value = countInput.max;
+            }
+
+            // Update prefix based on tape type
+            if (libraryId && libraryPrefixes[libraryId]) {
+                const fullPrefix = libraryPrefixes[libraryId];
+                const brandLetter = fullPrefix.charAt(0);
+
+                if (tapeType === 'clean') {
+                    prefixInput.value = '';
+                    prefixInput.disabled = true;
+                    prefixHelp.textContent = 'Cleaning tapes use CLN prefix automatically';
+                } else if (tapeType === 'WORM') {
+                    prefixInput.value = brandLetter;
+                    prefixInput.disabled = false;
+                    prefixInput.maxLength = 1;
+                    prefixHelp.textContent = 'Brand letter for WORM (e.g., H for HP)';
+                } else {
+                    prefixInput.value = fullPrefix;
+                    prefixInput.disabled = false;
+                    prefixInput.maxLength = 3;
+                    prefixHelp.textContent = 'Auto-set when library is selected';
+                }
+            }
+
+            // Update suffix for WORM tapes
+            updateSuffixForTapeType();
+            updatePreview();
+        });
+
+        function updateSuffixForTapeType() {
+            const tapeType = document.getElementById('tape_type').value;
+            const density = document.getElementById('density').value;
+            const suffixInput = document.getElementById('barcode_suffix');
+            const suffixHelp = document.getElementById('suffix-help');
+
+            suffixInput.value = TapeMedia.suffixFor(density, tapeType);
+            suffixHelp.textContent = tapeType === 'WORM' && TapeMedia.info.worm_suffix[density]
+                ? `WORM suffix for ${density}` : `Set from the density (${density})`;
+        }
+
+        // Update preview when count changes
+        document.getElementById('count').addEventListener('change', updatePreview);
+        document.getElementById('count').addEventListener('input', updatePreview);
+
+        // Update preview when prefix changes
+        document.getElementById('barcode_prefix').addEventListener('input', function() {
+            fetchNextBarcode();
+        });
+
+        // Fetch existing barcodes and next barcode when library changes
+        document.getElementById('library_id').addEventListener('change', function() {
+            const libraryId = this.value;
+            refreshDensities();
+            if (!libraryId) {
+                document.getElementById('existing-barcodes-card').style.display = 'none';
+                document.getElementById('slot-stats').style.display = 'none';
+                existingBarcodes = [];
+                nextBarcodeInfo = null;
+                updatePreview();
+                return;
+            }
+
+            // Update barcode prefix based on selected library and tape type
+            const tapeType = document.getElementById('tape_type').value;
+            const prefixInput = document.getElementById('barcode_prefix');
+
+            if (libraryPrefixes[libraryId]) {
+                const fullPrefix = libraryPrefixes[libraryId];
+                const brandLetter = fullPrefix.charAt(0);
+
+                if (tapeType === 'clean') {
+                    prefixInput.value = '';
+                    prefixInput.disabled = true;
+                } else if (tapeType === 'WORM') {
+                    prefixInput.value = brandLetter;
+                    prefixInput.maxLength = 1;
+                } else {
+                    prefixInput.value = fullPrefix;
+                    prefixInput.maxLength = 3;
+                }
+            }
+
+            // Fetch existing barcodes from backend
+            fetch(`/libraries/ajax/existing-barcodes/${libraryId}/`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        existingBarcodes = data.barcodes;
+                        displayExistingBarcodes();
+                        fetchNextBarcode(true);
+                    }
+                })
+                .catch(err => console.error('Failed to fetch barcodes:', err));
+
+            // Fetch slot stats
+            fetch(`/libraries/ajax/next-slot/${libraryId}/`)
+                .then(r => r.json())
+                .then(data => {
+                    const statsEl = document.getElementById('slot-stats');
+                    if (!statsEl) return;
+                    statsEl.style.display = 'block';
+                    if (data.success) {
+                        if (data.free_slots === 0) {
+                            statsEl.textContent = `Library is full — ${data.occupied_slots} / ${data.total_slots} slots used`;
+                            statsEl.className = 'form-help form-error';
+                        } else {
+                            statsEl.textContent = `Slots: ${data.occupied_slots} used, ${data.free_slots} free (${data.total_slots} total)`;
+                            statsEl.className = data.free_slots <= 5 ? 'form-help form-warn' : 'form-help form-ok';
+                        }
+                    }
+                })
+                .catch(err => console.error('Failed to fetch slot stats:', err));
+        });
+
+        // adoptSeries: on a library change, follow the suffix the library's
+        // tapes already use by selecting its density - never by changing the
+        // suffix alone, which would name a different density than is created.
+        function fetchNextBarcode(adoptSeries = false) {
+            const libraryId = document.getElementById('library_id').value;
+            const prefix = document.getElementById('barcode_prefix').value.toUpperCase() || 'E01';
+            const suffix = document.getElementById('barcode_suffix').value.toUpperCase() || 'L8';
+
+            if (!libraryId) {
+                nextBarcodeInfo = null;
+                updatePreview();
+                return;
+            }
+
+            // Fetch next available barcode from backend
+            fetch(`/libraries/ajax/next-barcode/${libraryId}/?prefix=${prefix}&suffix=${suffix}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const tapeType = document.getElementById('tape_type').value;
+                        if (adoptSeries && data.detected_suffix && tapeType === 'data') {
+                            const density = Object.keys(TapeMedia.info.suffix).find(
+                                d => TapeMedia.info.suffix[d] === data.detected_suffix);
+                            const select = document.getElementById('density');
+                            if (density && density !== select.value &&
+                                    Array.from(select.options).some(o => o.value === density)) {
+                                select.value = density;
+                                densityChanged();
+                                fetchNextBarcode();      // again, with the new suffix
+                                return;
+                            }
+                        }
+                        nextBarcodeInfo = data;
+                        // Cap count input to available consecutive range
+                        const countInput = document.getElementById('count');
+                        const typeLimits = {'data': 999, 'clean': 9, 'WORM': 99};
+                        const typeMax = typeLimits[tapeType] || 999;
+                        const avail = data.consecutive_available || typeMax;
+                        countInput.max = Math.min(avail, typeMax);
+                        if (parseInt(countInput.value) > countInput.max) {
+                            countInput.value = countInput.max;
+                        }
+                        // Show availability hint
+                        const help = document.getElementById('count-help');
+                        if (avail < typeMax) {
+                            help.textContent = `${avail} consecutive slot(s) available from ${data.next_barcode}`;
+                            help.className = avail < 5 ? 'form-help form-error' : 'form-help form-warn';
+                        } else {
+                            help.textContent = `Max: ${typeMax} for ${tapeType}`;
+                            help.style.color = '';
+                        }
+                        updatePreview();
+                    }
+                })
+                .catch(err => {
+                    console.error('Failed to fetch next barcode:', err);
+                    nextBarcodeInfo = null;
+                    updatePreview();
+                });
+        }
+
+        function displayExistingBarcodes() {
+            const container = document.getElementById('existing-barcodes');
+            const card = document.getElementById('existing-barcodes-card');
+
+            if (existingBarcodes.length === 0) {
+                card.style.display = 'none';
+                return;
+            }
+
+            card.style.display = 'block';
+            container.innerHTML = existingBarcodes.map(bc =>
+                `<span class="barcode-chip" style="padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 12px;">${bc}</span>`
+            ).join('');
+        }
+
+        function updatePreview() {
+            const tapeType = document.getElementById('tape_type').value;
+            const prefix = document.getElementById('barcode_prefix').value.toUpperCase();
+            const suffix = document.getElementById('barcode_suffix').value.toUpperCase() || 'L8';
+            const count = parseInt(document.getElementById('count').value) || 10;
+            const libraryId = document.getElementById('library_id').value;
+
+            if (!libraryId) {
+                document.getElementById('barcode-preview').textContent = 'Select a library to see barcode preview...';
+                return;
+            }
+
+            // Use backend-provided next number if available, otherwise start at 1
+            let startNum = 1;
+            if (nextBarcodeInfo && nextBarcodeInfo.prefix === prefix && nextBarcodeInfo.suffix === suffix) {
+                startNum = nextBarcodeInfo.next_number;
+            } else {
+                startNum = findNextAvailableNumber(tapeType, prefix, suffix, libraryId);
+            }
+
+            let previews = [];
+            let conflicts = [];
+            const libId = parseInt(libraryId);
+
+            for (let i = 0; i < Math.min(count, 5); i++) {
+                const num = startNum + i;
+                let barcode;
+
+                if (tapeType === 'clean') {
+                    // CLN{lib:2d}{num:1d}{suffix} = CLN701L8
+                    barcode = 'CLN' + String(libId).padStart(2, '0') + num + suffix;
+                } else if (tapeType === 'WORM') {
+                    // W{brand}{lib:2d}{num:2d}{suffix} = WH7001LV
+                    barcode = 'W' + prefix + String(libId).padStart(2, '0') + String(num).padStart(2, '0') + suffix;
+                } else {
+                    // data: {prefix}{num:3d}{suffix} = H70001L8
+                    barcode = prefix + String(num).padStart(3, '0') + suffix;
+                }
+
+                previews.push(barcode);
+
+                // Check for conflicts
+                if (existingBarcodes.includes(barcode)) {
+                    conflicts.push(barcode);
+                }
+            }
+
+            let previewText = previews.join(', ');
+            if (count > 5) {
+                previewText += ', ... (' + count + ' total)';
+            }
+
+            document.getElementById('barcode-preview').textContent = previewText;
+
+            // Show conflict warning if any
+            const warningEl = document.getElementById('conflict-warning');
+            if (conflicts.length > 0) {
+                warningEl.textContent = `Warning: ${conflicts.length} barcode(s) may conflict: ${conflicts.join(', ')}`;
+                warningEl.style.display = 'block';
+            } else {
+                warningEl.style.display = 'none';
+            }
+        }
+
+        function findNextAvailableNumber(tapeType, prefix, suffix, libraryId) {
+            // Local fallback - find the highest existing number based on tape type
+            let maxNum = 0;
+            const libId = String(parseInt(libraryId)).padStart(2, '0');
+
+            existingBarcodes.forEach(bc => {
+                const bcUpper = bc.toUpperCase();
+                let match;
+
+                if (tapeType === 'clean' && bcUpper.startsWith('CLN' + libId)) {
+                    // CLN{lib:2d}{num:1d}{suffix} - extract single digit
+                    match = bcUpper.match(/^CLN\d{2}(\d)/);
+                    if (match) {
+                        const num = parseInt(match[1], 10);
+                        if (!isNaN(num) && num > maxNum) maxNum = num;
+                    }
+                } else if (tapeType === 'WORM' && bcUpper.startsWith('W' + prefix.toUpperCase() + libId)) {
+                    // W{brand}{lib:2d}{num:2d}{suffix} - extract 2 digits
+                    match = bcUpper.match(/^W.\d{2}(\d{2})/);
+                    if (match) {
+                        const num = parseInt(match[1], 10);
+                        if (!isNaN(num) && num > maxNum) maxNum = num;
+                    }
+                } else if (tapeType === 'data' && bcUpper.startsWith(prefix.toUpperCase()) && !bcUpper.startsWith('CLN') && !bcUpper.startsWith('W')) {
+                    // {prefix}{num:3d}{suffix} - extract 3 digits
+                    const numPart = bcUpper.slice(prefix.length, -suffix.length);
+                    const num = parseInt(numPart, 10);
+                    if (!isNaN(num) && num > maxNum) maxNum = num;
+                }
+            });
+
+            return maxNum + 1;
+        }
+
+        // Form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const libraryId = document.getElementById('library_id').value;
+            if (!libraryId) {
+                e.preventDefault();
+                alert('Please select a library first.');
+            }
+        });
+
+        refreshDensities();
+
+        // The library the link carried is already chosen, so fill in what
+        // depends on it now rather than waiting for the picker to be touched.
+        if (document.getElementById('library_id').value) {
+            document.getElementById('library_id').dispatchEvent(new Event('change'));
+        }
+    </script>
+{% endblock %}

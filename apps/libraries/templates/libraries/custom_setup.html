@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Custom Library Setup - MHVTL Console{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/library-config.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="config-card">
+        <div class="config-header">
+            <div class="header-icon">🛠️</div>
+            <h1 class="header-title">Custom Library Configuration</h1>
+            <p class="header-description">
+                Configure all library parameters manually for advanced setup scenarios.
+                This mode gives you full control over library specifications.
+            </p>
+        </div>
+
+        <div class="info-banner">
+            <div class="info-icon">💡</div>
+            <div class="info-content">
+                <strong>Advanced Mode:</strong> This setup requires knowledge of MHVTL configuration.
+                For most use cases, we recommend using the Standard Configuration with brand presets.
+            </div>
+        </div>
+
+        <form method="post" class="config-form">
+            {% csrf_token %}
+
+            <!-- Brand Selection -->
+            <div class="form-section">
+                <h3 class="section-title">Library Brand</h3>
+                <div class="form-group">
+                    <label class="form-label">Vendor *</label>
+                    <select name="vendor" class="form-select" required>
+                        <option value="">Select vendor...</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.name }}">{{ brand.display_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Product Identification *</label>
+                    <input type="text" name="product" class="form-input"
+                           placeholder="e.g., L700, 03584L32" maxlength="16" required>
+                    <div class="form-help">Product model identifier (max 16 characters)</div>
+                </div>
+            </div>
+
+            <!-- Library Specifications -->
+            <div class="form-section">
+                <h3 class="section-title">Library Specifications</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Serial Number *</label>
+                    <input type="text" name="serial" class="form-input"
+                           placeholder="e.g., XYZZY_10" maxlength="10" required>
+                    <div class="form-help">Unique serial number (max 10 characters)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Number of Drives *</label>
+                    <input type="number" name="num_drives" class="form-input"
+                           value="4" min="1" max="16" required>
+                    <div class="form-help">Number of tape drives (1-16)</div>
+                </div>
+            </div>
+
+            <!-- SCSI Configuration (Optional) -->
+            <div class="form-section">
+                <h3 class="section-title">SCSI Configuration (Auto-assigned if blank)</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Channel</label>
+                    <input type="number" name="channel" class="form-input"
+                           placeholder="Auto" min="0" max="15">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Target</label>
+                    <input type="number" name="target" class="form-input"
+                           placeholder="Auto" min="0" max="127">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">LUN</label>
+                    <input type="number" name="lun" class="form-input"
+                           placeholder="Auto" min="0" max="7">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'libraries:setup_choice' %}" class="btn btn-secondary">
+                    ← Back to Setup Choice
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Create Library →
+                </button>
+            </div>
+        </form>
+
+        <div class="help-section">
+            <h4>Configuration Tips</h4>
+            <ul>
+                <li><strong>Vendor:</strong> Choose the library manufacturer</li>
+                <li><strong>Product:</strong> Enter the exact model identifier</li>
+                <li><strong>Serial Number:</strong> Must be unique across all libraries</li>
+                <li><strong>Drives:</strong> More drives allow more concurrent tape operations</li>
+                <li><strong>SCSI Parameters:</strong> Leave blank for automatic assignment</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/library-config.js' %}"></script>
+{% endblock %}

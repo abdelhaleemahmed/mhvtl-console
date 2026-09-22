@@ -1,0 +1,305 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Library Status{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    /* Status display */
+            .status-summary {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+    .status-item {
+                text-align: center;
+                padding: 15px;
+                background: var(--surface-deep);
+                border-radius: 8px;
+            }
+    .status-value {
+                font-size: 24px;
+                font-weight: bold;
+                color: var(--info);
+            }
+    .status-label {
+                font-size: 12px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+            }
+    /* Slot grid */
+            .slot-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+                margin-top: 15px;
+            }
+    .slot {
+                padding: 10px;
+                border-radius: 5px;
+                text-align: center;
+                font-size: 12px;
+            }
+    .slot-full {
+                background: var(--ok-bg);
+                border: 2px solid var(--ok);
+            }
+    .slot-empty {
+                background: var(--surface-deep);
+                border: 2px solid var(--border);
+            }
+    .slot-number {
+                font-weight: bold;
+                display: block;
+            }
+    .slot-barcode {
+                font-size: 11px;
+                color: var(--alert-ok-text);
+                word-break: break-all;
+            }
+    /* Drive status */
+            .drive-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+                margin-top: 15px;
+            }
+    .drive {
+                padding: 15px;
+                border-radius: 8px;
+                background: var(--surface-deep);
+            }
+    .drive-loaded {
+                background: var(--ok-bg);
+                border: 2px solid var(--ok);
+            }
+    .drive-empty {
+                background: var(--warn-bg);
+                border: 2px solid var(--warn);
+            }
+    .drive-number {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+    .drive-info {
+                font-size: 13px;
+                color: var(--text-dim);
+            }
+    .drift-actions {
+                margin-top: 12px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+    .drift-list {
+                margin: 8px 0 0 18px;
+                font-family: monospace;
+                font-size: 13px;
+            }
+    .raw-output {
+                background: var(--text);
+                color: var(--border);
+                padding: 15px;
+                border-radius: 5px;
+                font-family: monospace;
+                font-size: 12px;
+                white-space: pre-wrap;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Library Selection -->
+        <div class="card">
+            <div class="section-title">Select Library</div>
+            <form method="get" action="{% url 'libraries:library_status' %}">
+                <div class="form-group">
+                    <label for="library_id">Library</label>
+                    <select name="library_id" id="library_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- Select Library --</option>
+                        {% for library in libraries %}
+                            <option value="{{ library.library_id }}"
+                                    {% if selected_library and selected_library.library_id == library.library_id %}selected{% endif %}>
+                                Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        {% if status_result %}
+            {% if status_result.success %}
+                {% comment %}
+                The daemon reads library_contents once, at start. A tape
+                created or removed since then is in the file and not in the
+                robot, and the page used to show the old inventory with no
+                hint that it was old.
+                {% endcomment %}
+                {% if status_result.drift %}
+                <div class="alert alert-warning">
+                    <strong>The robot's inventory is older than the configuration.</strong>
+                    It reports {{ status_result.drift.reported }} tape(s);
+                    library_contents lists {{ status_result.drift.configured }}.
+                    {% if status_result.drift.added %}
+                    <div class="drift-list">
+                        added since it started: {{ status_result.drift.added|join:", " }}
+                    </div>
+                    {% endif %}
+                    {% if status_result.drift.removed %}
+                    <div class="drift-list">
+                        gone from the configuration: {{ status_result.drift.removed|join:", " }}
+                    </div>
+                    {% endif %}
+                    <div class="drift-actions">
+                        <form method="post"
+                              action="{% url 'libraries:library_control' selected_library.library_id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="restart">
+                            <button type="submit" class="btn btn-primary">
+                                Restart library {{ selected_library.library_id }}
+                            </button>
+                        </form>
+                        <span>so its robot reads the configuration again.</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Status Summary -->
+                <div class="card">
+                    <div class="section-title">Library {{ selected_library.library_id }} Status</div>
+                    <p class="page-description">Device: {{ status_result.device_path }}</p>
+
+                    <div class="status-summary">
+                        <div class="status-item">
+                            <div class="status-value">{{ status_result.slot_summary.total_slots }}</div>
+                            <div class="status-label">Total Slots</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-value" style="color: var(--ok);">{{ status_result.slot_summary.full_slots }}</div>
+                            <div class="status-label">Full Slots</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-value" style="color: var(--text-dim);">{{ status_result.slot_summary.empty_slots }}</div>
+                            <div class="status-label">Empty Slots</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-value" style="color: var(--accent);">{{ status_result.slot_summary.total_drives }}</div>
+                            <div class="status-label">Drives</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-value" style="color: var(--warn);">{{ status_result.slot_summary.loaded_drives }}</div>
+                            <div class="status-label">Loaded Drives</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-value" style="color: var(--accent);">{{ status_result.slot_summary.ie_slots }}</div>
+                            <div class="status-label">I/E Slots</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drives -->
+                <div class="card">
+                    <div class="section-title">Data Transfer Elements (Drives)</div>
+                    <div class="drive-grid">
+                        {% for drive in status_result.drives %}
+                            <div class="drive {% if drive.full %}drive-loaded{% else %}drive-empty{% endif %}">
+                                <div class="drive-number">Drive {{ drive.drive_num }}</div>
+                                <div class="drive-info">
+                                    {% if drive.full %}
+                                        <strong>LOADED</strong><br>
+                                        {% if drive.barcode %}Barcode: {{ drive.barcode }}<br>{% endif %}
+                                        {% if drive.slot_origin %}From Slot: {{ drive.slot_origin }}{% endif %}
+                                    {% else %}
+                                        <em>Empty</em>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No drives found</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Storage Slots -->
+                <div class="card">
+                    <div class="section-title">Storage Elements (Slots)</div>
+                    <div class="slot-grid">
+                        {% for slot in status_result.storage_slots %}
+                            <div class="slot {% if slot.full %}slot-full{% else %}slot-empty{% endif %}">
+                                <span class="slot-number">Slot {{ slot.slot_num }}</span>
+                                {% if slot.full and slot.barcode %}
+                                    <span class="slot-barcode">{{ slot.barcode }}</span>
+                                {% elif not slot.full %}
+                                    <span style="color: #aaa;">Empty</span>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p>No storage slots found</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- I/E Slots -->
+                {% if status_result.import_export_slots %}
+                <div class="card">
+                    <div class="section-title">Import/Export Elements</div>
+                    <div class="slot-grid">
+                        {% for slot in status_result.import_export_slots %}
+                            <div class="slot {% if slot.full %}slot-full{% else %}slot-empty{% endif %}">
+                                <span class="slot-number">I/E {{ slot.slot_num }}</span>
+                                {% if slot.full and slot.barcode %}
+                                    <span class="slot-barcode">{{ slot.barcode }}</span>
+                                {% elif not slot.full %}
+                                    <span style="color: #aaa;">Empty</span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Raw Output (collapsed by default) -->
+                <div class="card">
+                    <div class="section-title">
+                        Raw MTX Output
+                        <button onclick="toggleRawOutput()" class="btn btn-secondary" style="float: right; padding: 5px 10px;">Toggle</button>
+                    </div>
+                    <div id="raw-output" class="raw-output" style="display: none;">{{ status_result.raw_output }}</div>
+                </div>
+
+            {% else %}
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> {{ status_result.error }}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Back to Operator Panel</a>
+            {% if selected_library %}
+                <button onclick="location.reload()" class="btn btn-primary">Refresh Status</button>
+            {% endif %}
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        function toggleRawOutput() {
+            const el = document.getElementById('raw-output');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Auto-refresh every 30 seconds if a library is selected
+        {% if selected_library %}
+        setInterval(() => {
+            location.reload();
+        }, 30000);
+        {% endif %}
+    </script>
+{% endblock %}

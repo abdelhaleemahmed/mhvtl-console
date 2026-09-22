@@ -1,0 +1,25 @@
+{% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible" role="alert">
+                <div class="alert-content">
+                    <span class="alert-icon">
+                        {% if message.tags == 'error' or message.tags == 'danger' %}
+                            ⚠️
+                        {% elif message.tags == 'success' %}
+                            ✅
+                        {% elif message.tags == 'warning' %}
+                            ⚡
+                        {% else %}
+                            ℹ️
+                        {% endif %}
+                    </span>
+                    <span class="alert-message">{{ message }}</span>
+                </div>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                    ✕
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

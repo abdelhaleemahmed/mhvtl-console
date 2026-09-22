@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Library Setup - MHVTL Console{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/setup-choice.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="setup-card">
+        <div class="setup-header">
+            <div class="setup-icon">🎯</div>
+            <h1 class="setup-title">Select Configuration Type</h1>
+            <p class="setup-description">
+                Choose how you want to configure your virtual tape library.
+                You can use a standard configuration for quick setup or create a custom configuration for specific requirements.
+            </p>
+        </div>
+
+        <form method="post" class="setup-form">
+            {% csrf_token %}
+
+            <div class="setup-options">
+                <!-- Standard Configuration -->
+                <label for="standard" class="option-card" onclick="selectOption('standard')">
+                    <input type="radio" name="setup_type" value="standard" id="standard" class="radio-input">
+                    <div class="option-icon">⚡</div>
+                    <div class="option-title">Standard Configuration</div>
+                    <div class="option-description">
+                        Quick setup with pre-configured library brands and models
+                    </div>
+                    <ul class="option-features">
+                        <li>Pre-configured brand templates</li>
+                        <li>Automatic parameter setup</li>
+                        <li>Tested configurations</li>
+                        <li>Quick deployment</li>
+                        <li>Recommended for most users</li>
+                    </ul>
+                </label>
+
+                <!-- Custom Configuration -->
+                <label for="custom" class="option-card" onclick="selectOption('custom')">
+                    <input type="radio" name="setup_type" value="custom" id="custom" class="radio-input">
+                    <div class="option-icon">🛠️</div>
+                    <div class="option-title">Custom Configuration</div>
+                    <div class="option-description">
+                        Advanced setup with full control over all parameters
+                    </div>
+                    <ul class="option-features">
+                        <li>Full parameter control</li>
+                        <li>Custom library specifications</li>
+                        <li>Advanced drive configuration</li>
+                        <li>Flexible media setup</li>
+                        <li>For experienced users</li>
+                    </ul>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'libraries:dashboard' %}" class="btn btn-secondary">
+                    ← Return
+                </a>
+                <button type="submit" class="btn btn-primary" id="continueBtn" disabled>
+                    Continue →
+                </button>
+            </div>
+        </form>
+
+        <div class="info-section">
+            <div class="info-title">💡 Configuration Guide</div>
+            <div class="info-content">
+                <strong>Standard Configuration:</strong> Choose from popular library brands like IBM, HP, STK, Quantum, etc.
+                Each brand comes with tested default settings that work out of the box.
+                <br><br>
+                <strong>Custom Configuration:</strong> Manually configure all library parameters including
+                SCSI settings, slot counts, drive specifications, and media types. Recommended for users
+                with specific requirements or testing scenarios.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/setup-choice.js' %}"></script>
+{% endblock %}

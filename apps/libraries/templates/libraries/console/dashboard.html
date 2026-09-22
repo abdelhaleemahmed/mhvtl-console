@@ -1,0 +1,180 @@
+{% extends 'libraries/console/base.html' %}
+{% comment %}
+|unlocalize on every width: Django prints numbers in the reader's language,
+and in Arabic 81.9 is "81,9" - which CSS ignores, so the bar would draw
+empty the day the Arabic interface is switched on.
+{% endcomment %}{% load l10n %}
+
+{% block header_title %}System Console{% endblock %}
+
+{% block content %}
+<!-- System Stats -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ system_info.hostname|default:"Unknown" }}</div>
+        <div class="stat-label">Hostname</div>
+    </div>
+    <div class="stat-card {% if not mhvtl_service.all_services_healthy %}{% if mhvtl_service.target_active %}warning{% else %}danger{% endif %}{% endif %}">
+        <div class="stat-value">{{ mhvtl_service.active_services }}/{{ mhvtl_service.total_services }}</div>
+        <div class="stat-label">MHVTL Services</div>
+    </div>
+    <div class="stat-card {{ system_info.memory_level }}">
+        <div class="stat-value">{{ system_info.memory_percent|default:0 }}%</div>
+        <div class="stat-label">Memory Usage</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ scsi_devices|length }}</div>
+        <div class="stat-label">SCSI Devices</div>
+    </div>
+</div>
+
+<div class="card-grid">
+    <!-- System Information -->
+    <div class="card">
+        <div class="section-title">System Information</div>
+        <table class="info-table">
+            <tr>
+                <th>Operating System</th>
+                <td>{{ system_info.distribution|default:"Unknown" }}</td>
+            </tr>
+            <tr>
+                <th>Kernel Version</th>
+                <td>{{ system_info.kernel|default:"Unknown" }}</td>
+            </tr>
+            <tr>
+                <th>Uptime</th>
+                <td>{{ system_info.uptime|default:"Unknown" }}</td>
+            </tr>
+            <tr>
+                <th>CPU</th>
+                <td>{{ system_info.cpu_model|default:"Unknown" }}{% if system_info.cpu_count %} ({{ system_info.cpu_count }} cores){% endif %}</td>
+            </tr>
+            <tr>
+                <th>Memory</th>
+                <td>
+                    {{ system_info.memory_used|default:"?" }} / {{ system_info.memory_total|default:"?" }}
+                    <div class="progress-bar">
+                        <div class="progress-fill {{ system_info.memory_level }}" style="width: {{ system_info.memory_percent|unlocalize }}%"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Load Average</th>
+                <td style="font-size: 12px;">{{ system_info.load_average|default:"Unknown" }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- MHVTL Service Status -->
+    <div class="card">
+        <div class="section-title">MHVTL Services (systemd)</div>
+        <table class="info-table">
+            <tr>
+                <th>mhvtl.target</th>
+                <td>
+                    <span class="status-badge {% if mhvtl_service.target_active %}status-running{% else %}status-stopped{% endif %}">
+                        {% if mhvtl_service.target_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                    <span class="status-badge {% if mhvtl_service.target_enabled %}status-loaded{% else %}status-stopped{% endif %}" style="margin-left: 5px;">
+                        {% if mhvtl_service.target_enabled %}Enabled{% else %}Disabled{% endif %}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>Module Loader</th>
+                <td>
+                    <span class="status-badge {% if mhvtl_service.modules_service_active %}status-running{% else %}status-stopped{% endif %}">
+                        {% if mhvtl_service.modules_service_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>Libraries</th>
+                <td>{{ mhvtl_service.library_services_active }}/{{ mhvtl_service.library_services_count }} active</td>
+            </tr>
+            <tr>
+                <th>Tape Drives</th>
+                <td>{{ mhvtl_service.tape_services_active }}/{{ mhvtl_service.tape_services_count }} active</td>
+            </tr>
+        </table>
+
+        <div class="section-title" style="margin-top: 20px;">Kernel Modules</div>
+        <table class="info-table">
+            {% for info in kernel_modules %}
+            <tr>
+                <th>{{ info.name }}</th>
+                <td>
+                    <span class="status-badge {% if info.loaded %}status-loaded{% else %}status-stopped{% endif %}">
+                        {% if info.loaded %}Loaded{% else %}Not Loaded{% endif %}
+                    </span>
+                    {% if info.required %}<small>(required)</small>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div class="card-grid">
+    <!-- Disk Usage -->
+    <div class="card">
+        <div class="section-title">Disk Usage</div>
+        <table class="info-table">
+            {% for disk in disk_usage %}
+            <tr>
+                <th>{{ disk.path }}</th>
+                <td>
+                    {{ disk.used }} / {{ disk.size }} ({{ disk.percent }}%)
+                    <div class="progress-bar">
+                        <div class="progress-fill {{ disk.level }}" style="width: {{ disk.percent|unlocalize }}%"></div>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No disk information available</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% if mhvtl_data.data_size %}
+        <div style="margin-top: 15px; padding: 10px; background: var(--surface-deep); border-radius: 5px;">
+            <strong>MHVTL Data:</strong> {{ mhvtl_data.data_size }} ({{ mhvtl_data.tape_count }} tape files)
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- SCSI Devices -->
+    <div class="card">
+        <div class="section-title">MHVTL Devices</div>
+        {% if scsi_devices %}
+        <div class="device-list">
+            {% for device in scsi_devices %}
+            <div class="device-item">
+                [{{ device.address.host }}:{{ device.address.channel }}:{{ device.address.target }}:{{ device.address.lun }}]
+                {{ device.device_type }} {{ device.vendor }} {{ device.model }}
+                {% if device.device_path %}-> {{ device.device_path }}{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color: var(--text-dim);">No MHVTL devices found. Is the service running?</p>
+        {% endif %}
+        <div style="margin-top: 10px;">
+            <a href="{% url 'libraries:console_scsi_devices' %}?all=true" class="quick-link">View All SCSI Devices</a>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Links -->
+<div class="card">
+    <div class="section-title">Quick Actions</div>
+    <div class="quick-links">
+        <a href="{% url 'libraries:console_logs' %}" class="quick-link">View Logs</a>
+        <a href="{% url 'libraries:console_logs' %}?type=dmesg" class="quick-link">Kernel Messages</a>
+        <a href="{% url 'libraries:console_service_status' %}" class="quick-link">Service Control</a>
+        <a href="{% url 'libraries:console_kernel_modules' %}" class="quick-link">Kernel Modules</a>
+        <a href="{% url 'libraries:console_disk_usage' %}" class="quick-link">Disk Details</a>
+        <a href="{% url 'libraries:dashboard' %}" class="quick-link">Library Dashboard</a>
+    </div>
+</div>
+{% endblock %}

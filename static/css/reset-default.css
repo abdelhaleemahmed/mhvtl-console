@@ -1,0 +1,315 @@
+/**
+ * Reset Default Page Styles
+ * Critical system reset with strong warning UI
+ */
+
+.main-container {
+    max-width: 800px;
+    margin: 50px auto;
+}
+
+.reset-card {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Warning Header */
+.warning-header {
+    margin-bottom: 40px;
+}
+
+.warning-icon {
+    font-size: 72px;
+    color: var(--bad);
+    margin-bottom: 20px;
+    animation: shake 2s infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.warning-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--bad);
+    margin-bottom: 15px;
+}
+
+.warning-description {
+    font-size: 18px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Critical Warning Box */
+.critical-warning {
+    background: linear-gradient(135deg, var(--bad), var(--warn));
+    color: var(--surface);
+    padding: 30px;
+    border-radius: 15px;
+    margin: 30px 0;
+    border: 3px solid var(--bad);
+    position: relative;
+    overflow: hidden;
+}
+
+.critical-warning::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--bad), var(--bad), var(--bad));
+    background-size: 200% 100%;
+    animation: warning-flash 2s linear infinite;
+}
+
+@keyframes warning-flash {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.critical-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.critical-list {
+    font-size: 16px;
+    line-height: 1.8;
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.critical-list li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Impact Section */
+.impact-section {
+    background: var(--warn-bg);
+    border: 2px solid var(--warn-bg);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.impact-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--alert-warn-text);
+    margin-bottom: 15px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.impact-item {
+    background: var(--surface);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--warn);
+}
+
+.impact-item-title {
+    font-weight: 600;
+    color: var(--alert-warn-text);
+    margin-bottom: 5px;
+}
+
+.impact-item-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
+/* Form Section */
+.form-section {
+    margin: 30px 0;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.form-select {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 16px;
+    background: var(--surface);
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: var(--bad);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    outline: none;
+}
+
+.form-help {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 8px;
+}
+
+/* Confirmation Checklist */
+.confirmation-checklist {
+    background: var(--bad-bg);
+    border: 2px solid var(--bad-bg);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.checklist-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--alert-bad-text);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.checklist-input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--bad);
+}
+
+.checklist-label {
+    color: var(--alert-bad-text);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Final Confirmation */
+.final-confirmation {
+    background: linear-gradient(135deg, var(--text), var(--text-dim));
+    color: var(--surface);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 30px 0;
+    border: 3px solid var(--text);
+}
+
+.final-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.final-text {
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid var(--surface-deep);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--bad), var(--bad));
+    color: var(--surface);
+    min-width: 180px;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, var(--bad), var(--bad));
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(231, 76, 60, 0.4);
+}
+
+.btn-danger:disabled {
+    background: var(--text-dim);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Spinner */
+.spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: var(--surface);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .reset-card {
+        padding: 30px 20px;
+    }
+
+    .warning-title {
+        font-size: 28px;
+    }
+
+    .impact-grid {
+        grid-template-columns: 1fr;
+    }
+}

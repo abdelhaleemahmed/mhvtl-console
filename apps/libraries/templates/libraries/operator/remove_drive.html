@@ -1,0 +1,201 @@
+{% extends 'libraries/operator/base.html' %}
+{% comment %}
+Remove a drive from a library.
+
+The page used to carry its own <head>, navigation, theme picker and forty
+lines of CSS restating what css/mhvtl-console.css already defines. It extends
+the operator base now, so the theme, the header and the styling are the ones
+every operator page uses.
+{% endcomment %}
+
+{% block header_title %}Remove Drive{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what the shared stylesheet has no rule for. */
+    .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; color: var(--bad); }
+    .warning-box {
+        background: var(--warn-bg); border: 1px solid var(--warn);
+        border-radius: 5px; padding: 15px; margin-bottom: 20px;
+        color: var(--alert-warn-text);
+    }
+    .warning-box h4 { margin-bottom: 10px; }
+    .warning-box ul { margin-left: 20px; }
+    .drive-info {
+        background: var(--surface-deep); border-radius: 8px; padding: 20px;
+        margin-bottom: 20px; border-left: 4px solid var(--bad);
+    }
+    .drive-info-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; }
+    .drive-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .drive-info-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
+    .drive-info-value { font-size: 14px; font-weight: 500; }
+    .drive-info-value.loaded { color: var(--warn); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="operation-icon">&#128465;</div>
+    <div class="section-title">Remove Drive from Library</div>
+    <p class="page-description">
+        Remove a tape drive from a library's configuration.
+    </p>
+
+    <div class="warning-box">
+        <h4>Before you do</h4>
+        <ul>
+            <li>A drive holding a tape is shown as such below; the tape goes
+                back to its slot first.</li>
+            <li>The drive's daemon is stopped and the library restarted for you.</li>
+            <li>The entry is removed from <code>device.conf</code>. That cannot
+                be undone, although the drive can be added again.</li>
+        </ul>
+    </div>
+
+    <form method="post" action="{% url 'libraries:remove_drive' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="library_id">Select Library</label>
+            <select name="library_id" id="library_id" class="form-control" required
+                    onchange="loadDrives()">
+                <option value="">-- Select Library --</option>
+                {% for library in libraries %}
+                    <option value="{{ library.library_id }}"
+                            {% if selected_library_id == library.library_id %}selected{% endif %}>
+                        Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="drive_id">Select Drive to Remove</label>
+            <select name="drive_id" id="drive_id" class="form-control" required>
+                <option value="">-- Select Drive --</option>
+                {% for drive in drives %}
+                    <option value="{{ drive.drive_id }}"
+                            data-vendor="{{ drive.vendor }}" data-product="{{ drive.product }}"
+                            data-serial="{{ drive.serial }}" data-slot="{{ drive.slot }}"
+                            data-channel="{{ drive.channel }}" data-target="{{ drive.target }}"
+                            data-lun="{{ drive.lun }}">
+                        Drive {{ drive.drive_id }} - {{ drive.vendor }} {{ drive.product }}
+                        (slot {{ drive.slot }})
+                    </option>
+                {% endfor %}
+            </select>
+            <p class="form-help">Choose a library first to load its drives.</p>
+        </div>
+
+        <div id="drive-details" class="drive-info" style="display: none;">
+            <div class="drive-info-title">The drive you are removing</div>
+            <div class="drive-info-grid">
+                <div>
+                    <div class="drive-info-label">Vendor</div>
+                    <div class="drive-info-value" id="detail-vendor">-</div>
+                </div>
+                <div>
+                    <div class="drive-info-label">Product</div>
+                    <div class="drive-info-value" id="detail-product">-</div>
+                </div>
+                <div>
+                    <div class="drive-info-label">Serial</div>
+                    <div class="drive-info-value" id="detail-serial">-</div>
+                </div>
+                <div>
+                    <div class="drive-info-label">Drive slot</div>
+                    <div class="drive-info-value" id="detail-slot">-</div>
+                </div>
+                <div>
+                    <div class="drive-info-label">SCSI address</div>
+                    <div class="drive-info-value" id="detail-scsi">-</div>
+                </div>
+                <div>
+                    <div class="drive-info-label">Tape in the drive</div>
+                    <div class="drive-info-value" id="detail-tape">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="{% url 'libraries:drive_list' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Remove Drive</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* The drives come from the service for whichever library is chosen, and what
+ * each one holds from the robot; nothing about a drive is written into this
+ * page. */
+function showTape(barcode) {
+    var tape = document.getElementById('detail-tape');
+    tape.textContent = barcode ? barcode + ' - it goes back to its slot first' : 'none';
+    tape.classList.toggle('loaded', Boolean(barcode));
+}
+
+function loadDrives() {
+    var library = document.getElementById('library_id').value;
+    var drives = document.getElementById('drive_id');
+    var details = document.getElementById('drive-details');
+
+    if (!library) {
+        drives.innerHTML = '<option value="">-- Select Drive --</option>';
+        details.style.display = 'none';
+        return;
+    }
+
+    fetch('{% url "libraries:list_drives_ajax" %}?library_id=' + library)
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            drives.innerHTML = '<option value="">-- Select Drive --</option>';
+            (data.drives || []).forEach(function (drive) {
+                var option = document.createElement('option');
+                option.value = drive.drive_id;
+                option.textContent = 'Drive ' + drive.drive_id + ' - ' + drive.vendor +
+                    ' ' + drive.product + ' (slot ' + drive.slot + ')';
+                ['vendor', 'product', 'serial', 'slot', 'channel', 'target',
+                 'lun'].forEach(function (key) {
+                    option.dataset[key] = drive[key] == null ? '' : drive[key];
+                });
+                drives.appendChild(option);
+            });
+            details.style.display = 'none';
+        })
+        .catch(function () {
+            drives.innerHTML = '<option value="">-- could not read the drives --</option>';
+        });
+}
+
+document.getElementById('drive_id').addEventListener('change', function () {
+    var chosen = this.options[this.selectedIndex];
+    var details = document.getElementById('drive-details');
+    if (!this.value) { details.style.display = 'none'; return; }
+
+    var data = chosen.dataset;
+    document.getElementById('detail-vendor').textContent = data.vendor || '-';
+    document.getElementById('detail-product').textContent = data.product || '-';
+    document.getElementById('detail-serial').textContent = data.serial || '-';
+    document.getElementById('detail-slot').textContent = data.slot || '-';
+    document.getElementById('detail-scsi').textContent =
+        (data.channel || '0') + ':' + (data.target || '0') + ':' + (data.lun || '0');
+    details.style.display = 'block';
+
+    // What the robot says is in it, rather than a guess from the configuration.
+    showTape('');
+    fetch('/libraries/ajax/library-status/' + document.getElementById('library_id').value + '/')
+        .then(function (response) { return response.json(); })
+        .then(function (status) {
+            var drives = (status.data || status).drives || [];
+            var slot = parseInt(data.slot, 10);
+            var here = drives.filter(function (d) { return d.drive_num === slot - 1; })[0];
+            showTape(here && here.full ? here.barcode : '');
+        })
+        .catch(function () { /* the robot may be stopped; the rest still shows */ });
+});
+
+if (document.getElementById('library_id').value) { loadDrives(); }
+</script>
+{% endblock %}

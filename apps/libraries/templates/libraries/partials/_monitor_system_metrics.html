@@ -1,0 +1,52 @@
+{% comment %}
+Partial template for system metrics display.
+Loaded via HTMX for auto-refresh.
+{% endcomment %}
+
+<div class="metric-item">
+    <div class="metric-value">
+        {% if metrics.is_running and metrics.metrics.cpu != None %}
+            {{ metrics.metrics.cpu }}%
+        {% else %}
+            N/A
+        {% endif %}
+    </div>
+    <div class="metric-label">CPU Usage</div>
+</div>
+
+<div class="metric-item">
+    <div class="metric-value">
+        {% if metrics.is_running and metrics.metrics.memory != None %}
+            {{ metrics.metrics.memory }}%
+            <span class="metric-detail">({{ metrics.metrics.memory_mb|floatformat:0 }} MB)</span>
+        {% else %}
+            N/A
+        {% endif %}
+    </div>
+    <div class="metric-label">Process Memory</div>
+</div>
+
+<div class="metric-item">
+    <div class="metric-value">
+        {% if metrics.metrics.disk != None %}
+            {{ metrics.metrics.disk }}%
+        {% else %}
+            N/A
+        {% endif %}
+    </div>
+    <div class="metric-label">Disk Usage</div>
+    {% if metrics.metrics.disk_used_gb and metrics.metrics.disk_total_gb %}
+    <div class="metric-subtext">{{ metrics.metrics.disk_used_gb }}G / {{ metrics.metrics.disk_total_gb }}G</div>
+    {% endif %}
+</div>
+
+<div class="metric-item">
+    <div class="metric-value">
+        {% if metrics.is_running %}
+            {{ metrics.metrics.uptime|default:"Running" }}
+        {% else %}
+            Stopped
+        {% endif %}
+    </div>
+    <div class="metric-label">Uptime</div>
+</div>

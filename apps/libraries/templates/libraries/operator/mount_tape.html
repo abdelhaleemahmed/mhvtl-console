@@ -1,0 +1,536 @@
+{% extends 'libraries/operator/base.html' %}
+
+
+{% block header_title %}Mount Tape{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
+    @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+    .operation-icon { font-size: 36px; text-align: center; margin-bottom: 15px; }
+    #loading { display: none; text-align: center; padding: 20px; color: var(--text-dim); }
+    #loading.active { display: block; }
+    /* Library Status Panel */
+            .status-panel { background: var(--surface-deep); border-radius: 8px; padding: 15px; }
+    .status-section { margin-bottom: 20px; }
+    .status-section:last-child { margin-bottom: 0; }
+    .status-section h4 { font-size: 14px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .summary-stats { display: flex; gap: 15px; margin-bottom: 15px; }
+    .stat-box { flex: 1; text-align: center; padding: 10px; background: var(--surface); border-radius: 5px; }
+    /* Clickable drives */
+            .drive-list { display: flex; flex-direction: column; gap: 8px; }
+    .drive-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--surface); border-radius: 5px; border-left: 4px solid var(--border); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .drive-item.loaded { border-left-color: var(--ok); background: var(--ok-bg); opacity: 0.6; cursor: not-allowed; }
+    .drive-item.empty { border-left-color: var(--info); background: var(--surface-deep); }
+    .drive-item.empty:hover { background: var(--info-bg); border-left-color: var(--accent); }
+    .drive-item.selected { border-left-color: var(--ok); background: var(--ok-bg); box-shadow: 0 0 0 2px var(--ok); }
+    .item-label { font-weight: 600; }
+    .item-barcode { font-family: 'Consolas', monospace; color: var(--text); flex: 1; margin: 0 15px; }
+    .item-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+    .item-status.loaded { background: var(--ok-bg); color: var(--alert-ok-text); }
+    .item-status.empty { background: var(--info-bg); color: var(--info); }
+    /* Clickable slots */
+            .slot-grid-compact { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; max-height: 300px; overflow-y: auto; }
+    .slot-compact { padding: 8px; text-align: center; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .slot-compact.full { background: var(--warn-bg); border-color: var(--warn); }
+    .slot-compact.full:hover { background: var(--warn-bg); border-color: var(--warn); }
+    .slot-compact.empty { background: var(--surface-deep); border-color: var(--border); color: var(--text-dim); cursor: not-allowed; }
+    .slot-compact.selected { box-shadow: 0 0 0 3px var(--text); }
+    .slot-num { font-weight: 600; }
+    .slot-barcode { font-family: 'Consolas', monospace; font-size: 10px; display: block; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* LTO-based slot colors */
+    .no-library { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+    .no-library-icon { font-size: 48px; margin-bottom: 10px; }
+    /* Mount preview */
+            .mount-preview { background: var(--ok-bg); border: 1px solid var(--ok); border-radius: 8px; padding: 15px; margin-top: 15px; display: none; }
+    .mount-preview.active { display: block; }
+    .mount-preview-title { font-weight: 600; margin-bottom: 10px; color: var(--ok); }
+    .mount-preview-content { display: flex; align-items: center; justify-content: center; gap: 15px; }
+    .mount-preview-item { background: var(--surface); padding: 10px 15px; border-radius: 5px; text-align: center; }
+    .mount-preview-arrow { font-size: 24px; color: var(--ok); }
+    .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-color { width: 16px; height: 16px; border-radius: 3px; }
+    .legend-color.tape { background: var(--warn-bg); border: 1px solid var(--warn); }
+    .legend-color.empty-slot { background: var(--surface-deep); border: 1px solid var(--border); }
+    .legend-color.empty-drive { background: var(--info-bg); border: 1px solid var(--info); }
+    .legend-color.loaded-drive { background: var(--ok-bg); border: 1px solid var(--ok); }
+    /* LTO Compatibility Styles */
+            .lto-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-left: 5px; }
+    .drive-item.incompatible { opacity: 0.5; border-left-color: var(--bad) !important; background: var(--bad-bg) !important; }
+    .drive-item.compatible { border-left-color: var(--ok) !important; }
+    .drive-item.read-only { border-left-color: var(--warn) !important; background: var(--warn-bg) !important; }
+    .compat-warning { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 5px; padding: 10px 15px; margin-top: 10px; font-size: 13px; display: none; }
+    .compat-warning.active { display: block; }
+    .compat-warning.error { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--alert-bad-text); }
+    .compat-warning.success { background: var(--ok-bg); border-color: var(--ok-bg); color: var(--alert-ok-text); }
+    .compat-warning.read-only { background: var(--warn-bg); border-color: var(--warn-bg); color: var(--alert-warn-text); }
+    .compat-warning.unknown { background: var(--surface-deep); border-color: var(--border); }
+    .drive-item.incompatible { cursor: not-allowed; }
+    .drive-model { font-size: 11px; opacity: 0.7; margin-left: 4px; }
+    .compat-icon { font-size: 16px; margin-right: 5px; }
+    .slot-lto { font-size: 9px; color: var(--text-dim); display: block; }
+    .drive-lto { font-size: 11px; font-weight: 600; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-grid">
+            <!-- Mount Form -->
+            <div class="card">
+                <div class="operation-icon">&#128230; &#8594; &#128190;</div>
+                <div class="section-title">Mount Tape to Drive</div>
+                <p class="page-description">
+                    Load a tape from a storage slot into a tape drive.
+                </p>
+
+                <form method="post" action="{% url 'libraries:mount_tape' %}" id="mount-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="library_id">Select Library</label>
+                        <select name="library_id" id="library_id" class="form-control" required onchange="loadLibraryStatus()">
+                            <option value="">-- Select Library --</option>
+                            {% for library in libraries %}
+                                <option value="{{ library.library_id }}" {% if selected_library_id == library.library_id %}selected{% endif %}>
+                                    Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help">Choose the library containing the tape</p>
+                    </div>
+
+                    <div id="loading">Loading library status...</div>
+
+                    <div id="slot-drive-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="slot">Source Slot (tape to mount)</label>
+                            <select name="slot" id="slot" class="form-control" required onchange="updateSelection()">
+                                <option value="">-- Click a tape in the panel or select here --</option>
+                            </select>
+                            <p class="form-help">Click a tape (orange) in the slot grid to select</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="drive">Target Drive (empty)</label>
+                            <select name="drive" id="drive" class="form-control" required onchange="updateSelection()">
+                                <option value="">-- Click an empty drive in the panel or select here --</option>
+                            </select>
+                            <p class="form-help">Click an empty drive (blue) to select</p>
+                        </div>
+
+                        <div id="compat-warning" class="compat-warning"></div>
+
+                        <div id="mount-preview" class="mount-preview">
+                            <div class="mount-preview-title">Mount Preview</div>
+                            <div class="mount-preview-content">
+                                <div class="mount-preview-item" id="preview-slot">
+                                    <div class="slot-num">--</div>
+                                    <div>Select tape</div>
+                                </div>
+                                <div class="mount-preview-arrow">&#8594;</div>
+                                <div class="mount-preview-item" id="preview-drive">
+                                    <div class="slot-num">--</div>
+                                    <div>Select drive</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Mount Tape</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Library Status Panel -->
+            <div class="card">
+                <div class="section-title">Library Status (Click to Select)</div>
+
+                <!-- Legend - always visible -->
+                <div class="legend" style="margin-bottom: 15px;">
+                    <div class="legend-item"><div class="legend-color empty-slot"></div> Empty slot</div>
+                    <div class="legend-item"><div class="legend-color empty-drive"></div> Empty drive</div>
+                    <div class="legend-item"><div class="legend-color loaded-drive"></div> Loaded drive</div>
+                </div>
+                <div class="legend" style="margin-top: 0; border-top: none; padding-top: 0; margin-bottom: 15px;">
+                    <div class="legend-item"><div class="legend-color" style="background: var(--info-bg); border: 1px solid var(--info);"></div> LTO-8 tape</div>
+                    <div class="legend-item"><div class="legend-color" style="background: var(--ok-bg); border: 1px solid var(--ok);"></div> LTO-7 tape</div>
+                    <div class="legend-item"><div class="legend-color" style="background: var(--warn-bg); border: 1px solid var(--warn);"></div> LTO-6 tape</div>
+                </div>
+                <div style="font-size: 11px; color: #666; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                    LTO-8 drives can read LTO-6/7/8 tapes | LTO-6 drives can only read LTO-4/5/6 tapes
+                </div>
+
+                <div id="status-placeholder" class="no-library">
+                    <div class="no-library-icon">&#128218;</div>
+                    <p>Select a library to view its current status</p>
+                </div>
+
+                <div id="status-panel" class="status-panel" style="display: none;">
+                    <div class="summary-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="stat-drives">0/0</div>
+                            <div class="stat-label">Drives Empty</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="stat-slots">0/0</div>
+                            <div class="stat-label">Tapes Available</div>
+                        </div>
+                    </div>
+
+                    <div class="status-section">
+                        <h4>&#128190; Drives (Click empty to select)</h4>
+                        <p style="font-size: 11px; color: #666; margin-bottom: 8px;">LTO generation shown - drives highlighted green are compatible with selected tape</p>
+                        <div class="drive-list" id="drive-status"></div>
+                    </div>
+
+                    <div class="status-section">
+                        <h4>&#128230; Storage Slots (Click tape to select)</h4>
+                        <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Click a tape to see compatible drives</p>
+                        <div class="slot-grid-compact" id="slot-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        // Compatibility is decided on the server (services/tapes/compatibility.py,
+        // from MHVTL's own drive media tables) and arrives as
+        // libraryData.mount_matrix = {slot: {drive: verdict}}. This page used to
+        // apply its own "reads two back, writes one back" rule, which is wrong
+        // for LTO-8, LTO-9, LTO-10 and every non-LTO drive.
+        let libraryData = null;
+
+        function tapeLabel(item) {
+            return item.tape_lto || item.tape_density || '';
+        }
+
+        function driveLabel(drive) {
+            return drive.lto_generation && drive.lto_generation !== 'Unknown'
+                ? drive.lto_generation : (drive.model || '');
+        }
+
+        function verdictFor(slotNum, driveNum) {
+            const row = libraryData && libraryData.mount_matrix
+                ? libraryData.mount_matrix[String(slotNum)] : null;
+            return row ? row[String(driveNum)] || null : null;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text == null ? '' : String(text);
+            return div.innerHTML;
+        }
+
+        function getLtoBadgeClass(lto) {
+            if (!lto) return 'lto-unknown';
+            const gen = lto.replace('LTO-', '').replace('LTO', '');
+            if (gen === '8' || gen === '9') return 'lto-8';
+            if (gen === '7') return 'lto-7';
+            if (gen === '6') return 'lto-6';
+            if (gen === '5' || gen === '4') return 'lto-5';
+            return 'lto-unknown';
+        }
+
+        function loadLibraryStatus() {
+            const libraryId = document.getElementById('library_id').value;
+            const loading = document.getElementById('loading');
+            const fields = document.getElementById('slot-drive-fields');
+            const submitBtn = document.getElementById('submit-btn');
+            const statusPlaceholder = document.getElementById('status-placeholder');
+            const statusPanel = document.getElementById('status-panel');
+            const compatWarning = document.getElementById('compat-warning');
+
+            if (!libraryId) {
+                fields.style.display = 'none';
+                submitBtn.disabled = true;
+                statusPlaceholder.style.display = 'block';
+                statusPanel.style.display = 'none';
+                compatWarning.classList.remove('active');
+                return;
+            }
+
+            loading.classList.add('active');
+            fields.style.display = 'none';
+
+            // Use the new LTO-enhanced endpoint
+            fetch(`/libraries/ajax/library-status-lto/${libraryId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    loading.classList.remove('active');
+                    libraryData = data;
+
+                    if (!data.success) {
+                        alert('Error loading library status: ' + (data.error || 'Unknown error'));
+                        return;
+                    }
+
+                    // Update status panel
+                    statusPlaceholder.style.display = 'none';
+                    statusPanel.style.display = 'block';
+
+                    // Update summary stats
+                    const emptyDrives = data.drives.filter(d => !d.full).length;
+                    const totalDrives = data.drives.length;
+                    const fullSlots = data.storage_slots.filter(s => s.full).length;
+                    const totalSlots = data.storage_slots.length;
+
+                    document.getElementById('stat-drives').textContent = `${emptyDrives}/${totalDrives}`;
+                    document.getElementById('stat-slots').textContent = `${fullSlots}/${totalSlots}`;
+
+                    // Update drive status display with LTO generation
+                    const driveStatus = document.getElementById('drive-status');
+                    driveStatus.innerHTML = '';
+                    data.drives.forEach(drive => {
+                        const div = document.createElement('div');
+                        div.className = `drive-item ${drive.full ? 'loaded' : 'empty'}`;
+                        div.dataset.driveNum = drive.drive_num;
+                        div.dataset.lto = drive.lto_generation || '';
+
+                        const label = driveLabel(drive);
+                        const ltoBadge = label
+                            ? `<span class="lto-badge ${getLtoBadgeClass(drive.lto_generation)}">${escapeHtml(label)}</span>`
+                            : '';
+                        const model = drive.model && drive.model !== label
+                            ? `<span class="drive-model">${escapeHtml(drive.model)}</span>` : '';
+                        const loaded = tapeLabel(drive);
+
+                        div.innerHTML = `
+                            <span class="item-label">Drive ${drive.drive_num} ${ltoBadge}${model}</span>
+                            <span class="item-barcode">${drive.full ? escapeHtml(drive.barcode || 'Tape') + (loaded ? ' (' + escapeHtml(loaded) + ')' : '') : ''}</span>
+                            <span class="item-status ${drive.full ? 'loaded' : 'empty'}">${drive.full ? 'LOADED' : 'EMPTY'}</span>
+                        `;
+                        if (!drive.full) {
+                            div.onclick = () => selectDrive(drive.drive_num);
+                        }
+                        driveStatus.appendChild(div);
+                    });
+
+                    // Update slot status display with LTO generation and colors
+                    const slotStatus = document.getElementById('slot-status');
+                    slotStatus.innerHTML = '';
+                    data.storage_slots.forEach(slot => {
+                        const div = document.createElement('div');
+
+                        // Determine LTO class for coloring
+                        let ltoClass = '';
+                        if (slot.full && slot.tape_lto) {
+                            const gen = slot.tape_lto.replace('LTO-', '');
+                            ltoClass = `lto-${gen}`;
+                        } else if (slot.full) {
+                            ltoClass = 'lto-unknown';
+                        }
+
+                        div.className = `slot-compact ${slot.full ? ltoClass : 'empty'}`;
+                        div.dataset.slotNum = slot.slot_num;
+                        const media = tapeLabel(slot);
+                        const ltoText = media ? `<span class="slot-lto">${escapeHtml(media)}</span>` : '';
+
+                        div.innerHTML = `
+                            <div class="slot-num">${slot.slot_num}</div>
+                            <div class="slot-barcode">${slot.full ? escapeHtml(slot.barcode || 'Tape') : '-'}</div>
+                            ${ltoText}
+                        `;
+                        if (slot.full) {
+                            div.onclick = () => selectSlot(slot.slot_num);
+                        }
+                        slotStatus.appendChild(div);
+                    });
+
+                    // Populate form dropdowns with LTO info
+                    const slotSelect = document.getElementById('slot');
+                    slotSelect.innerHTML = '<option value="">-- Click a tape or select here --</option>';
+                    data.storage_slots.forEach(slot => {
+                        if (slot.full) {
+                            const option = document.createElement('option');
+                            option.value = slot.slot_num;
+                            const ltoSuffix = tapeLabel(slot) ? ` [${tapeLabel(slot)}]` : '';
+                            option.textContent = `Slot ${slot.slot_num}${slot.barcode ? ' - ' + slot.barcode : ''}${ltoSuffix}`;
+                            slotSelect.appendChild(option);
+                        }
+                    });
+
+                    const driveSelect = document.getElementById('drive');
+                    driveSelect.innerHTML = '<option value="">-- Click a drive or select here --</option>';
+                    data.drives.forEach(drive => {
+                        if (!drive.full) {
+                            const option = document.createElement('option');
+                            option.value = drive.drive_num;
+                            option.dataset.label = `Drive ${drive.drive_num}` +
+                                (driveLabel(drive) ? ` [${driveLabel(drive)}]` : '');
+                            option.textContent = option.dataset.label;
+                            driveSelect.appendChild(option);
+                        }
+                    });
+
+                    fields.style.display = 'block';
+                    updateDriveCompatibility();
+                    updateSelection();
+                })
+                .catch(error => {
+                    loading.classList.remove('active');
+                    alert('Error: ' + error);
+                });
+        }
+
+        function selectSlot(slotNum) {
+            document.getElementById('slot').value = slotNum;
+            updateDriveCompatibility();
+            updateSelection();
+        }
+
+        function selectDrive(driveNum) {
+            const slotValue = document.getElementById('slot').value;
+            const verdict = slotValue ? verdictFor(slotValue, driveNum) : null;
+            if (verdict && !verdict.compatible) {
+                showVerdict(verdict);            // say why, but do not select it
+                return;
+            }
+            document.getElementById('drive').value = driveNum;
+            updateSelection();
+        }
+
+        // Mark every empty drive for the chosen tape, and disable the ones
+        // MHVTL would refuse, both in the panel and in the drop-down.
+        function updateDriveCompatibility() {
+            const slotValue = document.getElementById('slot').value;
+            document.querySelectorAll('.drive-item').forEach(el => {
+                el.classList.remove('compatible', 'incompatible', 'read-only');
+                el.title = '';
+                if (el.classList.contains('loaded') || !slotValue) return;
+                const verdict = verdictFor(slotValue, el.dataset.driveNum);
+                if (!verdict) return;
+                el.title = verdict.message;
+                if (!verdict.compatible) el.classList.add('incompatible');
+                else if (!verdict.can_write) el.classList.add('read-only');
+                else if (verdict.known) el.classList.add('compatible');
+            });
+
+            const driveSelect = document.getElementById('drive');
+            Array.from(driveSelect.options).forEach(option => {
+                if (!option.value) return;
+                const verdict = slotValue ? verdictFor(slotValue, option.value) : null;
+                option.disabled = Boolean(verdict && !verdict.compatible);
+                let note = '';
+                if (verdict && !verdict.compatible) note = ' - does not load this tape';
+                else if (verdict && !verdict.can_write) note = ' - read-only for this tape';
+                option.textContent = option.dataset.label + note;
+            });
+            if (driveSelect.selectedOptions.length && driveSelect.selectedOptions[0].disabled) {
+                driveSelect.value = '';
+            }
+        }
+
+        function showVerdict(verdict) {
+            const compatWarning = document.getElementById('compat-warning');
+            compatWarning.classList.remove('error', 'success', 'read-only', 'unknown');
+            let title, style, icon;
+            if (!verdict.compatible) {
+                [title, style, icon] = ['Not compatible', 'error', '&#9888;'];
+            } else if (!verdict.known) {
+                [title, style, icon] = ['Unknown', 'unknown', '&#8505;'];
+            } else if (!verdict.can_write) {
+                [title, style, icon] = ['Read-only', 'read-only', '&#9888;'];
+            } else {
+                [title, style, icon] = ['Compatible', 'success', '&#10004;'];
+            }
+            compatWarning.innerHTML = `<span class="compat-icon">${icon}</span><strong>${title}:</strong> ${escapeHtml(verdict.message)}`;
+            compatWarning.classList.add('active', style);
+        }
+
+        function updateSelection() {
+            const slotValue = document.getElementById('slot').value;
+            const driveValue = document.getElementById('drive').value;
+            const preview = document.getElementById('mount-preview');
+            const submitBtn = document.getElementById('submit-btn');
+            const compatWarning = document.getElementById('compat-warning');
+
+            document.querySelectorAll('.slot-compact').forEach(el => {
+                el.classList.toggle('selected', el.dataset.slotNum == slotValue);
+            });
+            document.querySelectorAll('.drive-item').forEach(el => {
+                el.classList.toggle('selected', el.dataset.driveNum == driveValue);
+            });
+
+            compatWarning.classList.remove('active', 'error', 'success', 'read-only', 'unknown');
+
+            // A tape with no drive to go to is worth saying before a drive is picked.
+            if (slotValue && !driveValue && libraryData) {
+                const info = (libraryData.compatibility_info || [])
+                    .find(i => i.slot_num == slotValue);
+                if (info && !info.has_compatible_drive) {
+                    compatWarning.innerHTML = '<span class="compat-icon">&#9888;</span><strong>No drive:</strong> no empty drive in this library loads this tape.';
+                    compatWarning.classList.add('active', 'error');
+                }
+            }
+
+            if (!(slotValue && driveValue && libraryData)) {
+                preview.classList.remove('active');
+                submitBtn.disabled = true;
+                return;
+            }
+
+            const verdict = verdictFor(slotValue, driveValue);
+            if (verdict) {
+                showVerdict(verdict);
+                if (!verdict.compatible) {
+                    submitBtn.disabled = true;
+                    preview.classList.remove('active');
+                    return;
+                }
+            }
+
+            const selectedSlotData = libraryData.storage_slots.find(s => s.slot_num == slotValue);
+            const selectedDriveData = libraryData.drives.find(d => d.drive_num == driveValue);
+            const tapeText = selectedSlotData && tapeLabel(selectedSlotData) ? ` (${tapeLabel(selectedSlotData)})` : '';
+            const driveText = selectedDriveData && driveLabel(selectedDriveData) ? ` (${driveLabel(selectedDriveData)})` : '';
+
+            document.getElementById('preview-slot').innerHTML = `
+                <div class="slot-num">Slot ${escapeHtml(slotValue)}</div>
+                <div>${escapeHtml((selectedSlotData && selectedSlotData.barcode) || 'Tape')}${escapeHtml(tapeText)}</div>
+            `;
+            document.getElementById('preview-drive').innerHTML = `
+                <div class="slot-num">Drive ${escapeHtml(driveValue)}</div>
+                <div>empty${escapeHtml(driveText)}</div>
+            `;
+            preview.classList.add('active');
+            submitBtn.disabled = false;
+        }
+
+        document.getElementById('mount-form').addEventListener('submit', function(e) {
+            const slot = document.getElementById('slot').value;
+            const drive = document.getElementById('drive').value;
+
+            if (!slot || !drive) {
+                e.preventDefault();
+                alert('Please select both a slot and a drive');
+                return;
+            }
+
+            // The server refuses this too; stopping here saves the round trip.
+            const verdict = verdictFor(slot, drive);
+            if (verdict && !verdict.compatible) {
+                e.preventDefault();
+                alert(`Cannot mount: ${verdict.message}`);
+            }
+        });
+
+        document.getElementById('slot').addEventListener('change', function() {
+            updateDriveCompatibility();
+            updateSelection();
+        });
+
+        // Auto-load library status if a library is pre-selected
+        document.addEventListener('DOMContentLoaded', function() {
+            const librarySelect = document.getElementById('library_id');
+            if (librarySelect.value) {
+                loadLibraryStatus();
+            }
+        });
+    </script>
+{% endblock %}

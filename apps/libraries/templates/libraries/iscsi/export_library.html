@@ -1,0 +1,278 @@
+{% extends 'libraries/operator/base.html' %}
+{% load ch_policy %}
+{% load static %}
+
+{% block title %}Export Library via iSCSI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .wizard-step {
+        background: var(--surface);
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .wizard-step h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .wizard-step h3 .step-number {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+        color: var(--accent-ink);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+    /* The console's .device-list is a monospace listing of SCSI devices;
+     * this is a list of checkboxes. Same name, two meanings - and the shared
+     * rule, being the more specific of the two, won. */
+    .export-devices {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+    }
+    .export-device {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--border);
+    }
+    .export-device:last-child {
+        border-bottom: none;
+    }
+    .export-device input[type="checkbox"] {
+        margin-right: 15px;
+    }
+    .export-device .device-info {
+        flex: 1;
+    }
+    .export-device .device-type {
+        margin-left: 10px;
+    }
+    .library-select-card {
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+    .library-select-card:hover {
+        border-color: var(--accent);
+    }
+    .library-select-card.selected {
+        border-color: var(--accent);
+        background: var(--surface-deep);
+    }
+    .library-select-card input[type="radio"] {
+        margin-right: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Export Library via iSCSI</h1>
+    <p class="page-description">Quick wizard to export a tape library over iSCSI for remote backup software</p>
+</div>
+
+{% ch_policy_box %}
+
+<form method="post" id="exportForm">
+    {% csrf_token %}
+
+    <!-- Step 1: Select Library -->
+    <div class="wizard-step">
+        <h3><span class="step-number">1</span> Select Library</h3>
+
+        {% if libraries %}
+        <div class="library-list">
+            {% for library in libraries %}
+            <label class="library-select-card" id="lib-card-{{ library.library_id }}">
+                <input type="radio" name="library_id" value="{{ library.library_id }}"
+                       onchange="selectLibrary({{ library.library_id }})">
+                <strong>Library {{ library.library_id }}</strong> -
+                {{ library.brand.name }} {{ library.model.name }}
+                <span style="color: var(--text-dim); margin-left: 10px;">
+                    ({{ library.drive_set.count }} drives)
+                </span>
+            </label>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+            {% if exported_count %}
+                All libraries are already exported via iSCSI.
+                Manage them on the <a href="{% url 'libraries:iscsi_targets' %}">Targets</a> page.
+                Delete a target to re-export its library.
+            {% else %}
+                No libraries configured. <a href="{% url 'libraries:dashboard' %}">Create a library</a> first.
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Step 2: Select Devices -->
+    <div class="wizard-step">
+        <h3><span class="step-number">2</span> Select Devices to Export</h3>
+        <p style="color: var(--text-dim); margin-bottom: 15px;">Select the changer and tape drives to include in the iSCSI target.</p>
+
+        <div id="device-prompt" class="alert alert-info">
+            Please select a library in Step 1 to see its devices.
+        </div>
+
+        {% if available_devices %}
+        <div class="export-devices" id="device-list" style="display: none;">
+            {% for device in available_devices %}
+            <div class="export-device" data-scsi-target="{{ device.host }}">
+                <input type="checkbox" name="device_paths" value="{{ device.generic_path }}"
+                       id="dev-{{ forloop.counter }}" checked>
+                <label for="dev-{{ forloop.counter }}" class="device-info" style="cursor: pointer; margin: 0;">
+                    <strong>{{ device.generic_path }}</strong>
+                    <span style="color: var(--text-dim);">- {{ device.vendor }} {{ device.model }}</span>
+                </label>
+                <span class="device-type">
+                    {% if device.type == 'changer' %}
+                        <span class="badge badge-info">Changer</span>
+                    {% else %}
+                        <span class="badge badge-success">Tape</span>
+                    {% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="no-devices-for-library" class="alert alert-warning" style="display: none;">
+            No SCSI devices found for this library. Make sure its MHVTL services are running.
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+            No SCSI devices found. Make sure MHVTL services are running.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Step 3: Target Configuration -->
+    <div class="wizard-step">
+        <h3><span class="step-number">3</span> Target Configuration</h3>
+
+        <div class="form-group">
+            <label>Target IQN (optional)</label>
+            <input type="text" name="iqn" class="form-control" id="targetIqn"
+                   placeholder="Auto-generated if empty (e.g., iqn.2026-01.com.mhvtl:library70)">
+            <p class="form-help">Leave empty to auto-generate based on library ID.</p>
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" name="allow_all_initiators" checked>
+                <span>Allow all initiators</span>
+            </label>
+            <p class="form-help">When enabled, any iSCSI initiator can connect without authentication.</p>
+        </div>
+
+        <div class="form-group" id="initiatorIqnGroup" style="display: none;">
+            <label>Specific Initiator IQN</label>
+            <input type="text" name="initiator_iqn" class="form-control"
+                   placeholder="iqn.2026-01.com.example:backup-server">
+            <p class="form-help">Only this initiator will be allowed to connect.</p>
+        </div>
+    </div>
+
+    <!-- Step 4: Review & Export -->
+    <div class="wizard-step">
+        <h3><span class="step-number">4</span> Review & Export</h3>
+        <div class="alert alert-info">
+            <strong>What will happen:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>A new iSCSI target will be created</li>
+                <li>Each selected device will be added as a pscsi backstore</li>
+                <li>LUNs will be created and mapped to the target</li>
+                <li>A default portal (0.0.0.0:3260) will be added</li>
+                <li>Configuration will be saved to persist across reboots</li>
+            </ul>
+        </div>
+
+        {% if existing_targets %}
+        <div class="alert alert-warning">
+            <strong>Existing targets:</strong> {{ existing_targets|join:", " }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="btn-group">
+        <button type="submit" class="btn btn-success" {% if not libraries or not available_devices %}disabled{% endif %}>
+            Export Library
+        </button>
+        <a href="{% url 'libraries:iscsi_dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Library → SCSI target mapping from the server
+    const libraryScsiTargets = {{ library_scsi_targets_json|safe }};
+
+    function selectLibrary(libraryId) {
+        // Update visual selection
+        document.querySelectorAll('.library-select-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        document.getElementById('lib-card-' + libraryId).classList.add('selected');
+
+        // Update suggested IQN
+        const now = new Date();
+        const yearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        document.getElementById('targetIqn').placeholder =
+            'iqn.' + yearMonth + '.com.mhvtl:library' + libraryId;
+
+        // Filter devices to show only this library's changer and drives
+        const targets = libraryScsiTargets[libraryId] || [];
+        const deviceList = document.getElementById('device-list');
+        const prompt = document.getElementById('device-prompt');
+        const noDevices = document.getElementById('no-devices-for-library');
+
+        if (!deviceList) return;
+
+        let visibleCount = 0;
+        deviceList.querySelectorAll('.export-device').forEach(item => {
+            // Parse SCSI target from [H:C:T:L] format
+            const hostStr = item.dataset.scsiTarget; // e.g. "[16:0:2:0]"
+            const match = hostStr.match(/\[(\d+):(\d+):(\d+):(\d+)\]/);
+            if (!match) { item.style.display = 'none'; return; }
+
+            const scsiTarget = parseInt(match[3]);
+            if (targets.includes(scsiTarget)) {
+                item.style.display = 'flex';
+                item.querySelector('input[type="checkbox"]').checked = true;
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+                item.querySelector('input[type="checkbox"]').checked = false;
+            }
+        });
+
+        prompt.style.display = 'none';
+        if (visibleCount > 0) {
+            deviceList.style.display = 'block';
+            noDevices.style.display = 'none';
+        } else {
+            deviceList.style.display = 'none';
+            noDevices.style.display = 'block';
+        }
+    }
+
+    // Toggle initiator IQN field based on "allow all" checkbox
+    document.querySelector('input[name="allow_all_initiators"]').addEventListener('change', function() {
+        document.getElementById('initiatorIqnGroup').style.display = this.checked ? 'none' : 'block';
+    });
+</script>
+{% endblock %}
