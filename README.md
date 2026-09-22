@@ -9,6 +9,22 @@ backup writes to it. Everything the web pages do, the `mhvtl` command does
 too: both call the same Python services, so neither can do something the
 other cannot.
 
+![The dashboard: the MHVTL service running, four libraries, fourteen drives and ninety-nine tapes](docs/user/_static/shots/dashboard.png)
+
+**The library page** - one library, and everything that can be done to it,
+with the library already chosen:
+
+![Library 50: what it is, its slots, and the links to manage its tapes, drives and robot](docs/user/_static/shots/library-page.png)
+
+**A drive while a backup writes to it**, refreshed every five seconds, and
+**each tape with how full it is**:
+
+![Drive 31 writing G03001TA: 173.8 MB written, 14.8% of the tape](docs/user/_static/shots/drive-writing.png)
+
+![Two tape tiles, each with a bar for how much of the cartridge is used](docs/user/_static/shots/tape-tiles.png)
+
+And what the drives are doing, from the terminal:
+
 ```console
 $ sudo mhvtl status activity 50
 
@@ -63,14 +79,19 @@ sudo systemctl restart mhvtl-gui
 
 ## Documentation
 
-- [User Guide](docs/user/) - what the console does, page by page, with the
-  `mhvtl` command for every task.
-- [API Reference](docs/api/) - the Python services, generated from their
-  docstrings.
+Read them online, in English and Arabic:
 
-Both are Sphinx projects, in English and Arabic. They import the
-application, so build them with Python 3.12, in a virtualenv at the top of
-the checkout:
+- **[User Guide](https://abdelhaleemahmed.github.io/mhvtl-console/user/html/)**
+  ([العربية](https://abdelhaleemahmed.github.io/mhvtl-console/user/html-ar/)) -
+  what the console does, page by page, with the `mhvtl` command for every
+  task.
+- **[API Reference](https://abdelhaleemahmed.github.io/mhvtl-console/api/html/)**
+  ([العربية](https://abdelhaleemahmed.github.io/mhvtl-console/api/html-ar/)) -
+  the Python services, generated from their docstrings.
+
+The sources are in `docs/user/` and `docs/api/`, as Sphinx projects. They
+import the application, so to build them yourself use Python 3.12, in a
+virtualenv at the top of the checkout:
 
 ```bash
 python3.12 -m venv venv
