@@ -1,71 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MHVTL Console documentation</title>
-<meta name="description" content="Documentation for MHVTL Console, a web console and command line for MHVTL, the Linux virtual tape library.">
-<style>
-  :root {
-    --bg: #eef2f7; --surface: #ffffff; --border: #d1d5db;
-    --text: #111827; --dim: #6b7280; --accent: #0277bd;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1a2e; --surface: #1f2937; --border: #374151;
-      --text: #e5e7eb; --dim: #9ca3af; --accent: #4fc3f7;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
-  }
-  main { max-width: 860px; margin: 0 auto; padding: 48px 16px; }
-  h1 { margin: 0 0 8px; font-size: 32px; }
-  .lead { color: var(--dim); margin: 0 0 32px; }
-  .guides { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .guide {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 22px 24px;
-  }
-  .guide h2 { margin: 0 0 6px; font-size: 20px; }
-  .guide p { margin: 0 0 16px; color: var(--dim); font-size: 15px; }
-  .guide a { color: var(--accent); font-weight: 600; text-decoration: none; margin-right: 18px; }
-  .guide a:hover, footer a:hover { text-decoration: underline; }
-  .guide a[lang="ar"] { font-weight: 600; }
-  footer { margin-top: 36px; color: var(--dim); font-size: 14px; }
-  footer a { color: var(--accent); text-decoration: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHVTL Console — a web console for virtual tape libraries</title>
+    <meta name="description" content="A web console and a command line for MHVTL, the Linux virtual tape library: create libraries, fill them with tapes, move cartridges with the robot, export them over iSCSI, and watch each drive while a backup writes to it.">
+    <meta property="og:title" content="MHVTL Console — a web console for virtual tape libraries">
+    <meta property="og:description" content="A web console and a command line for MHVTL, the Linux virtual tape library.">
+    <meta property="og:url" content="https://abdelhaleemahmed.github.io/mhvtl-console/">
+    <meta property="og:image" content="https://abdelhaleemahmed.github.io/mhvtl-console/images/dashboard.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="images/mhvtl-console-icon.svg" type="image/svg+xml">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #2b2b3a; line-height: 1.6;
+            background: #ecedf7;
+            padding: 40px 24px;
+        }
+        .app {
+            max-width: 960px; width: 100%; margin: 0 auto;
+            background: #fff; border-radius: 26px; overflow: hidden;
+            box-shadow: 0 26px 70px rgba(45, 33, 90, .16), 0 6px 18px rgba(45, 33, 90, .06);
+        }
+        .section { padding: 58px 52px; }
+        .bg-hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; }
+        .bg-dark { background: #0d1117; color: #e6edf3; }
+        .bg-light { background: #f5f6fb; color: #2b2b3a; }
+        .bg-white { background: #ffffff; color: #2b2b3a; }
+        .bg-footer { background: #14141f; color: #cfd2e6; }
+        .hero { text-align: center; }
+        .logo { width: 144px; height: 144px; margin: 0 auto 16px; display: block; }
+        h1 { font-size: 3.4rem; letter-spacing: 2px; text-shadow: 2px 2px 6px rgba(0,0,0,.22); }
+        .tagline { font-size: 1.3rem; opacity: .96; margin-top: 4px; }
+        .badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 18px 0 4px; }
+        .badges img { height: 22px; }
+        .reqs { font-size: .9rem; opacity: .85; margin-top: 14px; }
+        .lead { font-size: 1.06rem; opacity: .93; max-width: 640px; margin: 16px auto 0; }
+        .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 30px 0 6px; }
+        .btn {
+            display: inline-block; padding: 13px 24px; border-radius: 10px;
+            font-size: .98rem; font-weight: 700; text-decoration: none;
+            border: 2px solid rgba(255,255,255,.85); color: #fff; transition: all .2s ease;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+        .btn.primary { background: #fff; color: #5a3d8a; border-color: #fff; }
+        .btn small { display: block; font-weight: 500; font-size: .76rem; opacity: .8; margin-top: 2px; }
+        .stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 36px; }
+        .stat {
+            background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+            border-radius: 12px; padding: 16px 24px; min-width: 170px;
+        }
+        .stat .num { font-size: 1.8rem; font-weight: 800; }
+        .stat .lbl { font-size: .88rem; opacity: .9; }
+        .section h2 { font-size: 1.8rem; text-align: center; margin-bottom: 8px; }
+        .section .sub { text-align: center; opacity: .7; margin-bottom: 32px; }
+        .bg-dark .sub { opacity: .6; }
+        .terminal { border-radius: 12px; overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0,0,0,.4); border: 1px solid #262b36; }
+        .term-bar { background: #161b22; padding: 11px 15px; display: flex; gap: 8px; align-items: center; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.r { background: #ff5f56; } .dot.y { background: #ffbd2e; } .dot.g { background: #27c93f; }
+        .term-title { margin-left: 10px; color: #7d8590; font-size: .82rem; }
+        .terminal pre {
+            background: #0d1117; padding: 20px; margin: 0; overflow-x: auto;
+            font-family: 'DejaVu Sans Mono', 'Cascadia Code', Consolas, monospace;
+            font-size: .84rem; line-height: 1.7; color: #c9d1d9;
+        }
+        .term .p { color: #a5d6ff; } .term .c { color: #fff; }
+        .term .ok { color: #56d364; } .term .hi { color: #d2a8ff; } .term .dim { color: #6e7681; }
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; }
+        .flow-wrap { overflow-x: auto; margin: 6px 0 26px; }
+        .flow { display: block; height: auto; margin: 0 auto; width: 100%; min-width: 640px; max-width: 960px; }
+        .step { background: #fff; border-radius: 12px; padding: 20px; border-bottom: 4px solid #667eea;
+            box-shadow: 0 8px 22px rgba(80,70,140,.08); }
+        .step .n { display: inline-flex; width: 32px; height: 32px; border-radius: 50%;
+            background: #667eea; color: #fff; font-weight: 800; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .step h3 { color: #5a4b9c; font-size: 1.05rem; margin-bottom: 4px; }
+        .step p { font-size: .9rem; color: #555; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 16px; margin-bottom: 32px; }
+        .feature { background: #f8f9fe; border-radius: 12px; padding: 18px 20px; border-left: 4px solid #667eea; }
+        .feature h3 { font-size: 1.02rem; margin-bottom: 5px; color: #4a3f7a; }
+        .feature p { font-size: .9rem; color: #555; }
+        .cmds { text-align: center; }
+        .cmds h3 { font-size: 1.02rem; margin-bottom: 12px; color: #4a3f7a; }
+        .pill { display: inline-block; margin: 5px; padding: 7px 14px; border-radius: 20px;
+            background: #eef0fb; color: #5a4b9c; font-family: 'DejaVu Sans Mono', Consolas, monospace;
+            font-size: .84rem; font-weight: 600; }
+        .install-row { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 8px 22px rgba(80,70,140,.12); }
+        .install-row code {
+            flex: 1; background: #1b2130; color: #f3f0ff; padding: 16px 18px; overflow-x: auto;
+            font-family: 'DejaVu Sans Mono', Consolas, monospace; font-size: .86rem; white-space: nowrap; }
+        .copy-btn { background: #667eea; color: #fff; border: 0; padding: 0 22px; font-weight: 700;
+            cursor: pointer; font-size: .9rem; transition: background .2s ease; }
+        .copy-btn:hover { background: #5568d3; }
+        .install-note { text-align: center; font-size: .9rem; color: #666; margin-top: 14px; }
+        .install-note a { color: #667eea; }
+        footer { text-align: center; }
+        footer a { color: #fff; text-decoration: none; border-bottom: 2px solid rgba(255,255,255,.4); }
+        footer a:hover { border-bottom-color: #fff; }
+        .footer-links { margin-top: 12px; opacity: .9; }
+        .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (max-width: 640px) {
+            body { padding: 16px 12px; }
+            .app { border-radius: 18px; }
+            .section { padding: 40px 24px; }
+            h1 { font-size: 2.6rem; }
+            .tagline { font-size: 1.05rem; }
+            .install-row code { white-space: normal; word-break: break-all; }
+        }
+
+        /* screenshots of the console, framed like a browser window */
+        .shot { border-radius: 12px; overflow: hidden; border: 1px solid #262b36;
+            box-shadow: 0 16px 40px rgba(0,0,0,.4); background: #161b22; }
+        .shot .term-bar { border-bottom: 1px solid #262b36; }
+        .shot img { display: block; width: 100%; height: auto; background: #eef2f7; }
+        .shots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px; margin-top: 18px; }
+        .shots-stack { display: grid; gap: 18px; align-content: start; }
+        .caption { text-align: center; font-size: .86rem; opacity: .6; margin-top: 10px; }
+        .terminal-block { margin-top: 34px; }
+        .vendors .feature p b { color: #4a3f7a; }
+    </style>
 </head>
 <body>
-<main>
-  <h1>MHVTL Console</h1>
-  <p class="lead">A web console and a command line for
-    <a href="https://github.com/markh794/mhvtl" style="color: var(--accent)">MHVTL</a>,
-    the Linux virtual tape library.</p>
+<div class="app">
 
-  <div class="guides">
-    <section class="guide">
-      <h2>User Guide</h2>
-      <p>What the console does, page by page, with the <code>mhvtl</code>
-        command for every task.</p>
-      <a href="user/html/">English</a>
-      <a href="user/html-ar/" lang="ar" dir="rtl">العربية</a>
-    </section>
-    <section class="guide">
-      <h2>API Reference</h2>
-      <p>The Python services, generated from their docstrings.</p>
-      <a href="api/html/">English</a>
-      <a href="api/html-ar/" lang="ar" dir="rtl">العربية</a>
-    </section>
-  </div>
+        <section class="section bg-hero">
+            <div class="hero">
+                <img class="logo" src="images/mhvtl-console-icon.svg" alt="MHVTL Console logo">
+                <h1>MHVTL Console</h1>
+                <p class="tagline">a web console for virtual tape libraries</p>
+                <div class="badges">
+                    <a href="https://github.com/abdelhaleemahmed/mhvtl-console/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/abdelhaleemahmed/mhvtl-console/actions/workflows/ci.yml/badge.svg"></a>
+                    <a href="https://github.com/abdelhaleemahmed/mhvtl-console/releases/latest"><img alt="version" src="https://img.shields.io/github/v/release/abdelhaleemahmed/mhvtl-console?color=blueviolet"></a>
+                    <img alt="license" src="https://img.shields.io/badge/license-GPL--2.0-blue">
+                    <img alt="python" src="https://img.shields.io/badge/python-3.11%2B-blue">
+                </div>
+                <p class="lead">A web console and a command line for <b>MHVTL</b>, the Linux virtual tape library.
+                    Create libraries, fill them with tapes, move cartridges with the robot, export them over
+                    <b>iSCSI</b> — and watch each drive while a backup writes to it.</p>
+                <p class="reqs">Rocky Linux / AlmaLinux / RHEL 9 &nbsp;·&nbsp; Python 3.12 &nbsp;·&nbsp; MHVTL 1.7+</p>
+                <div class="actions">
+                    <a class="btn primary" href="https://github.com/abdelhaleemahmed/mhvtl-console">Clone the repo<small>github.com/abdelhaleemahmed/mhvtl-console</small></a>
+                    <a class="btn" href="https://github.com/abdelhaleemahmed/mhvtl-console/releases/latest">Download release<small>latest RPM / tarball</small></a>
+                    <a class="btn" href="user/html/">Read the docs<small>user guide &amp; API reference</small></a>
+                </div>
+                <div class="stats">
+                    <div class="stat"><div class="num">Web + CLI</div><div class="lbl">one service layer</div></div>
+                    <div class="stat"><div class="num">9 vendors</div><div class="lbl">rules from MHVTL's source</div></div>
+                    <div class="stat"><div class="num">live</div><div class="lbl">drive activity</div></div>
+                </div>
+            </div>
+        </section>
 
-  <footer>
-    <a href="https://github.com/abdelhaleemahmed/mhvtl-console">Source on GitHub</a> ·
-    <a href="https://github.com/abdelhaleemahmed/mhvtl-console/releases/latest">Download the latest release</a> ·
-    GPL-2.0-only
-  </footer>
-</main>
+        <section class="section bg-dark">
+            <h2 class="reveal">See it in action</h2>
+            <p class="sub reveal">Every library at a glance, one page per library, and each drive while a backup writes to it.</p>
+            <div class="shot reveal">
+                <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">The dashboard</span></div>
+                <img src="images/dashboard.png" alt="The dashboard: the MHVTL service running, four libraries, fourteen drives, ninety-nine tapes" loading="lazy">
+            </div>
+            <div class="shots-grid">
+                <div class="shot reveal">
+                    <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">A library</span></div>
+                    <img src="images/library-page.png" alt="Library 50: what it is, its slots, and the links to manage its tapes, drives and robot" loading="lazy">
+                </div>
+                <div class="shots-stack">
+                    <div class="shot reveal">
+                        <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">A drive, writing</span></div>
+                        <img src="images/drive-writing.png" alt="Drive 31 writing G03001TA: 173.8 MB written, 14.8% of the tape" loading="lazy">
+                    </div>
+                    <div class="shot reveal">
+                        <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">Tapes</span></div>
+                        <img src="images/tape-tiles.png" alt="Two tape tiles, each with a bar for how much of the cartridge is used" loading="lazy">
+                    </div>
+                </div>
+            </div>
+            <p class="caption reveal">Screenshots from a running console, in the Daylight theme.</p>
+
+            <div class="terminal terminal-block reveal">
+                <div class="term-bar">
+                    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                    <span class="term-title">the same, from the terminal — a real run</span>
+                </div>
+<pre class="term"><span class="p">$ sudo mhvtl library create</span> <span class="c">--profile STK --id 50 --drives 2 \
+     --media-type LTO8 --drive-model ULT3580-TD8 --tapes 3 --empty-slots 3</span>
+
+<span class="ok">ok</span>   validate  Specification is valid
+<span class="ok">ok</span>   create    Library 50 created: STK SL500 with 2 drives
+<span class="ok">ok</span>   restart   Restarted vtllibrary@50.service
+<span class="ok">ok</span>   verify    MHVTL can see library 50
+<span class="ok">ok</span>   media     3 tape(s) created, 0 already present in library 50
+<span class="hi">Library 50 created</span>
+
+<span class="p">$ sudo mhvtl status activity</span> <span class="c">50</span>
+
+Library 50: 1 of 2 drive(s) hold a tape, 1 working
+
+<span class="dim">DRIVE  STATE    BARCODE   COUNTERS</span>
+51     <span class="ok">writing</span>  K50001L8  300.0 MB written - 29.6% of the tape
+52     empty    -         -</pre>
+            </div>
+        </section>
+
+        <section class="section bg-light">
+            <h2 class="reveal">How it works</h2>
+            <p class="sub reveal">MHVTL's own files are the truth. The console reads them, and says what it will change.</p>
+            <div class="flow-wrap reveal">
+                <svg class="flow" viewBox="0 0 960 150" role="img" aria-label="Create a library, then add tapes, then back up to it, then watch it work">
+                    <defs>
+                        <linearGradient id="nd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b8cf0"/><stop offset="1" stop-color="#6a4fb3"/></linearGradient>
+                        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8f87c9"/></marker>
+                    </defs>
+                    <g font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" fill="#3b3560" text-anchor="middle">
+                        <g transform="translate(120,20)"><rect x="-40" y="0" width="80" height="80" rx="16" fill="url(#nd)"/>
+                            <rect x="-22" y="16" width="44" height="48" rx="5" fill="none" stroke="#fff" stroke-width="3"/><path d="M-14 30 H14 M-14 42 H14 M-14 54 H14" stroke="#fff" stroke-width="3"/>
+                            <text y="118">Create a library</text></g>
+                        <g transform="translate(360,20)"><rect x="-40" y="0" width="80" height="80" rx="16" fill="url(#nd)"/>
+                            <rect x="-24" y="22" width="48" height="36" rx="5" fill="none" stroke="#fff" stroke-width="3"/><rect x="-16" y="44" width="32" height="8" rx="2" fill="#fff"/>
+                            <text y="118">Add tapes</text></g>
+                        <g transform="translate(600,20)"><rect x="-40" y="0" width="80" height="80" rx="16" fill="url(#nd)"/>
+                            <path d="M0 16 V46 M-12 34 L0 46 L12 34" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="-24" y="52" width="48" height="12" rx="4" fill="#fff"/>
+                            <text y="118">Back up to it</text></g>
+                        <g transform="translate(840,20)"><rect x="-40" y="0" width="80" height="80" rx="16" fill="url(#nd)"/>
+                            <rect x="-24" y="36" width="48" height="10" rx="5" fill="none" stroke="#fff" stroke-width="3"/><rect x="-24" y="36" width="30" height="10" rx="5" fill="#fff"/><circle cx="18" cy="22" r="6" fill="#34d399"/>
+                            <text y="118">Watch it work</text></g>
+                    </g>
+                    <g stroke="#8f87c9" stroke-width="2.5" marker-end="url(#ar)">
+                        <line x1="170" y1="60" x2="310" y2="60"/><line x1="410" y1="60" x2="550" y2="60"/><line x1="650" y1="60" x2="790" y2="60"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="steps">
+                <div class="step reveal"><div class="n">1</div><h3>Create a library</h3>
+                    <p>Pick a vendor and model. The console writes <code>device.conf</code>, restarts MHVTL, and checks MHVTL can see it — each step reported.</p></div>
+                <div class="step reveal"><div class="n">2</div><h3>Add tapes</h3>
+                    <p>Barcodes that say their generation, and the cartridges made on disk, in the slots you choose.</p></div>
+                <div class="step reveal"><div class="n">3</div><h3>Back up to it</h3>
+                    <p>Load a tape with the robot and write to it on this host, or export the library over <b>iSCSI</b> to a backup server.</p></div>
+                <div class="step reveal"><div class="n">4</div><h3>Watch it work</h3>
+                    <p>What each drive is doing and how full each tape is, every five seconds — on the page, or <code>mhvtl status activity</code>.</p></div>
+            </div>
+        </section>
+
+        <section class="section bg-white">
+            <h2 class="reveal">Features</h2>
+            <p class="sub reveal">A page and a command for every task — the same code underneath.</p>
+            <div class="features">
+                <div class="feature reveal"><h3>🖥️ Web and terminal, one engine</h3>
+                    <p>Every page and every <code>mhvtl</code> command call the same Python services, so neither can do something the other cannot.</p></div>
+                <div class="feature reveal"><h3>📡 Live drive state</h3>
+                    <p><b>writing</b>, <b>reading</b>, holding a tape or empty — worked out from each drive daemon's own counters while the backup runs.</p></div>
+                <div class="feature reveal"><h3>📼 Tapes that know their size</h3>
+                    <p>How full each cartridge is, from its own memory (MAM) — so a tape sitting in a slot still has a size.</p></div>
+                <div class="feature reveal"><h3>🌐 Export over iSCSI</h3>
+                    <p>Hand a whole library to a backup server with <code>targetcli</code> — and take it back cleanly, backstores and all.</p></div>
+                <div class="feature reveal"><h3>🗄️ Real hardware rules</h3>
+                    <p>Which drives each library takes, and which cartridges each drive writes or only reads — from MHVTL's own source.</p></div>
+                <div class="feature reveal"><h3>🎨 Four themes</h3>
+                    <p>Console Navy, Graphite, Daylight and Sepia, on every page — picked per browser.</p></div>
+            </div>
+            <div class="cmds reveal">
+                <h3>Commands</h3>
+                <span class="pill">library</span><span class="pill">drive</span><span class="pill">tape</span><span class="pill">operations</span><span class="pill">status</span>
+                <span class="pill">service</span><span class="pill">config</span><span class="pill">scsi</span><span class="pill">iscsi</span><span class="pill">console</span>
+            </div>
+        </section>
+
+        <section class="section bg-light">
+            <h2 class="reveal">Supported libraries</h2>
+            <p class="sub reveal">The tape libraries MHVTL emulates, from nine vendors.</p>
+            <div class="features vendors">
+                <div class="feature reveal"><h3>IBM</h3><p><b>TS3500</b> (3584) frames, <b>TS3100 / TS3200</b>, 3582 — LTO-1 to LTO-10.</p></div>
+                <div class="feature reveal"><h3>StorageTek</h3><p><b>SL150, SL500, SL3000</b>, L20 to L700 — T10000, T9840, T9940 and LTO.</p></div>
+                <div class="feature reveal"><h3>Quantum</h3><p><b>Scalar i500, i6000</b>, DXi6700, PX720 — DLT, SDLT and LTO.</p></div>
+                <div class="feature reveal"><h3>HP</h3><p><b>MSL G3, MSL6000</b>, EML and ESL E-Series — Ultrium 1 to 8.</p></div>
+                <div class="feature reveal"><h3>Spectra Logic</h3><p><b>Python, Gecko, Gator</b>, 215 — LTO.</p></div>
+                <div class="feature reveal"><h3>ADIC</h3><p><b>Scalar i2000</b>, Scalar 1000 — LTO.</p></div>
+                <div class="feature reveal"><h3>Overland</h3><p><b>NEO</b> series — LTO.</p></div>
+                <div class="feature reveal"><h3>Dell</h3><p><b>PowerVault 136T</b> — LTO.</p></div>
+                <div class="feature reveal"><h3>Sony</h3><p><b>LIB-152, LIB-302</b> — AIT.</p></div>
+            </div>
+        </section>
+
+        <section class="section bg-white">
+            <h2 class="reveal">Quick install</h2>
+            <p class="sub reveal">The RPM from the latest release, on Rocky Linux, AlmaLinux or RHEL 9 with MHVTL 1.7+ installed.</p>
+            <div class="install-row reveal">
+                <code id="cmd">sudo dnf install https://github.com/abdelhaleemahmed/mhvtl-console/releases/download/v2.1.1/mhvtl-gui-2.1.1-1.el9.noarch.rpm</code>
+                <button class="copy-btn" id="copyBtn" type="button">Copy</button>
+            </div>
+            <p class="install-note reveal">Then open <code>http://your-server/</code> — the password is <code>mhvtl</code>; change it at <code>/auth/password/</code>.
+                For other distributions, the release has a tarball with an installer. The <a href="user/html/">user guide</a> has the rest.</p>
+        </section>
+
+        <footer class="section bg-footer">
+            <p>GPL-2.0 licensed &nbsp;·&nbsp; by <a href="https://github.com/abdelhaleemahmed">Ahmed Abdelhaleem</a></p>
+            <p class="footer-links">
+                <a href="https://abdelhaleemahmed.github.io/">Portfolio</a> &nbsp;·&nbsp;
+                <a href="https://github.com/abdelhaleemahmed/mhvtl-console">GitHub</a> &nbsp;·&nbsp;
+                <a href="user/html/">User Guide</a> &nbsp;·&nbsp;
+                <a href="api/html/">API Reference</a>
+            </p>
+        </footer>
+
+</div>
+    <script>
+        (function () {
+            var btn = document.getElementById('copyBtn');
+            if (btn) btn.addEventListener('click', function () {
+                var txt = document.getElementById('cmd').textContent;
+                navigator.clipboard.writeText(txt).then(function () {
+                    var old = btn.textContent; btn.textContent = 'Copied!';
+                    setTimeout(function () { btn.textContent = old; }, 1600);
+                });
+            });
+        })();
+        (function () {
+            // The command names the latest release's RPM; the text above is the
+            // fallback when GitHub cannot be asked (offline, rate-limited).
+            var el = document.getElementById('cmd');
+            if (!el || !window.fetch) return;
+            fetch('https://api.github.com/repos/abdelhaleemahmed/mhvtl-console/releases/latest', {
+                headers: { 'Accept': 'application/vnd.github+json' }
+            })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                if (!data || !data.assets) return;
+                var rpm = data.assets.filter(function (a) { return /\.noarch\.rpm$/.test(a.name); })[0];
+                if (rpm) el.textContent = 'sudo dnf install ' + rpm.browser_download_url;
+            })
+            .catch(function () { /* keep the fallback */ });
+        })();
+        (function () {
+            var els = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+            }, { threshold: 0.12 });
+            els.forEach(function (e) { io.observe(e); });
+        })();
+    </script>
 </body>
 </html>

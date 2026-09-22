@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="t">
+  <title id="t">MHVTL Console</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7b8cf0"/>
+      <stop offset="1" stop-color="#5a3d9a"/>
+    </linearGradient>
+    <linearGradient id="cab" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#26324d"/>
+      <stop offset="1" stop-color="#121829"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="arm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd166"/>
+      <stop offset="1" stop-color="#f4a340"/>
+    </linearGradient>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#1b1036" flood-opacity=".45"/>
+    </filter>
+  </defs>
+
+  <!-- the app tile -->
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+
+  <!-- the library cabinet -->
+  <g filter="url(#sh)">
+    <rect x="96" y="100" width="320" height="316" rx="26" fill="url(#cab)"/>
+    <rect x="96" y="100" width="320" height="316" rx="26" fill="none" stroke="#8fa2ff" stroke-opacity=".55" stroke-width="4"/>
+  </g>
+
+  <!-- three shelves of cartridges, each with a coloured barcode label -->
+  <g>
+    <g id="shelf">
+      <rect x="120" y="128" width="272" height="56" rx="8" fill="#0b0f1c"/>
+      <g fill="#3b4768">
+        <rect x="130" y="136" width="36" height="40" rx="4"/>
+        <rect x="174" y="136" width="36" height="40" rx="4"/>
+        <rect x="218" y="136" width="36" height="40" rx="4"/>
+        <rect x="262" y="136" width="36" height="40" rx="4"/>
+        <rect x="306" y="136" width="36" height="40" rx="4"/>
+        <rect x="350" y="136" width="36" height="40" rx="4"/>
+      </g>
+      <g>
+        <rect x="135" y="160" width="26" height="9" rx="2" fill="#4fc3f7"/>
+        <rect x="179" y="160" width="26" height="9" rx="2" fill="#10b981"/>
+        <rect x="223" y="160" width="26" height="9" rx="2" fill="#4fc3f7"/>
+        <rect x="267" y="160" width="26" height="9" rx="2" fill="#f59e0b"/>
+        <rect x="311" y="160" width="26" height="9" rx="2" fill="#4fc3f7"/>
+        <rect x="355" y="160" width="26" height="9" rx="2" fill="#10b981"/>
+      </g>
+    </g>
+    <use href="#shelf" y="70"/>
+  </g>
+
+  <!-- the robot: a rail across the cabinet, and the picker holding a cartridge -->
+  <rect x="112" y="276" width="288" height="10" rx="5" fill="#8fa2ff" fill-opacity=".7"/>
+  <g>
+    <rect x="232" y="262" width="56" height="38" rx="8" fill="url(#arm)"/>
+    <rect x="240" y="300" width="40" height="30" rx="4" fill="#3b4768"/>
+    <rect x="245" y="316" width="30" height="8" rx="2" fill="#f59e0b"/>
+  </g>
+
+  <!-- a drive, with its light on: something is being written -->
+  <rect x="120" y="348" width="272" height="48" rx="10" fill="#0b0f1c"/>
+  <rect x="140" y="366" width="170" height="12" rx="6" fill="#26324d"/>
+  <circle cx="352" cy="372" r="11" fill="#34d399"/>
+  <circle cx="352" cy="372" r="18" fill="#34d399" fill-opacity=".25"/>
+
+  <!-- gloss -->
+  <path d="M16 128 Q16 16 128 16 H384 Q496 16 496 128 V190 Q256 250 16 190 Z" fill="url(#gloss)"/>
+</svg>
