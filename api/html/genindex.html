@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; MHVTL GUI API Reference 2.1.1</title>
+  <title>Index &mdash; MHVTL GUI API Reference 3.0.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/lang-switch.css?v=16e3750c" />
@@ -13,7 +13,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=841abef3"></script>
+      <script src="_static/documentation_options.js?v=acc74ff5"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/lang-switch.js?v=8f8661c5"></script>
@@ -59,8 +59,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#paths"><code class="docutils literal notranslate"><span class="pre">paths</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.DAEMON_CONFIG_DIR_SETTING"><code class="docutils literal notranslate"><span class="pre">DAEMON_CONFIG_DIR_SETTING</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.LOCK_NAME"><code class="docutils literal notranslate"><span class="pre">LOCK_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.config_dir"><code class="docutils literal notranslate"><span class="pre">config_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.daemon_config_dir"><code class="docutils literal notranslate"><span class="pre">daemon_config_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.home_dir"><code class="docutils literal notranslate"><span class="pre">home_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.device_conf_path"><code class="docutils literal notranslate"><span class="pre">device_conf_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.library_contents_path"><code class="docutils literal notranslate"><span class="pre">library_contents_path()</span></code></a></li>
@@ -81,6 +83,17 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.retry.retry_on_busy"><code class="docutils literal notranslate"><span class="pre">retry_on_busy()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#samples"><code class="docutils literal notranslate"><span class="pre">samples</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.LIFE"><code class="docutils literal notranslate"><span class="pre">LIFE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.MIN_AGE"><code class="docutils literal notranslate"><span class="pre">MIN_AGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.MIN_COMPARE"><code class="docutils literal notranslate"><span class="pre">MIN_COMPARE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.path"><code class="docutils literal notranslate"><span class="pre">path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.entry_for"><code class="docutils literal notranslate"><span class="pre">entry_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.recent"><code class="docutils literal notranslate"><span class="pre">recent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.remember"><code class="docutils literal notranslate"><span class="pre">remember()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.samples.forget"><code class="docutils literal notranslate"><span class="pre">forget()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#shell"><code class="docutils literal notranslate"><span class="pre">shell</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.shell.QUICK"><code class="docutils literal notranslate"><span class="pre">QUICK</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.shell.CommandResult"><code class="docutils literal notranslate"><span class="pre">CommandResult</span></code></a></li>
@@ -91,10 +104,17 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.shell.sudo_tee"><code class="docutils literal notranslate"><span class="pre">sudo_tee()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#units"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.units.FILLING_AT"><code class="docutils literal notranslate"><span class="pre">FILLING_AT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.units.human_size"><code class="docutils literal notranslate"><span class="pre">human_size()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.units.fullness"><code class="docutils literal notranslate"><span class="pre">fullness()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-config"><code class="docutils literal notranslate"><span class="pre">services.config</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="services.html#device-conf"><code class="docutils literal notranslate"><span class="pre">device_conf</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#device-conf-is-the-authority-read-this-before-changing-anything-here">DEVICE.CONF IS THE AUTHORITY. READ THIS BEFORE CHANGING ANYTHING HERE.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.device_conf.FIELDS"><code class="docutils literal notranslate"><span class="pre">FIELDS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.device_conf.MAX_TARGET"><code class="docutils literal notranslate"><span class="pre">MAX_TARGET</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.device_conf.DeviceConf"><code class="docutils literal notranslate"><span class="pre">DeviceConf</span></code></a></li>
@@ -144,6 +164,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#service"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.service.BACKUP_STAMP_FORMAT"><code class="docutils literal notranslate"><span class="pre">BACKUP_STAMP_FORMAT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.service.ConfigService"><code class="docutils literal notranslate"><span class="pre">ConfigService</span></code></a></li>
 </ul>
 </li>
@@ -151,6 +172,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-profiles"><code class="docutils literal notranslate"><span class="pre">services.profiles</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="services.html#data"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#do-not-edit-a-profile-to-suit-another-tool">DO NOT EDIT A PROFILE TO SUIT ANOTHER TOOL</a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.data.MEDIA_SUFFIX"><code class="docutils literal notranslate"><span class="pre">MEDIA_SUFFIX</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.data.get_media_suffix"><code class="docutils literal notranslate"><span class="pre">get_media_suffix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.data.VendorProfile"><code class="docutils literal notranslate"><span class="pre">VendorProfile</span></code></a></li>
@@ -168,7 +190,26 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.data.assert_all_profiles_strict"><code class="docutils literal notranslate"><span class="pre">assert_all_profiles_strict()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#ltfs-support"><code class="docutils literal notranslate"><span class="pre">ltfs_support</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#the-separation-runs-one-way-ltfs-does-not-get-a-vote-on-the-profiles">THE SEPARATION RUNS ONE WAY. LTFS DOES NOT GET A VOTE ON THE PROFILES.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.LTFS_REVISION"><code class="docutils literal notranslate"><span class="pre">LTFS_REVISION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.KNOWN_VENDORS"><code class="docutils literal notranslate"><span class="pre">KNOWN_VENDORS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.UNREACHABLE_VENDORS"><code class="docutils literal notranslate"><span class="pre">UNREACHABLE_VENDORS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.FIRMWARE_MINIMUM"><code class="docutils literal notranslate"><span class="pre">FIRMWARE_MINIMUM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.SUPPORTED_DRIVES"><code class="docutils literal notranslate"><span class="pre">SUPPORTED_DRIVES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.firmware_minimum_for"><code class="docutils literal notranslate"><span class="pre">firmware_minimum_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport"><code class="docutils literal notranslate"><span class="pre">LtfsSupport</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.supports"><code class="docutils literal notranslate"><span class="pre">supports()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.usable_drive_models"><code class="docutils literal notranslate"><span class="pre">usable_drive_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.FIRST_PARTITIONABLE_LTO"><code class="docutils literal notranslate"><span class="pre">FIRST_PARTITIONABLE_LTO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.JAGUAR_DENSITIES"><code class="docutils literal notranslate"><span class="pre">JAGUAR_DENSITIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsMedium"><code class="docutils literal notranslate"><span class="pre">LtfsMedium</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.ltfs_media_for"><code class="docutils literal notranslate"><span class="pre">ltfs_media_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.ltfs_support.ltfs_densities_for"><code class="docutils literal notranslate"><span class="pre">ltfs_densities_for()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#personalities"><code class="docutils literal notranslate"><span class="pre">personalities</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#verified-complete-against-the-mhvtl-source-do-not-correct-these-tables">VERIFIED COMPLETE AGAINST THE MHVTL SOURCE. DO NOT “CORRECT” THESE TABLES.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.MHVTL_REVISION"><code class="docutils literal notranslate"><span class="pre">MHVTL_REVISION</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.ELEMENT_ADDRESS_SPACE"><code class="docutils literal notranslate"><span class="pre">ELEMENT_ADDRESS_SPACE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.MAX_DEVICE_ID"><code class="docutils literal notranslate"><span class="pre">MAX_DEVICE_ID</span></code></a></li>
@@ -247,6 +288,9 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.workflow.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.workflow.WorkflowReport"><code class="docutils literal notranslate"><span class="pre">WorkflowReport</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.workflow.create_library_workflow"><code class="docutils literal notranslate"><span class="pre">create_library_workflow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.workflow.add_ltfs_drive_workflow"><code class="docutils literal notranslate"><span class="pre">add_ltfs_drive_workflow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.workflow.add_ltfs_media_workflow"><code class="docutils literal notranslate"><span class="pre">add_ltfs_media_workflow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.workflow.ltfs_provisioning"><code class="docutils literal notranslate"><span class="pre">ltfs_provisioning()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -273,8 +317,6 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.kind"><code class="docutils literal notranslate"><span class="pre">kind()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.density_for"><code class="docutils literal notranslate"><span class="pre">density_for()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.GENERATION_CLASS"><code class="docutils literal notranslate"><span class="pre">GENERATION_CLASS</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.generation_class"><code class="docutils literal notranslate"><span class="pre">generation_class()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.suffix_for"><code class="docutils literal notranslate"><span class="pre">suffix_for()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.barcodes.build"><code class="docutils literal notranslate"><span class="pre">build()</span></code></a></li>
@@ -302,6 +344,23 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.compatibility.mount_matrix"><code class="docutils literal notranslate"><span class="pre">mount_matrix()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#ltfs-state"><code class="docutils literal notranslate"><span class="pre">ltfs_state</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_FILE"><code class="docutils literal notranslate"><span class="pre">VTL_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_HEADER"><code class="docutils literal notranslate"><span class="pre">VTL_HEADER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_MAX_PARTITIONS"><code class="docutils literal notranslate"><span class="pre">VTL_MAX_PARTITIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_COHERENCY_P1"><code class="docutils literal notranslate"><span class="pre">VTL_COHERENCY_P1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_PARTITION_CAPACITY"><code class="docutils literal notranslate"><span class="pre">VTL_PARTITION_CAPACITY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.MAM_APPLICATION_VENDOR"><code class="docutils literal notranslate"><span class="pre">MAM_APPLICATION_VENDOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.LTFS"><code class="docutils literal notranslate"><span class="pre">LTFS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.FIRST_PARTITIONABLE_LTO"><code class="docutils literal notranslate"><span class="pre">FIRST_PARTITIONABLE_LTO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.read_vtl_attributes"><code class="docutils literal notranslate"><span class="pre">read_vtl_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState"><code class="docutils literal notranslate"><span class="pre">LtfsState</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.could_hold_ltfs"><code class="docutils literal notranslate"><span class="pre">could_hold_ltfs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.state_from_files"><code class="docutils literal notranslate"><span class="pre">state_from_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.state_for_all"><code class="docutils literal notranslate"><span class="pre">state_for_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.ltfs_state.state"><code class="docutils literal notranslate"><span class="pre">state()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#media"><code class="docutils literal notranslate"><span class="pre">media</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.DATA_FILE_RE"><code class="docutils literal notranslate"><span class="pre">DATA_FILE_RE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.MediaPathRefused"><code class="docutils literal notranslate"><span class="pre">MediaPathRefused</span></code></a></li>
@@ -311,6 +370,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.MAM_LIMIT"><code class="docutils literal notranslate"><span class="pre">MAM_LIMIT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.read_mam"><code class="docutils literal notranslate"><span class="pre">read_mam()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.capacity_from_mam"><code class="docutils literal notranslate"><span class="pre">capacity_from_mam()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.read_media_files"><code class="docutils literal notranslate"><span class="pre">read_media_files()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.read_mams"><code class="docutils literal notranslate"><span class="pre">read_mams()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.exists"><code class="docutils literal notranslate"><span class="pre">exists()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.usage"><code class="docutils literal notranslate"><span class="pre">usage()</span></code></a></li>
@@ -322,6 +382,25 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#id4"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.models.TapeInfo"><code class="docutils literal notranslate"><span class="pre">TapeInfo</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#palette"><code class="docutils literal notranslate"><span class="pre">palette</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#a-token-not-a-class">A token, not a class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#the-colours-are-the-real-cartridge-shell-colours-tailored">The colours are the real cartridge shell colours, tailored</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.UNKNOWN"><code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.PALETTE"><code class="docutils literal notranslate"><span class="pre">PALETTE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.UNKNOWN_ENTRY"><code class="docutils literal notranslate"><span class="pre">UNKNOWN_ENTRY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.GENERATION_BY_TOKEN"><code class="docutils literal notranslate"><span class="pre">GENERATION_BY_TOKEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.LTFS_MARKS"><code class="docutils literal notranslate"><span class="pre">LTFS_MARKS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.token_for_generation"><code class="docutils literal notranslate"><span class="pre">token_for_generation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.token_for_tape"><code class="docutils literal notranslate"><span class="pre">token_for_tape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.highest_supported"><code class="docutils literal notranslate"><span class="pre">highest_supported()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.token_for_drive"><code class="docutils literal notranslate"><span class="pre">token_for_drive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.mark_for_cartridge"><code class="docutils literal notranslate"><span class="pre">mark_for_cartridge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.label_for"><code class="docutils literal notranslate"><span class="pre">label_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.present_in"><code class="docutils literal notranslate"><span class="pre">present_in()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.rows"><code class="docutils literal notranslate"><span class="pre">rows()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.collisions"><code class="docutils literal notranslate"><span class="pre">collisions()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#id5"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
@@ -379,6 +458,20 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-scsi"><code class="docutils literal notranslate"><span class="pre">services.scsi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#ch-policy"><code class="docutils literal notranslate"><span class="pre">ch_policy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.UDEV_DIRS"><code class="docutils literal notranslate"><span class="pre">UDEV_DIRS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.MODPROBE_RE"><code class="docutils literal notranslate"><span class="pre">MODPROBE_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.UDEV_RE"><code class="docutils literal notranslate"><span class="pre">UDEV_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.CMDLINE_RE"><code class="docutils literal notranslate"><span class="pre">CMDLINE_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.PROBE_RE"><code class="docutils literal notranslate"><span class="pre">PROBE_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.modprobe_rules"><code class="docutils literal notranslate"><span class="pre">modprobe_rules()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.udev_rules"><code class="docutils literal notranslate"><span class="pre">udev_rules()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.cmdline_rules"><code class="docutils literal notranslate"><span class="pre">cmdline_rules()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.probe_reports"><code class="docutils literal notranslate"><span class="pre">probe_reports()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.bound_driver"><code class="docutils literal notranslate"><span class="pre">bound_driver()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.ch_policy.status"><code class="docutils literal notranslate"><span class="pre">status()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#lsscsi"><code class="docutils literal notranslate"><span class="pre">lsscsi</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.lsscsi.LINE_RE"><code class="docutils literal notranslate"><span class="pre">LINE_RE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.lsscsi.parse_line"><code class="docutils literal notranslate"><span class="pre">parse_line()</span></code></a></li>
@@ -454,7 +547,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.system.mhvtl_installation"><code class="docutils literal notranslate"><span class="pre">mhvtl_installation()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#units"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id9"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.units.UnitState"><code class="docutils literal notranslate"><span class="pre">UnitState</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.units.MhvtlServiceStatus"><code class="docutils literal notranslate"><span class="pre">MhvtlServiceStatus</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.units.is_active"><code class="docutils literal notranslate"><span class="pre">is_active()</span></code></a></li>
@@ -481,7 +574,50 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-iscsi"><code class="docutils literal notranslate"><span class="pre">services.iscsi</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id9"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#bindings"><code class="docutils literal notranslate"><span class="pre">bindings</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.INFO_RE"><code class="docutils literal notranslate"><span class="pre">INFO_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.WITHHELD"><code class="docutils literal notranslate"><span class="pre">WITHHELD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.state_path"><code class="docutils literal notranslate"><span class="pre">state_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.RebindDisabled"><code class="docutils literal notranslate"><span class="pre">RebindDisabled</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.rebind_allowed"><code class="docutils literal notranslate"><span class="pre">rebind_allowed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.Binding"><code class="docutils literal notranslate"><span class="pre">Binding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.running_config"><code class="docutils literal notranslate"><span class="pre">running_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.bound_addresses"><code class="docutils literal notranslate"><span class="pre">bound_addresses()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.parse_info"><code class="docutils literal notranslate"><span class="pre">parse_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.owners"><code class="docutils literal notranslate"><span class="pre">owners()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.invocation_ids"><code class="docutils literal notranslate"><span class="pre">invocation_ids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.load_state"><code class="docutils literal notranslate"><span class="pre">load_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.withheld_path"><code class="docutils literal notranslate"><span class="pre">withheld_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.load_withheld"><code class="docutils literal notranslate"><span class="pre">load_withheld()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.save_withheld"><code class="docutils literal notranslate"><span class="pre">save_withheld()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.add_withheld"><code class="docutils literal notranslate"><span class="pre">add_withheld()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.restore_withheld"><code class="docutils literal notranslate"><span class="pre">restore_withheld()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.save_state"><code class="docutils literal notranslate"><span class="pre">save_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.assess"><code class="docutils literal notranslate"><span class="pre">assess()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.lun_users"><code class="docutils literal notranslate"><span class="pre">lun_users()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.status"><code class="docutils literal notranslate"><span class="pre">status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.forget"><code class="docutils literal notranslate"><span class="pre">forget()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.record"><code class="docutils literal notranslate"><span class="pre">record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.record_saved"><code class="docutils literal notranslate"><span class="pre">record_saved()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.rebind"><code class="docutils literal notranslate"><span class="pre">rebind()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.after_restart"><code class="docutils literal notranslate"><span class="pre">after_restart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.bindings.release_library"><code class="docutils literal notranslate"><span class="pre">release_library()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#initiator"><code class="docutils literal notranslate"><span class="pre">initiator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.local_name"><code class="docutils literal notranslate"><span class="pre">local_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.sessions"><code class="docutils literal notranslate"><span class="pre">sessions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.session_for"><code class="docutils literal notranslate"><span class="pre">session_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.attached_devices"><code class="docutils literal notranslate"><span class="pre">attached_devices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.exported_as"><code class="docutils literal notranslate"><span class="pre">exported_as()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.library_paths"><code class="docutils literal notranslate"><span class="pre">library_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.portal_for"><code class="docutils literal notranslate"><span class="pre">portal_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.chap_for"><code class="docutils literal notranslate"><span class="pre">chap_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.attach"><code class="docutils literal notranslate"><span class="pre">attach()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.detach"><code class="docutils literal notranslate"><span class="pre">detach()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id10"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.models.IscsiBackstore"><code class="docutils literal notranslate"><span class="pre">IscsiBackstore</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.models.IscsiLun"><code class="docutils literal notranslate"><span class="pre">IscsiLun</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.models.IscsiAcl"><code class="docutils literal notranslate"><span class="pre">IscsiAcl</span></code></a></li>
@@ -515,7 +651,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.remap.remap"><code class="docutils literal notranslate"><span class="pre">remap()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id10"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id11"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.service.CONFIG_PATH"><code class="docutils literal notranslate"><span class="pre">CONFIG_PATH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.service.SERVICE_UNIT"><code class="docutils literal notranslate"><span class="pre">SERVICE_UNIT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.service.IscsiService"><code class="docutils literal notranslate"><span class="pre">IscsiService</span></code></a></li>
@@ -552,7 +688,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.targetcli.set_attribute"><code class="docutils literal notranslate"><span class="pre">set_attribute()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id11"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id12"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.workflow.ExportReport"><code class="docutils literal notranslate"><span class="pre">ExportReport</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.workflow.default_iqn"><code class="docutils literal notranslate"><span class="pre">default_iqn()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.workflow.export_library"><code class="docutils literal notranslate"><span class="pre">export_library()</span></code></a></li>
@@ -563,8 +699,38 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="services.html#services-ltfs"><code class="docutils literal notranslate"><span class="pre">services.ltfs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#mounts"><code class="docutils literal notranslate"><span class="pre">mounts</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.mounts.PROC_MOUNTS"><code class="docutils literal notranslate"><span class="pre">PROC_MOUNTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.mounts.SOURCE_PREFIX"><code class="docutils literal notranslate"><span class="pre">SOURCE_PREFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.mounts.by_device"><code class="docutils literal notranslate"><span class="pre">by_device()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.mounts.POINT_RE"><code class="docutils literal notranslate"><span class="pre">POINT_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.mounts.by_drive"><code class="docutils literal notranslate"><span class="pre">by_drive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.mounts.point_for"><code class="docutils literal notranslate"><span class="pre">point_for()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id13"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#what-this-does-not-keep">WHAT THIS DOES NOT KEEP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#the-destructive-one">THE DESTRUCTIVE ONE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.service.MOUNT_ROOT"><code class="docutils literal notranslate"><span class="pre">MOUNT_ROOT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.service.SEARCH_PATH"><code class="docutils literal notranslate"><span class="pre">SEARCH_PATH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.service.LTFSCK_CORRECTED"><code class="docutils literal notranslate"><span class="pre">LTFSCK_CORRECTED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.service.installed"><code class="docutils literal notranslate"><span class="pre">installed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.service.mount_point_for"><code class="docutils literal notranslate"><span class="pre">mount_point_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.service.LtfsService"><code class="docutils literal notranslate"><span class="pre">LtfsService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#tape-moves"><code class="docutils literal notranslate"><span class="pre">tape_moves</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#why-this-lives-in-ltfs-and-not-in-operations">WHY THIS LIVES IN ltfs/ AND NOT IN operations/</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#why-it-refuses-rather-than-warns">WHY IT REFUSES RATHER THAN WARNS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.tape_moves.blocked_drives"><code class="docutils literal notranslate"><span class="pre">blocked_drives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.tape_moves.unmount_tape"><code class="docutils literal notranslate"><span class="pre">unmount_tape()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-verification"><code class="docutils literal notranslate"><span class="pre">services.verification</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id12"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id14"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.CHUNK_BYTES"><code class="docutils literal notranslate"><span class="pre">CHUNK_BYTES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.MANIFEST_NAME"><code class="docutils literal notranslate"><span class="pre">MANIFEST_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.generate"><code class="docutils literal notranslate"><span class="pre">generate()</span></code></a></li>
@@ -573,12 +739,12 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.verify"><code class="docutils literal notranslate"><span class="pre">verify()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id13"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id15"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.models.StepResult"><code class="docutils literal notranslate"><span class="pre">StepResult</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.models.VerificationReport"><code class="docutils literal notranslate"><span class="pre">VerificationReport</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id14"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id16"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.service.VerificationService"><code class="docutils literal notranslate"><span class="pre">VerificationService</span></code></a></li>
 </ul>
 </li>
@@ -591,7 +757,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.tape_io.extracted_root"><code class="docutils literal notranslate"><span class="pre">extracted_root()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id15"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id17"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.workflow.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.workflow.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
 </ul>
@@ -599,7 +765,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-dashboard"><code class="docutils literal notranslate"><span class="pre">services.dashboard</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id16"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id18"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.dashboard.service.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.dashboard.service.get_dashboard_summary"><code class="docutils literal notranslate"><span class="pre">get_dashboard_summary()</span></code></a></li>
 </ul>
@@ -607,9 +773,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id17"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.ConfigUnreadable"><code class="docutils literal notranslate"><span class="pre">ConfigUnreadable</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.sync_mhvtl_to_django"><code class="docutils literal notranslate"><span class="pre">sync_mhvtl_to_django()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.record_library"><code class="docutils literal notranslate"><span class="pre">record_library()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.forget_library"><code class="docutils literal notranslate"><span class="pre">forget_library()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -776,6 +944,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="libraries.html#module-apps.libraries.views">Views</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.views.BACKUPS_SHOWN"><code class="docutils literal notranslate"><span class="pre">BACKUPS_SHOWN</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.views.ConfiguredLibrary"><code class="docutils literal notranslate"><span class="pre">ConfiguredLibrary</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.views.ConfiguredLibrary.library_id"><code class="docutils literal notranslate"><span class="pre">ConfiguredLibrary.library_id</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.views.ConfiguredLibrary.vendor"><code class="docutils literal notranslate"><span class="pre">ConfiguredLibrary.vendor</span></code></a></li>
@@ -940,6 +1109,15 @@
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.DriveStatusView.get"><code class="docutils literal notranslate"><span class="pre">DriveStatusView.get()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.LtfsView"><code class="docutils literal notranslate"><span class="pre">LtfsView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.LtfsView.template_name"><code class="docutils literal notranslate"><span class="pre">LtfsView.template_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.LtfsView.ACTIONS"><code class="docutils literal notranslate"><span class="pre">LtfsView.ACTIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.LtfsView.ADD_DRIVE"><code class="docutils literal notranslate"><span class="pre">LtfsView.ADD_DRIVE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.LtfsView.ADD_MEDIA"><code class="docutils literal notranslate"><span class="pre">LtfsView.ADD_MEDIA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.LtfsView.get"><code class="docutils literal notranslate"><span class="pre">LtfsView.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.LtfsView.post"><code class="docutils literal notranslate"><span class="pre">LtfsView.post()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.MountTapeView"><code class="docutils literal notranslate"><span class="pre">MountTapeView</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.MountTapeView.template_name"><code class="docutils literal notranslate"><span class="pre">MountTapeView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.MountTapeView.get"><code class="docutils literal notranslate"><span class="pre">MountTapeView.get()</span></code></a></li>
@@ -947,7 +1125,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.UnmountTapeView"><code class="docutils literal notranslate"><span class="pre">UnmountTapeView</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.UnmountTapeView.template_name"><code class="docutils literal notranslate"><span class="pre">UnmountTapeView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.UnmountTapeView.get"><code class="docutils literal notranslate"><span class="pre">UnmountTapeView.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.UnmountTapeView.post"><code class="docutils literal notranslate"><span class="pre">UnmountTapeView.post()</span></code></a></li>
 </ul>
@@ -972,6 +1149,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.library_status_ajax"><code class="docutils literal notranslate"><span class="pre">library_status_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.drive_status_ajax"><code class="docutils literal notranslate"><span class="pre">drive_status_ajax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.ltfs_drives_ajax"><code class="docutils literal notranslate"><span class="pre">ltfs_drives_ajax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.ltfs_mount_ajax"><code class="docutils literal notranslate"><span class="pre">ltfs_mount_ajax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.ltfs_unmount_ajax"><code class="docutils literal notranslate"><span class="pre">ltfs_unmount_ajax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.ltfs_check_ajax"><code class="docutils literal notranslate"><span class="pre">ltfs_check_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.mount_tape_ajax"><code class="docutils literal notranslate"><span class="pre">mount_tape_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.unmount_tape_ajax"><code class="docutils literal notranslate"><span class="pre">unmount_tape_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.move_tape_ajax"><code class="docutils literal notranslate"><span class="pre">move_tape_ajax()</span></code></a></li>
@@ -1312,6 +1493,18 @@
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.output.result"><code class="docutils literal notranslate"><span class="pre">result()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#colour"><code class="docutils literal notranslate"><span class="pre">colour</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#when-colour-is-used-and-when-it-is-not">When colour is used, and when it is not</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.BAR"><code class="docutils literal notranslate"><span class="pre">BAR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.INK"><code class="docutils literal notranslate"><span class="pre">INK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.block"><code class="docutils literal notranslate"><span class="pre">block()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.LTFS_ACCENT"><code class="docutils literal notranslate"><span class="pre">LTFS_ACCENT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.ltfs_outline"><code class="docutils literal notranslate"><span class="pre">ltfs_outline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.enabled"><code class="docutils literal notranslate"><span class="pre">enabled()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.paint"><code class="docutils literal notranslate"><span class="pre">paint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.colour.swatch"><code class="docutils literal notranslate"><span class="pre">swatch()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#privileges"><code class="docutils literal notranslate"><span class="pre">privileges</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.privileges.SERVICE_GROUP"><code class="docutils literal notranslate"><span class="pre">SERVICE_GROUP</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.privileges.PermissionDenied"><code class="docutils literal notranslate"><span class="pre">PermissionDenied</span></code></a></li>
@@ -1332,6 +1525,9 @@
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.config.do_restore"><code class="docutils literal notranslate"><span class="pre">do_restore()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.config.do_regenerate"><code class="docutils literal notranslate"><span class="pre">do_regenerate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.config.do_sync"><code class="docutils literal notranslate"><span class="pre">do_sync()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.config.do_backups"><code class="docutils literal notranslate"><span class="pre">do_backups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.config.do_remove_backup"><code class="docutils literal notranslate"><span class="pre">do_remove_backup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.config.do_prune_backups"><code class="docutils literal notranslate"><span class="pre">do_prune_backups()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#console"><code class="docutils literal notranslate"><span class="pre">console</span></code></a><ul>
@@ -1376,6 +1572,20 @@
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.library.do_delete"><code class="docutils literal notranslate"><span class="pre">do_delete()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#ltfs"><code class="docutils literal notranslate"><span class="pre">ltfs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_tapes"><code class="docutils literal notranslate"><span class="pre">do_tapes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_drives"><code class="docutils literal notranslate"><span class="pre">do_drives()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_mount"><code class="docutils literal notranslate"><span class="pre">do_mount()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_unmount"><code class="docutils literal notranslate"><span class="pre">do_unmount()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_check"><code class="docutils literal notranslate"><span class="pre">do_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_format"><code class="docutils literal notranslate"><span class="pre">do_format()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_support"><code class="docutils literal notranslate"><span class="pre">do_support()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_add_drive"><code class="docutils literal notranslate"><span class="pre">do_add_drive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_provisioning"><code class="docutils literal notranslate"><span class="pre">do_provisioning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.ltfs.do_add_media"><code class="docutils literal notranslate"><span class="pre">do_add_media()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#operations"><code class="docutils literal notranslate"><span class="pre">operations</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.operations.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.operations.do_mount"><code class="docutils literal notranslate"><span class="pre">do_mount()</span></code></a></li>
@@ -1385,6 +1595,8 @@
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.operations.do_offline"><code class="docutils literal notranslate"><span class="pre">do_offline()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.operations.do_map"><code class="docutils literal notranslate"><span class="pre">do_map()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.operations.do_inventory"><code class="docutils literal notranslate"><span class="pre">do_inventory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.operations.do_palette"><code class="docutils literal notranslate"><span class="pre">do_palette()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#mhvtl_cli.commands.operations.do_layout"><code class="docutils literal notranslate"><span class="pre">do_layout()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#scsi"><code class="docutils literal notranslate"><span class="pre">scsi</span></code></a><ul>
@@ -1460,6 +1672,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -1488,6 +1701,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.acls">acls (apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
 </li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.LtfsView.ACTIONS">ACTIONS (apps.libraries.tape_operations_views.LtfsView attribute)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.console.units.UnitState.active">active (apps.libraries.services.console.units.UnitState attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiServiceStatus.active_state">active_state (apps.libraries.services.iscsi.models.IscsiServiceStatus attribute)</a>
@@ -1504,6 +1719,8 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.core.results.ServiceResult.add_data">add_data() (apps.libraries.services.core.results.ServiceResult method)</a>
 </li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.LtfsView.ADD_DRIVE">ADD_DRIVE (apps.libraries.tape_operations_views.LtfsView attribute)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.add_drive_ajax">add_drive_ajax() (in module apps.libraries.tape_operations_views)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.config.library_contents.add_drive_slot">add_drive_slot() (in module apps.libraries.services.config.library_contents)</a>
@@ -1514,9 +1731,17 @@
         <li><a href="services.html#apps.libraries.services.core.results.ValidationResult.add_error">(apps.libraries.services.core.results.ValidationResult method)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.libraries.workflow.add_ltfs_drive_workflow">add_ltfs_drive_workflow() (in module apps.libraries.services.libraries.workflow)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.libraries.workflow.add_ltfs_media_workflow">add_ltfs_media_workflow() (in module apps.libraries.services.libraries.workflow)</a>
+</li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.LtfsView.ADD_MEDIA">ADD_MEDIA (apps.libraries.tape_operations_views.LtfsView attribute)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.core.results.ValidationResult.add_suggested_fix">add_suggested_fix() (apps.libraries.services.core.results.ValidationResult method)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.results.ValidationResult.add_warning">add_warning() (apps.libraries.services.core.results.ValidationResult method)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.add_withheld">add_withheld() (in module apps.libraries.services.iscsi.bindings)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.iscsi_views.AddAclAjaxView">AddAclAjaxView (class in apps.libraries.iscsi_views)</a>
 </li>
@@ -1529,6 +1754,8 @@
       <li><a href="services.html#apps.libraries.services.drives.models.DriveInfo.address">address (apps.libraries.services.drives.models.DriveInfo property)</a>
 
       <ul>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.address">(apps.libraries.services.iscsi.bindings.Binding attribute)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.iscsi.remap.Change.address">(apps.libraries.services.iscsi.remap.Change attribute)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.libraries.models.LibraryInfo.address">(apps.libraries.services.libraries.models.LibraryInfo property)</a>
@@ -1542,6 +1769,8 @@
 </li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.AdoptTapeView">AdoptTapeView (class in apps.libraries.tape_operations_views)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.after_restart">after_restart() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiLun.alias">alias (apps.libraries.services.iscsi.models.IscsiLun attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.units.all_vtl_units">all_vtl_units() (in module apps.libraries.services.console.units)</a>
@@ -1551,6 +1780,10 @@
       <li><a href="services.html#apps.libraries.services.profiles.data.VendorProfile.allowed_drive_vendors">allowed_drive_vendors (apps.libraries.services.profiles.data.VendorProfile attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.logs.ALLOWED_LOGS">ALLOWED_LOGS (in module apps.libraries.services.console.logs)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.application_name">application_name (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.application_version">application_version (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.remap.apply">apply() (in module apps.libraries.services.iscsi.remap)</a>
 </li>
@@ -1725,10 +1958,24 @@
 </li>
       </ul></li>
       <li>
+    apps.libraries.services.core.samples
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.core.samples">module</a>
+</li>
+      </ul></li>
+      <li>
     apps.libraries.services.core.shell
 
       <ul>
         <li><a href="services.html#module-apps.libraries.services.core.shell">module</a>
+</li>
+      </ul></li>
+      <li>
+    apps.libraries.services.core.units
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.core.units">module</a>
 </li>
       </ul></li>
       <li>
@@ -1745,13 +1992,27 @@
         <li><a href="services.html#module-apps.libraries.services.drives.models">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     apps.libraries.services.drives.service
 
       <ul>
         <li><a href="services.html#module-apps.libraries.services.drives.service">module</a>
+</li>
+      </ul></li>
+      <li>
+    apps.libraries.services.iscsi.bindings
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.iscsi.bindings">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    apps.libraries.services.iscsi.initiator
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.iscsi.initiator">module</a>
 </li>
       </ul></li>
       <li>
@@ -1846,6 +2107,27 @@
 </li>
       </ul></li>
       <li>
+    apps.libraries.services.ltfs.mounts
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.ltfs.mounts">module</a>
+</li>
+      </ul></li>
+      <li>
+    apps.libraries.services.ltfs.service
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.ltfs.service">module</a>
+</li>
+      </ul></li>
+      <li>
+    apps.libraries.services.ltfs.tape_moves
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.ltfs.tape_moves">module</a>
+</li>
+      </ul></li>
+      <li>
     apps.libraries.services.operations.mounting
 
       <ul>
@@ -1888,10 +2170,24 @@
 </li>
       </ul></li>
       <li>
+    apps.libraries.services.profiles.ltfs_support
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.profiles.ltfs_support">module</a>
+</li>
+      </ul></li>
+      <li>
     apps.libraries.services.profiles.personalities
 
       <ul>
         <li><a href="services.html#module-apps.libraries.services.profiles.personalities">module</a>
+</li>
+      </ul></li>
+      <li>
+    apps.libraries.services.scsi.ch_policy
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.scsi.ch_policy">module</a>
 </li>
       </ul></li>
       <li>
@@ -1937,6 +2233,13 @@
 </li>
       </ul></li>
       <li>
+    apps.libraries.services.tapes.ltfs_state
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.tapes.ltfs_state">module</a>
+</li>
+      </ul></li>
+      <li>
     apps.libraries.services.tapes.media
 
       <ul>
@@ -1948,6 +2251,13 @@
 
       <ul>
         <li><a href="services.html#module-apps.libraries.services.tapes.models">module</a>
+</li>
+      </ul></li>
+      <li>
+    apps.libraries.services.tapes.palette
+
+      <ul>
+        <li><a href="services.html#module-apps.libraries.services.tapes.palette">module</a>
 </li>
       </ul></li>
       <li>
@@ -2014,11 +2324,17 @@
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.data.VendorProfile.assert_strict">assert_strict() (apps.libraries.services.profiles.data.VendorProfile method)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.assess">assess() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.at_bot">at_bot (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.at_eot">at_eot (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.locking.atomic_write_text">atomic_write_text() (in module apps.libraries.services.core.locking)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.attach">attach() (in module apps.libraries.services.iscsi.initiator)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.attached_devices">attached_devices() (in module apps.libraries.services.iscsi.initiator)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.authentication">authentication (apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
 </li>
@@ -2054,12 +2370,24 @@
 </li>
       <li><a href="services.html#apps.libraries.services.config.service.ConfigService.backup">backup() (apps.libraries.services.config.service.ConfigService method)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.config.service.ConfigService.backup_dir">backup_dir (apps.libraries.services.config.service.ConfigService property)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.config.service.BACKUP_STAMP_FORMAT">BACKUP_STAMP_FORMAT (in module apps.libraries.services.config.service)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.config.service.ConfigService.backups">backups() (apps.libraries.services.config.service.ConfigService method)</a>
+</li>
+      <li><a href="libraries.html#apps.libraries.views.BACKUPS_SHOWN">BACKUPS_SHOWN (in module apps.libraries.views)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.colour.BAR">BAR (in module mhvtl_cli.colour)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.config.library_contents.Slot.barcode">barcode (apps.libraries.services.config.library_contents.Slot attribute)</a>
 
       <ul>
         <li><a href="services.html#apps.libraries.services.operations.mtx.Element.barcode">(apps.libraries.services.operations.mtx.Element attribute)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.operations.vtlcmd.TapeStats.barcode">(apps.libraries.services.operations.vtlcmd.TapeStats attribute)</a>
+</li>
+        <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.barcode">(apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.tapes.media.MediaUsage.barcode">(apps.libraries.services.tapes.media.MediaUsage attribute)</a>
 </li>
@@ -2076,10 +2404,10 @@
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.compatibility.BARCODE_SUFFIX_TO_LTO">BARCODE_SUFFIX_TO_LTO (in module apps.libraries.services.tapes.compatibility)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.config.library_contents.LibraryContents.barcodes">barcodes (apps.libraries.services.config.library_contents.LibraryContents property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.tapes.service.TapeService.barcodes_in">barcodes_in() (apps.libraries.services.tapes.service.TapeService method)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.forms.DriveCreateForm.base_fields">base_fields (apps.libraries.forms.DriveCreateForm attribute)</a>
@@ -2094,11 +2422,21 @@
         <li><a href="libraries.html#apps.libraries.forms.ResetDefaultForm.base_fields">(apps.libraries.forms.ResetDefaultForm attribute)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding">Binding (class in apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.service.IscsiService.binding_status">binding_status() (apps.libraries.services.iscsi.service.IscsiService method)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.colour.block">block() (in module mhvtl_cli.colour)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.block_number">block_number (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.block_size">block_size (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.tape_moves.blocked_drives">blocked_drives() (in module apps.libraries.services.ltfs.tape_moves)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.bound_addresses">bound_addresses() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.bound_driver">bound_driver() (in module apps.libraries.services.scsi.ch_policy)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.models.Library.brand">brand (apps.libraries.models.Library attribute)</a>
 
@@ -2121,6 +2459,10 @@
       <li><a href="cli.html#mhvtl_cli.main.build_parser">build_parser() (in module mhvtl_cli.main)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.busy">busy (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.mounts.by_device">by_device() (in module apps.libraries.services.ltfs.mounts)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.mounts.by_drive">by_drive() (in module apps.libraries.services.ltfs.mounts)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2176,6 +2518,8 @@
         <li><a href="libraries.html#apps.libraries.views.ConfiguredLibrary.channel">(apps.libraries.views.ConfiguredLibrary attribute)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.chap_for">chap_for() (in module apps.libraries.services.iscsi.initiator)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.service.IscsiService.chap_in_use">chap_in_use() (apps.libraries.services.iscsi.service.IscsiService method)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.chap_mutual_password">chap_mutual_password (apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
@@ -2192,8 +2536,12 @@
 </li>
       <li><a href="libraries.html#apps.libraries.iscsi_views.ChapAjaxView">ChapAjaxView (class in apps.libraries.iscsi_views)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.tapes.compatibility.check">check() (in module apps.libraries.services.tapes.compatibility)</a>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.LtfsService.check">check() (apps.libraries.services.ltfs.service.LtfsService method)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.tapes.compatibility.check">(in module apps.libraries.services.tapes.compatibility)</a>
 </li>
+      </ul></li>
       <li><a href="libraries.html#apps.libraries.iscsi_views.check_login">check_login() (in module apps.libraries.iscsi_views)</a>
 
       <ul>
@@ -2242,18 +2590,26 @@
 </li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.close_map">close_map() (in module apps.libraries.services.operations.vtlcmd)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.CMDLINE_RE">CMDLINE_RE (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.cmdline_rules">cmdline_rules() (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.coherency_present">coherency_present (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.collisions">collisions() (in module apps.libraries.services.tapes.palette)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.models.LibraryBrand.color_code">color_code (apps.libraries.models.LibraryBrand attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.errors.CommandFailed">CommandFailed</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.shell.CommandResult">CommandResult (class in apps.libraries.services.core.shell)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.drives.models.DriveInfo.compression">compression (apps.libraries.services.drives.models.DriveInfo attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.TapeStats.compression_ratio">compression_ratio (apps.libraries.services.operations.vtlcmd.TapeStats property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.core.paths.config_dir">config_dir() (in module apps.libraries.services.core.paths)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.service.CONFIG_PATH">CONFIG_PATH (in module apps.libraries.services.iscsi.service)</a>
@@ -2298,6 +2654,8 @@
         <li><a href="services.html#apps.libraries.services.tapes.service.CONTENTS_RE">(in module apps.libraries.services.tapes.service)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.could_hold_ltfs">could_hold_ltfs() (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.console.system.cpu">cpu() (in module apps.libraries.services.console.system)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.system.SystemInfo.cpu_count">cpu_count (apps.libraries.services.console.system.SystemInfo attribute)</a>
@@ -2380,6 +2738,8 @@
 </li>
       <li><a href="services.html#apps.libraries.services.scsi.models.ScsiAddress.ctl">ctl (apps.libraries.services.scsi.models.ScsiAddress property)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.current">current (apps.libraries.services.iscsi.bindings.Binding attribute)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.privileges.current_identity">current_identity() (in module mhvtl_cli.privileges)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.views.CustomSetupView">CustomSetupView (class in apps.libraries.views)</a>
@@ -2390,6 +2750,10 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="services.html#apps.libraries.services.core.paths.daemon_config_dir">daemon_config_dir() (in module apps.libraries.services.core.paths)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.core.paths.DAEMON_CONFIG_DIR_SETTING">DAEMON_CONFIG_DIR_SETTING (in module apps.libraries.services.core.paths)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.console.units.daemon_reload">daemon_reload() (in module apps.libraries.services.console.units)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.units.MhvtlServiceStatus.daemons_active">daemons_active (apps.libraries.services.console.units.MhvtlServiceStatus property)</a>
@@ -2513,12 +2877,12 @@
       <li><a href="services.html#apps.libraries.services.config.library_contents.Slot.density">density (apps.libraries.services.config.library_contents.Slot property)</a>
 
       <ul>
+        <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsMedium.density">(apps.libraries.services.profiles.ltfs_support.LtfsMedium attribute)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.density">(apps.libraries.services.tapes.models.TapeInfo property)</a>
 </li>
       </ul></li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.DENSITY_BY_SUFFIX">DENSITY_BY_SUFFIX (in module apps.libraries.services.profiles.personalities)</a>
-</li>
-      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.density_class">density_class (apps.libraries.services.tapes.models.TapeInfo property)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.density_code">density_code (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
 </li>
@@ -2527,16 +2891,24 @@
       <li><a href="services.html#apps.libraries.services.profiles.personalities.density_for_barcode">density_for_barcode() (in module apps.libraries.services.profiles.personalities)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.density_name">density_name (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.density_name">(apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
 </li>
+      </ul></li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.density_suffix_mapping_ajax">density_suffix_mapping_ajax() (in module apps.libraries.tape_operations_views)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.models.LibraryOperation.description">description (apps.libraries.models.LibraryOperation attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.detach">detach() (in module apps.libraries.services.iscsi.initiator)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.models.Library.detect_changes">detect_changes() (apps.libraries.models.Library method)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.barcodes.detect_prefix">detect_prefix() (in module apps.libraries.services.tapes.barcodes)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.barcodes.detect_suffix">detect_suffix() (in module apps.libraries.services.tapes.barcodes)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.dev">dev (apps.libraries.services.iscsi.bindings.Binding attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.device">device (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
 
@@ -2608,16 +2980,24 @@
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.drive.do_add">do_add() (in module mhvtl_cli.commands.drive)</a>
 </li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_add_drive">do_add_drive() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_add_media">do_add_media() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.commands.tape.do_adopt">do_adopt() (in module mhvtl_cli.commands.tape)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.iscsi.do_backstores">do_backstores() (in module mhvtl_cli.commands.iscsi)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.config.do_backup">do_backup() (in module mhvtl_cli.commands.config)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#mhvtl_cli.commands.config.do_backups">do_backups() (in module mhvtl_cli.commands.config)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.commands.tape.do_bulk">do_bulk() (in module mhvtl_cli.commands.tape)</a>
 </li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_check">do_check() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cli.html#mhvtl_cli.commands.library.do_create">do_create() (in module mhvtl_cli.commands.library)</a>
 
       <ul>
@@ -2638,13 +3018,19 @@
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.status.do_drive">do_drive() (in module mhvtl_cli.commands.status)</a>
 </li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_drives">do_drives() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.commands.config.do_export">do_export() (in module mhvtl_cli.commands.config)</a>
 
       <ul>
         <li><a href="cli.html#mhvtl_cli.commands.iscsi.do_export">(in module mhvtl_cli.commands.iscsi)</a>
 </li>
       </ul></li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_format">do_format() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.commands.operations.do_inventory">do_inventory() (in module mhvtl_cli.commands.operations)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.commands.operations.do_layout">do_layout() (in module mhvtl_cli.commands.operations)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.status.do_library">do_library() (in module mhvtl_cli.commands.status)</a>
 </li>
@@ -2672,8 +3058,12 @@
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.console.do_modules">do_modules() (in module mhvtl_cli.commands.console)</a>
 </li>
-      <li><a href="cli.html#mhvtl_cli.commands.operations.do_mount">do_mount() (in module mhvtl_cli.commands.operations)</a>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_mount">do_mount() (in module mhvtl_cli.commands.ltfs)</a>
+
+      <ul>
+        <li><a href="cli.html#mhvtl_cli.commands.operations.do_mount">(in module mhvtl_cli.commands.operations)</a>
 </li>
+      </ul></li>
       <li><a href="cli.html#mhvtl_cli.commands.operations.do_move">do_move() (in module mhvtl_cli.commands.operations)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.tape.do_next_barcode">do_next_barcode() (in module mhvtl_cli.commands.tape)</a>
@@ -2686,13 +3076,21 @@
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.library.do_orphans">do_orphans() (in module mhvtl_cli.commands.library)</a>
 </li>
+      <li><a href="cli.html#mhvtl_cli.commands.operations.do_palette">do_palette() (in module mhvtl_cli.commands.operations)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.commands.iscsi.do_portal">do_portal() (in module mhvtl_cli.commands.iscsi)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_provisioning">do_provisioning() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.commands.config.do_prune_backups">do_prune_backups() (in module mhvtl_cli.commands.config)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.config.do_regenerate">do_regenerate() (in module mhvtl_cli.commands.config)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.iscsi.do_remap">do_remap() (in module mhvtl_cli.commands.iscsi)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.drive.do_remove">do_remove() (in module mhvtl_cli.commands.drive)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.commands.config.do_remove_backup">do_remove_backup() (in module mhvtl_cli.commands.config)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.config.do_restore">do_restore() (in module mhvtl_cli.commands.config)</a>
 </li>
@@ -2718,6 +3116,8 @@
         <li><a href="cli.html#mhvtl_cli.commands.service.do_status">(in module mhvtl_cli.commands.service)</a>
 </li>
       </ul></li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_support">do_support() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.commands.config.do_sync">do_sync() (in module mhvtl_cli.commands.config)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.console.do_system">do_system() (in module mhvtl_cli.commands.console)</a>
@@ -2726,14 +3126,20 @@
         <li><a href="cli.html#mhvtl_cli.commands.status.do_system">(in module mhvtl_cli.commands.status)</a>
 </li>
       </ul></li>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_tapes">do_tapes() (in module mhvtl_cli.commands.ltfs)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.commands.iscsi.do_target">do_target() (in module mhvtl_cli.commands.iscsi)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.iscsi.do_targets">do_targets() (in module mhvtl_cli.commands.iscsi)</a>
 </li>
       <li><a href="cli.html#mhvtl_cli.commands.iscsi.do_unexport">do_unexport() (in module mhvtl_cli.commands.iscsi)</a>
 </li>
-      <li><a href="cli.html#mhvtl_cli.commands.operations.do_unmount">do_unmount() (in module mhvtl_cli.commands.operations)</a>
+      <li><a href="cli.html#mhvtl_cli.commands.ltfs.do_unmount">do_unmount() (in module mhvtl_cli.commands.ltfs)</a>
+
+      <ul>
+        <li><a href="cli.html#mhvtl_cli.commands.operations.do_unmount">(in module mhvtl_cli.commands.operations)</a>
 </li>
+      </ul></li>
       <li><a href="cli.html#mhvtl_cli.commands.config.do_validate">do_validate() (in module mhvtl_cli.commands.config)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.door_open">door_open (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
@@ -2876,10 +3282,16 @@
         <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.enabled">(apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
 </li>
       </ul></li>
+      <li><a href="cli.html#mhvtl_cli.colour.enabled">enabled() (in module mhvtl_cli.colour)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.core.samples.entry_for">entry_for() (in module apps.libraries.services.core.samples)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.parsing.ENTRY_RE">ENTRY_RE (in module apps.libraries.services.iscsi.parsing)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.dashboard.service.Section.error">error (apps.libraries.services.dashboard.service.Section attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.core.results.ServiceResult.errors">errors (apps.libraries.services.core.results.ServiceResult attribute)</a>
 
       <ul>
@@ -2890,8 +3302,6 @@
         <li><a href="services.html#apps.libraries.services.verification.models.StepResult.errors">(apps.libraries.services.verification.models.StepResult attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.existing_barcodes_ajax">existing_barcodes_ajax() (in module apps.libraries.tape_operations_views)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.media.MediaUsage.exists">exists (apps.libraries.services.tapes.media.MediaUsage attribute)</a>
@@ -2914,6 +3324,8 @@
         <li><a href="services.html#apps.libraries.services.config.inventory.export_zip">(in module apps.libraries.services.config.inventory)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.exported_as">exported_as() (in module apps.libraries.services.iscsi.initiator)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.workflow.ExportReport">ExportReport (class in apps.libraries.services.iscsi.workflow)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.verification.tape_io.extracted_root">extracted_root() (in module apps.libraries.services.verification.tape_io)</a>
@@ -2931,6 +3343,8 @@
       <li><a href="services.html#apps.libraries.services.verification.models.VerificationReport.failed_step">failed_step (apps.libraries.services.verification.models.VerificationReport property)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.results.failure_result">failure_result() (in module apps.libraries.services.core.results)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport.family">family (apps.libraries.services.profiles.ltfs_support.LtfsSupport attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.libraries.workflow.Step.fatal">fatal (apps.libraries.services.libraries.workflow.Step attribute)</a>
 </li>
@@ -2950,27 +3364,55 @@
 </li>
       <li><a href="services.html#apps.libraries.services.console.disk.DiskUsage.filesystem">filesystem (apps.libraries.services.console.disk.DiskUsage attribute)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.core.units.FILLING_AT">FILLING_AT (in module apps.libraries.services.core.units)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.libraries.orphans.find">find() (in module apps.libraries.services.libraries.orphans)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mtx.LibraryStatus.find_barcode">find_barcode() (apps.libraries.services.operations.mtx.LibraryStatus method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.libraries.orphans.find_result">find_result() (in module apps.libraries.services.libraries.orphans)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.verification.models.VerificationReport.finished_at">finished_at (apps.libraries.services.verification.models.VerificationReport attribute)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport.firmware_minimum">firmware_minimum (apps.libraries.services.profiles.ltfs_support.LtfsSupport attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.FIRMWARE_MINIMUM">FIRMWARE_MINIMUM (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.firmware_minimum_for">firmware_minimum_for() (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.tapes.barcodes.first_free">first_free() (in module apps.libraries.services.tapes.barcodes)</a>
 </li>
       <li><a href="authentication.html#apps.authentication.models.User.first_name">first_name (apps.authentication.models.User attribute)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.FIRST_PARTITIONABLE_LTO">FIRST_PARTITIONABLE_LTO (in module apps.libraries.services.profiles.ltfs_support)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.FIRST_PARTITIONABLE_LTO">(in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      </ul></li>
       <li><a href="services.html#apps.libraries.services.config.inventory.FIXED_FILES">FIXED_FILES (in module apps.libraries.services.config.inventory)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.FLAG_RE">FLAG_RE (in module apps.libraries.services.operations.mt)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.metrics.for_library">for_library() (in module apps.libraries.services.console.metrics)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.core.samples.forget">forget() (in module apps.libraries.services.core.samples)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.forget">(in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      </ul></li>
       <li><a href="services.html#apps.libraries.services.console.units.forget_library">forget_library() (in module apps.libraries.services.console.units)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.sync.service.forget_library">(in module apps.libraries.services.sync.service)</a>
+</li>
+      </ul></li>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.LtfsService.format_cartridge">format_cartridge() (apps.libraries.services.ltfs.service.LtfsService method)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.format_version">format_version (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.free_mb">free_mb (apps.libraries.services.tapes.models.TapeInfo property)</a>
 </li>
@@ -2990,6 +3432,8 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.fullness">fullness (apps.libraries.services.tapes.models.TapeInfo property)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.core.units.fullness">fullness() (in module apps.libraries.services.core.units)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -3002,9 +3446,9 @@
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.generate_node_acls">generate_node_acls (apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.tapes.barcodes.GENERATION_CLASS">GENERATION_CLASS (in module apps.libraries.services.tapes.barcodes)</a>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.GENERATION_BY_TOKEN">GENERATION_BY_TOKEN (in module apps.libraries.services.tapes.palette)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.tapes.barcodes.generation_class">generation_class() (in module apps.libraries.services.tapes.barcodes)</a>
+      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.generation_token">generation_token (apps.libraries.services.tapes.models.TapeInfo property)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.scsi.models.ScsiDevice.generic_path">generic_path (apps.libraries.services.scsi.models.ScsiDevice attribute)</a>
 </li>
@@ -3072,6 +3516,8 @@
         <li><a href="libraries.html#apps.libraries.tape_operations_views.LibraryOnlineView.get">(apps.libraries.tape_operations_views.LibraryOnlineView method)</a>
 </li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.LibraryStatusView.get">(apps.libraries.tape_operations_views.LibraryStatusView method)</a>
+</li>
+        <li><a href="libraries.html#apps.libraries.tape_operations_views.LtfsView.get">(apps.libraries.tape_operations_views.LtfsView method)</a>
 </li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.MountTapeView.get">(apps.libraries.tape_operations_views.MountTapeView method)</a>
 </li>
@@ -3224,6 +3670,8 @@
         <li><a href="services.html#apps.libraries.services.console.units.MhvtlServiceStatus.healthy">(apps.libraries.services.console.units.MhvtlServiceStatus property)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.highest_supported">highest_supported() (in module apps.libraries.services.tapes.palette)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.core.paths.home_dir">home_dir() (in module apps.libraries.services.core.paths)</a>
 </li>
   </ul></td>
@@ -3241,6 +3689,8 @@
       <li><a href="services.html#apps.libraries.services.scsi.lsscsi.host_driver">host_driver() (in module apps.libraries.services.scsi.lsscsi)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.system.SystemInfo.hostname">hostname (apps.libraries.services.console.system.SystemInfo attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.core.units.human_size">human_size() (in module apps.libraries.services.core.units)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -3274,11 +3724,17 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.console.system.info">info() (in module apps.libraries.services.console.system)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.INFO_RE">INFO_RE (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.init">init (apps.libraries.services.profiles.personalities.LibraryLayout attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.scsi.lsscsi.INITIATOR_DRIVERS">INITIATOR_DRIVERS (in module apps.libraries.services.scsi.lsscsi)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiAcl.initiator_iqn">initiator_iqn (apps.libraries.services.iscsi.models.IscsiAcl attribute)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.colour.INK">INK (in module mhvtl_cli.colour)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.installed">installed() (in module apps.libraries.services.ltfs.service)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.units.instance_id">instance_id() (in module apps.libraries.services.console.units)</a>
 </li>
@@ -3289,6 +3745,8 @@
       <li><a href="services.html#apps.libraries.services.iscsi.targetcli.InvalidIqn">InvalidIqn</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mtx.inventory">inventory() (in module apps.libraries.services.operations.mtx)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.invocation_ids">invocation_ids() (in module apps.libraries.services.iscsi.bindings)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiPortal.ip_address">ip_address (apps.libraries.services.iscsi.models.IscsiPortal attribute)</a>
 </li>
@@ -3324,6 +3782,8 @@
         <li><a href="services.html#apps.libraries.services.console.logs.is_allowed">(in module apps.libraries.services.console.logs)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.scsi.models.ScsiDevice.is_changer">is_changer (apps.libraries.services.scsi.models.ScsiDevice property)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.models.Drive.is_discovered">is_discovered (apps.libraries.models.Drive property)</a>
@@ -3334,8 +3794,6 @@
         <li><a href="libraries.html#apps.libraries.models.MediaSlot.is_discovered">(apps.libraries.models.MediaSlot property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="libraries.html#apps.libraries.models.MediaSlot.is_empty">is_empty (apps.libraries.models.MediaSlot attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.units.is_enabled">is_enabled() (in module apps.libraries.services.console.units)</a>
@@ -3403,6 +3861,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.JAGUAR_DENSITIES">JAGUAR_DENSITIES (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -3430,12 +3896,16 @@
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.barcodes.kind_head">kind_head() (in module apps.libraries.services.tapes.barcodes)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.KNOWN_VENDORS">KNOWN_VENDORS (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.label_for">label_for() (in module apps.libraries.services.tapes.palette)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiStatus.last_checked">last_checked (apps.libraries.services.iscsi.models.IscsiStatus attribute)</a>
 </li>
       <li><a href="authentication.html#apps.authentication.models.User.last_login">last_login (apps.authentication.models.User attribute)</a>
@@ -3511,6 +3981,8 @@
 </li>
         <li><a href="services.html#apps.libraries.services.drives.models.DriveInfo.library_id">(apps.libraries.services.drives.models.DriveInfo attribute)</a>
 </li>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.library_id">(apps.libraries.services.iscsi.bindings.Binding attribute)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.iscsi.workflow.ExportReport.library_id">(apps.libraries.services.iscsi.workflow.ExportReport attribute)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.libraries.models.LibraryInfo.library_id">(apps.libraries.services.libraries.models.LibraryInfo attribute)</a>
@@ -3529,6 +4001,8 @@
       <li><a href="services.html#apps.libraries.services.profiles.data.VendorProfile.library_models">library_models (apps.libraries.services.profiles.data.VendorProfile attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.workflow.library_of">library_of() (in module apps.libraries.services.iscsi.workflow)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.library_paths">library_paths() (in module apps.libraries.services.iscsi.initiator)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.data.VendorProfile.library_product_default">library_product_default (apps.libraries.services.profiles.data.VendorProfile attribute)</a>
 </li>
@@ -3574,8 +4048,6 @@
 </li>
       <li><a href="libraries.html#apps.libraries.views.LibraryDashboardView">LibraryDashboardView (class in apps.libraries.views)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="libraries.html#apps.libraries.views.LibraryDetailView">LibraryDetailView (class in apps.libraries.views)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.libraries.models.LibraryInfo">LibraryInfo (class in apps.libraries.services.libraries.models)</a>
@@ -3602,6 +4074,8 @@
 </li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.LibraryOnlineView">LibraryOnlineView (class in apps.libraries.tape_operations_views)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="libraries.html#apps.libraries.models.LibraryOperation">LibraryOperation (class in apps.libraries.models)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.models.LibraryOperation.DoesNotExist">LibraryOperation.DoesNotExist</a>
@@ -3619,6 +4093,8 @@
       <li><a href="libraries.html#apps.libraries.ajax_views.LibraryStatusAPIView">LibraryStatusAPIView (class in apps.libraries.ajax_views)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.LibraryStatusView">LibraryStatusView (class in apps.libraries.tape_operations_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.core.samples.LIFE">LIFE (in module apps.libraries.services.core.samples)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.limits_problems">limits_problems() (in module apps.libraries.services.profiles.personalities)</a>
 </li>
@@ -3650,6 +4126,10 @@
 </li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.load_map">load_map() (in module apps.libraries.services.operations.vtlcmd)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.load_state">load_state() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.load_withheld">load_withheld() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.TapeStats.loaded">loaded (apps.libraries.services.operations.vtlcmd.TapeStats attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.modules.loaded">loaded() (in module apps.libraries.services.console.modules)</a>
@@ -3657,6 +4137,8 @@
       <li><a href="services.html#apps.libraries.services.profiles.personalities.MediaSupport.loads">loads (apps.libraries.services.profiles.personalities.MediaSupport property)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.scsi.lsscsi.local">local() (in module apps.libraries.services.scsi.lsscsi)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.local_name">local_name() (in module apps.libraries.services.iscsi.initiator)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.location">location (apps.libraries.services.tapes.models.TapeInfo property)</a>
 </li>
@@ -3675,6 +4157,52 @@
       <li><a href="libraries.html#apps.libraries.console_views.LogViewerView">LogViewerView (class in apps.libraries.console_views)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.targetcli.ls">ls() (in module apps.libraries.services.iscsi.targetcli)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.ltfs">ltfs (apps.libraries.services.tapes.models.TapeInfo property)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LTFS">LTFS (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.colour.LTFS_ACCENT">LTFS_ACCENT (in module mhvtl_cli.colour)</a>
+</li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.ltfs_check_ajax">ltfs_check_ajax() (in module apps.libraries.tape_operations_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.ltfs_densities_for">ltfs_densities_for() (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.ltfs_drives_ajax">ltfs_drives_ajax() (in module apps.libraries.tape_operations_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.ltfs_mark">ltfs_mark (apps.libraries.services.tapes.models.TapeInfo property)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.LTFS_MARKS">LTFS_MARKS (in module apps.libraries.services.tapes.palette)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.ltfs_media_for">ltfs_media_for() (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.ltfs_mount_ajax">ltfs_mount_ajax() (in module apps.libraries.tape_operations_views)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.colour.ltfs_outline">ltfs_outline() (in module mhvtl_cli.colour)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.libraries.workflow.ltfs_provisioning">ltfs_provisioning() (in module apps.libraries.services.libraries.workflow)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LTFS_REVISION">LTFS_REVISION (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.ltfs_state">ltfs_state (apps.libraries.services.tapes.models.TapeInfo attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.ltfs_summary">ltfs_summary (apps.libraries.services.tapes.models.TapeInfo property)</a>
+</li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.ltfs_unmount_ajax">ltfs_unmount_ajax() (in module apps.libraries.tape_operations_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.ltfs_was">ltfs_was (apps.libraries.services.tapes.models.TapeInfo attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.LTFSCK_CORRECTED">LTFSCK_CORRECTED (in module apps.libraries.services.ltfs.service)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsMedium">LtfsMedium (class in apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.LtfsService">LtfsService (class in apps.libraries.services.ltfs.service)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState">LtfsState (class in apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport">LtfsSupport (class in apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="libraries.html#apps.libraries.tape_operations_views.LtfsView">LtfsView (class in apps.libraries.tape_operations_views)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.compatibility.LTO_COMPATIBILITY">LTO_COMPATIBILITY (in module apps.libraries.services.tapes.compatibility)</a>
 </li>
@@ -3702,9 +4230,13 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiLun.lun_id">lun_id (apps.libraries.services.iscsi.models.IscsiLun attribute)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.luns">luns (apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.lun_users">lun_users() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.luns">luns (apps.libraries.services.iscsi.bindings.Binding attribute)</a>
 
       <ul>
+        <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.luns">(apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.iscsi.workflow.ExportReport.luns">(apps.libraries.services.iscsi.workflow.ExportReport attribute)</a>
 </li>
       </ul></li>
@@ -3715,6 +4247,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cli.html#mhvtl_cli.main.main">main() (in module mhvtl_cli.main)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.MAM_APPLICATION_VENDOR">MAM_APPLICATION_VENDOR (in module apps.libraries.services.tapes.ltfs_state)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.media.MAM_HEADER">MAM_HEADER (in module apps.libraries.services.tapes.media)</a>
 </li>
@@ -3732,6 +4266,8 @@
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiAcl.mapped_luns">mapped_luns (apps.libraries.services.iscsi.models.IscsiAcl attribute)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.mark_for_cartridge">mark_for_cartridge() (in module apps.libraries.services.tapes.palette)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.models.Library.mark_synced">mark_synced() (apps.libraries.models.Library method)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.MAX_DEVICE_ID">MAX_DEVICE_ID (in module apps.libraries.services.profiles.personalities)</a>
@@ -3743,6 +4279,8 @@
       <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.max_maps">max_maps (apps.libraries.services.profiles.personalities.LibraryLayout property)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.MAX_NAA_FIELD">MAX_NAA_FIELD (in module apps.libraries.services.profiles.personalities)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.max_partitions">max_partitions (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.max_pickers">max_pickers (apps.libraries.services.profiles.personalities.LibraryLayout property)</a>
 </li>
@@ -3778,6 +4316,8 @@
       </ul></li>
       <li><a href="libraries.html#apps.libraries.models.Library.media_count">media_count (apps.libraries.models.Library attribute)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.media_description">media_description (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.core.paths.media_dir">media_dir() (in module apps.libraries.services.core.paths)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.media_exists">media_exists (apps.libraries.services.tapes.models.TapeInfo attribute)</a>
@@ -3789,7 +4329,11 @@
       <li><a href="services.html#apps.libraries.services.profiles.data.MEDIA_SUFFIX">MEDIA_SUFFIX (in module apps.libraries.services.profiles.data)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.models.MediaSlot.media_type">media_type (apps.libraries.models.MediaSlot attribute)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.media_type">(apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
 </li>
+      </ul></li>
       <li><a href="services.html#apps.libraries.services.console.disk.media_usage">media_usage() (in module apps.libraries.services.console.disk)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.media_verdict">media_verdict() (in module apps.libraries.services.profiles.personalities)</a>
@@ -3835,6 +4379,13 @@
 </li>
       </ul></li>
       <li>
+    mhvtl_cli.colour
+
+      <ul>
+        <li><a href="cli.html#module-mhvtl_cli.colour">module</a>
+</li>
+      </ul></li>
+      <li>
     mhvtl_cli.commands.config
 
       <ul>
@@ -3867,6 +4418,13 @@
 
       <ul>
         <li><a href="cli.html#module-mhvtl_cli.commands.library">module</a>
+</li>
+      </ul></li>
+      <li>
+    mhvtl_cli.commands.ltfs
+
+      <ul>
+        <li><a href="cli.html#module-mhvtl_cli.commands.ltfs">module</a>
 </li>
       </ul></li>
       <li>
@@ -3951,6 +4509,10 @@
 </li>
       <li><a href="libraries.html#apps.libraries.views.MHVTLStatusView">MHVTLStatusView (class in apps.libraries.views)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.core.samples.MIN_AGE">MIN_AGE (in module apps.libraries.services.core.samples)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.core.samples.MIN_COMPARE">MIN_COMPARE (in module apps.libraries.services.core.samples)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.forms.DriveCreateForm.Meta.model">model (apps.libraries.forms.DriveCreateForm.Meta attribute)</a>
 
       <ul>
@@ -3963,13 +4525,17 @@
         <li><a href="services.html#apps.libraries.services.scsi.models.ScsiDevice.model">(apps.libraries.services.scsi.models.ScsiDevice attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="libraries.html#apps.libraries.models.Library.model_id">model_id (apps.libraries.models.Library attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="libraries.html#apps.libraries.models.LibraryBrand.models">models (apps.libraries.models.LibraryBrand attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.config.inventory.ConfigFile.modified">modified (apps.libraries.services.config.inventory.ConfigFile attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.MODPROBE_RE">MODPROBE_RE (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.modprobe_rules">modprobe_rules() (in module apps.libraries.services.scsi.ch_policy)</a>
 </li>
       <li>
     module
@@ -4023,13 +4589,21 @@
 </li>
         <li><a href="services.html#module-apps.libraries.services.core.retry">apps.libraries.services.core.retry</a>
 </li>
+        <li><a href="services.html#module-apps.libraries.services.core.samples">apps.libraries.services.core.samples</a>
+</li>
         <li><a href="services.html#module-apps.libraries.services.core.shell">apps.libraries.services.core.shell</a>
+</li>
+        <li><a href="services.html#module-apps.libraries.services.core.units">apps.libraries.services.core.units</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.dashboard.service">apps.libraries.services.dashboard.service</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.drives.models">apps.libraries.services.drives.models</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.drives.service">apps.libraries.services.drives.service</a>
+</li>
+        <li><a href="services.html#module-apps.libraries.services.iscsi.bindings">apps.libraries.services.iscsi.bindings</a>
+</li>
+        <li><a href="services.html#module-apps.libraries.services.iscsi.initiator">apps.libraries.services.iscsi.initiator</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.iscsi.models">apps.libraries.services.iscsi.models</a>
 </li>
@@ -4057,6 +4631,12 @@
 </li>
         <li><a href="services.html#module-apps.libraries.services.libraries.workflow">apps.libraries.services.libraries.workflow</a>
 </li>
+        <li><a href="services.html#module-apps.libraries.services.ltfs.mounts">apps.libraries.services.ltfs.mounts</a>
+</li>
+        <li><a href="services.html#module-apps.libraries.services.ltfs.service">apps.libraries.services.ltfs.service</a>
+</li>
+        <li><a href="services.html#module-apps.libraries.services.ltfs.tape_moves">apps.libraries.services.ltfs.tape_moves</a>
+</li>
         <li><a href="services.html#module-apps.libraries.services.operations.mounting">apps.libraries.services.operations.mounting</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.operations.mt">apps.libraries.services.operations.mt</a>
@@ -4069,7 +4649,11 @@
 </li>
         <li><a href="services.html#module-apps.libraries.services.profiles.data">apps.libraries.services.profiles.data</a>
 </li>
+        <li><a href="services.html#module-apps.libraries.services.profiles.ltfs_support">apps.libraries.services.profiles.ltfs_support</a>
+</li>
         <li><a href="services.html#module-apps.libraries.services.profiles.personalities">apps.libraries.services.profiles.personalities</a>
+</li>
+        <li><a href="services.html#module-apps.libraries.services.scsi.ch_policy">apps.libraries.services.scsi.ch_policy</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.scsi.lsscsi">apps.libraries.services.scsi.lsscsi</a>
 </li>
@@ -4083,9 +4667,13 @@
 </li>
         <li><a href="services.html#module-apps.libraries.services.tapes.compatibility">apps.libraries.services.tapes.compatibility</a>
 </li>
+        <li><a href="services.html#module-apps.libraries.services.tapes.ltfs_state">apps.libraries.services.tapes.ltfs_state</a>
+</li>
         <li><a href="services.html#module-apps.libraries.services.tapes.media">apps.libraries.services.tapes.media</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.tapes.models">apps.libraries.services.tapes.models</a>
+</li>
+        <li><a href="services.html#module-apps.libraries.services.tapes.palette">apps.libraries.services.tapes.palette</a>
 </li>
         <li><a href="services.html#module-apps.libraries.services.tapes.service">apps.libraries.services.tapes.service</a>
 </li>
@@ -4103,6 +4691,8 @@
 </li>
         <li><a href="libraries.html#module-apps.libraries.views">apps.libraries.views</a>
 </li>
+        <li><a href="cli.html#module-mhvtl_cli.colour">mhvtl_cli.colour</a>
+</li>
         <li><a href="cli.html#module-mhvtl_cli.commands.config">mhvtl_cli.commands.config</a>
 </li>
         <li><a href="cli.html#module-mhvtl_cli.commands.console">mhvtl_cli.commands.console</a>
@@ -4112,6 +4702,8 @@
         <li><a href="cli.html#module-mhvtl_cli.commands.iscsi">mhvtl_cli.commands.iscsi</a>
 </li>
         <li><a href="cli.html#module-mhvtl_cli.commands.library">mhvtl_cli.commands.library</a>
+</li>
+        <li><a href="cli.html#module-mhvtl_cli.commands.ltfs">mhvtl_cli.commands.ltfs</a>
 </li>
         <li><a href="cli.html#module-mhvtl_cli.commands.operations">mhvtl_cli.commands.operations</a>
 </li>
@@ -4132,11 +4724,19 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.console.units.MhvtlServiceStatus.modules_loaded">modules_loaded (apps.libraries.services.console.units.MhvtlServiceStatus attribute)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.operations.service.OperationsService.mount">mount() (apps.libraries.services.operations.service.OperationsService method)</a>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.LtfsService.mount">mount() (apps.libraries.services.ltfs.service.LtfsService method)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.operations.service.OperationsService.mount">(apps.libraries.services.operations.service.OperationsService method)</a>
 </li>
+      </ul></li>
       <li><a href="services.html#apps.libraries.services.operations.mounting.mount_check">mount_check() (in module apps.libraries.services.operations.mounting)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.compatibility.mount_matrix">mount_matrix() (in module apps.libraries.services.tapes.compatibility)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.mount_point_for">mount_point_for() (in module apps.libraries.services.ltfs.service)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.MOUNT_ROOT">MOUNT_ROOT (in module apps.libraries.services.ltfs.service)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mounting.mount_status">mount_status() (in module apps.libraries.services.operations.mounting)</a>
 </li>
@@ -4179,6 +4779,8 @@
 </li>
         <li><a href="services.html#apps.libraries.services.console.units.UnitState.name">(apps.libraries.services.console.units.UnitState attribute)</a>
 </li>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.name">(apps.libraries.services.iscsi.bindings.Binding attribute)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiBackstore.name">(apps.libraries.services.iscsi.models.IscsiBackstore attribute)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.iscsi.remap.Change.name">(apps.libraries.services.iscsi.remap.Change attribute)</a>
@@ -4190,10 +4792,10 @@
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.NATIVE_CAPACITY_GB">NATIVE_CAPACITY_GB (in module apps.libraries.services.profiles.personalities)</a>
 </li>
-      <li><a href="libraries.html#apps.libraries.models.Library.needs_sync">needs_sync (apps.libraries.models.Library property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="libraries.html#apps.libraries.models.Library.needs_sync">needs_sync (apps.libraries.models.Library property)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.tapes.service.TapeService.next_barcode">next_barcode() (apps.libraries.services.tapes.service.TapeService method)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.next_barcode_ajax">next_barcode_ajax() (in module apps.libraries.tape_operations_views)</a>
@@ -4262,10 +4864,10 @@
         <li><a href="services.html#apps.libraries.services.libraries.workflow.Step.ok">(apps.libraries.services.libraries.workflow.Step attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.online">online (apps.libraries.services.operations.mt.DriveStatus attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.operations.service.OperationsService.online">online() (apps.libraries.services.operations.service.OperationsService method)</a>
 
       <ul>
@@ -4294,6 +4896,8 @@
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.service.TapeService.owner_of">owner_of() (apps.libraries.services.tapes.service.TapeService method)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.owners">owners() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -4314,7 +4918,13 @@
       </ul></li>
       <li><a href="libraries.html#apps.libraries.iscsi_views.IscsiAttachView.page_arguments">page_arguments() (apps.libraries.iscsi_views.IscsiAttachView method)</a>
 </li>
+      <li><a href="cli.html#mhvtl_cli.colour.paint">paint() (in module mhvtl_cli.colour)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.output.pairs">pairs() (in module mhvtl_cli.output)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.PALETTE">PALETTE (in module apps.libraries.services.tapes.palette)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.service.TapeService.palette">palette() (apps.libraries.services.tapes.service.TapeService method)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.scsi.models.ScsiAddress.parse">parse() (apps.libraries.services.scsi.models.ScsiAddress class method)</a>
 
@@ -4332,10 +4942,26 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.iscsi.parsing.parse_config">parse_config() (in module apps.libraries.services.iscsi.parsing)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.parse_info">parse_info() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.scsi.lsscsi.parse_line">parse_line() (in module apps.libraries.services.scsi.lsscsi)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.parse_stats">parse_stats() (in module apps.libraries.services.operations.vtlcmd)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.partition_capacities">partition_capacities (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.partition_summary">partition_summary (apps.libraries.services.tapes.models.TapeInfo property)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.partitioned">partitioned (apps.libraries.services.tapes.ltfs_state.LtfsState property)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.partitions">partitions (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.tapes.media.MediaUsage.partitions">(apps.libraries.services.tapes.media.MediaUsage attribute)</a>
+</li>
+        <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.partitions">(apps.libraries.services.tapes.models.TapeInfo attribute)</a>
+</li>
+      </ul></li>
       <li><a href="authentication.html#apps.authentication.models.User.password">password (apps.authentication.models.User attribute)</a>
 
       <ul>
@@ -4348,6 +4974,8 @@
         <li><a href="services.html#apps.libraries.services.console.disk.DiskUsage.path">(apps.libraries.services.console.disk.DiskUsage attribute)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.core.samples.path">path() (in module apps.libraries.services.core.samples)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.tapes.media.path_for">path_for() (in module apps.libraries.services.tapes.media)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.disk.DiskUsage.percent">percent (apps.libraries.services.console.disk.DiskUsage attribute)</a>
@@ -4370,7 +4998,13 @@
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.parsing.PLUGIN_RE">PLUGIN_RE (in module apps.libraries.services.iscsi.parsing)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.ltfs.mounts.point_for">point_for() (in module apps.libraries.services.ltfs.mounts)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.mounts.POINT_RE">POINT_RE (in module apps.libraries.services.ltfs.mounts)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiPortal.port">port (apps.libraries.services.iscsi.models.IscsiPortal attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.portal_for">portal_for() (in module apps.libraries.services.iscsi.initiator)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiTpg.portals">portals (apps.libraries.services.iscsi.models.IscsiTpg attribute)</a>
 </li>
@@ -4435,6 +5069,8 @@
 </li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.LibraryOnlineView.post">(apps.libraries.tape_operations_views.LibraryOnlineView method)</a>
 </li>
+        <li><a href="libraries.html#apps.libraries.tape_operations_views.LtfsView.post">(apps.libraries.tape_operations_views.LtfsView method)</a>
+</li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.MountTapeView.post">(apps.libraries.tape_operations_views.MountTapeView method)</a>
 </li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.MoveTapeView.post">(apps.libraries.tape_operations_views.MoveTapeView method)</a>
@@ -4468,11 +5104,19 @@
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.barcodes.PREFIX_LENGTH">PREFIX_LENGTH (in module apps.libraries.services.tapes.barcodes)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.present_in">present_in() (in module apps.libraries.services.tapes.palette)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.libraries.lifecycle.preview">preview() (in module apps.libraries.services.libraries.lifecycle)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.ajax_views.preview_config_ajax">preview_config_ajax() (in module apps.libraries.ajax_views)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.ajax_views.preview_config_file_ajax">preview_config_file_ajax() (in module apps.libraries.ajax_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.PROBE_RE">PROBE_RE (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.probe_reports">probe_reports() (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.mounts.PROC_MOUNTS">PROC_MOUNTS (in module apps.libraries.services.ltfs.mounts)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.metrics.LibraryMetrics.process">process (apps.libraries.services.console.metrics.LibraryMetrics attribute)</a>
 </li>
@@ -4503,6 +5147,8 @@
 </li>
       </ul></li>
       <li><a href="services.html#apps.libraries.services.libraries.spec.profile_key_of">profile_key_of() (in module apps.libraries.services.libraries.spec)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.config.service.ConfigService.prune_backups">prune_backups() (apps.libraries.services.config.service.ConfigService method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -4542,9 +5188,13 @@
 </li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.TapeStats.read_media">read_media (apps.libraries.services.operations.vtlcmd.TapeStats attribute)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.tapes.media.read_media_files">read_media_files() (in module apps.libraries.services.tapes.media)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.MediaSupport.read_only">read_only (apps.libraries.services.profiles.personalities.MediaSupport attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.read_only_media">read_only_media() (in module apps.libraries.services.profiles.personalities)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.read_vtl_attributes">read_vtl_attributes() (in module apps.libraries.services.tapes.ltfs_state)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.MediaSupport.read_write">read_write (apps.libraries.services.profiles.personalities.MediaSupport attribute)</a>
 </li>
@@ -4552,15 +5202,39 @@
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mt.DriveStatus.ready">ready (apps.libraries.services.operations.mt.DriveStatus property)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.iscsi.remap.Change.reason">reason (apps.libraries.services.iscsi.remap.Change attribute)</a>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.reason">reason (apps.libraries.services.iscsi.bindings.Binding attribute)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.iscsi.remap.Change.reason">(apps.libraries.services.iscsi.remap.Change attribute)</a>
+</li>
+        <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsMedium.reason">(apps.libraries.services.profiles.ltfs_support.LtfsMedium attribute)</a>
+</li>
+        <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport.reason">(apps.libraries.services.profiles.ltfs_support.LtfsSupport attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.rebind">rebind() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.rebind_allowed">rebind_allowed() (in module apps.libraries.services.iscsi.bindings)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.service.IscsiService.rebind_library">rebind_library() (apps.libraries.services.iscsi.service.IscsiService method)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.RebindDisabled">RebindDisabled</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.core.samples.recent">recent() (in module apps.libraries.services.core.samples)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.libraries.lifecycle.recognised">recognised() (in module apps.libraries.services.libraries.lifecycle)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.libraries.service.LibraryService.recognised_by_mhvtl">recognised_by_mhvtl() (apps.libraries.services.libraries.service.LibraryService method)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.workflow.ExportReport.record">record() (apps.libraries.services.iscsi.workflow.ExportReport method)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.record">(in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      </ul></li>
+      <li><a href="services.html#apps.libraries.services.sync.service.record_library">record_library() (in module apps.libraries.services.sync.service)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.record_saved">record_saved() (in module apps.libraries.services.iscsi.bindings)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.config.device_conf.record_text">record_text() (in module apps.libraries.services.config.device_conf)</a>
 </li>
@@ -4581,6 +5255,8 @@
 </li>
         <li><a href="cli.html#mhvtl_cli.commands.library.register">(in module mhvtl_cli.commands.library)</a>
 </li>
+        <li><a href="cli.html#mhvtl_cli.commands.ltfs.register">(in module mhvtl_cli.commands.ltfs)</a>
+</li>
         <li><a href="cli.html#mhvtl_cli.commands.operations.register">(in module mhvtl_cli.commands.operations)</a>
 </li>
         <li><a href="cli.html#mhvtl_cli.commands.scsi.register">(in module mhvtl_cli.commands.scsi)</a>
@@ -4592,14 +5268,20 @@
         <li><a href="cli.html#mhvtl_cli.commands.tape.register">(in module mhvtl_cli.commands.tape)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.release_library">release_library() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.tapes.media.MediaUsage.remaining_bytes">remaining_bytes (apps.libraries.services.tapes.media.MediaUsage attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.remap.remap">remap() (in module apps.libraries.services.iscsi.remap)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.core.samples.remember">remember() (in module apps.libraries.services.core.samples)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.drives.service.DriveService.remove">remove() (apps.libraries.services.drives.service.DriveService method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="services.html#apps.libraries.services.config.service.ConfigService.remove_backup">remove_backup() (apps.libraries.services.config.service.ConfigService method)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.remove_drive_ajax">remove_drive_ajax() (in module apps.libraries.tape_operations_views)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.config.library_contents.remove_drive_slot">remove_drive_slot() (in module apps.libraries.services.config.library_contents)</a>
@@ -4648,19 +5330,27 @@
         <li><a href="services.html#apps.libraries.services.iscsi.targetcli.restore_config">(in module apps.libraries.services.iscsi.targetcli)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.restore_withheld">restore_withheld() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="cli.html#mhvtl_cli.output.result">result() (in module mhvtl_cli.output)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.retry.retry_on_busy">retry_on_busy() (in module apps.libraries.services.core.retry)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.shell.CommandResult.returncode">returncode (apps.libraries.services.core.shell.CommandResult attribute)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.scsi.models.ScsiDevice.revision">revision (apps.libraries.services.scsi.models.ScsiDevice attribute)</a>
+      <li><a href="services.html#apps.libraries.services.drives.models.DriveInfo.revision">revision (apps.libraries.services.drives.models.DriveInfo attribute)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.scsi.models.ScsiDevice.revision">(apps.libraries.services.scsi.models.ScsiDevice attribute)</a>
 </li>
+      </ul></li>
       <li><a href="services.html#apps.libraries.services.verification.tape_io.rewind">rewind() (in module apps.libraries.services.verification.tape_io)</a>
 </li>
       <li><a href="authentication.html#apps.authentication.models.User.role">role (apps.authentication.models.User attribute)</a>
 </li>
       <li><a href="authentication.html#apps.authentication.models.User.ROLE_CHOICES">ROLE_CHOICES (apps.authentication.models.User attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.rows">rows() (in module apps.libraries.services.tapes.palette)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.verification.service.VerificationService.run">run() (apps.libraries.services.verification.service.VerificationService method)</a>
 
@@ -4682,6 +5372,8 @@
         <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiServiceStatus.running">(apps.libraries.services.iscsi.models.IscsiServiceStatus attribute)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.running_config">running_config() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -4696,6 +5388,10 @@
         <li><a href="services.html#apps.libraries.services.iscsi.targetcli.save_config">(in module apps.libraries.services.iscsi.targetcli)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.save_state">save_state() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.save_withheld">save_withheld() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.remap.Change.saved">saved (apps.libraries.services.iscsi.remap.Change attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.scalar_layout_product">scalar_layout_product() (in module apps.libraries.services.profiles.personalities)</a>
@@ -4707,6 +5403,8 @@
       <li><a href="services.html#apps.libraries.services.scsi.models.ScsiDevice">ScsiDevice (class in apps.libraries.services.scsi.models)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.console_views.ScsiDevicesView">ScsiDevicesView (class in apps.libraries.console_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.SEARCH_PATH">SEARCH_PATH (in module apps.libraries.services.ltfs.service)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.dashboard.service.Section">Section (class in apps.libraries.services.dashboard.service)</a>
 </li>
@@ -4737,6 +5435,10 @@
       <li><a href="services.html#apps.libraries.services.core.results.ServiceResult">ServiceResult (class in apps.libraries.services.core.results)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.console_views.ServiceStatusView">ServiceStatusView (class in apps.libraries.console_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.session_for">session_for() (in module apps.libraries.services.iscsi.initiator)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.initiator.sessions">sessions() (in module apps.libraries.services.iscsi.initiator)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.targetcli.set_attribute">set_attribute() (in module apps.libraries.services.iscsi.targetcli)</a>
 </li>
@@ -4796,14 +5498,14 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.source">source (apps.libraries.services.profiles.personalities.LibraryLayout attribute)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.ltfs.mounts.SOURCE_PREFIX">SOURCE_PREFIX (in module apps.libraries.services.ltfs.mounts)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.models.LibraryOperation.source_slot">source_slot (apps.libraries.models.LibraryOperation attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.barcodes.split">split() (in module apps.libraries.services.tapes.barcodes)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.units.MhvtlServiceStatus.stale">stale (apps.libraries.services.console.units.MhvtlServiceStatus attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.console.units.start">start() (in module apps.libraries.services.console.units)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.start_drive">start_drive (apps.libraries.services.profiles.personalities.LibraryLayout attribute)</a>
@@ -4814,6 +5516,8 @@
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.start_picker">start_picker (apps.libraries.services.profiles.personalities.LibraryLayout attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.start_storage">start_storage (apps.libraries.services.profiles.personalities.LibraryLayout attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.verification.models.VerificationReport.started_at">started_at (apps.libraries.services.verification.models.VerificationReport attribute)</a>
@@ -4825,23 +5529,43 @@
       <ul>
         <li><a href="services.html#apps.libraries.services.console.units.UnitState.state">(apps.libraries.services.console.units.UnitState attribute)</a>
 </li>
+        <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.state">(apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+</li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.state">state() (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.state_for_all">state_for_all() (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.state_from_files">state_from_files() (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.state_path">state_path() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.stats">stats() (in module apps.libraries.services.operations.vtlcmd)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.vtlcmd.STATS_RE">STATS_RE (in module apps.libraries.services.operations.vtlcmd)</a>
 </li>
-      <li><a href="libraries.html#apps.libraries.views.ConfiguredLibrary.status">status (apps.libraries.views.ConfiguredLibrary attribute)</a>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.status">status (apps.libraries.services.iscsi.bindings.Binding attribute)</a>
+
+      <ul>
+        <li><a href="libraries.html#apps.libraries.views.ConfiguredLibrary.status">(apps.libraries.views.ConfiguredLibrary attribute)</a>
 </li>
+      </ul></li>
       <li><a href="services.html#apps.libraries.services.iscsi.service.IscsiService.status">status() (apps.libraries.services.iscsi.service.IscsiService method)</a>
 
       <ul>
+        <li><a href="services.html#apps.libraries.services.ltfs.service.LtfsService.status">(apps.libraries.services.ltfs.service.LtfsService method)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.operations.service.OperationsService.status">(apps.libraries.services.operations.service.OperationsService method)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.console.units.status">(in module apps.libraries.services.console.units)</a>
 </li>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.status">(in module apps.libraries.services.iscsi.bindings)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.operations.mt.status">(in module apps.libraries.services.operations.mt)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.operations.mtx.status">(in module apps.libraries.services.operations.mtx)</a>
+</li>
+        <li><a href="services.html#apps.libraries.services.scsi.ch_policy.status">(in module apps.libraries.services.scsi.ch_policy)</a>
 </li>
       </ul></li>
       <li><a href="services.html#apps.libraries.services.core.shell.CommandResult.stderr">stderr (apps.libraries.services.core.shell.CommandResult attribute)</a>
@@ -4866,6 +5590,8 @@
 </li>
       <li><a href="services.html#apps.libraries.services.console.units.stop_library">stop_library() (in module apps.libraries.services.console.units)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.stored_partition_count">stored_partition_count (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiServiceStatus.sub_state">sub_state (apps.libraries.services.iscsi.models.IscsiServiceStatus attribute)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.core.results.ServiceResult.success">success (apps.libraries.services.core.results.ServiceResult attribute)</a>
@@ -4886,6 +5612,8 @@
 </li>
       <li><a href="services.html#apps.libraries.services.core.shell.sudo_tee">sudo_tee() (in module apps.libraries.services.core.shell)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsMedium.suffix">suffix (apps.libraries.services.profiles.ltfs_support.LtfsMedium attribute)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.SUFFIX_BY_DENSITY">SUFFIX_BY_DENSITY (in module apps.libraries.services.profiles.personalities)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.suffix_for">suffix_for() (in module apps.libraries.services.profiles.personalities)</a>
@@ -4899,6 +5627,8 @@
       <li><a href="services.html#apps.libraries.services.operations.mtx.LibraryStatus.summary">summary (apps.libraries.services.operations.mtx.LibraryStatus property)</a>
 
       <ul>
+        <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.summary">(apps.libraries.services.tapes.ltfs_state.LtfsState property)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.tapes.models.TapeInfo.summary">(apps.libraries.services.tapes.models.TapeInfo property)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.verification.models.VerificationReport.summary">(apps.libraries.services.verification.models.VerificationReport attribute)</a>
@@ -4912,6 +5642,14 @@
         <li><a href="services.html#apps.libraries.services.console.modules.summary">(in module apps.libraries.services.console.modules)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport.supported">supported (apps.libraries.services.profiles.ltfs_support.LtfsSupport attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.SUPPORTED_DRIVES">SUPPORTED_DRIVES (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.supports">supports() (in module apps.libraries.services.profiles.ltfs_support)</a>
+</li>
+      <li><a href="cli.html#mhvtl_cli.colour.swatch">swatch() (in module mhvtl_cli.colour)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.models.Library.sync_hash">sync_hash (apps.libraries.models.Library attribute)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.ajax_views.sync_library_ajax">sync_library_ajax() (in module apps.libraries.ajax_views)</a>
@@ -5033,6 +5771,8 @@
 </li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.LibraryStatusView.template_name">(apps.libraries.tape_operations_views.LibraryStatusView attribute)</a>
 </li>
+        <li><a href="libraries.html#apps.libraries.tape_operations_views.LtfsView.template_name">(apps.libraries.tape_operations_views.LtfsView attribute)</a>
+</li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.MountTapeView.template_name">(apps.libraries.tape_operations_views.MountTapeView attribute)</a>
 </li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.MoveTapeView.template_name">(apps.libraries.tape_operations_views.MoveTapeView attribute)</a>
@@ -5042,8 +5782,6 @@
         <li><a href="libraries.html#apps.libraries.tape_operations_views.RemoveDriveView.template_name">(apps.libraries.tape_operations_views.RemoveDriveView attribute)</a>
 </li>
         <li><a href="libraries.html#apps.libraries.tape_operations_views.TapeListView.template_name">(apps.libraries.tape_operations_views.TapeListView attribute)</a>
-</li>
-        <li><a href="libraries.html#apps.libraries.tape_operations_views.UnmountTapeView.template_name">(apps.libraries.tape_operations_views.UnmountTapeView attribute)</a>
 </li>
         <li><a href="libraries.html#apps.libraries.views.BrandConfigView.template_name">(apps.libraries.views.BrandConfigView attribute)</a>
 </li>
@@ -5113,6 +5851,8 @@
 </li>
         <li><a href="services.html#apps.libraries.services.drives.models.DriveInfo.to_dict">(apps.libraries.services.drives.models.DriveInfo method)</a>
 </li>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.to_dict">(apps.libraries.services.iscsi.bindings.Binding method)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiAcl.to_dict">(apps.libraries.services.iscsi.models.IscsiAcl method)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.iscsi.models.IscsiBackstore.to_dict">(apps.libraries.services.iscsi.models.IscsiBackstore method)</a>
@@ -5147,9 +5887,15 @@
 </li>
         <li><a href="services.html#apps.libraries.services.operations.vtlcmd.TapeStats.to_dict">(apps.libraries.services.operations.vtlcmd.TapeStats method)</a>
 </li>
+        <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsMedium.to_dict">(apps.libraries.services.profiles.ltfs_support.LtfsMedium method)</a>
+</li>
+        <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport.to_dict">(apps.libraries.services.profiles.ltfs_support.LtfsSupport method)</a>
+</li>
         <li><a href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout.to_dict">(apps.libraries.services.profiles.personalities.LibraryLayout method)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.scsi.models.ScsiDevice.to_dict">(apps.libraries.services.scsi.models.ScsiDevice method)</a>
+</li>
+        <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.to_dict">(apps.libraries.services.tapes.ltfs_state.LtfsState method)</a>
 </li>
         <li><a href="services.html#apps.libraries.services.tapes.media.MediaUsage.to_dict">(apps.libraries.services.tapes.media.MediaUsage method)</a>
 </li>
@@ -5160,6 +5906,12 @@
         <li><a href="services.html#apps.libraries.services.verification.models.VerificationReport.to_dict">(apps.libraries.services.verification.models.VerificationReport method)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.token_for_drive">token_for_drive() (in module apps.libraries.services.tapes.palette)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.token_for_generation">token_for_generation() (in module apps.libraries.services.tapes.palette)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.token_for_tape">token_for_tape() (in module apps.libraries.services.tapes.palette)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.models.Library.total_slots">total_slots (apps.libraries.models.Library property)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.parsing.TPG_RE">TPG_RE (in module apps.libraries.services.iscsi.parsing)</a>
@@ -5178,6 +5930,12 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.UDEV_DIRS">UDEV_DIRS (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.UDEV_RE">UDEV_RE (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.scsi.ch_policy.udev_rules">udev_rules() (in module apps.libraries.services.scsi.ch_policy)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.tapes.service.TapeService.unassigned">unassigned() (apps.libraries.services.tapes.service.TapeService method)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.iscsi.service.IscsiService.unexport_library">unexport_library() (apps.libraries.services.iscsi.service.IscsiService method)</a>
@@ -5187,7 +5945,11 @@
 </li>
       </ul></li>
       <li><a href="services.html#apps.libraries.services.console.metrics.LibraryMetrics.unit">unit (apps.libraries.services.console.metrics.LibraryMetrics attribute)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.iscsi.bindings.Binding.unit">(apps.libraries.services.iscsi.bindings.Binding attribute)</a>
 </li>
+      </ul></li>
       <li><a href="services.html#apps.libraries.services.drives.models.DriveInfo.unit_name">unit_name (apps.libraries.services.drives.models.DriveInfo property)</a>
 
       <ul>
@@ -5202,15 +5964,27 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.console.units.UnitState">UnitState (class in apps.libraries.services.console.units)</a>
 </li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.UNKNOWN">UNKNOWN (in module apps.libraries.services.tapes.palette)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.palette.UNKNOWN_ENTRY">UNKNOWN_ENTRY (in module apps.libraries.services.tapes.palette)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.libraries.spec.UnknownProfile">UnknownProfile</a>
 </li>
       <li><a href="services.html#apps.libraries.services.operations.mtx.unload">unload() (in module apps.libraries.services.operations.mtx)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.operations.service.OperationsService.unmount">unmount() (apps.libraries.services.operations.service.OperationsService method)</a>
+      <li><a href="services.html#apps.libraries.services.ltfs.service.LtfsService.unmount">unmount() (apps.libraries.services.ltfs.service.LtfsService method)</a>
+
+      <ul>
+        <li><a href="services.html#apps.libraries.services.operations.service.OperationsService.unmount">(apps.libraries.services.operations.service.OperationsService method)</a>
+</li>
+      </ul></li>
+      <li><a href="services.html#apps.libraries.services.ltfs.tape_moves.unmount_tape">unmount_tape() (in module apps.libraries.services.ltfs.tape_moves)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.unmount_tape_ajax">unmount_tape_ajax() (in module apps.libraries.tape_operations_views)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.tape_operations_views.UnmountTapeView">UnmountTapeView (class in apps.libraries.tape_operations_views)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.UNREACHABLE_VENDORS">UNREACHABLE_VENDORS (in module apps.libraries.services.profiles.ltfs_support)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.drives.service.DriveService.update">update() (apps.libraries.services.drives.service.DriveService method)</a>
 
@@ -5222,6 +5996,8 @@
       </ul></li>
       <li><a href="libraries.html#apps.libraries.ajax_views.update_library_ajax">update_library_ajax() (in module apps.libraries.ajax_views)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="libraries.html#apps.libraries.models.Library.updated_at">updated_at (apps.libraries.models.Library attribute)</a>
 
       <ul>
@@ -5234,9 +6010,11 @@
         <li><a href="services.html#apps.libraries.services.console.system.SystemInfo.uptime">(apps.libraries.services.console.system.SystemInfo attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.console.metrics.uptime">uptime() (in module apps.libraries.services.console.metrics)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsMedium.usable">usable (apps.libraries.services.profiles.ltfs_support.LtfsMedium attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.usable_drive_models">usable_drive_models() (in module apps.libraries.services.profiles.ltfs_support)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.console.disk.usage">usage() (in module apps.libraries.services.console.disk)</a>
 
@@ -5318,8 +6096,6 @@
 </li>
       <li><a href="services.html#apps.libraries.services.core.results.ValidationResult">ValidationResult (class in apps.libraries.services.core.results)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.drives.models.DriveInfo.vendor">vendor (apps.libraries.services.drives.models.DriveInfo attribute)</a>
 
       <ul>
@@ -5330,6 +6106,8 @@
         <li><a href="libraries.html#apps.libraries.views.ConfiguredLibrary.vendor">(apps.libraries.views.ConfiguredLibrary attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.VENDOR_ID_LEN">VENDOR_ID_LEN (in module apps.libraries.services.profiles.personalities)</a>
 </li>
       <li><a href="libraries.html#apps.libraries.models.Drive.vendor_identification">vendor_identification (apps.libraries.models.Drive attribute)</a>
@@ -5338,6 +6116,8 @@
         <li><a href="libraries.html#apps.libraries.models.Library.vendor_identification">(apps.libraries.models.Library attribute)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.profiles.ltfs_support.LtfsSupport.vendor_unknown">vendor_unknown (apps.libraries.services.profiles.ltfs_support.LtfsSupport attribute)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.profiles.data.VendorProfile">VendorProfile (class in apps.libraries.services.profiles.data)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.tapes.compatibility.verdict">verdict() (in module apps.libraries.services.tapes.compatibility)</a>
@@ -5349,6 +6129,16 @@
       <li><a href="services.html#apps.libraries.services.verification.data.verify">verify() (in module apps.libraries.services.verification.data)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.config.library_contents.LibraryContents.version">version (apps.libraries.services.config.library_contents.LibraryContents attribute)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_COHERENCY_P1">VTL_COHERENCY_P1 (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_FILE">VTL_FILE (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_HEADER">VTL_HEADER (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_MAX_PARTITIONS">VTL_MAX_PARTITIONS (in module apps.libraries.services.tapes.ltfs_state)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.VTL_PARTITION_CAPACITY">VTL_PARTITION_CAPACITY (in module apps.libraries.services.tapes.ltfs_state)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -5368,6 +6158,8 @@
         <li><a href="services.html#apps.libraries.services.libraries.workflow.WorkflowReport.warnings">(apps.libraries.services.libraries.workflow.WorkflowReport property)</a>
 </li>
       </ul></li>
+      <li><a href="services.html#apps.libraries.services.tapes.ltfs_state.LtfsState.was_ltfs">was_ltfs (apps.libraries.services.tapes.ltfs_state.LtfsState attribute)</a>
+</li>
       <li><a href="libraries.html#apps.libraries.forms.DriveCreateForm.Meta.widgets">widgets (apps.libraries.forms.DriveCreateForm.Meta attribute)</a>
 
       <ul>
@@ -5376,12 +6168,16 @@
       </ul></li>
       <li><a href="services.html#apps.libraries.services.profiles.data.with_scalar_layout">with_scalar_layout() (in module apps.libraries.services.profiles.data)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.iscsi.remap.withheld_entries">withheld_entries() (in module apps.libraries.services.iscsi.remap)</a>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.WITHHELD">WITHHELD (in module apps.libraries.services.iscsi.bindings)</a>
 </li>
-      <li><a href="services.html#apps.libraries.services.iscsi.remap.Change.withhold">withhold (apps.libraries.services.iscsi.remap.Change attribute)</a>
+      <li><a href="services.html#apps.libraries.services.iscsi.remap.withheld_entries">withheld_entries() (in module apps.libraries.services.iscsi.remap)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="services.html#apps.libraries.services.iscsi.bindings.withheld_path">withheld_path() (in module apps.libraries.services.iscsi.bindings)</a>
+</li>
+      <li><a href="services.html#apps.libraries.services.iscsi.remap.Change.withhold">withhold (apps.libraries.services.iscsi.remap.Change attribute)</a>
+</li>
       <li><a href="services.html#apps.libraries.services.libraries.workflow.WorkflowReport">WorkflowReport (class in apps.libraries.services.libraries.workflow)</a>
 </li>
       <li><a href="services.html#apps.libraries.services.profiles.personalities.WORM_SUFFIX_BY_DENSITY">WORM_SUFFIX_BY_DENSITY (in module apps.libraries.services.profiles.personalities)</a>

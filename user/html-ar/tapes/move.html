@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Moving a tape: mount, unmount, move &mdash; MHVTL GUI User Guide 2.1.1 — التوثيق العربي</title>
+  <title>Moving a tape: mount, unmount, move &mdash; MHVTL GUI User Guide 3.0.0 — التوثيق العربي</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/lang-switch.css?v=16e3750c" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=60bde09b"></script>
+      <script src="../_static/documentation_options.js?v=4860119d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/translations.js?v=87cb2081"></script>
@@ -127,11 +127,13 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Moving a tape: mount, unmount, move</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#one-page-does-the-first-two">One page does the first two</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mount-slot-into-drive">Mount: slot into drive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#unmount-drive-back-to-a-slot">Unmount: drive back to a slot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#move-slot-to-slot">Move: slot to slot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#online-and-offline">Online and offline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-map">The MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#seeing-the-whole-library-at-once">Seeing the whole library at once</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#what-the-robot-says-is-where">What the robot says is where</a></li>
 </ul>
 </li>
@@ -165,6 +167,18 @@
 <li class="toctree-l2"><a class="reference internal" href="../using/watching.html#two-readings-not-one">Two readings, not one</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/watching.html#if-it-says-holding-while-a-backup-is-running">If it says <code class="docutils literal notranslate"><span class="pre">holding</span></code> while a backup is running</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/watching.html#if-mt-and-the-panel-disagree">If <code class="docutils literal notranslate"><span class="pre">mt</span></code> and the panel disagree</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../using/ltfs.html">A tape as a filesystem: LTFS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#two-different-things-are-called-mount">Two different things are called &quot;mount&quot;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#can-this-library-do-ltfs-at-all">1. Can this library do LTFS at all?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#give-it-a-drive-ltfs-will-open">2. Give it a drive LTFS will open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#a-cartridge-it-can-write">3. A cartridge it can write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#put-it-in-the-drive">4. Put it in the drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#format-it-which-the-console-will-not-do-for-you">5. Format it — which the console will not do for you</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#mount-it-write-to-it-read-it-back">6. Mount it, write to it, read it back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#taking-it-out-again-in-the-right-order">7. Taking it out again, in the right order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#which-cartridges-are-volumes">Which cartridges are volumes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../using/iscsi.html">Exporting a library over iSCSI</a><ul>
@@ -241,18 +255,46 @@
 and move it between slots. Everything else is the drive's job.</p>
 <nav class="contents local" id="id1">
 <ul class="simple">
-<li><p><a class="reference internal" href="#mount-slot-into-drive" id="id2">Mount: slot into drive</a></p></li>
-<li><p><a class="reference internal" href="#unmount-drive-back-to-a-slot" id="id3">Unmount: drive back to a slot</a></p></li>
-<li><p><a class="reference internal" href="#move-slot-to-slot" id="id4">Move: slot to slot</a></p></li>
-<li><p><a class="reference internal" href="#online-and-offline" id="id5">Online and offline</a></p></li>
-<li><p><a class="reference internal" href="#the-map" id="id6">The MAP</a></p></li>
-<li><p><a class="reference internal" href="#what-the-robot-says-is-where" id="id7">What the robot says is where</a></p></li>
+<li><p><a class="reference internal" href="#one-page-does-the-first-two" id="id2">One page does the first two</a></p></li>
+<li><p><a class="reference internal" href="#mount-slot-into-drive" id="id3">Mount: slot into drive</a></p></li>
+<li><p><a class="reference internal" href="#unmount-drive-back-to-a-slot" id="id4">Unmount: drive back to a slot</a></p></li>
+<li><p><a class="reference internal" href="#move-slot-to-slot" id="id5">Move: slot to slot</a></p></li>
+<li><p><a class="reference internal" href="#online-and-offline" id="id6">Online and offline</a></p></li>
+<li><p><a class="reference internal" href="#the-map" id="id7">The MAP</a></p></li>
+<li><p><a class="reference internal" href="#seeing-the-whole-library-at-once" id="id8">Seeing the whole library at once</a></p></li>
+<li><p><a class="reference internal" href="#what-the-robot-says-is-where" id="id9">What the robot says is where</a></p></li>
 </ul>
 </nav>
+<section id="one-page-does-the-first-two">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">One page does the first two</a><a class="headerlink" href="#one-page-does-the-first-two" title="Link to this heading"></a></h2>
+<p><strong>Operator → Mount / Unmount Tape</strong>, or <strong>The robot → Mount or unmount a
+tape</strong> on the library page. There used to be two pages; the drives were drawn
+on both and clickable on neither.</p>
+<p>Which direction you are going depends on which drive you click:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Click</p></th>
+<th class="head"><p>What happens</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a tape, then an <strong>empty</strong> drive</p></td>
+<td><p>mount - the tape goes into the drive</p></td>
+</tr>
+<tr class="row-odd"><td><p>a <strong>loaded</strong> drive</p></td>
+<td><p>unmount - its cartridge goes back to a slot</p></td>
+</tr>
+</tbody>
+</table>
+<p>A click only ever <em>selects</em>. The preview says what will happen and the button
+does it, both ways round.</p>
+</section>
 <section id="mount-slot-into-drive">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Mount: slot into drive</a><a class="headerlink" href="#mount-slot-into-drive" title="Link to this heading"></a></h2>
-<p><strong>Operator → Mount Tape</strong>, or <strong>The robot → Mount a tape</strong> on the library
-page.</p>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Mount: slot into drive</a><a class="headerlink" href="#mount-slot-into-drive" title="Link to this heading"></a></h2>
 <p>Pick the library, the slot and the drive. The page shows what is in each
 slot, coloured by generation, so an LTO-7 cartridge is not mounted into a
 drive that cannot write it by accident.</p>
@@ -268,18 +310,35 @@ library is 0, not its drive id. <code class="docutils literal notranslate"><span
 <code class="docutils literal notranslate"><span class="pre">--force</span></code> overrides it if you are testing what the refusal looks like.</p>
 </section>
 <section id="unmount-drive-back-to-a-slot">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Unmount: drive back to a slot</a><a class="headerlink" href="#unmount-drive-back-to-a-slot" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Unmount: drive back to a slot</a><a class="headerlink" href="#unmount-drive-back-to-a-slot" title="Link to this heading"></a></h2>
+<p>Click a loaded drive. The slot it came from is chosen for you and outlined on
+the map; click any empty slot, or use the dropdown, to send it somewhere else.</p>
+<p>If that original slot has since been filled there is no default, the page says
+so, and the button waits until you choose a free one. Being told &quot;slot 7&quot; and
+finding slot 7 occupied is worse than being told nothing.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>op<span class="w"> </span>unmount<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="m">0</span><span class="w">              </span><span class="c1"># back where it came from</span>
 <span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>op<span class="w"> </span>unmount<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="m">0</span><span class="w"> </span>--slot<span class="w"> </span><span class="m">4</span><span class="w">     </span><span class="c1"># to a particular slot</span>
 </pre></div>
 </div>
-<p>A tape goes back to the slot it came from unless you say otherwise. If that
-slot has since been filled, name a free one.</p>
-<a class="reference internal image-reference" href="../_images/unmount-tape.png"><img alt="Unmount: which drive, and where the tape goes" src="../_images/unmount-tape.png" style="width: 100%;" />
-</a>
+<div class="admonition important">
+<p class="admonition-title">مهم</p>
+<p><strong>A drive whose cartridge is mounted as an LTFS filesystem cannot be
+unloaded</strong>, from the page or the command line. It is not a warning: pulling
+the cartridge out from under a live mount leaves <code class="docutils literal notranslate"><span class="pre">ltfs</span></code> holding a device
+with no medium, and whatever was reading it gets I/O errors rather than a
+clean end.</p>
+<p>Unmount the filesystem first - the LTFS page, or
+<code class="docutils literal notranslate"><span class="pre">mhvtl</span> <span class="pre">ltfs</span> <span class="pre">unmount</span> <span class="pre">&lt;library&gt;</span> <span class="pre">&lt;drive&gt;</span></code> - and then unload the tape. Such a
+drive is marked on the map and is not offered in the list.</p>
+<p>The two senses of &quot;mount&quot; are the thing to keep straight: this page moves a
+cartridge <strong>into</strong> a drive, and the LTFS page opens what is <strong>in</strong> a drive
+as a filesystem.</p>
+</div>
+<p>The old <code class="docutils literal notranslate"><span class="pre">/libraries/operator/unmount/</span></code> address still works and sends you
+here, carrying the library with it.</p>
 </section>
 <section id="move-slot-to-slot">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Move: slot to slot</a><a class="headerlink" href="#move-slot-to-slot" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Move: slot to slot</a><a class="headerlink" href="#move-slot-to-slot" title="Link to this heading"></a></h2>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>op<span class="w"> </span>move<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
 </pre></div>
 </div>
@@ -287,7 +346,7 @@ slot has since been filled, name a free one.</p>
 cartridge that has to live somewhere particular.</p>
 </section>
 <section id="online-and-offline">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Online and offline</a><a class="headerlink" href="#online-and-offline" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Online and offline</a><a class="headerlink" href="#online-and-offline" title="Link to this heading"></a></h2>
 <p>A library can be told to stop answering the robot without stopping its
 daemons:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>op<span class="w"> </span>offline<span class="w"> </span><span class="m">50</span>
@@ -298,7 +357,7 @@ daemons:</p>
 this console's.</p>
 </section>
 <section id="the-map">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">The MAP</a><a class="headerlink" href="#the-map" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">The MAP</a><a class="headerlink" href="#the-map" title="Link to this heading"></a></h2>
 <p>The mail slot, where an operator at a real library puts a cartridge in from
 outside. MHVTL emulates it, and the console can open it, close it, and have
 the robot re-read it:</p>
@@ -306,8 +365,34 @@ the robot re-read it:</p>
 </pre></div>
 </div>
 </section>
+<section id="seeing-the-whole-library-at-once">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Seeing the whole library at once</a><a class="headerlink" href="#seeing-the-whole-library-at-once" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">op</span> <span class="pre">layout</span></code> draws it: every drive with what it holds, the storage slots as a
+grid, the import/export port, and a legend of the generations this library
+actually has.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>op<span class="w"> </span>layout<span class="w"> </span><span class="m">10</span>
+
+<span class="go">Drives</span>
+<span class="go">  Drive 0   ULT3580-TD8    empty  takes up to LTO-8</span>
+<span class="go">  Drive 2   ULT3580-TD6    empty  takes up to LTO-6</span>
+
+<span class="go">Storage slots  (32 of 39 full)</span>
+<span class="go">  1 [ E01001L8 ]   2 [ E01002L8 ]   3 [ E01003L8 ]   ...</span>
+
+<span class="go">Legend  LTO-6  LTO-8</span>
+</pre></div>
+</div>
+<p>Each cartridge is coloured by its generation, in the same colours the web
+pages use - the real LTO cartridge shell colours, adjusted so that generations
+sharing one in real life can still be told apart. <code class="docutils literal notranslate"><span class="pre">mhvtl</span> <span class="pre">op</span> <span class="pre">palette</span></code> prints
+them all with their meanings.</p>
+<p>Colour is never the only thing saying what a tape is: the generation is always
+written out beside it, so a pipe, <code class="docutils literal notranslate"><span class="pre">--no-colour</span></code>, or a terminal without 256
+colours loses nothing but the fill.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ltfs</span></code> marks which cartridges are LTFS volumes - see <a class="reference internal" href="../using/ltfs.html"><span class="doc">A tape as a filesystem: LTFS</span></a>.</p>
+</section>
 <section id="what-the-robot-says-is-where">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">What the robot says is where</a><a class="headerlink" href="#what-the-robot-says-is-where" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">What the robot says is where</a><a class="headerlink" href="#what-the-robot-says-is-where" title="Link to this heading"></a></h2>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>library<span class="w"> </span><span class="m">50</span>
 
 <span class="go">Library 50: 2/6 slots full, 1/2 drives loaded</span>

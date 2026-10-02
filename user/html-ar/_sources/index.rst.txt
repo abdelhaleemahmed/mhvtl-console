@@ -53,6 +53,7 @@ cannot.
 
    using/backup
    using/watching
+   using/ltfs
    using/iscsi
 
 .. toctree::

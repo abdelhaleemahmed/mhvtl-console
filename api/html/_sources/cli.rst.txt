@@ -24,6 +24,18 @@ Printing: human tables by default, JSON on request.
    :undoc-members:
    :show-inheritance:
 
+``colour``
+----------
+
+The only file here that contains an escape sequence. It renders the tokens
+``services.tapes.palette`` decides, and is off unless the terminal can show
+them apart.
+
+.. automodule:: mhvtl_cli.colour
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``privileges``
 --------------
 
@@ -80,6 +92,18 @@ status, targets, backstores, export, remap, target, lun, acl, portal, service.
 list, show, create, update, delete, orphans, next-id.
 
 .. automodule:: mhvtl_cli.commands.library
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``ltfs``
+--------
+
+tapes, drives, mount, unmount, check, format, support. Its own noun because
+``op mount`` already means the robot putting a cartridge into a drive, and
+this is a filesystem over one already there.
+
+.. automodule:: mhvtl_cli.commands.ltfs
    :members:
    :undoc-members:
    :show-inheritance:

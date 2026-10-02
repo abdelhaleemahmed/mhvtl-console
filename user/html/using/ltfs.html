@@ -1,0 +1,570 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A tape as a filesystem: LTFS &mdash; MHVTL GUI User Guide 3.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/lang-switch.css?v=16e3750c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=acc74ff5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/lang-switch.js?v=8f8661c5"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exporting a library over iSCSI" href="iscsi.html" />
+    <link rel="prev" title="Watching a drive while it works" href="watching.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MHVTL GUI User Guide
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/what-it-is.html">What this is</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#what-you-can-do-with-it">What you can do with it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#what-it-is-not">What it is not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#why-a-virtual-library">Why a virtual library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#the-words-used-here">The words used here</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../start/first-look.html">A first look</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#log-in">Log in</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#is-mhvtl-running">Is MHVTL running?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#what-you-see-first">What you see first</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#the-same-thing-from-the-terminal">The same thing from the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#if-there-are-no-libraries-yet">If there are no libraries yet</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../start/the-console.html">Finding your way around</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#the-header">The header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#dashboard">Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#libraries">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#operator">Operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#console">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#themes">Themes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#the-command-line">The command line</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Libraries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/create.html">Creating a library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#which-combinations-exist">Which combinations exist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#what-it-wrote">What it wrote</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/create.html#afterwards">Afterwards</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/the-library-page.html">The library page</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#what-is-on-it">What is on it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#the-same-thing-from-the-terminal">The same thing from the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#the-buttons-and-what-they-run">The buttons, and what they run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/the-library-page.html#if-the-page-says-404">If the page says 404</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/drives.html">Adding and removing drives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#adding-a-drive">Adding a drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#removing-a-drive">Removing a drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#what-it-does-to-the-running-library">What it does to the running library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/drives.html#seeing-the-drives">Seeing the drives</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries/remove.html">Removing a library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#before-you-do">Before you do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libraries/remove.html#what-is-left-behind">What is left behind</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tapes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/create.html">Creating tapes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#the-barcode-decides-the-generation">The barcode decides the generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#one-tape">One tape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#a-run-of-tapes">A run of tapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#size-and-why-it-matters">Size, and why it matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#room-for-more-tapes">Room for more tapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#deleting-a-tape">Deleting a tape</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/inventory.html">The tape inventory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#where-the-numbers-come-from">Where the numbers come from</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#compression">Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#tapes-that-are-not-in-a-library">Tapes that are not in a library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/move.html">Moving a tape: mount, unmount, move</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#one-page-does-the-first-two">One page does the first two</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#mount-slot-into-drive">Mount: slot into drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#unmount-drive-back-to-a-slot">Unmount: drive back to a slot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#move-slot-to-slot">Move: slot to slot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#online-and-offline">Online and offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#the-map">The MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#seeing-the-whole-library-at-once">Seeing the whole library at once</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#what-the-robot-says-is-where">What the robot says is where</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/adopt.html">Adopting a tape that is already on disk</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#when-this-comes-up">When this comes up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#finding-them">Finding them</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#adopting-one">Adopting one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#what-it-does-and-what-it-does-not">What it does, and what it does not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#restart-the-library-afterwards">Restart the library afterwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#checking-the-data-survived">Checking the data survived</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using a library</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="backup.html">Writing a backup to a tape</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#find-the-drive-s-device">1. Find the drive’s device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#put-a-cartridge-in-the-drive">2. Put a cartridge in the drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#write">3. Write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#read-it-back">4. Read it back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#put-the-cartridge-away">5. Put the cartridge away</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#several-backups-on-one-tape">Several backups on one tape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#why-the-tape-says-it-used-no-megabytes">Why the tape says it used no megabytes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="watching.html">Watching a drive while it works</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="watching.html#on-the-library-page">On the library page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="watching.html#on-the-command-line">On the command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="watching.html#what-the-states-mean">What the states mean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="watching.html#where-the-numbers-come-from">Where the numbers come from</a></li>
+<li class="toctree-l2"><a class="reference internal" href="watching.html#two-readings-not-one">Two readings, not one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="watching.html#if-it-says-holding-while-a-backup-is-running">If it says <code class="docutils literal notranslate"><span class="pre">holding</span></code> while a backup is running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="watching.html#if-mt-and-the-panel-disagree">If <code class="docutils literal notranslate"><span class="pre">mt</span></code> and the panel disagree</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">A tape as a filesystem: LTFS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#two-different-things-are-called-mount">Two different things are called “mount”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#can-this-library-do-ltfs-at-all">1. Can this library do LTFS at all?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#give-it-a-drive-ltfs-will-open">2. Give it a drive LTFS will open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-cartridge-it-can-write">3. A cartridge it can write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#put-it-in-the-drive">4. Put it in the drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#format-it-which-the-console-will-not-do-for-you">5. Format it — which the console will not do for you</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mount-it-write-to-it-read-it-back">6. Mount it, write to it, read it back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#taking-it-out-again-in-the-right-order">7. Taking it out again, in the right order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#which-cartridges-are-volumes">Which cartridges are volumes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iscsi.html">Exporting a library over iSCSI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#what-gets-exported">What gets exported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#what-it-made">What it made</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#connecting-from-another-machine">Connecting from another machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#after-a-reboot-or-after-recreating-a-library">After a reboot, or after recreating a library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#removing-an-export">Removing an export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html#is-the-service-even-running">Is the service even running?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keeping it running</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../running/console.html">The system console</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#console">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#devices">Devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#modules">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#logs">Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#disk">Disk</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../running/password.html">The password, and who can reach this</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#the-warning">The warning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#changing-it">Changing it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#if-you-lose-it">If you lose it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#who-can-reach-the-console">Who can reach the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#what-the-password-does-not-cover">What the password does not cover</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../running/when-something-is-wrong.html">When something is wrong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#three-answers-that-disagree">Three answers that disagree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#restart-the-library-for-its-robot-to-see-this">“Restart the library for its robot to see this”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-drive-says-silent">A drive says <code class="docutils literal notranslate"><span class="pre">silent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-library-page-that-answers-404">A library page that answers 404</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#an-export-that-points-at-the-wrong-device">An export that points at the wrong device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#tapes-that-belong-to-no-library">Tapes that belong to no library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-drive-that-will-not-take-a-cartridge">A drive that will not take a cartridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#the-disk-is-full">The disk is full</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#removing-a-library-and-rebooting">Removing a library and rebooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#nothing-here-helped">Nothing here helped</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MHVTL GUI User Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">A tape as a filesystem: LTFS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/using/ltfs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="a-tape-as-a-filesystem-ltfs">
+<h1>A tape as a filesystem: LTFS<a class="headerlink" href="#a-tape-as-a-filesystem-ltfs" title="Link to this heading"></a></h1>
+<p>LTFS puts a filesystem on a cartridge, so you can copy files on and off it
+with <code class="docutils literal notranslate"><span class="pre">cp</span></code> and <code class="docutils literal notranslate"><span class="pre">ls</span></code> instead of a backup program. It is a separate project
+from MHVTL, used mostly for archives — a tape you will read again in ten
+years, by someone who no longer has the software that wrote it.</p>
+<p>The console does not make every tape an LTFS volume. It is an extra, and it
+has to be asked for.</p>
+<p>Everything below was run against library 80, a StorageTek SL500 created for
+the purpose and deleted at the end. The same sequence is the recording in
+<code class="docutils literal notranslate"><span class="pre">recordings/ltfs-on-a-cartridge</span></code>.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#two-different-things-are-called-mount" id="id1">Two different things are called “mount”</a></p></li>
+<li><p><a class="reference internal" href="#can-this-library-do-ltfs-at-all" id="id2">1. Can this library do LTFS at all?</a></p></li>
+<li><p><a class="reference internal" href="#give-it-a-drive-ltfs-will-open" id="id3">2. Give it a drive LTFS will open</a></p></li>
+<li><p><a class="reference internal" href="#a-cartridge-it-can-write" id="id4">3. A cartridge it can write</a></p></li>
+<li><p><a class="reference internal" href="#put-it-in-the-drive" id="id5">4. Put it in the drive</a></p></li>
+<li><p><a class="reference internal" href="#format-it-which-the-console-will-not-do-for-you" id="id6">5. Format it — which the console will not do for you</a></p></li>
+<li><p><a class="reference internal" href="#mount-it-write-to-it-read-it-back" id="id7">6. Mount it, write to it, read it back</a></p></li>
+<li><p><a class="reference internal" href="#taking-it-out-again-in-the-right-order" id="id8">7. Taking it out again, in the right order</a></p></li>
+<li><p><a class="reference internal" href="#which-cartridges-are-volumes" id="id9">Which cartridges are volumes</a></p></li>
+</ul>
+</nav>
+<section id="two-different-things-are-called-mount">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Two different things are called “mount”</a><a class="headerlink" href="#two-different-things-are-called-mount" title="Link to this heading"></a></h2>
+<p>This is the thing to keep straight before anything else.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.0%" />
+<col style="width: 39.0%" />
+<col style="width: 39.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><strong>Mount a tape</strong></p></th>
+<th class="head"><p><strong>Mount LTFS</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>What happens</p></td>
+<td><p>the robot moves a cartridge from a slot into a drive</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ltfs</span></code> opens the cartridge <em>already in a drive</em> as a filesystem</p></td>
+</tr>
+<tr class="row-odd"><td><p>Where</p></td>
+<td><p>Operator → Mount and Unmount, <code class="docutils literal notranslate"><span class="pre">mhvtl</span> <span class="pre">op</span> <span class="pre">mount</span></code></p></td>
+<td><p>the LTFS page, <code class="docutils literal notranslate"><span class="pre">mhvtl</span> <span class="pre">ltfs</span> <span class="pre">mount</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Needs</p></td>
+<td><p>a free drive</p></td>
+<td><p>a cartridge in a drive, a drive LTFS will open, and an LTFS volume</p></td>
+</tr>
+</tbody>
+</table>
+<p>You always do the first before the second.</p>
+</section>
+<section id="can-this-library-do-ltfs-at-all">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">1. Can this library do LTFS at all?</a><a class="headerlink" href="#can-this-library-do-ltfs-at-all" title="Link to this heading"></a></h2>
+<p>Ask before anything else. Most libraries cannot, and the answer costs nothing:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>provisioning<span class="w"> </span><span class="m">80</span>
+
+<span class="go">Library 80 has no drive LTFS can open, so its cartridges were not read</span>
+
+<span class="go">DRIVE  MODEL        FIRMWARE  LTFS CAN OPEN  WHY NOT</span>
+<span class="go">-----  -----------  --------  -------------  ---------------------------------------</span>
+<span class="go">81     STK T10000C  0016      no             LTFS does not know the vendor id 'STK'.</span>
+<span class="go">82     STK T10000C  0016      no             LTFS does not know the vendor id 'STK'.</span>
+
+<span class="go">Drive slots    2 used of 500</span>
+<span class="go">Storage slots  3 full, 4 empty, 7 total</span>
+<span class="go">LTFS volumes   not read - no drive here can open LTFS</span>
+
+<span class="go">It needs a drive LTFS can open. It can be given:</span>
+<span class="go">VENDOR  MODEL        FIRMWARE AT LEAST</span>
+<span class="go">------  -----------  -----------------</span>
+<span class="go">IBM     ULT3580-TD7  -</span>
+
+<span class="go">mhvtl ltfs add-drive 80</span>
+</pre></div>
+</div>
+<p>Read the last line of the table: <strong>not read</strong>, not “none”. No cartridge in
+this library was looked at, because no drive here could have opened one. A
+cartridge nobody read may still be an LTFS volume written somewhere else, and
+the console will not say otherwise.</p>
+<p>LTFS refuses these drives for their <strong>vendor id</strong>, not their model. It knows
+IBM and HP and does not know <code class="docutils literal notranslate"><span class="pre">STK</span></code>.</p>
+</section>
+<section id="give-it-a-drive-ltfs-will-open">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">2. Give it a drive LTFS will open</a><a class="headerlink" href="#give-it-a-drive-ltfs-will-open" title="Link to this heading"></a></h2>
+<p>The drives are emulated, so the vendor id a drive reports is yours to choose.
+The library’s own profile decides which models it will take; LTFS decides which
+vendor ids it will open. Picking one that satisfies both is all this does:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>add-drive<span class="w"> </span><span class="m">80</span><span class="w"> </span>--model<span class="w"> </span>ULT3580-TD7
+
+<span class="go">ok   validate  LTFS opens IBM ULT3580-TD7 at revision 0016 - reported as IBM</span>
+<span class="go">               rather than STK, which LTFS does not know</span>
+<span class="go">ok   slots     4 empty slot(s)</span>
+<span class="go">ok   drive     Drive 83 added to library 80 (revision 0016)</span>
+<span class="go">ok   restart   Restarted vtllibrary@80.service</span>
+<span class="go">ok   record    Library 80 and its 3 drives recorded in the database</span>
+<span class="go">ok   verify    LTFS can open drive 83: IBM ULT3580-TD7 rev 0016</span>
+</pre></div>
+</div>
+<p>Nothing existing is changed. <strong>A drive is only ever added</strong> — no drive is
+overwritten, no personality is altered, and the drives that were there keep
+reporting exactly what they reported before. Removing a drive is a separate
+job on the drives pages.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>drives<span class="w"> </span><span class="m">80</span>
+
+<span class="go">DRIVE  ID  MODEL        NODE       LTFS CAN OPEN  CARTRIDGE  STATE  MOUNTED AT</span>
+<span class="go">-----  --  -----------  ---------  -------------  ---------  -----  ----------</span>
+<span class="go">0      81  T10000C      /dev/sg32  no             -          -      -</span>
+<span class="go">1      82  T10000C      /dev/sg33  no             -          -      -</span>
+<span class="go">2      83  ULT3580-TD7  /dev/sg34  yes            -          -      -</span>
+</pre></div>
+</div>
+<p>The <strong>NODE</strong> column is the one to check. A drive with no device node is not
+usable, whatever the other columns say.</p>
+<p>Some drives also need a minimum firmware: IBM LTO-5 wants B170, LTO-8 wants
+HB81. <code class="docutils literal notranslate"><span class="pre">--drive-revision</span></code> sets it, and the refusal tells you when you need it.</p>
+</section>
+<section id="a-cartridge-it-can-write">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">3. A cartridge it can write</a><a class="headerlink" href="#a-cartridge-it-can-write" title="Link to this heading"></a></h2>
+<p>Being partitionable is not enough. <code class="docutils literal notranslate"><span class="pre">mkltfs</span></code> <strong>writes</strong>, so the cartridge has
+to be a density the drive can write, not merely load — an LTO-7 drive loads
+LTO-5 read-only, so an LTO-5 cartridge in it can never become a volume:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>add-media<span class="w"> </span><span class="m">80</span><span class="w"> </span>--count<span class="w"> </span><span class="m">1</span>
+
+<span class="go">ok   validate  drive 83 (ULT3580-TD7) can format LTO7 - the newest density it writes</span>
+<span class="go">ok   media     Created 1 of 1 tapes in library 80</span>
+<span class="go">ok   verify    1 LTO7 cartridge(s) in slots - blank media, not LTFS volumes:</span>
+<span class="go">               mkltfs formats one, and erases it</span>
+
+<span class="gp">$ </span>mhvtl<span class="w"> </span>tape<span class="w"> </span>list<span class="w"> </span><span class="m">80</span>
+
+<span class="go">BARCODE   SLOT  KIND  DENSITY  USED MB  CAPACITY MB  ON DISK</span>
+<span class="go">--------  ----  ----  -------  -------  -----------  -------</span>
+<span class="go">K80001TC  1     data  T10KC    0        500          yes</span>
+<span class="go">K80002TC  2     data  T10KC    0        500          yes</span>
+<span class="go">K80003TC  3     data  T10KC    0        500          yes</span>
+<span class="go">K80004L7  4     data  LTO7     0        500          yes</span>
+</pre></div>
+</div>
+<p>The three T10000 cartridges came with the library and the new drive cannot
+write any of them. <code class="docutils literal notranslate"><span class="pre">K80004L7</span></code> is the one that can become a volume.</p>
+</section>
+<section id="put-it-in-the-drive">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">4. Put it in the drive</a><a class="headerlink" href="#put-it-in-the-drive" title="Link to this heading"></a></h2>
+<p>The robot, not the filesystem — the first sense of “mount”:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>op<span class="w"> </span>mount<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">2</span>
+<span class="go">Mounted K80004L7 from slot 4 into drive 2</span>
+
+<span class="gp">$ </span>mhvtl<span class="w"> </span>op<span class="w"> </span>layout<span class="w"> </span><span class="m">80</span>
+
+<span class="go">Drives</span>
+<span class="go">  Drive 0   T10000C      empty  not an LTO drive</span>
+<span class="go">  Drive 1   T10000C      empty  not an LTO drive</span>
+<span class="go">  Drive 2   ULT3580-TD7  K80004L7  (LTO-7)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">op</span> <span class="pre">layout</span></code> draws the whole library — drives, slots, the import/export port
+and a legend — coloured by tape generation. On the web it is
+<strong>Operator → Mount and Unmount</strong>.</p>
+</section>
+<section id="format-it-which-the-console-will-not-do-for-you">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">5. Format it — which the console will not do for you</a><a class="headerlink" href="#format-it-which-the-console-will-not-do-for-you" title="Link to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">mkltfs</span></code> partitions and erases the cartridge. Everything on it is gone,
+and there is no undo.</p>
+</div>
+<p>The console refuses, twice over — a setting it checks, and a <code class="docutils literal notranslate"><span class="pre">sudoers</span></code> rule
+the service account was never granted:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>format<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">2</span>
+
+<span class="go">mhvtl: Formatting a cartridge is disabled on this host</span>
+<span class="go">  mkltfs partitions and erases the cartridge; there is no undo.</span>
+<span class="go">  Set MHVTL_GUI_ALLOW_LTFS_FORMAT to enable it, and note the packaged</span>
+<span class="go">  sudoers does not grant mkltfs to the service account.</span>
+</pre></div>
+</div>
+<p>That is deliberate, and it is not an obstacle to work around. Formatting a
+cartridge stays an act a person takes at a terminal, with root, having decided
+to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mkltfs<span class="w"> </span>-d<span class="w"> </span>/dev/sg34<span class="w"> </span>-f
+
+<span class="go">LTFS15024I Medium formatted successfully.</span>
+</pre></div>
+</div>
+<p>The device is the <strong>NODE</strong> from <code class="docutils literal notranslate"><span class="pre">ltfs</span> <span class="pre">drives</span></code>.</p>
+</section>
+<section id="mount-it-write-to-it-read-it-back">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">6. Mount it, write to it, read it back</a><a class="headerlink" href="#mount-it-write-to-it-read-it-back" title="Link to this heading"></a></h2>
+<p>Now the second sense of “mount”:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>mount<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">2</span>
+<span class="go">K80004L7 mounted at /var/lib/ltfs/mnt/library80-drive2</span>
+</pre></div>
+</div>
+<p>It is a directory. Write to it with anything:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"echo 'hello' &gt; /var/lib/ltfs/mnt/library80-drive2/hello.txt"</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/var/lib/ltfs/mnt/library80-drive2
+
+<span class="go">-rwxrwxrwx. 1 root root     25 Oct  2 04:27 hello.txt</span>
+<span class="go">-rwxrwxrwx. 1 root root 262144 Oct  2 04:27 payload.bin</span>
+</pre></div>
+</div>
+<p>And the proof that it is on the tape rather than in a cache — unmount, mount
+again, and check:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>unmount<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">2</span>
+<span class="go">/var/lib/ltfs/mnt/library80-drive2 unmounted; the index is on the cartridge</span>
+
+<span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>mount<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">2</span>
+<span class="go">K80004L7 mounted at /var/lib/ltfs/mnt/library80-drive2</span>
+
+<span class="gp">$ </span>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"cd /var/lib/ltfs/mnt/library80-drive2 &amp;&amp; sha256sum -c checksums.txt"</span>
+<span class="go">hello.txt: OK</span>
+<span class="go">payload.bin: OK</span>
+</pre></div>
+</div>
+</section>
+<section id="taking-it-out-again-in-the-right-order">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">7. Taking it out again, in the right order</a><a class="headerlink" href="#taking-it-out-again-in-the-right-order" title="Link to this heading"></a></h2>
+<p>The filesystem first, then the robot. If you try it the other way the console
+stops you:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>op<span class="w"> </span>unmount<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">2</span>
+
+<span class="go">mhvtl: Drive 2 cannot be emptied: an LTFS filesystem is mounted on it,</span>
+<span class="go">       at /var/lib/ltfs/mnt/library80-drive2</span>
+<span class="go">  Unmount the filesystem first - the LTFS page, or `mhvtl ltfs unmount 80 2`</span>
+<span class="go">  - and then unload the tape.</span>
+<span class="go">  Pulling the cartridge out from under a mounted filesystem gives whatever</span>
+<span class="go">  is using it I/O errors rather than a clean end.</span>
+</pre></div>
+</div>
+<p>This is a refusal and not a warning. Taking the cartridge out leaves <code class="docutils literal notranslate"><span class="pre">ltfs</span></code>
+holding a device with no medium; whatever was reading the mount gets errors
+instead of an ending. On the mount page such a drive is marked and cannot be
+clicked, and <code class="docutils literal notranslate"><span class="pre">op</span> <span class="pre">layout</span></code> marks it <strong>MOUNTED</strong>.</p>
+<p>So:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>unmount<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">2</span>
+<span class="go">/var/lib/ltfs/mnt/library80-drive2 unmounted; the index is on the cartridge</span>
+
+<span class="gp">$ </span>mhvtl<span class="w"> </span>op<span class="w"> </span>unmount<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="m">2</span>
+<span class="go">Unmounted K80004L7 from drive 2 to slot 4</span>
+</pre></div>
+</div>
+</section>
+<section id="which-cartridges-are-volumes">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Which cartridges are volumes</a><a class="headerlink" href="#which-cartridges-are-volumes" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>ltfs<span class="w"> </span>tapes<span class="w"> </span><span class="m">80</span>
+
+<span class="go">BARCODE   PARTS  LAYOUT  STATE  WHAT THAT MEANS</span>
+<span class="go">--------  -----  ------  -----  ------------------</span>
+<span class="go">K80001TC  1      1.8     plain  not LTFS</span>
+<span class="go">K80004L7  2      1.8     ltfs   LTFS, 2 partitions</span>
+
+<span class="go">1 of 4 cartridge(s) are LTFS volumes.</span>
+</pre></div>
+</div>
+<p>Four states, and the difference between the last two matters:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18.0%" />
+<col style="width: 82.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>State</p></th>
+<th class="head"><p>Means</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ltfs</span></code></p></td>
+<td><p>read, and it is an LTFS volume</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plain</span></code></p></td>
+<td><p>read, and it is not</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">unknown</span></code></p></td>
+<td><p>read, and the cartridge could not say</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>(blank)</em></p></td>
+<td><p><strong>not read at all</strong> — no drive here could open it</p></td>
+</tr>
+</tbody>
+</table>
+<p>A blank is never reported as <code class="docutils literal notranslate"><span class="pre">plain</span></code>. “We did not look” is not “there is
+nothing there”.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="watching.html" class="btn btn-neutral float-left" title="Watching a drive while it works" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="iscsi.html" class="btn btn-neutral float-right" title="Exporting a library over iSCSI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ahmed Abdelhaleem Ahmed.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
