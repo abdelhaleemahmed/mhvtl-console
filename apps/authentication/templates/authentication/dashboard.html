@@ -21,6 +21,7 @@
             <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Tape Operations</a>
             <a href="{% url 'libraries:console_dashboard' %}" class="nav-link">System Console</a>
             <a href="{% url 'authentication:change_password' %}" class="nav-link">Password</a>
+            <a href="{% url 'libraries:about' %}" class="nav-link">About</a>
             <a href="{% url 'authentication:logout' %}" class="nav-link">Log out</a>
             <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
         </nav>
@@ -261,5 +262,6 @@
     setInterval(fetchSummary, REFRESH_MS);
 })();
 </script>
+{% include 'includes/_version_line.html' %}
 </body>
 </html>

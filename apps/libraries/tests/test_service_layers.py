@@ -37,6 +37,7 @@ ALLOWED = {
     'verification': {'config', 'core', 'operations', 'scsi'},
     'libraries': {'config', 'console', 'core', 'drives', 'iscsi', 'operations',
                   'profiles', 'sync', 'tapes'},
+    'about': {'console', 'core'},
     'dashboard': {'config', 'console', 'libraries'},
 }
 

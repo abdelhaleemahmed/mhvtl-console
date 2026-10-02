@@ -17,6 +17,7 @@
                 <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
                 <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Operator</a>
                 <a href="{% url 'libraries:config_files' %}" class="nav-link">Config Files</a>
+                <a href="{% url 'libraries:about' %}" class="nav-link">About</a>
                 <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
                 <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
             </nav>
@@ -37,5 +38,6 @@
 
 <script src="{% static 'js/csrf.js' %}"></script>
     {% block extra_js %}{% endblock %}
+{% include 'includes/_version_line.html' %}
 </body>
 </html>

@@ -41,6 +41,26 @@ COMMAND_MODULES = ('library', 'drive', 'tape', 'ltfs', 'operations', 'status',
                    'service', 'config', 'scsi', 'iscsi', 'console')
 
 
+class _Version(argparse.Action):
+    """``--version``, answered by the service rather than by this file.
+
+    argparse's own ``action='version'`` wants the string when the parser is
+    built, and build_parser() runs before Django is set up and must not import
+    a service. So the import is deferred to the moment the flag is actually
+    used. It is safe there because about.project() reads only
+    mhvtl_system - five constants, no settings, no I/O - and formatting the
+    answer here instead would be a second copy of what the About page shows.
+    """
+
+    def __init__(self, option_strings, dest, **kwargs):
+        super().__init__(option_strings, dest, nargs=0, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        from apps.libraries.services import about
+        print(about.one_line())
+        parser.exit()
+
+
 def build_parser() -> argparse.ArgumentParser:
     """The whole command tree.
 
@@ -51,6 +71,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog='mhvtl',
         description='Command line interface to the MHVTL tape library.')
+    parser.add_argument('--version', action=_Version,
+                        help="the console's version, author and licence")
     parser.add_argument('--json', action='store_true',
                         help='machine-readable output on stdout')
     parser.add_argument('--quiet', '-q', action='store_true',

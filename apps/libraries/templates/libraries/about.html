@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About - MHVTL Console{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+{% comment %} Every value here comes from services.about. The page formats, it does not
+   decide: `mhvtl --version` and `mhvtl status system` call the same service,
+   so the terminal and the browser cannot disagree about what is installed. {% endcomment %}
+<div class="about-wrap">
+
+    <div class="about-card">
+        <div class="about-version">{{ project.version }}</div>
+        <div class="about-name">{{ project.name }}</div>
+
+        <table class="about-facts">
+            <tr>
+                <th>Written by</th>
+                <td>
+                    {{ project.author }}
+                    &lt;<a href="mailto:{{ project.email }}">{{ project.email }}</a>&gt;
+                </td>
+            </tr>
+            <tr>
+                <th>Licence</th>
+                <td>{{ project.licence }}</td>
+            </tr>
+            <tr>
+                <th>Source</th>
+                <td><a href="{{ project.url }}" target="_blank" rel="noopener">{{ project.url }}</a></td>
+            </tr>
+        </table>
+
+        <div class="about-links">
+            <a href="{{ project.docs_user }}" target="_blank" rel="noopener">User Guide</a>
+            <a href="{{ project.docs_api }}" target="_blank" rel="noopener">API Reference</a>
+            <a href="{{ project.url }}/issues" target="_blank" rel="noopener">Report a problem</a>
+        </div>
+    </div>
+
+    <div class="about-card">
+        <h2>This host</h2>
+        <p class="about-note">
+            What a bug report needs. The version above ships with the code; everything
+            below is read when this page is opened.
+        </p>
+
+        <table class="about-facts">
+            <tr><th>Host</th><td class="mono">{{ runtime.hostname }}</td></tr>
+            <tr><th>Python</th><td class="mono">{{ runtime.python }}</td></tr>
+            <tr><th>Django</th><td class="mono">{{ runtime.django }}</td></tr>
+            <tr><th>Kernel</th><td class="mono">{{ runtime.platform }}</td></tr>
+
+            {% comment %} A collector that failed says so in place. A blank row would read
+               as "nothing here", which is a different answer. {% endcomment %}
+            <tr>
+                <th>mhvtl.target</th>
+                {% if runtime.mhvtl_error %}
+                    <td class="about-failed">could not be read: {{ runtime.mhvtl_error }}</td>
+                {% else %}
+                    <td class="mono">{{ runtime.mhvtl_target }}</td>
+                {% endif %}
+            </tr>
+            {% if not runtime.mhvtl_error %}
+                <tr><th>Libraries running</th><td class="mono">{{ runtime.mhvtl_libraries }}</td></tr>
+                <tr><th>Drives running</th><td class="mono">{{ runtime.mhvtl_drives }}</td></tr>
+            {% endif %}
+            <tr>
+                <th>Backend</th>
+                {% if runtime.backend_error %}
+                    <td class="about-failed">could not be read: {{ runtime.backend_error }}</td>
+                {% else %}
+                    <td class="mono">{{ runtime.backend }}</td>
+                {% endif %}
+            </tr>
+        </table>
+    </div>
+
+    <div class="about-card">
+        <h2>The same thing from the terminal</h2>
+        <p class="about-note">
+            Both commands call the service this page calls.
+        </p>
+        <table class="about-facts">
+            <tr><th>Version and author</th><td class="mono">mhvtl --version</td></tr>
+            <tr><th>Version and host</th><td class="mono">mhvtl status system</td></tr>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

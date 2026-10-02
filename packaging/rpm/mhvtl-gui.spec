@@ -1,5 +1,5 @@
 %define name mhvtl-gui
-%define version 3.0.0
+%define version 3.1.0
 %define release 1%{?dist}
 %define installdir /opt/mhvtl-gui
 %define servicename mhvtl-gui
@@ -228,6 +228,22 @@ fi
 %dir /var/lib/mhvtl-gui/targetcli
 
 %changelog
+* Fri Oct 02 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.1.0-1
+- An About page, linked from the header of every page: the version, the
+  author, the licence, links to the published documentation, and what a bug
+  report needs about this host - python, django, the kernel, whether
+  mhvtl.target is up.
+- mhvtl --version, which answered "unrecognized arguments" before this, and
+  the console's version in mhvtl status system - an upgrade that did not
+  restart gunicorn is invisible otherwise.
+- Every page behind a login says which version it is. It used to appear on 8
+  pages of about 46, and on none of the operator pages.
+- The identity is decided once in mhvtl_system and composed by
+  services/about, so the page and the terminal cannot disagree.
+- Fixed: <meta name="author"> said "MHVTL Community"; test_sudoers.py read a
+  file from outside the repository and so could only pass on one machine; no
+  template can leak a multi-line {# #} comment into a page any more.
+
 * Fri Oct 02 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.0.0-1
 - LTFS: a cartridge can be opened as a filesystem from the console or the
   command line. Which drives LTFS will open and which cartridges are volumes,

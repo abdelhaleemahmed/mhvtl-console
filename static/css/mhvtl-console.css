@@ -973,3 +973,24 @@ body.mhvtl-console {
     display: inline-block; width: 90px; height: 8px; flex: none;
     vertical-align: middle;
 }
+
+/* The one-line version footer the application shells carry (see
+   templates/includes/_version_line.html). The three-column footer in
+   _footer.html belongs to templates/base.html; these shells have their own
+   layout, but every shell has to be able to say which version it is. */
+.version-line {
+    padding: 14px 20px 20px;
+    text-align: center;
+    font-size: .78rem;
+    color: var(--text-faint);
+}
+
+.version-line a {
+    color: var(--text-faint);
+    text-decoration: none;
+}
+
+.version-line a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}

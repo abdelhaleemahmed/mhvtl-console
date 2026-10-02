@@ -733,6 +733,22 @@ Overview data for the dashboard tiles.
    :undoc-members:
    :show-inheritance:
 
+``services.about``
+------------------
+
+Who made this, which version it is, and what it is running on. The About page
+and ``mhvtl --version`` are both callers.
+
+``service``
+~~~~~~~~~~~
+
+The project's identity, composed once for the page and the terminal alike.
+
+.. automodule:: apps.libraries.services.about.service
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``services.sync``
 -----------------
 

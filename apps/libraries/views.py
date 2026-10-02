@@ -1743,3 +1743,32 @@ class CleanupOrphanedView(View):
         result['deleted_libraries'] = orphaned.count()
         orphaned.delete()                       # drives cascade
         return result
+
+
+class AboutView(View):
+    """What this is, which version it is, and what it is running on.
+
+    The page a bug report is written from. It decides nothing: every value
+    comes from services.about, which `mhvtl --version` and
+    `mhvtl status system` also call, so the page and the terminal cannot
+    disagree about what is installed - which they did, for twenty minutes,
+    when the footer said 2.0.0 after 2.1.0 went on.
+
+    Login required, like every other page here. The version is not a secret,
+    but there is no reason for an unauthenticated visitor to be told which
+    release to look up.
+    """
+    template_name = 'libraries/about.html'
+
+    def get(self, request):
+        if not request.session.get('mhvtl_logged_in'):
+            return redirect('authentication:login')
+
+        from apps.libraries.services import about
+
+        result = about.facts()
+        return render(request, self.template_name, {
+            'title': 'About',
+            'project': result.data['project'],
+            'runtime': result.data['runtime'],
+        })

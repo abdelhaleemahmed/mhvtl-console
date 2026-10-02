@@ -40,7 +40,8 @@ NOT_A_NOUN = {'gui', 'command', 'commands', 'reads', 'says', 'and', 'is',
 PLANS = {'sphinx/guides/plan-cli-hardware.rst', 'sphinx/guides/phase-two.rst',
          'sphinx/guides/plan-map-colours.rst',
          'sphinx/guides/plan-mount-unmount.rst',
-         'sphinx/guides/plan-iqn-dates.rst'}
+         'sphinx/guides/plan-iqn-dates.rst',
+         'sphinx/guides/plan-about.rst'}
 
 
 def commands_in_the_docs():

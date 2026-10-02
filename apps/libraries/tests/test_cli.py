@@ -51,6 +51,48 @@ class ParserTests(TestCase):
         self.assertEqual(exit_code.exception.code, 2)
 
 
+class VersionTests(TestCase):
+    """`--version`, which answered "unrecognized arguments" before this.
+
+    The flag exits inside argparse, so it raises SystemExit rather than
+    returning an exit code like every other command here.
+    """
+
+    def _version(self):
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            with self.assertRaises(SystemExit) as exit_code:
+                main.main(['--version'])
+        return exit_code.exception.code, out.getvalue(), err.getvalue()
+
+    def test_it_prints_the_version_and_exits_cleanly(self):
+        import mhvtl_system
+        code, out, err = self._version()
+        self.assertIn(code, (0, None))
+        self.assertIn(mhvtl_system.__version__, out)
+        self.assertEqual(err, '')
+
+    def test_it_says_who_to_report_to_and_under_what_licence(self):
+        code, out, err = self._version()
+        self.assertIn('Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com>', out)
+        self.assertIn('GPL-2.0-only', out)
+        self.assertIn('github.com/abdelhaleemahmed/mhvtl-console', out)
+
+    def test_the_flag_is_in_the_top_level_help(self):
+        code, out, err = run([])
+        self.assertIn('--version', out + err)
+
+    def test_building_the_parser_imports_no_service(self):
+        """build_parser() runs before Django is set up, so the --version
+        action defers its import to the moment the flag is used."""
+        import sys
+        for name in [n for n in sys.modules
+                     if n.startswith('apps.libraries.services.about')]:
+            del sys.modules[name]
+        main.build_parser()
+        self.assertNotIn('apps.libraries.services.about', sys.modules)
+
+
 class OutputTests(TestCase):
     """Data on stdout, diagnostics on stderr, so a pipe stays valid."""
 
@@ -273,6 +315,30 @@ class StatusCommandTests(TestCase):
         self.assertEqual(code, output.EXIT_OK)
         self.assertIn('3/3 running', out)
         self.assertIn('mhvtl', out)
+
+    def test_system_also_reports_the_console_version(self):
+        """The version of the thing doing the reporting. An upgrade that did
+        not restart gunicorn is invisible without it, and this is the command
+        a bug report quotes."""
+        import mhvtl_system
+        from apps.libraries.services.console import modules, units
+
+        state = mock.MagicMock(target_active=True, target_enabled=True,
+                               libraries_active=3, drives_active=12,
+                               healthy=True, stale=[])
+        state.libraries = [1, 2, 3]
+        state.drives = list(range(12))
+
+        with mock.patch.object(units, 'status', return_value=state), \
+             mock.patch.object(modules, 'summary', return_value={'backend': 'mhvtl'}):
+            code, out, err = run(['status', 'system'])
+            jcode, jout, jerr = run(['--json', 'status', 'system'])
+
+        self.assertIn(f'mhvtl-gui     {mhvtl_system.__version__}', out)
+        self.assertEqual(json.loads(jout)['console']['version'],
+                         mhvtl_system.__version__)
+        self.assertEqual(json.loads(jout)['console']['email'],
+                         'ahmedhal@gmail.com')
 
     def test_stale_units_are_named_with_what_removes_them(self):
         from apps.libraries.services.console import modules, units

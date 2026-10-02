@@ -34,6 +34,7 @@ One nav here, and every console page can be left from every other.
                 <a href="{% url 'libraries:console_kernel_modules' %}" class="nav-link">Modules</a>
                 <a href="{% url 'libraries:console_disk_usage' %}" class="nav-link">Disk</a>
                 <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'libraries:about' %}" class="nav-link">About</a>
                 <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
                 <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
             </nav>
@@ -58,5 +59,6 @@ One nav here, and every console page can be left from every other.
 
     <script src="{% static 'js/csrf.js' %}"></script>
     {% block extra_js %}{% endblock %}
+{% include 'includes/_version_line.html' %}
 </body>
 </html>

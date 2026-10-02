@@ -156,6 +156,46 @@ library is missing drives, or ``rmmod mhvtl`` says the module is in use with
 everything stopped, read *The kernel ch driver leak* in the *Guides*. Only a
 reboot clears it.
 
+Which version am I running
+--------------------------
+
+Worth settling first, because a problem that was fixed in a later release
+looks exactly like a problem. Three places answer it, and all three read the
+same value:
+
+.. code-block:: console
+
+   $ mhvtl --version
+   mhvtl-gui 3.1.0
+   Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com>
+   GPL-2.0-only
+   https://github.com/abdelhaleemahmed/mhvtl-console
+
+``mhvtl status system`` prints it above the rest of the host's state, which
+makes it the one command to quote in a bug report:
+
+.. code-block:: console
+
+   $ sudo mhvtl status system
+   mhvtl-gui     3.1.0
+   reading       /etc/mhvtl/
+   mhvtl.target  running
+   enabled       yes
+   backend       mhvtl
+   libraries     7/7 running
+   drives        21/21 running
+   healthy       yes
+
+In the console it is **About**, in the header of every page. That page adds
+what the command line cannot easily show - the Python and Django versions,
+the kernel, and the host's name - which is the rest of what a bug report
+needs.
+
+If the page and the command disagree, the service was upgraded and not
+restarted: the workers hold the code they started with. ``systemctl restart
+mhvtl-gui`` settles it. The packaged RPM restarts the service on an upgrade
+for exactly this reason.
+
 Nothing here helped
 -------------------
 

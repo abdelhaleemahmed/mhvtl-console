@@ -20,6 +20,10 @@
                 <span class="nav-icon">📚</span>
                 Libraries
             </a>
+            <a href="{% url 'libraries:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+                <span class="nav-icon">ℹ️</span>
+                About
+            </a>
             {% if '/auth/dashboard/' in request.path %}
             <a href="{% url 'authentication:logout' %}" class="nav-link">
                 <span class="nav-icon">🚪</span>

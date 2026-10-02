@@ -31,6 +31,9 @@ urlpatterns = [
     path('remove/', views.LibraryRemoveView.as_view(), name='remove'),
     path('reset/', views.ResetDefaultView.as_view(), name='reset_default'),
     
+    # What this is and what it is running on - the page a bug report quotes
+    path('about/', views.AboutView.as_view(), name='about'),
+
     # Configuration file management - UPDATED: Now shows actual MHVTL files
     path('config-files/', views.ConfigFilesView.as_view(), name='config_files'),
     path('config-files/download/<str:filename>/', views.DownloadConfigView.as_view(), name='download_config'),

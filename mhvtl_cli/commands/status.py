@@ -139,6 +139,7 @@ def do_activity(args) -> int:
 
 
 def do_system(args) -> int:
+    from apps.libraries.services import about
     from apps.libraries.services.console import modules, units
 
     state = units.status(args.config_dir)
@@ -147,12 +148,17 @@ def do_system(args) -> int:
     if args.json:
         output.emit_json({'units': state.to_dict() if hasattr(state, 'to_dict')
                           else vars(state),
-                          'modules': kernel})
+                          'modules': kernel,
+                          'console': about.project()})
         return output.EXIT_OK
 
     from django.conf import settings
 
+    # The version of the thing doing the reporting belongs with what it
+    # reports: an upgrade that did not restart gunicorn is invisible
+    # otherwise, and this is the command a bug report quotes.
     output.pairs({
+        'console': about.project()['version'],
         'config': str(getattr(settings, 'MHVTL_CONFIG_DIR', '?')),
         'target': 'running' if state.target_active else 'stopped',
         'enabled': state.target_enabled,
@@ -160,7 +166,8 @@ def do_system(args) -> int:
         'libraries': f'{state.libraries_active}/{len(state.libraries)} running',
         'drives': f'{state.drives_active}/{len(state.drives)} running',
         'healthy': state.healthy,
-    }, labels={'target': 'mhvtl.target', 'config': 'reading'})
+    }, labels={'target': 'mhvtl.target', 'config': 'reading',
+               'console': 'mhvtl-gui'})
 
     if state.stale:
         print(f'\n{len(state.stale)} unit(s) systemd still knows about that '

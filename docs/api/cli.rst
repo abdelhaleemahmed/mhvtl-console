@@ -4,6 +4,20 @@ Command line
 The ``mhvtl`` command, ``mhvtl_cli``. It holds no logic: each command parses
 arguments, calls one service method and prints the result.
 
+The ``--version`` flag answers with the console's version, its author and its
+licence, all of it from ``services.about``:
+
+.. code:: console
+
+   $ mhvtl --version
+   mhvtl-gui 3.1.0
+   Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com>
+   GPL-2.0-only
+   https://github.com/abdelhaleemahmed/mhvtl-console
+
+Its argparse action defers that import until the flag is used, because
+``build_parser()`` runs before Django is set up.
+
 ``main``
 --------
 
