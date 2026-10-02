@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mhvtl_cli.main &mdash; MHVTL GUI API Reference 3.0.0</title>
+  <title>mhvtl_cli.main &mdash; MHVTL GUI API Reference 3.1.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/lang-switch.css?v=16e3750c" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=acc74ff5"></script>
+      <script src="../../_static/documentation_options.js?v=dd1205ac"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/lang-switch.js?v=8f8661c5"></script>
@@ -772,8 +772,19 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../services.html#services-about"><code class="docutils literal notranslate"><span class="pre">services.about</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../services.html#what-is-a-fact-about-the-project-and-what-is-a-fact-about-this-host">WHAT IS A FACT ABOUT THE PROJECT, AND WHAT IS A FACT ABOUT THIS HOST</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../services.html#apps.libraries.services.about.service.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../services.html#apps.libraries.services.about.service.runtime"><code class="docutils literal notranslate"><span class="pre">runtime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../services.html#apps.libraries.services.about.service.facts"><code class="docutils literal notranslate"><span class="pre">facts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../services.html#apps.libraries.services.about.service.one_line"><code class="docutils literal notranslate"><span class="pre">one_line()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../services.html#apps.libraries.services.sync.service.ConfigUnreadable"><code class="docutils literal notranslate"><span class="pre">ConfigUnreadable</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../services.html#apps.libraries.services.sync.service.sync_mhvtl_to_django"><code class="docutils literal notranslate"><span class="pre">sync_mhvtl_to_django()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../services.html#apps.libraries.services.sync.service.record_library"><code class="docutils literal notranslate"><span class="pre">record_library()</span></code></a></li>
@@ -1053,6 +1064,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../libraries.html#apps.libraries.views.CleanupOrphanedView.template_name"><code class="docutils literal notranslate"><span class="pre">CleanupOrphanedView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../libraries.html#apps.libraries.views.CleanupOrphanedView.get"><code class="docutils literal notranslate"><span class="pre">CleanupOrphanedView.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../libraries.html#apps.libraries.views.CleanupOrphanedView.post"><code class="docutils literal notranslate"><span class="pre">CleanupOrphanedView.post()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../libraries.html#apps.libraries.views.AboutView"><code class="docutils literal notranslate"><span class="pre">AboutView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../libraries.html#apps.libraries.views.AboutView.template_name"><code class="docutils literal notranslate"><span class="pre">AboutView.template_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../libraries.html#apps.libraries.views.AboutView.get"><code class="docutils literal notranslate"><span class="pre">AboutView.get()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1703,6 +1719,26 @@
                    <span class="s1">'service'</span><span class="p">,</span> <span class="s1">'config'</span><span class="p">,</span> <span class="s1">'scsi'</span><span class="p">,</span> <span class="s1">'iscsi'</span><span class="p">,</span> <span class="s1">'console'</span><span class="p">)</span>
 
 
+<span class="k">class</span><span class="w"> </span><span class="nc">_Version</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Action</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""``--version``, answered by the service rather than by this file.</span>
+
+<span class="sd">    argparse's own ``action='version'`` wants the string when the parser is</span>
+<span class="sd">    built, and build_parser() runs before Django is set up and must not import</span>
+<span class="sd">    a service. So the import is deferred to the moment the flag is actually</span>
+<span class="sd">    used. It is safe there because about.project() reads only</span>
+<span class="sd">    mhvtl_system - five constants, no settings, no I/O - and formatting the</span>
+<span class="sd">    answer here instead would be a second copy of what the About page shows.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option_strings</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">option_strings</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">option_string</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">about</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">about</span><span class="o">.</span><span class="n">one_line</span><span class="p">())</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="build_parser">
 <a class="viewcode-back" href="../../cli.html#mhvtl_cli.main.build_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
@@ -1715,6 +1751,8 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
         <span class="n">prog</span><span class="o">=</span><span class="s1">'mhvtl'</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s1">'Command line interface to the MHVTL tape library.'</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--version'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">_Version</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"the console's version, author and licence"</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--json'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">'machine-readable output on stdout'</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--quiet'</span><span class="p">,</span> <span class="s1">'-q'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>

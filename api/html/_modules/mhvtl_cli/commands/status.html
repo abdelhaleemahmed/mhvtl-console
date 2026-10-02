@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mhvtl_cli.commands.status &mdash; MHVTL GUI API Reference 3.0.0</title>
+  <title>mhvtl_cli.commands.status &mdash; MHVTL GUI API Reference 3.1.0</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/lang-switch.css?v=16e3750c" />
@@ -13,7 +13,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=acc74ff5"></script>
+      <script src="../../../_static/documentation_options.js?v=dd1205ac"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/lang-switch.js?v=8f8661c5"></script>
@@ -772,8 +772,19 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-about"><code class="docutils literal notranslate"><span class="pre">services.about</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-is-a-fact-about-the-project-and-what-is-a-fact-about-this-host">WHAT IS A FACT ABOUT THE PROJECT, AND WHAT IS A FACT ABOUT THIS HOST</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.runtime"><code class="docutils literal notranslate"><span class="pre">runtime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.facts"><code class="docutils literal notranslate"><span class="pre">facts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.one_line"><code class="docutils literal notranslate"><span class="pre">one_line()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.ConfigUnreadable"><code class="docutils literal notranslate"><span class="pre">ConfigUnreadable</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.sync_mhvtl_to_django"><code class="docutils literal notranslate"><span class="pre">sync_mhvtl_to_django()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.record_library"><code class="docutils literal notranslate"><span class="pre">record_library()</span></code></a></li>
@@ -1053,6 +1064,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.CleanupOrphanedView.template_name"><code class="docutils literal notranslate"><span class="pre">CleanupOrphanedView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.CleanupOrphanedView.get"><code class="docutils literal notranslate"><span class="pre">CleanupOrphanedView.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.CleanupOrphanedView.post"><code class="docutils literal notranslate"><span class="pre">CleanupOrphanedView.post()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.AboutView"><code class="docutils literal notranslate"><span class="pre">AboutView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.AboutView.template_name"><code class="docutils literal notranslate"><span class="pre">AboutView.template_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.AboutView.get"><code class="docutils literal notranslate"><span class="pre">AboutView.get()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1815,6 +1831,7 @@
 <div class="viewcode-block" id="do_system">
 <a class="viewcode-back" href="../../../cli.html#mhvtl_cli.commands.status.do_system">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">do_system</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">about</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">units</span>
 
     <span class="n">state</span> <span class="o">=</span> <span class="n">units</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config_dir</span><span class="p">)</span>
@@ -1823,12 +1840,17 @@
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">:</span>
         <span class="n">output</span><span class="o">.</span><span class="n">emit_json</span><span class="p">({</span><span class="s1">'units'</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="s1">'to_dict'</span><span class="p">)</span>
                           <span class="k">else</span> <span class="nb">vars</span><span class="p">(</span><span class="n">state</span><span class="p">),</span>
-                          <span class="s1">'modules'</span><span class="p">:</span> <span class="n">kernel</span><span class="p">})</span>
+                          <span class="s1">'modules'</span><span class="p">:</span> <span class="n">kernel</span><span class="p">,</span>
+                          <span class="s1">'console'</span><span class="p">:</span> <span class="n">about</span><span class="o">.</span><span class="n">project</span><span class="p">()})</span>
         <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">EXIT_OK</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 
+    <span class="c1"># The version of the thing doing the reporting belongs with what it</span>
+    <span class="c1"># reports: an upgrade that did not restart gunicorn is invisible</span>
+    <span class="c1"># otherwise, and this is the command a bug report quotes.</span>
     <span class="n">output</span><span class="o">.</span><span class="n">pairs</span><span class="p">({</span>
+        <span class="s1">'console'</span><span class="p">:</span> <span class="n">about</span><span class="o">.</span><span class="n">project</span><span class="p">()[</span><span class="s1">'version'</span><span class="p">],</span>
         <span class="s1">'config'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s1">'MHVTL_CONFIG_DIR'</span><span class="p">,</span> <span class="s1">'?'</span><span class="p">)),</span>
         <span class="s1">'target'</span><span class="p">:</span> <span class="s1">'running'</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">target_active</span> <span class="k">else</span> <span class="s1">'stopped'</span><span class="p">,</span>
         <span class="s1">'enabled'</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">target_enabled</span><span class="p">,</span>
@@ -1836,7 +1858,8 @@
         <span class="s1">'libraries'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">libraries_active</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">libraries</span><span class="p">)</span><span class="si">}</span><span class="s1"> running'</span><span class="p">,</span>
         <span class="s1">'drives'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">drives_active</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">drives</span><span class="p">)</span><span class="si">}</span><span class="s1"> running'</span><span class="p">,</span>
         <span class="s1">'healthy'</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">healthy</span><span class="p">,</span>
-    <span class="p">},</span> <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">'target'</span><span class="p">:</span> <span class="s1">'mhvtl.target'</span><span class="p">,</span> <span class="s1">'config'</span><span class="p">:</span> <span class="s1">'reading'</span><span class="p">})</span>
+    <span class="p">},</span> <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">'target'</span><span class="p">:</span> <span class="s1">'mhvtl.target'</span><span class="p">,</span> <span class="s1">'config'</span><span class="p">:</span> <span class="s1">'reading'</span><span class="p">,</span>
+               <span class="s1">'console'</span><span class="p">:</span> <span class="s1">'mhvtl-gui'</span><span class="p">})</span>
 
     <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">stale</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">stale</span><span class="p">)</span><span class="si">}</span><span class="s1"> unit(s) systemd still knows about that '</span>
