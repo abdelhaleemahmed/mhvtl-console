@@ -28,6 +28,12 @@ def register(subparsers) -> None:
     add.add_argument('library_id', type=int)
     add.add_argument('--vendor', help='override the library profile')
     add.add_argument('--model', dest='product', help='override the library profile')
+    add.add_argument('--drive-revision', dest='revision', metavar='REV',
+                     help="firmware revision, four characters (default: what "
+                          "the library's other drives report). LTFS refuses an "
+                          "IBM LTO-5 below B170, LTO-8 below HB81 and TS1140 "
+                          "below 3694; HP, HPE and Quantum drives have no "
+                          "minimum at all - see 'mhvtl ltfs support'")
     add.add_argument('--serial')
     add.add_argument('--no-restart', action='store_true',
                      help='write device.conf but leave the daemons alone; the '
@@ -85,7 +91,7 @@ def do_add(args) -> int:
 
     spec = {key: value for key, value in
             (('vendor', args.vendor), ('product', args.product),
-             ('serial', args.serial)) if value}
+             ('revision', args.revision), ('serial', args.serial)) if value}
     result = _service(args).add(args.library_id, spec or None,
                                 restart=not args.no_restart)
     return output.result(result, as_json=args.json, quiet=args.quiet)

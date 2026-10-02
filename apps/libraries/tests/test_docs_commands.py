@@ -37,7 +37,10 @@ NOT_A_NOUN = {'gui', 'command', 'commands', 'reads', 'says', 'and', 'is',
               'are', 'the', 'to', 'on', 'from', 'does', 'it', 'loaded'}
 
 #: Pages that document commands which do not exist yet, on purpose.
-PLANS = {'sphinx/guides/plan-cli-hardware.rst', 'sphinx/guides/phase-two.rst'}
+PLANS = {'sphinx/guides/plan-cli-hardware.rst', 'sphinx/guides/phase-two.rst',
+         'sphinx/guides/plan-map-colours.rst',
+         'sphinx/guides/plan-mount-unmount.rst',
+         'sphinx/guides/plan-iqn-dates.rst'}
 
 
 def commands_in_the_docs():

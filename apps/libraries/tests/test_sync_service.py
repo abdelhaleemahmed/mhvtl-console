@@ -10,7 +10,8 @@ from pathlib import Path
 from django.test import TestCase
 
 from apps.libraries.models import Drive, Library, LibraryBrand, LibraryModel
-from apps.libraries.services.sync.service import ConfigUnreadable, sync_mhvtl_to_django
+from apps.libraries.services.sync.service import (ConfigUnreadable, forget_library,
+                                                  record_library, sync_mhvtl_to_django)
 
 
 def library(library_id, vendor='STK', product='L700', target=0):
@@ -164,3 +165,120 @@ class SyncServiceTest(TestCase):
         self.add_drive(db_lib, 91, active=True)
         self.sync(library(10))
         self.assertFalse(Drive.objects.get(drive_id=91).is_active)
+
+
+class RecordOneLibraryTest(TestCase):
+    """record_library() and forget_library(): one library, never the others.
+
+    The scope is the point. sync_mhvtl_to_django() deactivates every row
+    device.conf does not mention, and the parser does not raise on a damaged
+    file - it returns a shorter library list - so a whole-configuration
+    reconcile is the wrong thing to run as a step of "I created one library".
+    """
+
+    def setUp(self):
+        self.config = Path(tempfile.mkdtemp())
+
+    def write(self, text):
+        (self.config / 'device.conf').write_text('VERSION: 5\n\n' + text)
+
+    def existing(self, library_id, active=True, vendor='STK', product='L700'):
+        brand, _ = LibraryBrand.objects.get_or_create(
+            name=vendor, defaults={'display_name': vendor})
+        model, _ = LibraryModel.objects.get_or_create(brand=brand, name=product)
+        return Library.objects.create(
+            library_id=library_id, channel=0, target=0, lun=0, brand=brand,
+            model=model, vendor_identification=vendor,
+            product_identification=product, is_active=active)
+
+    def test_creates_the_row_and_its_drives(self):
+        self.write(library(60) + drive(61, 60, 1, 1) + drive(62, 60, 2, 2))
+        recorded = record_library(60, self.config)
+        self.assertTrue(recorded['ok'], recorded['message'])
+        self.assertTrue(recorded['created'])
+        self.assertEqual(recorded['drives'], 2)
+        self.assertEqual(Library.objects.get(library_id=60).is_active, True)
+        self.assertEqual(Drive.objects.filter(library__library_id=60).count(), 2)
+
+    def test_activates_a_row_left_inactive(self):
+        """Library 60 in device.conf, running, and invisible in every dropdown:
+        get_live_libraries() drops a configured library whose row is inactive."""
+        self.existing(60, active=False)
+        self.write(library(60) + drive(61, 60, 1, 1))
+        recorded = record_library(60, self.config)
+        self.assertTrue(recorded['ok'])
+        self.assertFalse(recorded['created'])
+        self.assertTrue(Library.objects.get(library_id=60).is_active)
+
+    def test_leaves_every_other_library_alone(self):
+        """The whole reason this is scoped: library 20 is not in this file."""
+        self.existing(20, active=True)
+        self.write(library(60))
+        record_library(60, self.config)
+        self.assertTrue(Library.objects.get(library_id=20).is_active)
+
+    def test_a_truncated_file_cannot_deactivate_anything(self):
+        """A truncated device.conf parses to fewer libraries, not to an error:
+        the cut lost library 60 entirely, and nothing else may be touched."""
+        self.existing(20, active=True)
+        self.existing(30, active=True)
+        self.write(library(20) + 'Library: 60 CHANNEL: 00 TAR')
+        recorded = record_library(60, self.config)
+        self.assertFalse(recorded['ok'])
+        self.assertIn('does not declare library 60', recorded['message'])
+        self.assertTrue(Library.objects.get(library_id=20).is_active)
+        self.assertTrue(Library.objects.get(library_id=30).is_active)
+
+    def test_a_garbage_file_cannot_deactivate_anything(self):
+        """It parses to zero libraries without raising, which is what makes a
+        whole-configuration reconcile dangerous here."""
+        self.existing(20, active=True)
+        (self.config / 'device.conf').write_text('not a device.conf at all\n')
+        recorded = record_library(60, self.config)
+        self.assertFalse(recorded['ok'])
+        self.assertTrue(Library.objects.get(library_id=20).is_active)
+
+    def test_a_stanza_without_a_home_directory_still_records(self):
+        """The column is NOT NULL with a default, and passing None overrides the
+        default rather than falling back to it."""
+        self.write('Library: 60 CHANNEL: 00 TARGET: 00 LUN: 00\n'
+                   ' Vendor identification: STK\n'
+                   ' Product identification: L700\n\n')
+        recorded = record_library(60, self.config)
+        self.assertTrue(recorded['ok'], recorded['message'])
+        self.assertTrue(Library.objects.get(library_id=60).home_directory)
+
+    def test_an_unreadable_file_changes_nothing(self):
+        self.existing(20, active=True)
+        recorded = record_library(60, self.config)      # no device.conf written
+        self.assertFalse(recorded['ok'])
+        self.assertIn('could not be read', recorded['message'])
+        self.assertTrue(Library.objects.get(library_id=20).is_active)
+
+    def test_a_drive_no_longer_declared_is_deactivated_within_the_library(self):
+        self.write(library(60) + drive(61, 60, 1, 1) + drive(62, 60, 2, 2))
+        record_library(60, self.config)
+        self.write(library(60) + drive(61, 60, 1, 1))
+        recorded = record_library(60, self.config)
+        self.assertEqual(recorded['drives'], 1)
+        self.assertFalse(Drive.objects.get(drive_id=62).is_active)
+
+    def test_forget_deactivates_the_row_and_its_drives(self):
+        self.write(library(60) + drive(61, 60, 1, 1))
+        record_library(60, self.config)
+        forgotten = forget_library(60)
+        self.assertTrue(forgotten['ok'])
+        self.assertFalse(Library.objects.get(library_id=60).is_active)
+        self.assertFalse(Drive.objects.get(drive_id=61).is_active)
+
+    def test_forget_keeps_the_row(self):
+        """Deleting rows is the cleanup page's decision, and an inactive row is
+        what lets a recreated id be recognised rather than duplicated."""
+        self.existing(60)
+        forget_library(60)
+        self.assertTrue(Library.objects.filter(library_id=60).exists())
+
+    def test_forget_an_unknown_library_is_not_an_error(self):
+        forgotten = forget_library(999)
+        self.assertTrue(forgotten['ok'])
+        self.assertIn('No database row', forgotten['message'])

@@ -673,8 +673,7 @@
                     <div class="manage-group">
                         <h4>The robot</h4>
                         <a href="{% url 'libraries:library_status' %}?library_id={{ library.library_id }}">Slots and drives</a>
-                        <a href="{% url 'libraries:mount_tape' %}?library_id={{ library.library_id }}">Mount a tape</a>
-                        <a href="{% url 'libraries:unmount_tape' %}?library_id={{ library.library_id }}">Unmount</a>
+                        <a href="{% url 'libraries:mount_tape' %}?library_id={{ library.library_id }}">Mount or unmount a tape</a>
                         <a href="{% url 'libraries:move_tape' %}?library_id={{ library.library_id }}">Move a tape</a>
                     </div>
                     <div class="manage-group">

@@ -26,6 +26,10 @@ class DriveInfo:
     slot: Optional[int] = None
     vendor: str = ''
     product: str = ''
+    #: `Product revision level`, the drive's firmware as it reports it. LTFS
+    #: refuses an IBM LTO-5, LTO-8 or TS1140 drive below a minimum and reads
+    #: this to decide - see profiles/ltfs_support.py.
+    revision: str = ''
     serial: str = ''
     channel: Optional[int] = None
     target: Optional[int] = None
@@ -56,6 +60,7 @@ class DriveInfo:
             'slot': self.slot,
             'vendor': self.vendor,
             'product': self.product,
+            'revision': self.revision,
             'serial': self.serial,
             'channel': self.channel,
             'target': self.target,
@@ -73,6 +78,7 @@ class DriveInfo:
             slot=data.get('slot'),
             vendor=data.get('vendor', ''),
             product=data.get('product', ''),
+            revision=data.get('revision') or '',
             serial=data.get('serial', ''),
             channel=data.get('channel'),
             target=data.get('target'),

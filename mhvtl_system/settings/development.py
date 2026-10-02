@@ -24,7 +24,13 @@ if os.environ.get('MHVTL_DEBUG_TOOLBAR', '1') != '0':
     INTERNAL_IPS = ['127.0.0.1']
 
 # Development-specific settings
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+# MHVTL_EXTRA_HOSTS adds addresses to reach a dev server from another
+# machine on the lab network - the browser sends the IP as the Host
+# header, and Django refuses it otherwise:
+#     MHVTL_EXTRA_HOSTS=10.10.10.54 ./manage.py runserver 0.0.0.0:8010
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0'] + [
+    host.strip() for host in os.environ.get('MHVTL_EXTRA_HOSTS', '').split(',')
+    if host.strip()]
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # MHVTL Configuration Settings

@@ -148,11 +148,14 @@ class CleanupTests(TestCase):
         (self.config / 'library_contents.10').write_text('VERSION: 2\n')
         (self.config / 'library_contents.90').write_text('VERSION: 2\n')
 
-        # cleanup only stops units for the live configuration directory
+        # cleanup only stops units for the live configuration directory, and
+        # daemons_are_ours() asks daemon_config_dir() - which is config_dir()
+        # unless pinned, so both names have to say this is that directory.
         from apps.libraries.services.libraries import lifecycle
-        live = mock.patch.object(lifecycle, 'config_dir', return_value=self.config)
-        live.start()
-        self.addCleanup(live.stop)
+        for name in ('config_dir', 'daemon_config_dir'):
+            live = mock.patch.object(lifecycle, name, return_value=self.config)
+            live.start()
+            self.addCleanup(live.stop)
 
         for name in ('stop', 'disable', 'reset_failed', 'daemon_reload'):
             patch = mock.patch.object(orphans.units, name, return_value=ok())

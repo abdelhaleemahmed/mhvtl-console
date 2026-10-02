@@ -1,5 +1,63 @@
 """Read and write /etc/mhvtl/device.conf.
 
+DEVICE.CONF IS THE AUTHORITY. READ THIS BEFORE CHANGING ANYTHING HERE.
+======================================================================
+
+This file is the truth about what libraries and drives exist. Not the database,
+not the web UI, not a cached list anywhere. Everything else in this application
+describes what device.conf says, and the direction is deliberate and absolute:
+
+    device.conf  ---->  the database        ALWAYS
+    the database ---->  device.conf         NEVER
+
+The database is auxiliary. It exists so the web UI has something to render and
+join against, and for nothing else. It could be deleted entirely and the system
+would keep working from these files - sync/ would fill it again from device.conf
+the next time a library was created or reconciled. It is a view, not a record.
+
+Three consequences, each of which has been learned the hard way and must not be
+re-litigated:
+
+1. A LIBRARY ABSENT FROM DEVICE.CONF DOES NOT EXIST.
+
+   If a library is not in this file, we do not want it, and it must be removed
+   from the database. That is not a bug to be guarded against; it is the design.
+   sync_mhvtl_to_django() deactivating rows it cannot find here, and the cleanup
+   page deleting them, are both correct behaviour.
+
+2. DO NOT ADD "UNLESS THE FILE LOOKS WRONG" SPECIAL CASES.
+
+   The parser below is deliberately LENIENT: it skips what it does not
+   understand and returns what it could read. Hand it a truncated file and it
+   returns fewer libraries; hand it garbage and it returns none. It does not
+   raise, and it is not going to start.
+
+   The temptation, on noticing that, is to make the callers second-guess the
+   answer - "refuse to deactivate if the parse looks implausible", "keep the row
+   in case the file is damaged". DO NOT. This application has been through that
+   shape of logic before and it was very hard to manage: two sources of truth
+   that disagree, a database holding rows for libraries that do not exist, and
+   nobody able to say which of the two was right. The one-way rule is what
+   replaced all of it, and it works because it is simple.
+
+   If device.conf is damaged, the fix is device.conf - restore it from a backup
+   (ConfigService.backup() takes one before every write) and let the database
+   follow. Not a guard here.
+
+3. THE RISK IS NOT THE DATABASE. IT IS THE FILES.
+
+   Deleting database rows costs nothing: one sync rebuilds them from here.
+   Deleting a `library_contents.N` file, or a `Drive:` record out of this file,
+   costs everything - there is nothing upstream of these files to restore them
+   from. So caution belongs where the files are written and removed
+   (libraries/lifecycle.py, libraries/orphans.py, and the writers below), never
+   in the direction of the database.
+
+Read services/__init__.py rule 7 for the layering this sits in, and
+guides/architecture.rst for the same rule in prose.
+
+------------------------------------------------------------------------------
+
 Moved from mhvtl_library_service.py:1260 (_parse_device_conf_rpm), the best of
 the four implementations in the tree because it takes text rather than a path -
 no file I/O, no sudo, so it can be tested against captured fixtures. The rivals
@@ -51,6 +109,12 @@ LIBRARY_ID_SLOT_RE = re.compile(r'^\s*Library ID:\s+(\d+)\s+Slot:\s+(\d+)\s*$')
 FIELDS = {
     'Vendor identification': 'vendor',
     'Product identification': 'product',
+    #: Read because LTFS decides from it: an IBM LTO-8 drive below HB81 is
+    #: refused (profiles/ltfs_support.py). It was absent from this map, so the
+    #: line was written by generate_device_conf() and then never read back -
+    #: `ltfs drives` reported which firmware a family needs without being able
+    #: to say whether the drive in front of it met that.
+    'Product revision level': 'revision',
     'Unit serial number': 'serial',
     'NAA': 'naa',
     'Home directory': 'home_directory',
@@ -173,15 +237,27 @@ def parse(text: str) -> DeviceConf:
 
 def render_drive(*, drive_id: int, library_id: int, slot: int, target: int,
                  vendor: str, product: str, serial: str,
-                 channel: int = 0, lun: int = 0) -> str:
-    """One Drive record, in MHVTL's own layout."""
+                 revision: str = '', channel: int = 0, lun: int = 0) -> str:
+    """One Drive record, in MHVTL's own layout.
+
+    revision writes the `Product revision level` line, which this function used
+    to omit while generate_device_conf() wrote it - so a drive from
+    `library create` reported a firmware revision and a drive from `drive add`
+    reported none. That is not cosmetic: LTFS refuses an IBM LTO-8 drive below
+    HB81 and reads the revision from this line (see profiles/ltfs_support.py).
+    Empty leaves the line out, which is what MHVTL did for every added drive
+    until now.
+    """
     naa = f'{library_id:02d}:22:33:44:ab:{channel:02x}:{target:02x}:{lun:02x}'
+    revision_line = (f' Product revision level: {revision}\n'
+                     if str(revision).strip() else '')
     return (
         f'Drive: {drive_id:02d} CHANNEL: {channel:02d} TARGET: {target:02d} '
         f'LUN: {lun:02d}\n'
         f' Library ID: {library_id:02d} Slot: {slot:02d}\n'
         f' Vendor identification: {vendor}\n'
         f' Product identification: {product}\n'
+        f'{revision_line}'
         f' Unit serial number: {serial}\n'
         f' NAA: {naa}\n'
         f' Compression: factor 1 enabled 1\n'

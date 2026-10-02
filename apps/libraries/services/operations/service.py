@@ -144,7 +144,17 @@ class OperationsService:
 
     def unmount(self, library_id: int, drive: int,
                 slot: Optional[int] = None) -> ServiceResult:
-        """Return the tape in `drive` to a slot - its own by default."""
+        """Return the tape in `drive` to a slot - its own by default.
+
+        This is the mechanism and it is unguarded on purpose. An operator's
+        unmount should go through `ltfs.unmount_tape()`, which refuses while a
+        filesystem is mounted on the drive - pulling a cartridge out from under
+        a live mount leaves `ltfs` holding a device with no medium.
+
+        The guard cannot live here: `operations/` may not import `ltfs/` (rule
+        7 - the graph is a DAG and `ltfs` is a leaf), and `ltfs/` already
+        imports this module. See services/ltfs/tape_moves.py.
+        """
         operation_id = str(uuid.uuid4())[:8]
         device = self._device(library_id)
         if device is None:

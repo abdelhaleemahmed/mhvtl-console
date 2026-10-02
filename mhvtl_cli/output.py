@@ -23,6 +23,7 @@ Exit codes::
         a script retrying after a sudo is a sensible response to 3 and not to 1.
 """
 import json
+import re
 import sys
 from typing import Any, Dict, Iterable, List, Sequence
 
@@ -37,7 +38,15 @@ EMPTY = '-'
 
 
 def fail(message: str, *details: str, code: int = EXIT_FAILED) -> int:
-    """Report a failure on stderr and return the exit code to hand back."""
+    """Report a failure on stderr and return the exit code to hand back.
+
+    stdout is flushed first. stderr is unbuffered and stdout is
+    block-buffered when it is a pipe, so without this a command that prints
+    its steps on stdout and then fails had the failure appear ABOVE the steps
+    that led to it - every step-printing verb, `library create` included, read
+    backwards under `| head`.
+    """
+    sys.stdout.flush()
     print(f'mhvtl: {message}', file=sys.stderr)
     for detail in details:
         if detail:
@@ -46,7 +55,11 @@ def fail(message: str, *details: str, code: int = EXIT_FAILED) -> int:
 
 
 def note(message: str) -> None:
-    """A diagnostic. Always stderr, so it never lands in piped output."""
+    """A diagnostic. Always stderr, so it never lands in piped output.
+
+    Flushes stdout first, for the ordering reason in fail().
+    """
+    sys.stdout.flush()
     print(message, file=sys.stderr)
 
 
@@ -73,14 +86,14 @@ def table(rows: Sequence[Dict[str, Any]], columns: Sequence[str],
     headers = list(headers or [column.replace('_', ' ') for column in columns])
     cells = [[_text(row.get(column)) for column in columns] for row in rows]
 
-    widths = [max(len(headers[i]), *(len(row[i]) for row in cells))
+    widths = [max(_width(headers[i]), *(_width(row[i]) for row in cells))
               for i in range(len(columns))]
 
-    print('  '.join(header.upper().ljust(width)
+    print('  '.join(_pad(header.upper(), width)
                     for header, width in zip(headers, widths)).rstrip())
     print('  '.join('-' * width for width in widths))
     for row in cells:
-        print('  '.join(value.ljust(width)
+        print('  '.join(_pad(value, width)
                         for value, width in zip(row, widths)).rstrip())
 
 
@@ -117,6 +130,22 @@ def result(service_result, *, as_json: bool = False, quiet: bool = False) -> int
     if not quiet:
         print(service_result.message)
     return EXIT_OK
+
+
+#: A colour escape takes no room on the screen but plenty in a string, so a
+#: table whose cells carry one would put its headings in the wrong place. Only
+#: the SGR sequences this CLI emits (mhvtl_cli/colour.py) need stripping.
+_ANSI = re.compile(r'\033\[[0-9;]*m')
+
+
+def _width(text: str) -> int:
+    """How wide a cell is on the screen, not how long its string is."""
+    return len(_ANSI.sub('', text))
+
+
+def _pad(text: str, width: int) -> str:
+    """ljust that counts what is visible."""
+    return text + ' ' * max(0, width - _width(text))
 
 
 def _text(value: Any) -> str:

@@ -71,8 +71,22 @@ class LibraryStatusTests(FixtureConfigMixin, TestCase):
         self.assertEqual(status['slot_summary']['loaded_drives'], 1)
         self.assertEqual(status['drives'][0],
                          {'drive_num': 0, 'barcode': 'E01003L8', 'full': True,
-                          'slot_origin': 3})
+                          'slot_origin': 3,
+                          # Which generation it is drawn as, from
+                          # services/tapes/palette.py - the page renders this
+                          # rather than working it out from the barcode.
+                          'generation_token': 'lto-8', 'generation': 'LTO-8'})
         self.assertEqual(len(status['import_export_slots']), 4)
+
+    def test_the_status_names_the_generations_it_is_holding(self):
+        """For the legend. Only what this library has, in order, named by the
+        service - the page loops over it and decides nothing."""
+        a, b = self._patched()
+        with a, b:
+            status = views._library_status(10)
+        self.assertEqual(status['generations_present'],
+                         [{'token': 'lto-6', 'label': 'LTO-6'},
+                          {'token': 'lto-8', 'label': 'LTO-8'}])
 
     def test_the_status_endpoint_answers(self):
         """It raised AttributeError (picker_count) and returned a 500."""

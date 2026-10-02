@@ -36,6 +36,12 @@ from apps.libraries.services.profiles.data import get_profile, get_profile_optio
 # Kept for the templates and branches that still test them; the services are
 # part of this app and always importable.
 MHVTL_SERVICE_AVAILABLE = True
+
+#: How many backups the cleanup page lists. Every write takes one and nothing
+#: pruned them, so this host had 949: rendering them all made the page 867 KB
+#: with 949 Remove buttons. The service still returns them all - the CLI and the
+#: JSON want that - and the page shows the newest and offers the prune.
+BACKUPS_SHOWN = 25
 TAPE_SERVICE_AVAILABLE = True
 
 
@@ -663,24 +669,10 @@ class BrandConfigView(View):
                     messages.error(request, f'• {error}')
                 return redirect('libraries:brand_config', brand_name=brand_name)
 
-            # The database is a cache of what device.conf says, so it is
-            # filled from device.conf rather than from the form: this used to
-            # build the row by hand from keys the form does not send (it failed
-            # with KeyError 'vendor' on every creation), with channel, target
-            # and LUN hardcoded to 0, a made-up NAA, no brand or model, and
-            # drive ids guessed as library_id + n.
-            try:
-                from apps.libraries.services.sync.service import sync_mhvtl_to_django
-                sync_mhvtl_to_django()
-                messages.success(request,
-                                 f'Library {library_id} recorded in the database')
-            except Exception as db_error:  # noqa: BLE001 - shown to the operator
-                logger.warning('recording library %s in the database: %s',
-                               library_id, db_error)
-                messages.warning(
-                    request,
-                    f'Library created in MHVTL but the database record failed: '
-                    f'{db_error}')
+            # The database record is step 6 of the workflow above, reported
+            # with the other steps, so it happens for the CLI too. It used to
+            # be here, which is why a library created from the CLI was
+            # configured, running, and invisible in every dropdown.
 
             return redirect('libraries:dashboard')
 
@@ -935,7 +927,11 @@ class LibraryDetailView(View):
             except Exception:
                 pass
             try:
-                listed = TapeService().list(library_id)
+                # with_ltfs: this page's tiles carry the LTFS chips, so it
+                # is one of the two callers that asks. Gates in the
+                # service mean it costs nothing on a library whose drives
+                # LTFS cannot open.
+                listed = TapeService().list(library_id, with_ltfs=True)
                 if listed.success:
                     tapes = sorted(listed.data['tapes'],
                                    key=lambda t: t['slot'] or 0)
@@ -1536,7 +1532,92 @@ class CleanupOrphanedView(View):
             else:
                 messages.error(request, "MHVTL service not available")
 
+        elif action == 'full_scan':
+            self._full_scan(request)
+
+        elif action == 'remove_backup':
+            self._remove_backup(request, request.POST.get('name'))
+
+        elif action == 'prune_backups':
+            self._prune_backups(request, request.POST.get('keep'))
+
         return redirect('libraries:cleanup_orphaned')
+
+    @staticmethod
+    def _full_scan(request):
+        """Reconcile the whole database against device.conf.
+
+        The same sync the library list page's Full Scan button runs, as a form
+        post rather than through fetch(): this page is server-rendered with
+        forms and messages, and the decision is the service's either way.
+
+        It belongs here because this is the page for putting the database right,
+        and because a whole-configuration reconcile is an explicit repair rather
+        than a step inside another operation - see the one-way rule in
+        guides/architecture.rst. Deactivating rows device.conf does not declare
+        is what it is for, not a side effect to be guarded against.
+        """
+        from apps.libraries.services.sync.service import (ConfigUnreadable,
+                                                          sync_mhvtl_to_django)
+
+        try:
+            stats = sync_mhvtl_to_django()
+        except ConfigUnreadable as exc:
+            # device.conf could not be READ - which is not the same as saying
+            # there are no libraries, and the sync refuses rather than emptying
+            # the database.
+            messages.error(request, f'Full scan refused: {exc}')
+            return
+        except Exception as exc:                       # noqa: BLE001 - shown
+            logger.exception('running a full scan')
+            messages.error(request, f'Full scan failed: {exc}')
+            return
+
+        messages.success(
+            request,
+            f'Full scan complete: {stats["libraries_found"]} library/libraries '
+            f'in device.conf, {stats["created"]} new, {stats["updated"]} '
+            f'corrected, {stats["activated"]} reactivated, '
+            f'{stats["deactivated"]} deactivated; {stats["drives_imported"]} '
+            f'drive(s) imported, {stats["drives_activated"]} reactivated, '
+            f'{stats["drives_deactivated"]} deactivated')
+        messages.info(request,
+                      f'The database now holds {stats["total_db"]} active '
+                      f'library/libraries and {stats["total_drives"]} drive(s)')
+
+    @staticmethod
+    def _remove_backup(request, name):
+        """Delete one backup. The service holds it to backups/ by refusing any
+        name with a separator in it, so nothing here needs to check the path."""
+        from apps.libraries.services.config.service import ConfigService
+
+        result = ConfigService().remove_backup(name or '')
+        if result.success:
+            messages.success(request, result.message)
+        else:
+            messages.error(request, result.message)
+            for error in result.errors:
+                messages.error(request, f'  {error}')
+
+    @staticmethod
+    def _prune_backups(request, keep):
+        """Delete all but the newest N. The count comes from the operator and is
+        never defaulted: a prune that deletes everything because a field was
+        empty is not a prune."""
+        from apps.libraries.services.config.service import ConfigService
+
+        try:
+            wanted = int(keep)
+        except (TypeError, ValueError):
+            messages.error(request, 'How many backups to keep must be a number')
+            return
+        result = ConfigService().prune_backups(keep=wanted)
+        if result.success:
+            messages.success(request, result.message)
+        else:
+            messages.error(request, result.message)
+            for error in result.errors:
+                messages.error(request, f'  {error}')
 
     def _get_cleanup_context(self):
         """Get context with discovered vs database comparison"""
@@ -1550,6 +1631,13 @@ class CleanupOrphanedView(View):
             # New: device.conf orphans
             'config_orphans': None,
             'mhvtl_service_available': MHVTL_SERVICE_AVAILABLE,
+            # The backups every config write takes, which nothing used to show:
+            # 949 of them had collected here before this page could list them.
+            'backups': [],
+            'backups_count': 0,
+            'backups_hidden': 0,
+            'backups_total_bytes': 0,
+            'backups_path': '',
         }
 
         # device.conf orphans, from services/libraries/orphans
@@ -1558,6 +1646,29 @@ class CleanupOrphanedView(View):
                 context['config_orphans'] = orphans.find()
             except Exception as e:
                 context['config_orphans_error'] = str(e)
+
+            # Backups belong on this page because this is where an operator
+            # comes to tidy up, and because orphans.cleanup() takes one before
+            # it removes anything - the copy it leaves is the way back.
+            try:
+                from apps.libraries.services.config.service import ConfigService
+
+                listed = ConfigService().backups()
+                if listed.success:
+                    # The newest few only. Rendering all of them made this page
+                    # 867 KB of HTML and 949 Remove buttons - an operator with
+                    # that many is looking for the prune, not for row 700.
+                    rows = listed.data['backups']
+                    context['backups'] = rows[:BACKUPS_SHOWN]
+                    context['backups_count'] = listed.data['count']
+                    context['backups_hidden'] = max(
+                        len(rows) - BACKUPS_SHOWN, 0)
+                    context['backups_total_bytes'] = listed.data['total_bytes']
+                    context['backups_path'] = listed.data['path']
+                else:
+                    context['backups_error'] = listed.message
+            except Exception as e:                     # noqa: BLE001 - shown
+                context['backups_error'] = str(e)
 
         # Get libraries from database
         db_libraries = Library.objects.filter(is_active=True).select_related('brand', 'model')

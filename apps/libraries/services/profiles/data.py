@@ -14,6 +14,22 @@ Rules for this layer:
     - never imports django.contrib.messages and never sees a request
     - all subprocess work goes through core.shell
     - only sync/ may import apps.libraries.models
+
+DO NOT EDIT A PROFILE TO SUIT ANOTHER TOOL
+------------------------------------------
+
+These rows describe hardware that exists: what a real library and its drives
+report, which models a given library takes, which media those drives accept.
+They are verified against the MHVTL source (13 of 13 library personalities, 64
+of 64 drive models) and held there by 127 tests in test_personalities.py,
+test_library_matrix.py, test_compatibility.py and test_ltfs_support.py.
+
+A profile is not the place to solve a problem in another program. In
+particular: if LTFS refuses a library's drives, add a drive it accepts with
+libraries/workflow.add_ltfs_drive_workflow() - see profiles/ltfs_support.py -
+rather than changing what these drives claim to be. What a drive reports is
+what backup software identifies it by (config/device_conf.py:272).
+
 """
 
 

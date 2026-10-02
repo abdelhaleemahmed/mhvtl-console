@@ -6,8 +6,17 @@
 {% block extra_css %}
 <style>
     /* Only what css/mhvtl-console.css has no rule for. */
-    .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
+    /* The same shape as the mount page: both tracks are ranges, so the map
+       takes 700px where there is room and gives width back rather than
+       dropping under the form. A fixed second column plus a bigger breakpoint
+       stacks them on a narrower screen, which is the wrong thing to do to two
+       cards that are read together. */
+    .main-grid { display: grid;
+                 grid-template-columns: minmax(320px, 1fr) minmax(340px, 700px);
+                 gap: 20px; }
     @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+    .summary-bar { margin-bottom: 20px; }
+    .summary-bar .summary-stats { margin: 0; }
     .operation-icon { font-size: 36px; text-align: center; margin-bottom: 15px; }
     #loading { display: none; text-align: center; padding: 20px; color: var(--text-dim); }
     #loading.active { display: block; }
@@ -15,10 +24,15 @@
             .status-panel { background: var(--surface-deep); border-radius: 8px; padding: 15px; }
     .summary-stats { display: flex; gap: 15px; margin-bottom: 15px; }
     .stat-box { flex: 1; text-align: center; padding: 10px; background: var(--surface); border-radius: 5px; }
-    .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; max-height: 400px; overflow-y: auto; }
-    .slot-box { padding: 10px 8px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
-    .slot-box.full { background: var(--info-bg); border-color: var(--info); }
-    .slot-box.full:hover { background: var(--info-bg); border-color: var(--accent); }
+    /* Sized like the mount page's grid, so the same library looks the same on
+       both: a slot is a slot. */
+    .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; max-height: 300px; overflow-y: auto; }
+    .slot-box { padding: 8px; text-align: center; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    /* `full` is a state, not a colour - the generation's own class provides
+       the fill, exactly as on the mount page. It used to be one blue for every
+       tape, whatever generation it was. */
+    .slot-box.full { cursor: pointer; }
+    .slot-lto { font-size: 9px; display: block; opacity: .85; margin-top: 2px; }
     .slot-box.empty { background: var(--surface-deep); border-color: var(--border); color: var(--text-dim); }
     .slot-box.empty:hover { background: var(--surface-deep); border-color: var(--border); }
     .slot-box.selected-source { background: var(--warn-bg); border-color: var(--warn); box-shadow: 0 0 0 2px var(--warn); }
@@ -37,7 +51,6 @@
     .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-color { width: 16px; height: 16px; border-radius: 3px; }
-    .legend-color.full { background: var(--info-bg); border: 1px solid var(--info); }
     .legend-color.empty { background: var(--surface-deep); border: 1px solid var(--border); }
     .legend-color.source { background: var(--warn-bg); border: 2px solid var(--warn); }
     .legend-color.dest { background: var(--ok-bg); border: 2px solid var(--ok); }
@@ -45,6 +58,23 @@
 {% endblock %}
 
 {% block content %}
+{% comment %}
+Across the top, spanning both cards, as on the mount page: these describe the
+library as a whole and belong to neither half of the page.
+{% endcomment %}
+<div class="card summary-bar" id="summary-bar" style="display: none;">
+    <div class="summary-stats">
+        <div class="stat-box">
+            <div class="stat-value" id="stat-full">0</div>
+            <div class="stat-label">Tapes in Slots</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="stat-empty">0</div>
+            <div class="stat-label">Empty Slots</div>
+        </div>
+    </div>
+</div>
+
 <div class="main-grid">
             <!-- Move Form -->
             <div class="card">
@@ -123,21 +153,15 @@
                 </div>
 
                 <div id="status-panel" class="status-panel" style="display: none;">
-                    <div class="summary-stats">
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-full">0</div>
-                            <div class="stat-label">Tapes in Slots</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-empty">0</div>
-                            <div class="stat-label">Empty Slots</div>
-                        </div>
-                    </div>
-
                     <div class="slot-grid" id="slot-grid"></div>
 
+                    {% comment %}
+                    Which generations this library is holding, filled in from
+                    generations_present. There was one "Tape" swatch here, in
+                    the single colour every cartridge used to be drawn in.
+                    {% endcomment %}
+                    <div class="legend" id="generation-legend"></div>
                     <div class="legend">
-                        <div class="legend-item"><div class="legend-color full"></div> Tape</div>
                         <div class="legend-item"><div class="legend-color empty"></div> Empty</div>
                         <div class="legend-item"><div class="legend-color source"></div> Source</div>
                         <div class="legend-item"><div class="legend-color dest"></div> Destination</div>
@@ -152,6 +176,16 @@
         let libraryData = null;
         let selectedSource = null;
         let selectedDest = null;
+
+        function escapeHtml(text) {
+            // A barcode is interpolated into innerHTML here. It comes from a
+            // cartridge label and the service validates it, but a template
+            // string that builds markup should escape what it is given
+            // whatever its provenance - the same helper the mount page uses.
+            const div = document.createElement('div');
+            div.textContent = text == null ? '' : String(text);
+            return div.innerHTML;
+        }
 
         function loadLibraryStatus() {
             const libraryId = document.getElementById('library_id').value;
@@ -170,13 +204,18 @@
                 submitBtn.disabled = true;
                 statusPlaceholder.style.display = 'block';
                 statusPanel.style.display = 'none';
+                document.getElementById('summary-bar').style.display = 'none';
                 return;
             }
 
             loading.classList.add('active');
             fields.style.display = 'none';
 
-            fetch(`/libraries/ajax/library-status/${libraryId}/`)
+            // The endpoint with generations on it. This page used to fetch
+            // /libraries/ajax/library-status/, which carries none, so every
+            // tape here was one colour while the mount page coloured them by
+            // LTO generation - the same library looking like two.
+            fetch(`/libraries/ajax/library-status-lto/${libraryId}/`)
                 .then(response => response.json())
                 .then(data => {
                     loading.classList.remove('active');
@@ -190,6 +229,7 @@
                     // Update status panel
                     statusPlaceholder.style.display = 'none';
                     statusPanel.style.display = 'block';
+                    document.getElementById('summary-bar').style.display = 'block';
 
                     // Update summary stats
                     const fullSlots = data.storage_slots.filter(s => s.full).length;
@@ -204,17 +244,38 @@
 
                     data.storage_slots.forEach(slot => {
                         const div = document.createElement('div');
-                        div.className = `slot-box ${slot.full ? 'full' : 'empty'}`;
+                        // generation_token is decided in
+                        // services/tapes/palette.py. A full slot carries both
+                        // `full` and its generation; `full` is a state here,
+                        // not a colour.
+                        div.className = `slot-box ${slot.full
+                            ? 'full ' + slot.generation_token : 'empty'}`;
                         div.dataset.slotNum = slot.slot_num;
                         div.dataset.full = slot.full;
                         div.dataset.barcode = slot.barcode || '';
+                        const generation = slot.full && slot.tape_lto
+                            ? `<div class="slot-lto">${escapeHtml(slot.tape_lto)}</div>` : '';
                         div.innerHTML = `
                             <div class="slot-num">${slot.slot_num}</div>
-                            <div class="slot-barcode">${slot.full ? (slot.barcode || 'Tape') : '-'}</div>
-                            <div class="slot-status">${slot.full ? 'Full' : 'Empty'}</div>
+                            <div class="slot-barcode">${slot.full ? escapeHtml(slot.barcode || 'Tape') : '-'}</div>
+                            ${generation || `<div class="slot-status">${slot.full ? 'Full' : 'Empty'}</div>`}
                         `;
                         div.onclick = () => handleSlotClick(slot);
                         slotGrid.appendChild(div);
+                    });
+
+                    // The generations THIS library holds, in order, named by
+                    // the service - palette.present_in(). The legend below is
+                    // for what a tile means; this one is for which tape it is.
+                    const generationLegend = document.getElementById('generation-legend');
+                    generationLegend.innerHTML = '';
+                    (data.generations_present || []).forEach(generation => {
+                        const item = document.createElement('div');
+                        item.className = 'legend-item';
+                        item.innerHTML =
+                            `<div class="legend-color ${generation.token}"></div> ` +
+                            `${escapeHtml(generation.label)} tape`;
+                        generationLegend.appendChild(item);
                     });
 
                     // Populate dropdowns
@@ -294,7 +355,7 @@
 
                 document.getElementById('preview-source').innerHTML = `
                     <div class="slot-num">Slot ${fromSlot}</div>
-                    <div class="slot-barcode">${sourceSlot?.barcode || 'Tape'}</div>
+                    <div class="slot-barcode">${escapeHtml(sourceSlot?.barcode || 'Tape')}</div>
                 `;
                 document.getElementById('preview-dest').innerHTML = `
                     <div class="slot-num">Slot ${toSlot}</div>

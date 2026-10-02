@@ -1,0 +1,292 @@
+{% extends 'libraries/operator/base.html' %}
+
+{% block header_title %}LTFS{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. Theme tokens only - no
+       literal colours, so the outstanding theme pass has nothing new to fix. */
+    .ltfs-row.capable   { border-left: 4px solid var(--ok); }
+    .ltfs-row.incapable { border-left: 4px solid var(--border); opacity: 0.75; }
+    .ltfs-why  { font-size: 12px; color: var(--text-dim); }
+    .ltfs-path { font-family: 'Consolas', monospace; font-size: 12px; }
+    .ltfs-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ltfs-note { color: var(--text-dim); font-size: 13px; margin-top: 12px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form method="get" action="{% url 'libraries:ltfs' %}">
+        <div class="form-group">
+            <label for="library_id">Library</label>
+            <select name="library_id" id="library_id" class="form-control"
+                    onchange="this.form.submit()">
+                <option value="">Choose a library</option>
+                {% for library in libraries %}
+                    <option value="{{ library.library_id }}"
+                            {% if selected_library_id == library.library_id %}selected{% endif %}>
+                        Library {{ library.library_id }} - {{ library.vendor }} {{ library.product }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+</div>
+
+{% if not tools.ltfs %}
+<div class="alert alert-warning">
+    LTFS is not installed on this host, so nothing here can run.
+    {# Said once, here, rather than repeated as a failure on every button. #}
+</div>
+{% endif %}
+
+{% if selected_library_id %}
+{% if provisioning %}
+{% comment %} Above the drive table on purpose: it is what an operator came to
+   do, and reading "not ready" after scrolling past the evidence is the wrong
+   way round. One thing at a time - the drive when there is none, the cartridges
+   once a drive exists - and every value is the service's, from
+   libraries/workflow.ltfs_provisioning(). This template chooses nothing.
+
+   Shown for EVERY library, not only one that is missing something. A ready
+   library used to get nothing at all - no volume count, no slots, no statement
+   that it is ready - which is the case where those numbers are most worth
+   reading. The service always answered; the page threw it away.
+{% endcomment %}
+<div class="card">
+    <div class="section-title">
+        {% if provisioning.needs %}
+        Library {{ selected_library_id }} is not ready for LTFS
+        {% else %}
+        Library {{ selected_library_id }} is ready for LTFS
+        {% endif %}
+    </div>
+
+    <p class="form-help" style="font-size: 13px; margin-bottom: 15px;">
+        Drive slots {{ provisioning.drive_slots.used }}{% if provisioning.drive_slots.max %} of {{ provisioning.drive_slots.max }}{% endif %}
+        &middot; storage slots {{ provisioning.storage_slots.full }} full,
+        {{ provisioning.storage_slots.empty }} empty
+        &middot;
+        {% if provisioning.ltfs_media is None %}
+        LTFS volumes not read, because no drive here can open LTFS
+        {% else %}
+        {{ provisioning.ltfs_media }} LTFS volume{{ provisioning.ltfs_media|pluralize }}{% if provisioning.ltfs_media_barcodes %}:
+        {{ provisioning.ltfs_media_barcodes|join:", " }}{% endif %}
+        {% endif %}
+    </p>
+
+    {% if 'drive' in provisioning.needs %}
+    {% if provisioning.can_add_drive %}
+    <p>
+        A drive can be added that LTFS will open, without disturbing the
+        cartridges already here. The drive is emulated, so the vendor id it
+        reports is ours to choose &mdash; which is usually the whole difference.
+    </p>
+    <form method="post" action="{% url 'libraries:ltfs' %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add-drive">
+        <input type="hidden" name="library_id" value="{{ selected_library_id }}">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="ltfs-add-pair">Drive to add</label>
+                <select id="ltfs-add-pair" name="pair" class="form-control">
+                    {% for pair in provisioning.drive_candidates %}
+                    <option value="{{ pair.vendor }}|{{ pair.model }}">{{ pair.vendor }} {{ pair.model }}{% if pair.firmware_minimum %} — firmware {{ pair.firmware_minimum }} or later{% endif %}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-help">
+                    Only models LTFS opens and this library's profile takes.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ltfs-add-revision">Firmware revision</label>
+                <input id="ltfs-add-revision" type="text" name="revision"
+                       class="form-control" maxlength="4" placeholder="leave empty">
+                <div class="form-help">
+                    Only IBM LTO-5, LTO-8 and TS1140 have a minimum at all.
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Add the drive</button>
+        </div>
+    </form>
+    <p class="form-help" style="margin-top: 12px;">
+        This adds. It never removes: if there is no room it says what is full,
+        because taking a drive away restarts the library &mdash; that lives on
+        the drives pages. It does not format anything either.
+    </p>
+    {% else %}
+    <div class="alert alert-warning" style="margin: 0;">
+        It needs a drive LTFS can open, and one cannot be added:
+        {{ provisioning.cannot_add_because }}
+    </div>
+    {% endif %}
+    {% endif %}
+
+    {% if provisioning.can_add_media %}
+    <p>
+        {% if 'media' in provisioning.needs %}
+        It has a drive LTFS can open and no LTFS volumes. Cartridges can be
+        created for it &mdash;
+        {% else %}
+        More cartridges can be created for it &mdash;
+        {% endif %}
+        blank media of a density that drive can format. They are not LTFS
+        volumes until <code>mkltfs</code> has formatted one, which erases it.
+    </p>
+    <form method="post" action="{% url 'libraries:ltfs' %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add-media">
+        <input type="hidden" name="library_id" value="{{ selected_library_id }}">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="ltfs-media-count">Cartridges</label>
+                <input id="ltfs-media-count" type="number" name="count"
+                       class="form-control" value="2" min="1" max="20" required>
+                <div class="form-help">
+                    {{ provisioning.storage_slots.empty }} empty slot{{ provisioning.storage_slots.empty|pluralize }} free.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ltfs-media-density">Density</label>
+                <select id="ltfs-media-density" name="density" class="form-control">
+                    <option value="">The newest its drive writes</option>
+                    {% for medium in provisioning.media_candidates %}{% if medium.usable %}
+                    <option value="{{ medium.density }}">{{ medium.density }} — barcodes end {{ medium.suffix }}</option>
+                    {% endif %}{% endfor %}
+                </select>
+                <div class="form-help">
+                    Only densities this drive can write: <code>mkltfs</code>
+                    writes, so a read-only cartridge is no use.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ltfs-expand-slots" style="font-weight: 400;">
+                <input id="ltfs-expand-slots" type="checkbox" name="expand_slots">
+                Grow the library if it has too few empty slots
+            </label>
+            <div class="form-help">
+                Off by default: a library's slot count is part of what it
+                advertises to backup software.
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Create the cartridges</button>
+        </div>
+    </form>
+    {% with refused=provisioning.media_candidates %}
+    {% for medium in refused %}{% if not medium.usable %}{% if forloop.first %}
+    <p class="form-help" style="margin-top: 12px;">Cannot be used here:{% endif %}
+        {{ medium.density }} &mdash; {{ medium.reason }}{% if not forloop.last %};{% else %}</p>{% endif %}
+    {% endif %}{% endfor %}
+    {% endwith %}
+    {% elif 'media' in provisioning.needs %}
+    <div class="alert alert-warning" style="margin: 0;">
+        It needs cartridges, and none can be added:
+        {{ provisioning.cannot_add_media_because }}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="section-title">Drives in library {{ selected_library_id }}</div>
+
+    {% if drives %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Drive</th><th>Model</th><th>Node</th>
+                <th>Cartridge</th><th>State</th><th>Mounted at</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for drive in drives %}
+            <tr class="ltfs-row {% if drive.ltfs_capable %}capable{% else %}incapable{% endif %}">
+                <td>{{ drive.drive_num }}<br>
+                    <span class="ltfs-why">id {{ drive.drive_id }}</span></td>
+                <td>{{ drive.vendor }} {{ drive.model }}
+                    {% if not drive.ltfs_capable %}
+                        <div class="ltfs-why">{{ drive.ltfs_reason }}</div>
+                    {% endif %}</td>
+                <td class="ltfs-path">{{ drive.device|default:"-" }}</td>
+                <td>{{ drive.barcode|default:"-" }}</td>
+                <td>
+                    {% if drive.cartridge_state == 'ltfs' %}
+                        <span class="tape-chip ltfs">LTFS</span>
+                    {% elif drive.cartridge_state %}
+                        <span class="ltfs-why">{{ drive.cartridge_summary }}</span>
+                    {% else %}-{% endif %}
+                </td>
+                <td class="ltfs-path">{{ drive.mounted_at|default:"-" }}</td>
+                <td>
+                    {% comment %} Every button is a form post: the service decides, and a
+                       GET on this URL can never change anything. {% endcomment %}
+                    <div class="ltfs-actions">
+                    {% if drive.ltfs_capable and drive.barcode %}
+                        {% if drive.mounted_at %}
+                        <form method="post" action="{% url 'libraries:ltfs' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="unmount">
+                            <input type="hidden" name="library_id" value="{{ selected_library_id }}">
+                            <input type="hidden" name="drive" value="{{ drive.drive_num }}">
+                            <button type="submit" class="btn btn-secondary btn-sm">Unmount</button>
+                        </form>
+                        {% else %}
+                        <form method="post" action="{% url 'libraries:ltfs' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="mount">
+                            <input type="hidden" name="library_id" value="{{ selected_library_id }}">
+                            <input type="hidden" name="drive" value="{{ drive.drive_num }}">
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                    {% if drive.cartridge_state != 'ltfs' %}disabled
+                                    title="Not an LTFS volume"{% endif %}>Mount</button>
+                        </form>
+                        <form method="post" action="{% url 'libraries:ltfs' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="check">
+                            <input type="hidden" name="library_id" value="{{ selected_library_id }}">
+                            <input type="hidden" name="drive" value="{{ drive.drive_num }}">
+                            <button type="submit" class="btn btn-secondary btn-sm">Check</button>
+                        </form>
+                        {% if format_allowed %}
+                        <form method="post" action="{% url 'libraries:ltfs' %}"
+                              onsubmit="return confirm('Formatting {{ drive.barcode }} erases everything on it. There is no undo. Continue?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="format">
+                            <input type="hidden" name="library_id" value="{{ selected_library_id }}">
+                            <input type="hidden" name="drive" value="{{ drive.drive_num }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Format</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="ltfs-note">
+        A cartridge must be in a drive before LTFS can touch it - load one from
+        Mount Tape. Unmounting is when LTFS writes its index to the cartridge,
+        so release a volume before taking it out.
+        {% if not format_allowed %}
+        Formatting is disabled on this host (MHVTL_GUI_ALLOW_LTFS_FORMAT).
+        {% endif %}
+    </div>
+    {% else %}
+    <p>No drives in this library.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

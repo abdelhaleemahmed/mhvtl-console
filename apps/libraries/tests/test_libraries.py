@@ -94,7 +94,7 @@ class CreateWorkflowTests(TestCase):
                      'media_type': 'LTO8'}
 
     def _patch(self, *, validate=True, create=True, restart=True,
-               recognised=True, media=True):
+               recognised=True, media=True, record=True):
         created = (success_result('Library 40 created', {'library_id': 40})
                    if create else failure_result('device.conf is not writable',
                                                  ['permission denied']))
@@ -115,6 +115,16 @@ class CreateWorkflowTests(TestCase):
                 workflow_module, '_create_media',
                 return_value=('media', media,
                               'Tape media created' if media else 'mktape failed')),
+            # Nothing was really written, so the real step would report that
+            # device.conf does not declare library 40 - which is true, and not
+            # what these tests are about. sync.record_library has its own.
+            mock.patch.object(
+                workflow_module, '_record',
+                return_value=('record', record,
+                              'Library 40 and its 2 drives recorded in the database'
+                              if record else
+                              'device.conf does not declare library 40; the '
+                              'database was left as it is')),
         ]
         for patch in patches:
             patch.start()
@@ -128,7 +138,8 @@ class CreateWorkflowTests(TestCase):
         result = create_library_workflow(self.spec)
         self.assertTrue(result.success, result.message)
         self.assertEqual([s['step'] for s in result.data['steps']],
-                         ['validate', 'create', 'restart', 'verify', 'media'])
+                         ['validate', 'create', 'restart', 'verify', 'media',
+                          'record'])
 
     def test_a_rejected_specification_creates_nothing(self):
         self._patch(validate=False)
@@ -174,9 +185,26 @@ class CreateWorkflowTests(TestCase):
     def test_warnings_are_collected_for_the_caller(self):
         self._patch(restart=False, media=False)
         result = create_library_workflow(self.spec)
-        # restart and media failed; verify succeeded, so two warnings.
+        # restart and media failed; verify and record succeeded, so two.
         self.assertEqual(len(result.data['warnings']), 2)
         self.assertTrue(result.success)
+
+    def test_the_database_record_is_a_step_so_the_cli_gets_it_too(self):
+        """It used to live in the view that called this, which is why a library
+        created from the CLI was configured, running, and invisible in the web
+        UI's dropdowns."""
+        self._patch()
+        result = create_library_workflow(self.spec)
+        self.assertIn('recorded in the database',
+                      self.steps(result)['record']['message'])
+
+    def test_a_failed_database_record_is_a_warning_not_a_failure(self):
+        """The library is configured and running; the database is a cache."""
+        self._patch(record=False)
+        result = create_library_workflow(self.spec)
+        self.assertTrue(result.success)
+        self.assertFalse(self.steps(result)['record']['ok'])
+        self.assertFalse(self.steps(result)['record']['fatal'])
 
     def test_restart_can_be_skipped(self):
         """A CLI creating several libraries restarts once at the end."""

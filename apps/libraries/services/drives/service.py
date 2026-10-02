@@ -497,6 +497,21 @@ class DriveService:
                 sibling = next(iter(sorted(existing.items())), (None, {}))[1]
                 vendor = drive_data.get('vendor') or sibling.get('vendor') or DEFAULT_VENDOR
                 product = drive_data.get('product') or sibling.get('product') or DEFAULT_PRODUCT
+                # A sibling's revision, so an added drive reports what the
+                # library's other drives report. render_drive() wrote no
+                # revision line at all until now, while generate_device_conf()
+                # always did - so every drive added after creation was missing
+                # the field LTFS reads to decide whether it will open it.
+                #
+                # The FIRST sibling that has one, not simply the lowest id as
+                # vendor and product take: a library where four drives report
+                # HB82 and the fifth reports nothing is a library whose fifth
+                # drive LTFS treats differently, for no reason an operator
+                # asked for. MHVTL's own sample device.conf comments the line
+                # out, so a hand-written library legitimately has none.
+                revision = drive_data.get('revision') or next(
+                    (data.get('revision') for _, data in sorted(existing.items())
+                     if data.get('revision')), '')
                 if personalities.drive_personality(product) == personalities.GENERIC_DRIVE:
                     return failure_result(
                         f'MHVTL does not recognise the drive model {product!r}',
@@ -526,6 +541,7 @@ class DriveService:
                     drive_id=drive_id, library_id=library_id, slot=slot, target=target,
                     vendor=vendor,
                     product=product,
+                    revision=revision,
                     serial=drive_data.get('serial')
                             or f"{library.get('serial', 'XYZZY')}D{slot}")
 
@@ -537,6 +553,8 @@ class DriveService:
                 contents_updated = self._add_to_library_contents(library_id, slot)
 
             message = f'Drive {drive_id} added to library {library_id}'
+            if revision:
+                message += f' (revision {revision})'
             if not contents_updated:
                 message += ' (library_contents was not updated; check it by hand)'
             note, applied = (self._apply(library_id, start=drive_id) if restart
@@ -548,11 +566,29 @@ class DriveService:
                 'target': target, 'restart_required': not applied,
                 'restarted': applied,
                 'library_contents_updated': contents_updated,
+                'vendor': vendor, 'product': product, 'revision': revision,
+                'database': self._record(library_id),
             }, operation_id)
 
         except Exception as exc:                       # noqa: BLE001 - reported
             logger.exception('adding a drive to library %s', library_id)
             return failure_result(f'Error adding drive: {exc}', [str(exc)], operation_id)
+
+    def _record(self, library_id: int) -> str:
+        """Bring this library's database drives in line with device.conf.
+
+        device.conf has just changed, and the web UI reads its drive lists from
+        the database. Scoped to the one library, and never fatal: the drive is
+        added or removed either way, and the database is a cache.
+        """
+        from ..sync import record_library
+
+        try:
+            return record_library(library_id, self.config_dir)['message']
+        except Exception as exc:                       # noqa: BLE001 - reported
+            logger.warning('drive change in library %s not recorded in the '
+                           'database: %s', library_id, exc)
+            return f'the database was not updated: {exc}'
 
     def remove(self, drive_id: int, *, restart: bool = True) -> ServiceResult:
         """Remove a drive from device.conf and from its library_contents."""
@@ -594,7 +630,8 @@ class DriveService:
             return success_result(
                 f'Drive {drive_id} removed from library {library_id}{note}',
                 {'drive_id': drive_id, 'library_id': library_id, 'slot': slot,
-                 'restart_required': not applied, 'restarted': applied},
+                 'restart_required': not applied, 'restarted': applied,
+                 'database': self._record(library_id)},
                 operation_id)
 
         except Exception as exc:                       # noqa: BLE001 - reported

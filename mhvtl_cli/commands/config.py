@@ -37,6 +37,25 @@ def register(subparsers) -> None:
     backup = verbs.add_parser('backup', help='copy the files to a dated backup')
     backup.set_defaults(handler=do_backup)
 
+    backups = verbs.add_parser('backups', help='every backup that has been taken')
+    backups.add_argument('--files', action='store_true',
+                         help='list what each backup holds')
+    backups.set_defaults(handler=do_backups)
+
+    remove_backup = verbs.add_parser('remove-backup', help='delete one backup')
+    remove_backup.add_argument('name', help='as `config backups` lists it')
+    remove_backup.set_defaults(handler=do_remove_backup)
+
+    prune = verbs.add_parser(
+        'prune-backups', help='delete all but the newest N backups')
+    prune.add_argument('--keep', type=int, required=True, metavar='N',
+                       help='how many of the newest to keep; at least 1. '
+                            'Required, so a forgotten argument cannot delete '
+                            'everything')
+    prune.add_argument('--dry-run', action='store_true',
+                       help='say what would go, change nothing')
+    prune.set_defaults(handler=do_prune_backups)
+
     restore = verbs.add_parser('restore', help='copy a backup back into place')
     restore.add_argument('backup_dir',
                          help='a directory under the configuration backups/')
@@ -138,7 +157,7 @@ def do_restore(args) -> int:
     """
     privileges.require_write_access('restoring the configuration')
     service = _service(args)
-    backups = (Path(service.config_dir) / 'backups').resolve()
+    backups = service.backup_dir.resolve()
     source = Path(args.backup_dir)
     if not source.is_absolute():
         source = backups / source
@@ -166,4 +185,66 @@ def do_sync(args) -> int:
         output.emit_json(summary)
     elif not args.quiet:
         output.pairs(summary)
+    return output.EXIT_OK
+
+
+def do_backups(args) -> int:
+    """What backups exist, newest first.
+
+    Every config write takes one and nothing used to look at them again, so
+    `config restore` took a directory name the operator had to already know.
+    """
+    result = _service(args).backups()
+    if args.json or not result.success:
+        return output.result(result, as_json=args.json)
+
+    rows = result.data['backups']
+    if not rows:
+        print(f"No backups in {result.data['path']}.")
+        return output.EXIT_OK
+
+    for row in rows:
+        row['kib'] = row['bytes'] // 1024
+        row['when'] = row['taken'] or '-'
+        row['ours'] = 'yes' if row['recognised'] else 'no'
+        row['holds'] = ', '.join(row['files']) if args.files else row['file_count']
+
+    output.table(rows,
+                 columns=['name', 'when', 'kib', 'holds', 'ours'],
+                 headers=['backup', 'taken', 'KiB',
+                          'files' if args.files else 'files', 'ours'])
+    total = result.data['total_bytes']
+    print(f"\n{len(rows)} backup(s), {total // 1024} KiB in "
+          f"{result.data['path']}")
+    unrecognised = [r for r in rows if not r['recognised']]
+    if unrecognised:
+        # Listed but never pruned: somebody's deliberate copy from before the
+        # dated-directory shape, and a prune is not the place to decide about it.
+        print(f'{len(unrecognised)} of these predate the dated-directory shape; '
+              f'prune-backups leaves them alone.')
+    return output.EXIT_OK
+
+
+def do_remove_backup(args) -> int:
+    privileges.require_write_access('removing a backup')
+    return output.result(_service(args).remove_backup(args.name),
+                         as_json=args.json, quiet=args.quiet)
+
+
+def do_prune_backups(args) -> int:
+    """Delete all but the newest --keep backups.
+
+    --keep is required rather than defaulted: a prune that deletes everything
+    because an argument was forgotten is not a prune.
+    """
+    if not args.dry_run:
+        privileges.require_write_access('removing backups')
+    result = _service(args).prune_backups(keep=args.keep, dry_run=args.dry_run)
+    if args.json or not result.success:
+        return output.result(result, as_json=args.json)
+
+    print(result.message)
+    if args.dry_run:
+        for name in (result.data or {}).get('would_remove', []):
+            print(f'  {name}')
     return output.EXIT_OK

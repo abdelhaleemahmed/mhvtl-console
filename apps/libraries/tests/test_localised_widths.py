@@ -33,7 +33,7 @@ class LocalisedWidthTests(SimpleTestCase):
             self.assertEqual(localize(81.9), '81,9')
 
     def test_the_tape_tiles(self):
-        tape = {'barcode': 'K50001L8', 'density': 'LTO8', 'density_class': 'lto8',
+        tape = {'barcode': 'K50001L8', 'density': 'LTO8', 'generation_token': 'lto-8',
                 'slot': 1, 'kind': 'data', 'summary': '1.2 TB free of 11.4 TB',
                 'used_percent': 81.9, 'fullness': 'filling', 'drive': None}
         page = arabic('libraries/partials/_tape_tiles.html', {'tapes': [tape]})

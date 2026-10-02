@@ -107,6 +107,11 @@ def _tapes():
     return TapeService()
 
 
+def _ltfs():
+    from apps.libraries.services.ltfs import LtfsService
+    return LtfsService()
+
+
 def _as_json(result) -> dict:
     """A ServiceResult as these endpoints have always returned it."""
     body = result.to_dict()
@@ -161,17 +166,43 @@ def _library_status(library_id: int) -> dict:
                 'error': f'mtx reported nothing for {device}; is '
                          f'vtllibrary@{library_id} running?'}
 
+    # Which generation each cartridge is drawn as. Decided in
+    # services/tapes/palette.py, the one place that decides it - this only
+    # asks. The keys are additive, so the AJAX endpoint that shares this shape
+    # is unaffected.
+    from apps.libraries.services.tapes import palette
+
+    slots = [{'slot_num': s.number, 'barcode': s.barcode, 'full': s.full,
+              'generation_token': palette.token_for_tape(s.barcode) if s.full else '',
+              'generation': palette.label_for(palette.token_for_tape(s.barcode))
+              if s.full else ''}
+             for s in state.slots]
+    drives = [{'drive_num': d.number, 'barcode': d.barcode, 'full': d.full,
+               'slot_origin': d.slot_origin,
+               'generation_token': palette.token_for_tape(d.barcode) if d.full else '',
+               'generation': palette.label_for(palette.token_for_tape(d.barcode))
+               if d.full else ''}
+              for d in state.drives]
+    ports = [{'slot_num': s.number, 'barcode': s.barcode, 'full': s.full,
+              'generation_token': palette.token_for_tape(s.barcode) if s.full else '',
+              'generation': palette.label_for(palette.token_for_tape(s.barcode))
+              if s.full else ''}
+             for s in state.import_export]
+
     return {
         'success': True,
         'library_id': library_id,
         'device_path': device,
         'drift': _inventory_drift(library_id, state),
-        'storage_slots': [{'slot_num': s.number, 'barcode': s.barcode, 'full': s.full}
-                          for s in state.slots],
-        'drives': [{'drive_num': d.number, 'barcode': d.barcode, 'full': d.full,
-                    'slot_origin': d.slot_origin} for d in state.drives],
-        'import_export_slots': [{'slot_num': s.number, 'barcode': s.barcode,
-                                 'full': s.full} for s in state.import_export],
+        'storage_slots': slots,
+        'drives': drives,
+        # The generations this library is holding, in order and named - for a
+        # legend. The page renders the list; it does not work it out.
+        'generations_present': palette.present_in(
+            [s['generation_token'] for s in slots]
+            + [d['generation_token'] for d in drives]
+            + [p['generation_token'] for p in ports]),
+        'import_export_slots': ports,
         'slot_summary': state.summary,
         'raw_output': state.raw,
         'error': None,
@@ -411,6 +442,208 @@ class DriveStatusView(View):
         return render(request, self.template_name, context)
 
 
+class LtfsView(View):
+    """LTFS: which drives can use it, and mount or release a volume.
+
+    Server-rendered with forms and messages, like the other operator pages, so
+    there is no logic in JavaScript - every decision is the service's. The AJAX
+    endpoints below exist for a page that wants to refresh without reloading;
+    they call the same methods.
+    """
+    template_name = 'libraries/operator/ltfs.html'
+
+    #: What this page may ask the service to do. A POST naming anything else is
+    #: rejected rather than dispatched, so the form cannot reach a method by
+    #: guessing its name.
+    ACTIONS = {'mount': 'mount', 'unmount': 'unmount', 'check': 'check',
+               'format': 'format_cartridge'}
+
+    #: add-drive is not in ACTIONS because it is not an LtfsService method: it
+    #: is a libraries workflow, and configuring a library is not mounting one.
+    #: Dispatched separately rather than smuggled into the map above.
+    ADD_DRIVE = 'add-drive'
+
+    #: Cartridges, for the same reason: a libraries workflow, not an
+    #: LtfsService method. The drive comes first, and the service refuses if
+    #: there is no drive LTFS can open - the page does not have to police it.
+    ADD_MEDIA = 'add-media'
+
+    def get(self, request):
+        if not check_login(request):
+            return redirect('authentication:login')
+
+        libraries = get_live_libraries()
+        selected = (request.GET.get('library_id')
+                    or request.session.get('last_library_id'))
+        status = None
+        if selected:
+            request.session['last_library_id'] = int(selected)
+            status = _ltfs().status(int(selected))
+
+        drives = (status.data or {}).get('drives', []) if status else []
+        # The add-a-drive form is offered only where it is the answer: a library
+        # with drives, none of which LTFS will open. On library 60 the problem
+        # does not exist, so the form is not there to be misread as an
+        # invitation.
+        return render(request, self.template_name, {
+            'libraries': libraries,
+            'selected_library_id': int(selected) if selected else None,
+            'status': status,
+            'drives': drives,
+            # One call, and the page decides nothing: which drives are
+            # capable, which models and densities it could be given, how many
+            # slots of each kind are free, and what is missing - all from
+            # libraries/workflow.ltfs_provisioning(). The view used to build
+            # the (vendor, model) pairs itself, which put the decision in a
+            # view.
+            'provisioning': self._provisioning(int(selected)) if selected else {},
+            'tools': (status.data or {}).get('tools', {}) if status else {},
+            'format_allowed': (status.data or {}).get('format_allowed', False)
+                              if status else False,
+            'title': 'LTFS',
+        })
+
+    def post(self, request):
+        if not check_login(request):
+            return redirect('authentication:login')
+
+        action = request.POST.get('action')
+        library_id = request.POST.get('library_id')
+        drive = request.POST.get('drive')
+
+        if action == self.ADD_DRIVE and library_id:
+            return self._add_drive(request, int(library_id))
+
+        if action == self.ADD_MEDIA and library_id:
+            return self._add_media(request, int(library_id))
+
+        if action not in self.ACTIONS or not library_id or drive in (None, ''):
+            messages.error(request, 'Choose a library, a drive and an action')
+            return redirect('libraries:ltfs')
+
+        library_id, drive = int(library_id), int(drive)
+        request.session['last_library_id'] = library_id
+        result = getattr(_ltfs(), self.ACTIONS[action])(library_id, drive)
+
+        if result.success:
+            messages.success(request, result.message)
+        else:
+            messages.error(request, result.message)
+            for error in result.errors:
+                messages.error(request, f'  {error}')
+        return redirect(f"{reverse('libraries:ltfs')}?library_id={library_id}")
+
+    @staticmethod
+    def _provisioning(library_id: int) -> dict:
+        """What this library has for LTFS, lacks, and could be given.
+
+        A pass-through. Everything in it is the service's answer; a failure
+        returns {} and the page simply offers nothing, because a card built on
+        a guess is worse than no card.
+        """
+        from .services.libraries import ltfs_provisioning
+
+        result = ltfs_provisioning(library_id)
+        return result.data if result.success else {}
+
+    def _add_media(self, request, library_id: int):
+        """Create cartridges the library's LTFS drive can format.
+
+        Blank media. It does not format anything - mkltfs erases a cartridge
+        and is gated twice over on purpose.
+        """
+        from .services.libraries import add_ltfs_media_workflow
+
+        back = f"{reverse('libraries:ltfs')}?library_id={library_id}"
+        try:
+            count = int(request.POST.get('count') or 0)
+        except ValueError:
+            messages.error(request, 'Cartridges must be a number')
+            return redirect(back)
+
+        density = request.POST.get('density') or None
+        if density:
+            # Checked against what was offered, as the drive pair is: a POST
+            # naming a density this drive cannot format is rejected here rather
+            # than relied on being caught downstream.
+            offered = {m['density'] for m in
+                       self._provisioning(library_id).get('media_candidates', [])
+                       if m['usable']}
+            if density not in offered:
+                messages.error(request, 'That is not a density this library '
+                                        'can be given')
+                return redirect(back)
+
+        result = add_ltfs_media_workflow(
+            library_id, count, density=density,
+            expand_slots=bool(request.POST.get('expand_slots')))
+        self._render_steps(request, result)
+        return redirect(back)
+
+    @staticmethod
+    def _render_steps(request, result):
+        """Every step a workflow reported becomes a message, in order.
+
+        The same rendering the create form uses, in one place now that two
+        workflows post here.
+        """
+        for step in (result.data or {}).get('steps', []):
+            if step['ok']:
+                messages.success(request, f"{step['step']}: {step['message']}")
+            elif step['fatal']:
+                messages.error(request, f"{step['step']}: {step['message']}")
+            else:
+                messages.warning(request, f"{step['step']}: {step['message']}")
+        if result.success:
+            messages.success(request, result.message)
+        else:
+            for error in result.errors:
+                messages.error(request, f'  {error}')
+
+    def _add_drive(self, request, library_id: int):
+        """Add a drive LTFS can open to this library.
+
+        The workflow decides everything - which vendor id, which model, whether
+        the slots are enough - and every step it reports becomes a message, the
+        way the create form already renders create_library_workflow.
+        """
+        from .services.libraries import add_ltfs_drive_workflow
+
+        try:
+            tapes = int(request.POST.get('tapes') or 0)
+        except ValueError:
+            messages.error(request, 'Cartridges must be a number')
+            return redirect(f"{reverse('libraries:ltfs')}?library_id={library_id}")
+
+        # The select posts one field, "VENDOR|MODEL", and it is checked against
+        # what was offered rather than trusted - the same discipline as ACTIONS.
+        # A POST naming a pair this library cannot take is rejected here, before
+        # the workflow, so the page cannot be used to reach a model the profile
+        # refuses by editing the form.
+        vendor = model = None
+        pair = request.POST.get('pair') or ''
+        if pair:
+            offered = {f"{c['vendor']}|{c['model']}" for c in
+                       self._provisioning(library_id).get('drive_candidates', [])}
+            if pair not in offered:
+                messages.error(request, 'That is not a drive this library can '
+                                        'be given')
+                return redirect(
+                    f"{reverse('libraries:ltfs')}?library_id={library_id}")
+            vendor, model = pair.split('|', 1)
+
+        result = add_ltfs_drive_workflow(
+            library_id,
+            vendor=vendor or request.POST.get('vendor') or None,
+            model=model or request.POST.get('model') or None,
+            revision=request.POST.get('revision') or None,
+            tapes=tapes,
+            expand_slots=bool(request.POST.get('expand_slots')))
+
+        self._render_steps(request, result)
+        return redirect(f"{reverse('libraries:ltfs')}?library_id={library_id}")
+
+
 # ============================================================================
 # Tape Movement Views
 # ============================================================================
@@ -440,105 +673,108 @@ class MountTapeView(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
+        """Both directions of the same operation, from the same form.
+
+        `operation` says which. Mounting needs a slot and a drive; unmounting
+        needs only the drive, because the cartridge's own slot is where it goes
+        back to and the service works that out.
+
+        Unmounting goes through `ltfs.unmount_tape()`, never
+        `OperationsService.unmount()` directly: it refuses while a filesystem
+        is mounted on the drive. See services/ltfs/tape_moves.py for why the
+        guard lives there.
+        """
         if not check_login(request):
             return redirect('authentication:login')
 
         library_id = request.POST.get('library_id')
-        slot = request.POST.get('slot')
-        drive = request.POST.get('drive')
-
-        if not all([library_id, slot, drive]):
-            messages.error(request, "Please select library, slot, and drive")
+        if not library_id:
+            messages.error(request, "Please select a library")
             return redirect('libraries:mount_tape')
 
+        operation = request.POST.get('operation') or 'mount'
         try:
             library_id = int(library_id)
-            slot = int(slot)
-            drive = int(drive)
-
-            # Remember last used library
             request.session['last_library_id'] = library_id
+            result = (self._unmount(request, library_id) if operation == 'unmount'
+                      else self._mount(request, library_id))
+        except ValueError:
+            messages.error(request, "Invalid slot or drive number")
+            result = None
+        except Exception as e:                 # noqa: BLE001 - the page stands
+            messages.error(request, f"Error: {str(e)}")
+            result = None
 
-
-            result = _operations().mount(library_id, slot, drive)
-
+        if result is not None:
             if result.success:
                 messages.success(request, result.message)
             else:
                 messages.error(request, result.message)
                 for error in result.errors:
                     messages.error(request, f"  {error}")
-
-        except ValueError:
-            messages.error(request, "Invalid slot or drive number")
-        except Exception as e:
-            messages.error(request, f"Error: {str(e)}")
 
         # Redirect back with library_id to preserve selection
         return redirect(f'/libraries/operator/mount/?library_id={library_id}')
 
-
-class UnmountTapeView(View):
-    """
-    Unmount tape from drive to slot
-    Similar to form.unmount.tape.php in PHP GUI
-    """
-    template_name = 'libraries/operator/unmount_tape.html'
-
-    def get(self, request):
-        if not check_login(request):
-            return redirect('authentication:login')
-
-        libraries = get_live_libraries()
-
-        # Check for pre-selected library (from query param or session)
-        selected_library_id = request.GET.get('library_id') or request.session.get('last_library_id')
-
-        context = {
-            'libraries': libraries,
-            'selected_library_id': int(selected_library_id) if selected_library_id else None,
-            'title': 'Unmount Tape'
-        }
-
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        if not check_login(request):
-            return redirect('authentication:login')
-
-        library_id = request.POST.get('library_id')
+    def _mount(self, request, library_id):
         slot = request.POST.get('slot')
         drive = request.POST.get('drive')
+        if not (slot and drive):
+            messages.error(request, "Please select a tape and a drive")
+            return None
+        return _operations().mount(library_id, int(slot), int(drive))
 
-        if not all([library_id, slot, drive]):
-            messages.error(request, "Please select library, slot, and drive")
-            return redirect('libraries:unmount_tape')
+    def _unmount(self, request, library_id):
+        """The second gesture: a loaded drive, and where its cartridge goes.
 
-        try:
-            library_id = int(library_id)
-            slot = int(slot)
-            drive = int(drive)
+        The same two fields serve both directions - `drive` and `slot` - with
+        `operation` saying which way round they mean. Here: the drive to
+        unload, and where its cartridge goes.
 
-            # Remember last used library
-            request.session['last_library_id'] = library_id
+        The slot is optional on the way through. The page pre-selects the slot
+        the cartridge came from and lets an operator choose another; a caller
+        that sends none gets the service's own default, which is the same slot.
+        """
+        from apps.libraries.services import ltfs
+
+        drive = request.POST.get('drive')
+        if drive is None or drive == '':
+            messages.error(request, "Please choose a loaded drive to unmount")
+            return None
+        slot = request.POST.get('slot')
+        return ltfs.unmount_tape(library_id, int(drive),
+                                 int(slot) if slot else None)
 
 
-            result = _operations().unmount(library_id, drive, slot)
+class UnmountTapeView(View):
+    """Gone: the mount page does both directions now.
 
-            if result.success:
-                messages.success(request, result.message)
-            else:
-                messages.error(request, result.message)
-                for error in result.errors:
-                    messages.error(request, f"  {error}")
+    This stays as a redirect because a URL somebody bookmarked is a contract.
+    It carries `library_id` through, so a link from the library detail page
+    still lands on the right library.
 
-        except ValueError:
-            messages.error(request, "Invalid slot or drive number")
-        except Exception as e:
-            messages.error(request, f"Error: {str(e)}")
+    POST redirects too rather than answering 405. Nothing posts here any more -
+    unmount_tape.html is deleted and the form lives on the mount page - so the
+    only way to reach it is a stale tab, and sending that to the page that can
+    do the job beats an error about a method.
+    """
 
-        # Redirect back with library_id to preserve selection
-        return redirect(f'/libraries/operator/unmount/?library_id={library_id}')
+    def get(self, request):
+        return self._to_mount_page(request)
+
+    def post(self, request):
+        return self._to_mount_page(request)
+
+    @staticmethod
+    def _to_mount_page(request):
+        if not check_login(request):
+            return redirect('authentication:login')
+        library_id = (request.GET.get('library_id')
+                      or request.POST.get('library_id')
+                      or request.session.get('last_library_id'))
+        target = reverse('libraries:mount_tape')
+        return redirect(f'{target}?library_id={library_id}' if library_id
+                        else target)
 
 
 class MoveTapeView(View):
@@ -754,6 +990,60 @@ def drive_status_ajax(request, drive_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
+def ltfs_drives_ajax(request, library_id):
+    """Each drive's LTFS state for the page: capability, cartridge, mount point.
+
+    GET, because it reads. Costs one mtx call, one lsscsi and a file read, so a
+    page may poll it; nothing here is privileged except the mtx call the service
+    already makes for the status panel.
+    """
+    if not check_login(request):
+        return JsonResponse({'success': False, 'error': 'Not authenticated'},
+                            status=401)
+    return JsonResponse(_as_json(_ltfs().status(int(library_id))))
+
+
+def _ltfs_action(request, verb):
+    """The three POST actions, which differ only in the method they call.
+
+    Written once because they refuse in the same order, report in the same
+    shape, and are the same service the `mhvtl tape ltfs-*` commands call -
+    which is the point of the service layer: neither front end decides
+    anything.
+    """
+    if not check_login(request):
+        return JsonResponse({'success': False, 'error': 'Not authenticated'},
+                            status=401)
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'POST required'},
+                            status=405)
+    try:
+        data = json.loads(request.body or b'{}')
+        library_id = int(data.get('library_id'))
+        drive = int(data.get('drive'))
+    except (TypeError, ValueError, json.JSONDecodeError) as exc:
+        return JsonResponse({'success': False,
+                             'error': f'library_id and drive are required: {exc}'},
+                            status=400)
+    return JsonResponse(_as_json(getattr(_ltfs(), verb)(library_id, drive)))
+
+
+def ltfs_mount_ajax(request):
+    """Mount the cartridge in a drive as a filesystem."""
+    return _ltfs_action(request, 'mount')
+
+
+def ltfs_unmount_ajax(request):
+    """Release it. This is when LTFS writes its index to the cartridge."""
+    return _ltfs_action(request, 'unmount')
+
+
+def ltfs_check_ajax(request):
+    """ltfsck. Its exit 1 means consistent-and-modified, which the service
+    already reports as success - the page must not treat it as an error."""
+    return _ltfs_action(request, 'check')
+
+
 def mount_tape_ajax(request):
     """
     AJAX endpoint for mounting tape
@@ -792,12 +1082,20 @@ def unmount_tape_ajax(request):
         return JsonResponse({'success': False, 'error': 'POST required'}, status=405)
 
     try:
+        from apps.libraries.services import ltfs
+
         data = json.loads(request.body)
         library_id = int(data.get('library_id'))
-        slot = int(data.get('slot'))
         drive = int(data.get('drive'))
+        # Optional, because the service returns the cartridge to its own slot.
+        # This used to be int(data.get('slot')) and so REQUIRED what the
+        # service treats as a default - a caller with nothing to say about the
+        # destination could not call it.
+        raw_slot = data.get('slot')
+        slot = int(raw_slot) if raw_slot not in (None, '') else None
 
-        result = _operations().unmount(library_id, drive, slot)
+        # Guarded: refused while a filesystem is mounted on the drive.
+        result = ltfs.unmount_tape(library_id, drive, slot)
         return JsonResponse(_as_json(result))
 
     except (json.JSONDecodeError, ValueError, TypeError) as e:

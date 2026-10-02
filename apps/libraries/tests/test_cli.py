@@ -689,10 +689,17 @@ class OperationCommandTests(TestCase):
         self.assertEqual(mount.call_args[0], (10, 5, 0))
 
     def test_unmount_returns_to_its_own_slot_by_default(self):
+        """Through ltfs.unmount_tape(), which refuses while a filesystem is
+        mounted on the drive and otherwise hands the move to this same method
+        - see test_tape_unload_guard. by_drive is patched so the test does not
+        depend on the mount table of whatever host it runs on.
+        """
         with mock.patch.object(privileges, 'can_write', return_value=True), \
+             mock.patch('apps.libraries.services.ltfs.tape_moves.mounts'
+                        '.by_drive', return_value={}), \
              self._ops('unmount') as unmount:
             run(['op', 'unmount', '10', '0'])
-        self.assertIsNone(unmount.call_args[1]['slot'])
+        self.assertEqual(unmount.call_args[0], (10, 0, None))
 
     def test_map_only_accepts_the_known_verbs(self):
         """Refused by argparse before anything reaches vtlcmd."""

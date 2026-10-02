@@ -83,25 +83,6 @@ def density_for(barcode: str) -> Optional[str]:
     return DENSITY_BY_SUFFIX.get(barcode[-2:].upper())
 
 
-#: Which palette entry a generation is drawn with. css/mhvtl-console.css
-#: defines five, built from the theme's own tokens; anything older or
-#: unrecognised shares the last one.
-GENERATION_CLASS = {'9': 'lto-9', '8': 'lto-8', '7': 'lto-7', '6': 'lto-6',
-                    '5': 'lto-5', '4': 'lto-5'}
-
-
-def generation_class(density: str) -> str:
-    """The CSS class for a density: LTO8 -> 'lto-8'.
-
-    The mount page worked this out in JavaScript, which meant the rule lived
-    in a browser and the tape tiles would have needed their own copy of it.
-    """
-    match = re.search(r'(\d+)', density or '')
-    if not match:
-        return 'lto-unknown'
-    return GENERATION_CLASS.get(match.group(1), 'lto-unknown')
-
-
 def suffix_for(density: str) -> Optional[str]:
     """The barcode suffix a density is written with."""
     return SUFFIX_BY_DENSITY.get((density or '').upper())

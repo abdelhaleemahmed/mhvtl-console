@@ -42,9 +42,29 @@
                 text-align: center;
                 font-size: 12px;
             }
-    .slot-full {
-                background: var(--ok-bg);
-                border: 2px solid var(--ok);
+    /* `slot-full` is a state, not a colour. It was one green for every
+       cartridge; the generation's own class provides the fill now, from the
+       same table the mount and move pages draw from. */
+    .slot-full { border: 2px solid transparent; }
+    .legend {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 14px;
+                margin: 4px 0 0;
+                font-size: 11px;
+                color: var(--text-dim);
+            }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-color { width: 16px; height: 16px; border-radius: 3px; }
+    .legend-color.legend-empty {
+                background: var(--surface-deep);
+                border: 1px solid var(--border);
+            }
+    .slot-generation {
+                font-size: 10px;
+                display: block;
+                margin-top: 2px;
+                opacity: .85;
             }
     .slot-empty {
                 background: var(--surface-deep);
@@ -212,7 +232,8 @@
                                 <div class="drive-number">Drive {{ drive.drive_num }}</div>
                                 <div class="drive-info">
                                     {% if drive.full %}
-                                        <strong>LOADED</strong><br>
+                                        <strong>LOADED</strong>
+                                        <span class="lto-chip {{ drive.generation_token }}">{{ drive.generation }}</span><br>
                                         {% if drive.barcode %}Barcode: {{ drive.barcode }}<br>{% endif %}
                                         {% if drive.slot_origin %}From Slot: {{ drive.slot_origin }}{% endif %}
                                     {% else %}
@@ -229,12 +250,33 @@
                 <!-- Storage Slots -->
                 <div class="card">
                     <div class="section-title">Storage Elements (Slots)</div>
+                    {% comment %}
+                    The generations this library is holding, in order and
+                    named by the service - services/tapes/palette.py decides
+                    both, and this page renders what it is given. No
+                    JavaScript: the whole page is server-rendered, so the
+                    legend is a loop.
+                    {% endcomment %}
+                    {% if status_result.generations_present %}
+                        <div class="legend">
+                            {% for generation in status_result.generations_present %}
+                                <div class="legend-item">
+                                    <div class="legend-color {{ generation.token }}"></div>
+                                    {{ generation.label }}
+                                </div>
+                            {% endfor %}
+                            <div class="legend-item">
+                                <div class="legend-color legend-empty"></div> Empty
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="slot-grid">
                         {% for slot in status_result.storage_slots %}
-                            <div class="slot {% if slot.full %}slot-full{% else %}slot-empty{% endif %}">
+                            <div class="slot {% if slot.full %}slot-full {{ slot.generation_token }}{% else %}slot-empty{% endif %}">
                                 <span class="slot-number">Slot {{ slot.slot_num }}</span>
                                 {% if slot.full and slot.barcode %}
                                     <span class="slot-barcode">{{ slot.barcode }}</span>
+                                    <span class="slot-generation">{{ slot.generation }}</span>
                                 {% elif not slot.full %}
                                     <span style="color: #aaa;">Empty</span>
                                 {% endif %}
@@ -251,10 +293,11 @@
                     <div class="section-title">Import/Export Elements</div>
                     <div class="slot-grid">
                         {% for slot in status_result.import_export_slots %}
-                            <div class="slot {% if slot.full %}slot-full{% else %}slot-empty{% endif %}">
+                            <div class="slot {% if slot.full %}slot-full {{ slot.generation_token }}{% else %}slot-empty{% endif %}">
                                 <span class="slot-number">I/E {{ slot.slot_num }}</span>
                                 {% if slot.full and slot.barcode %}
                                     <span class="slot-barcode">{{ slot.barcode }}</span>
+                                    <span class="slot-generation">{{ slot.generation }}</span>
                                 {% elif not slot.full %}
                                     <span style="color: #aaa;">Empty</span>
                                 {% endif %}

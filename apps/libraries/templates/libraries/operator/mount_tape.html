@@ -6,7 +6,17 @@
 {% block extra_css %}
 <style>
     /* Only what css/mhvtl-console.css has no rule for. */
-    .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
+    /* The status card holds the slot map, so it gets the room: at a fixed
+       400px the grid fitted three tiles across and library 10's 39 slots
+       needed thirteen rows inside a 300px scroller.
+       Both tracks are ranges rather than one fixed and one flexible. The
+       status card takes 700px wherever there is room for it and gives width
+       back before the form drops below 320px, so the two stay SIDE BY SIDE on
+       a narrower screen instead of stacking - which a fixed 700px plus a
+       bigger breakpoint got wrong. */
+    .main-grid { display: grid;
+                 grid-template-columns: minmax(320px, 1fr) minmax(340px, 700px);
+                 gap: 20px; }
     @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
     .operation-icon { font-size: 36px; text-align: center; margin-bottom: 15px; }
     #loading { display: none; text-align: center; padding: 20px; color: var(--text-dim); }
@@ -22,6 +32,12 @@
             .drive-list { display: flex; flex-direction: column; gap: 8px; }
     .drive-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--surface); border-radius: 5px; border-left: 4px solid var(--border); font-size: 13px; cursor: pointer; transition: all 0.2s; }
     .drive-item.loaded { border-left-color: var(--ok); background: var(--ok-bg); opacity: 0.6; cursor: not-allowed; }
+    /* A loaded drive used to be dead on this page - drawn, then greyed out,
+       while the operator was sent to a second page to act on it. It is the
+       unmount gesture now, unless a filesystem is open on it. */
+    .drive-item.loaded.unloadable { opacity: 1; cursor: pointer; }
+    .drive-item.loaded.unloadable:hover { box-shadow: 0 0 0 2px var(--warn); }
+    .drive-item.unmount-selected { border-left-color: var(--warn) !important; background: var(--warn-bg) !important; box-shadow: 0 0 0 2px var(--warn); opacity: 1; }
     .drive-item.empty { border-left-color: var(--info); background: var(--surface-deep); }
     .drive-item.empty:hover { background: var(--info-bg); border-left-color: var(--accent); }
     .drive-item.selected { border-left-color: var(--ok); background: var(--ok-bg); box-shadow: 0 0 0 2px var(--ok); }
@@ -33,10 +49,33 @@
     /* Clickable slots */
             .slot-grid-compact { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; max-height: 300px; overflow-y: auto; }
     .slot-compact { padding: 8px; text-align: center; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
-    .slot-compact.full { background: var(--warn-bg); border-color: var(--warn); }
-    .slot-compact.full:hover { background: var(--warn-bg); border-color: var(--warn); }
+    /* `full` is a state and no longer a colour: the generation's own class
+       provides the fill, and a slot carries both. It used to carry only the
+       generation, so this rule never applied to a storage slot at all - which
+       is why nobody noticed it was the LTO-6 colour for every tape. */
+    .slot-compact.full { cursor: pointer; }
     .slot-compact.empty { background: var(--surface-deep); border-color: var(--border); color: var(--text-dim); cursor: not-allowed; }
     .slot-compact.selected { box-shadow: 0 0 0 3px var(--text); }
+    /* Where the cartridge in the selected drive came from. Shown while
+       unmounting so the default destination is visible on the map and not
+       only in the dropdown. */
+    .slot-compact.origin { outline: 2px dashed var(--warn); outline-offset: 1px; }
+    .slot-compact.empty { cursor: not-allowed; }
+    .slot-compact.empty.targetable { cursor: pointer; }
+    /* LTFS is a property a cartridge has AS WELL AS its generation, so it does
+       not take a fourth fill colour competing with LTO-6/7/8: it is an inset
+       outline and a tag, and an LTO-7 LTFS volume stays LTO-7 coloured. */
+    .slot-compact.ltfs { box-shadow: inset 0 0 0 2px var(--accent-strong); }
+    .slot-compact.ltfs.selected { box-shadow: inset 0 0 0 2px var(--accent-strong), 0 0 0 3px var(--text); }
+    .slot-compact.ltfs-was { box-shadow: inset 0 0 0 2px var(--border); }
+    /* The tag sits ON a generation's fill, so it takes that tile's ink rather
+     * than the page's accent. It used to be --accent-strong, which read well
+     * against the old severity-derived backgrounds and badly against the real
+     * shell colours - cyan on LTO-7's light graphite is nearly invisible. The
+     * inset outline still carries the accent; the tag only has to be read. */
+    .slot-ltfs { display: block; font-size: 9px; font-weight: 700; letter-spacing: .04em; color: currentColor; }
+    .slot-ltfs.was { font-weight: 600; opacity: .7; }
+    .drive-item .drive-ltfs { font-size: 9px; font-weight: 700; color: var(--accent-strong); }
     .slot-num { font-weight: 600; }
     .slot-barcode { font-family: 'Consolas', monospace; font-size: 10px; display: block; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     /* LTO-based slot colors */
@@ -52,7 +91,6 @@
     .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); flex-wrap: wrap; }
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-color { width: 16px; height: 16px; border-radius: 3px; }
-    .legend-color.tape { background: var(--warn-bg); border: 1px solid var(--warn); }
     .legend-color.empty-slot { background: var(--surface-deep); border: 1px solid var(--border); }
     .legend-color.empty-drive { background: var(--info-bg); border: 1px solid var(--info); }
     .legend-color.loaded-drive { background: var(--ok-bg); border: 1px solid var(--ok); }
@@ -72,15 +110,38 @@
     .compat-icon { font-size: 16px; margin-right: 5px; }
     .slot-lto { font-size: 9px; color: var(--text-dim); display: block; }
     .drive-lto { font-size: 11px; font-weight: 600; }
+    /* The summary spans both cards: it is about the library, not about either
+       half of the page. */
+    .summary-bar { margin-bottom: 20px; }
+    .summary-bar .summary-stats { margin: 0; }
+    .drive-legend { margin: 0 0 8px; padding: 0; border: none; }
 </style>
 {% endblock %}
 
 {% block content %}
+{% comment %}
+Across the top, spanning both cards: these describe the library as a whole and
+belonged to neither. They sat inside the status panel, which put the count of
+free drives in the card an operator was not looking at while choosing one.
+{% endcomment %}
+<div class="card summary-bar" id="summary-bar" style="display: none;">
+    <div class="summary-stats">
+        <div class="stat-box">
+            <div class="stat-value" id="stat-drives">0/0</div>
+            <div class="stat-label">Drives Empty</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="stat-slots">0/0</div>
+            <div class="stat-label">Tapes Available</div>
+        </div>
+    </div>
+</div>
+
 <div class="main-grid">
             <!-- Mount Form -->
             <div class="card">
                 <div class="operation-icon">&#128230; &#8594; &#128190;</div>
-                <div class="section-title">Mount Tape to Drive</div>
+                <div class="section-title">Mount and Unmount</div>
                 <p class="page-description">
                     Load a tape from a storage slot into a tape drive.
                 </p>
@@ -104,20 +165,43 @@
                     <div id="loading">Loading library status...</div>
 
                     <div id="slot-drive-fields" style="display: none;">
+                        {% comment %}
+                        The drives live here, with the form that acts on them.
+                        They were in the status card on the other side of the
+                        page: an operator picking a drive had to look there,
+                        act here, then read the result back there again. Both
+                        gestures start on a drive, so this is where they are.
+                        {% endcomment %}
+                        <div class="status-section">
+                            <h4>&#128190; Drives</h4>
+                            <div class="legend drive-legend">
+                                <div class="legend-item"><div class="legend-color empty-drive"></div> Empty &mdash; click to mount into</div>
+                                <div class="legend-item"><div class="legend-color loaded-drive"></div> Loaded &mdash; click to unload</div>
+                            </div>
+                            <div class="drive-list" id="drive-status"></div>
+                        </div>
+
+{% comment %}
+                        Both directions use these two fields; `operation` says
+                        which way round they mean. Mounting: a tape to send and
+                        an empty drive to send it to. Unmounting: a loaded
+                        drive and a slot to put its cartridge back in. The
+                        labels are set in setMode(), not written twice here.
+                        {% endcomment %}
                         <div class="form-group">
-                            <label for="slot">Source Slot (tape to mount)</label>
+                            <label for="slot" id="slot-label">Source Slot (tape to mount)</label>
                             <select name="slot" id="slot" class="form-control" required onchange="updateSelection()">
                                 <option value="">-- Click a tape in the panel or select here --</option>
                             </select>
-                            <p class="form-help">Click a tape (orange) in the slot grid to select</p>
+                            <p class="form-help" id="slot-help">Click a tape in the slot grid to select</p>
                         </div>
 
                         <div class="form-group">
-                            <label for="drive">Target Drive (empty)</label>
-                            <select name="drive" id="drive" class="form-control" required onchange="updateSelection()">
+                            <label for="drive" id="drive-label">Target Drive (empty)</label>
+                            <select name="drive" id="drive" class="form-control" required onchange="onDriveFieldChange()">
                                 <option value="">-- Click an empty drive in the panel or select here --</option>
                             </select>
-                            <p class="form-help">Click an empty drive (blue) to select</p>
+                            <p class="form-help" id="drive-help">Click an empty drive to select</p>
                         </div>
 
                         <div id="compat-warning" class="compat-warning"></div>
@@ -140,6 +224,14 @@
 
                     <div class="btn-group">
                         <a href="{% url 'libraries:operator_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        {% comment %}
+                        Which direction this form is going. Mounting needs a
+                        tape and a drive; unmounting needs only the drive,
+                        because the cartridge goes back to its own slot and the
+                        service works that out - which is what made the old
+                        unmount page's second dropdown unnecessary.
+                        {% endcomment %}
+                        <input type="hidden" name="operation" id="operation" value="mount">
                         <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Mount Tape</button>
                     </div>
                 </form>
@@ -152,16 +244,27 @@
                 <!-- Legend - always visible -->
                 <div class="legend" style="margin-bottom: 15px;">
                     <div class="legend-item"><div class="legend-color empty-slot"></div> Empty slot</div>
-                    <div class="legend-item"><div class="legend-color empty-drive"></div> Empty drive</div>
-                    <div class="legend-item"><div class="legend-color loaded-drive"></div> Loaded drive</div>
                 </div>
+{% comment %}
+                The generations THIS library is holding, filled in from
+                library.generations_present when one is selected. It used to
+                name LTO-6, LTO-7 and LTO-8 here with their colours written out
+                inline, which was wrong twice over: a library holding anything
+                else was unrepresented, and the moment the palette changed the
+                legend disagreed with the tiles it was explaining.
+                {% endcomment %}
+                <div class="legend" id="generation-legend"
+                     style="margin-top: 0; border-top: none; padding-top: 0; margin-bottom: 15px;"></div>
                 <div class="legend" style="margin-top: 0; border-top: none; padding-top: 0; margin-bottom: 15px;">
-                    <div class="legend-item"><div class="legend-color" style="background: var(--info-bg); border: 1px solid var(--info);"></div> LTO-8 tape</div>
-                    <div class="legend-item"><div class="legend-color" style="background: var(--ok-bg); border: 1px solid var(--ok);"></div> LTO-7 tape</div>
-                    <div class="legend-item"><div class="legend-color" style="background: var(--warn-bg); border: 1px solid var(--warn);"></div> LTO-6 tape</div>
+                    <div class="legend-item"><div class="legend-color" style="background: var(--surface-deep); box-shadow: inset 0 0 0 2px var(--accent-strong);"></div> LTFS volume &mdash; mountable as a filesystem</div>
+                    <div class="legend-item"><div class="legend-color" style="background: var(--surface-deep); box-shadow: inset 0 0 0 2px var(--border);"></div> was LTFS &mdash; formatted once, since unpartitioned</div>
                 </div>
-                <div style="font-size: 11px; color: #666; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
-                    LTO-8 drives can read LTO-6/7/8 tapes | LTO-6 drives can only read LTO-4/5/6 tapes
+                <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                    LTO-8 drives can read LTO-6/7/8 tapes | LTO-6 drives can only read LTO-4/5/6 tapes<br>
+                    A drive marked <span class="drive-ltfs">LTFS</span> can open an LTFS volume. Load one
+                    into it here, then mount it as a filesystem on the
+                    <a href="{% url 'libraries:ltfs' %}">LTFS page</a> &mdash; loading a tape and mounting
+                    a filesystem are two different things, and this page does the first.
                 </div>
 
                 <div id="status-placeholder" class="no-library">
@@ -170,23 +273,6 @@
                 </div>
 
                 <div id="status-panel" class="status-panel" style="display: none;">
-                    <div class="summary-stats">
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-drives">0/0</div>
-                            <div class="stat-label">Drives Empty</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-slots">0/0</div>
-                            <div class="stat-label">Tapes Available</div>
-                        </div>
-                    </div>
-
-                    <div class="status-section">
-                        <h4>&#128190; Drives (Click empty to select)</h4>
-                        <p style="font-size: 11px; color: #666; margin-bottom: 8px;">LTO generation shown - drives highlighted green are compatible with selected tape</p>
-                        <div class="drive-list" id="drive-status"></div>
-                    </div>
-
                     <div class="status-section">
                         <h4>&#128230; Storage Slots (Click tape to select)</h4>
                         <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Click a tape to see compatible drives</p>
@@ -227,16 +313,6 @@
             return div.innerHTML;
         }
 
-        function getLtoBadgeClass(lto) {
-            if (!lto) return 'lto-unknown';
-            const gen = lto.replace('LTO-', '').replace('LTO', '');
-            if (gen === '8' || gen === '9') return 'lto-8';
-            if (gen === '7') return 'lto-7';
-            if (gen === '6') return 'lto-6';
-            if (gen === '5' || gen === '4') return 'lto-5';
-            return 'lto-unknown';
-        }
-
         function loadLibraryStatus() {
             const libraryId = document.getElementById('library_id').value;
             const loading = document.getElementById('loading');
@@ -251,6 +327,7 @@
                 submitBtn.disabled = true;
                 statusPlaceholder.style.display = 'block';
                 statusPanel.style.display = 'none';
+                document.getElementById('summary-bar').style.display = 'none';
                 compatWarning.classList.remove('active');
                 return;
             }
@@ -273,6 +350,8 @@
                     // Update status panel
                     statusPlaceholder.style.display = 'none';
                     statusPanel.style.display = 'block';
+                    // The summary belongs to the library, so it appears with it.
+                    document.getElementById('summary-bar').style.display = 'block';
 
                     // Update summary stats
                     const emptyDrives = data.drives.filter(d => !d.full).length;
@@ -294,21 +373,52 @@
 
                         const label = driveLabel(drive);
                         const ltoBadge = label
-                            ? `<span class="lto-badge ${getLtoBadgeClass(drive.lto_generation)}">${escapeHtml(label)}</span>`
+                            ? `<span class="lto-badge ${drive.generation_token}">${escapeHtml(label)}</span>`
                             : '';
                         const model = drive.model && drive.model !== label
                             ? `<span class="drive-model">${escapeHtml(drive.model)}</span>` : '';
                         const loaded = tapeLabel(drive);
+                        // Whether LTFS would open this drive, so loading an
+                        // LTFS volume into it is an informed choice rather
+                        // than a thing found out afterwards on another page.
+                        const ltfsMark = drive.ltfs_capable === true
+                            ? ' <span class="drive-ltfs">LTFS</span>' : '';
+                        if (drive.ltfs_capable === false && drive.ltfs_reason) {
+                            div.title = drive.ltfs_reason;
+                        }
 
                         div.innerHTML = `
-                            <span class="item-label">Drive ${drive.drive_num} ${ltoBadge}${model}</span>
+                            <span class="item-label">Drive ${drive.drive_num} ${ltoBadge}${model}${ltfsMark}</span>
                             <span class="item-barcode">${drive.full ? escapeHtml(drive.barcode || 'Tape') + (loaded ? ' (' + escapeHtml(loaded) + ')' : '') : ''}</span>
                             <span class="item-status ${drive.full ? 'loaded' : 'empty'}">${drive.full ? 'LOADED' : 'EMPTY'}</span>
                         `;
+                        // Both gestures live on this list now. An empty
+                        // drive is a mount target; a loaded one is a tape to
+                        // send back. A drive whose filesystem is mounted is
+                        // neither - the service says so and says why.
                         if (!drive.full) {
                             div.onclick = () => selectDrive(drive.drive_num);
+                        } else if (drive.unmount_blocked) {
+                            div.title = drive.unmount_blocked;
+                        } else {
+                            div.classList.add('unloadable');
+                            div.onclick = () => selectForUnmount(drive.drive_num);
                         }
                         driveStatus.appendChild(div);
+                    });
+
+                    // The legend: which generations this library holds, and
+                    // what to call each one. Both decided by the service - see
+                    // palette.present_in() - so this only puts them on screen.
+                    const legend = document.getElementById('generation-legend');
+                    legend.innerHTML = '';
+                    (data.generations_present || []).forEach(generation => {
+                        const item = document.createElement('div');
+                        item.className = 'legend-item';
+                        item.innerHTML =
+                            `<div class="legend-color ${generation.token}"></div> ` +
+                            `${escapeHtml(generation.label)} tape`;
+                        legend.appendChild(item);
                     });
 
                     // Update slot status display with LTO generation and colors
@@ -317,56 +427,46 @@
                     data.storage_slots.forEach(slot => {
                         const div = document.createElement('div');
 
-                        // Determine LTO class for coloring
-                        let ltoClass = '';
-                        if (slot.full && slot.tape_lto) {
-                            const gen = slot.tape_lto.replace('LTO-', '');
-                            ltoClass = `lto-${gen}`;
-                        } else if (slot.full) {
-                            ltoClass = 'lto-unknown';
-                        }
-
-                        div.className = `slot-compact ${slot.full ? ltoClass : 'empty'}`;
+                        // Which generation this is drawn as was decided in
+                        // services/tapes/palette.py and arrives on the slot.
+                        // This page used to work it out itself, in a second
+                        // copy of the rule that disagreed with the first - an
+                        // LTO-9 cartridge and an LTO-9 drive came out two
+                        // different colours.
+                        //
+                        // ltfs_mark is '' for a cartridge nobody read, which is
+                        // not the same as one read and found plain, and the
+                        // service is what knows the difference.
+                        const occupancy = slot.full
+                            ? `full ${slot.generation_token}` : 'empty';
+                        const ltfsClass = slot.ltfs_mark ? ` ${slot.ltfs_mark}` : '';
+                        div.className = `slot-compact ${occupancy}${ltfsClass}`;
                         div.dataset.slotNum = slot.slot_num;
                         const media = tapeLabel(slot);
                         const ltoText = media ? `<span class="slot-lto">${escapeHtml(media)}</span>` : '';
+                        const ltfsText = {
+                            'ltfs': '<span class="slot-ltfs">LTFS</span>',
+                            'ltfs-was': '<span class="slot-ltfs was">was LTFS</span>',
+                        }[slot.ltfs_mark] || '';
 
                         div.innerHTML = `
                             <div class="slot-num">${slot.slot_num}</div>
                             <div class="slot-barcode">${slot.full ? escapeHtml(slot.barcode || 'Tape') : '-'}</div>
                             ${ltoText}
+                            ${ltfsText}
                         `;
-                        if (slot.full) {
-                            div.onclick = () => selectSlot(slot.slot_num);
-                        }
+                        if (slot.ltfs_summary) div.title = slot.ltfs_summary;
+                        // A full slot is a tape to mount; an empty one is
+                        // somewhere to put a tape back. Which it is depends on
+                        // the gesture in progress, so both are wired and
+                        // selectSlot decides nothing - it just records.
+                        div.onclick = () => selectSlot(slot.slot_num, slot.full);
                         slotStatus.appendChild(div);
                     });
 
-                    // Populate form dropdowns with LTO info
-                    const slotSelect = document.getElementById('slot');
-                    slotSelect.innerHTML = '<option value="">-- Click a tape or select here --</option>';
-                    data.storage_slots.forEach(slot => {
-                        if (slot.full) {
-                            const option = document.createElement('option');
-                            option.value = slot.slot_num;
-                            const ltoSuffix = tapeLabel(slot) ? ` [${tapeLabel(slot)}]` : '';
-                            option.textContent = `Slot ${slot.slot_num}${slot.barcode ? ' - ' + slot.barcode : ''}${ltoSuffix}`;
-                            slotSelect.appendChild(option);
-                        }
-                    });
+                    fillSlotChoices();
 
-                    const driveSelect = document.getElementById('drive');
-                    driveSelect.innerHTML = '<option value="">-- Click a drive or select here --</option>';
-                    data.drives.forEach(drive => {
-                        if (!drive.full) {
-                            const option = document.createElement('option');
-                            option.value = drive.drive_num;
-                            option.dataset.label = `Drive ${drive.drive_num}` +
-                                (driveLabel(drive) ? ` [${driveLabel(drive)}]` : '');
-                            option.textContent = option.dataset.label;
-                            driveSelect.appendChild(option);
-                        }
-                    });
+                    fillDriveChoices();
 
                     fields.style.display = 'block';
                     updateDriveCompatibility();
@@ -378,13 +478,148 @@
                 });
         }
 
-        function selectSlot(slotNum) {
+        function selectSlot(slotNum, isFull) {
+            if (document.getElementById('operation').value === 'unmount') {
+                // Choosing where the cartridge goes back to. Only a slot the
+                // service listed as a target can be chosen.
+                if (!(libraryData.unmount_targets || []).includes(slotNum)) { return; }
+                document.getElementById('slot').value = slotNum;
+                updateSelection();
+                return;
+            }
+            if (!isFull) { return; }            // nothing to mount from here
+            clearUnmount();
             document.getElementById('slot').value = slotNum;
             updateDriveCompatibility();
             updateSelection();
         }
 
+        function unmounting() {
+            return document.getElementById('operation').value === 'unmount';
+        }
+
+        function fillDriveChoices(preSelect = null) {
+            // Mounting, the drives worth listing are the empty ones. Unmounting,
+            // the loaded ones - minus any whose filesystem is mounted, which the
+            // service marked and which cannot be emptied at all.
+            if (!libraryData) { return; }
+            const forUnmount = unmounting();
+            const driveSelect = document.getElementById('drive');
+            driveSelect.innerHTML = forUnmount
+                ? '<option value="">-- Click a loaded drive or select here --</option>'
+                : '<option value="">-- Click an empty drive or select here --</option>';
+            libraryData.drives.forEach(drive => {
+                if (forUnmount ? (!drive.full || drive.unmount_blocked) : drive.full) {
+                    return;
+                }
+                const option = document.createElement('option');
+                option.value = drive.drive_num;
+                option.dataset.label = `Drive ${drive.drive_num}` +
+                    (driveLabel(drive) ? ` [${driveLabel(drive)}]` : '');
+                option.textContent = forUnmount
+                    ? `Drive ${drive.drive_num} - ${drive.barcode || 'a tape'}` +
+                      (drive.unmount_default_slot != null
+                        ? ` (from slot ${drive.unmount_default_slot})` : '')
+                    : option.dataset.label;
+                driveSelect.appendChild(option);
+            });
+            if (preSelect != null) { driveSelect.value = preSelect; }
+        }
+
+        function setMode(mode) {
+            document.getElementById('operation').value = mode;
+            const unmount = mode === 'unmount';
+            document.getElementById('slot-label').textContent = unmount
+                ? 'Slot to return the tape to' : 'Source Slot (tape to mount)';
+            document.getElementById('slot-help').textContent = unmount
+                ? 'Its own slot is chosen for you; click any empty slot to change it'
+                : 'Click a tape in the slot grid to select';
+            document.getElementById('drive-label').textContent = unmount
+                ? 'Drive to unload' : 'Target Drive (empty)';
+            document.getElementById('drive-help').textContent = unmount
+                ? 'Click a loaded drive to select'
+                : 'Click an empty drive to select';
+        }
+
+        function onDriveFieldChange() {
+            // Choosing a loaded drive from the dropdown is the same gesture as
+            // clicking one, so it goes the same way.
+            const driveNum = document.getElementById('drive').value;
+            const chosen = driveNum !== '' && libraryData &&
+                libraryData.drives.find(d => d.drive_num == driveNum);
+            if (unmounting() && chosen) { selectForUnmount(chosen.drive_num); return; }
+            updateSelection();
+        }
+
+        function fillSlotChoices(preSelect = null) {
+            // Mounting, the list is the tapes to send. Unmounting, it is where
+            // this one may go - `unmount_targets`, worked out by the service,
+            // not filtered here.
+            if (!libraryData) { return; }
+            const unmounting = document.getElementById('operation').value === 'unmount';
+            const slotSelect = document.getElementById('slot');
+            slotSelect.innerHTML = unmounting
+                ? '<option value="">-- Click a slot or select here --</option>'
+                : '<option value="">-- Click a tape or select here --</option>';
+
+            if (unmounting) {
+                (libraryData.unmount_targets || []).forEach(slotNum => {
+                    const option = document.createElement('option');
+                    option.value = slotNum;
+                    option.textContent = `Slot ${slotNum}` +
+                        (slotNum == preSelect ? ' (original)' : '');
+                    if (slotNum == preSelect) { option.selected = true; }
+                    slotSelect.appendChild(option);
+                });
+                if (preSelect != null) { slotSelect.value = preSelect; }
+                return;
+            }
+
+            libraryData.storage_slots.forEach(slot => {
+                if (!slot.full) { return; }
+                const option = document.createElement('option');
+                option.value = slot.slot_num;
+                const ltoSuffix = tapeLabel(slot) ? ` [${tapeLabel(slot)}]` : '';
+                option.textContent = `Slot ${slot.slot_num}${slot.barcode ? ' - ' + slot.barcode : ''}${ltoSuffix}`;
+                slotSelect.appendChild(option);
+            });
+        }
+
+        function selectForUnmount(driveNum) {
+            // Selecting, never moving. The button and the preview are the
+            // confirmation, the same three beats mounting already has.
+            setMode('unmount');
+            const loaded = (libraryData.drives || [])
+                .find(d => d.drive_num == driveNum) || {};
+            fillDriveChoices(driveNum);
+            // The slot it came from, pre-selected - and whether that slot is
+            // still free was decided in the service, not here.
+            fillSlotChoices(loaded.unmount_default_slot);
+            document.getElementById('slot').value =
+                loaded.unmount_default_slot != null ? loaded.unmount_default_slot : '';
+            markOriginSlot(loaded.unmount_default_slot);
+            updateSelection();
+        }
+
+        function markOriginSlot(slotNum) {
+            document.querySelectorAll('.slot-compact').forEach(el => {
+                el.classList.toggle('origin',
+                                    slotNum != null && el.dataset.slotNum == slotNum);
+            });
+        }
+
+        function clearUnmount() {
+            if (!unmounting()) { return; }
+            setMode('mount');
+            document.getElementById('slot').value = '';
+            document.getElementById('drive').value = '';
+            markOriginSlot(null);
+            fillSlotChoices();
+            fillDriveChoices();
+        }
+
         function selectDrive(driveNum) {
+            clearUnmount();
             const slotValue = document.getElementById('slot').value;
             const verdict = slotValue ? verdictFor(slotValue, driveNum) : null;
             if (verdict && !verdict.compatible) {
@@ -398,6 +633,11 @@
         // Mark every empty drive for the chosen tape, and disable the ones
         // MHVTL would refuse, both in the panel and in the drop-down.
         function updateDriveCompatibility() {
+            // Mount-side only: it greys out drives that will not load the
+            // selected tape. Unmounting has no such question - the tape is
+            // already in the drive - and running it there would grey out the
+            // very drives being offered.
+            if (unmounting()) { return; }
             const slotValue = document.getElementById('slot').value;
             document.querySelectorAll('.drive-item').forEach(el => {
                 el.classList.remove('compatible', 'incompatible', 'read-only');
@@ -453,11 +693,62 @@
             document.querySelectorAll('.slot-compact').forEach(el => {
                 el.classList.toggle('selected', el.dataset.slotNum == slotValue);
             });
+            // In unmount mode the same `drive` field holds the loaded drive.
+            const unmountDrive = unmounting() ? driveValue : '';
             document.querySelectorAll('.drive-item').forEach(el => {
                 el.classList.toggle('selected', el.dataset.driveNum == driveValue);
+                el.classList.toggle('unmount-selected',
+                                    unmountDrive !== '' && el.dataset.driveNum == unmountDrive);
             });
 
             compatWarning.classList.remove('active', 'error', 'success', 'read-only', 'unknown');
+
+            // The second gesture. Nothing to check for compatibility: the tape
+            // is already in the drive and it is going back where it came from.
+            if (unmountDrive !== '') {
+                const loaded = (libraryData && libraryData.drives
+                    .find(d => d.drive_num == unmountDrive)) || {};
+                const targets = (libraryData && libraryData.unmount_targets) || [];
+                // Every empty slot the service listed is a place this can go.
+                document.querySelectorAll('.slot-compact.empty').forEach(el => {
+                    el.classList.toggle(
+                        'targetable', targets.includes(Number(el.dataset.slotNum)));
+                });
+
+                if (loaded.unmount_note) {
+                    compatWarning.innerHTML =
+                        `<span class="compat-icon">&#8505;</span>${escapeHtml(loaded.unmount_note)}.`;
+                    compatWarning.classList.add('active',
+                        loaded.unmount_default_slot == null ? 'error' : 'success');
+                }
+
+                document.getElementById('preview-slot').innerHTML = `
+                    <div class="slot-num">Drive ${escapeHtml(unmountDrive)}</div>
+                    <div>${escapeHtml(loaded.barcode || 'a tape')}</div>
+                `;
+                if (!slotValue) {
+                    // No destination yet, and none could be defaulted.
+                    preview.classList.remove('active');
+                    submitBtn.textContent = 'Unmount Tape';
+                    submitBtn.disabled = true;
+                    return;
+                }
+                const original = loaded.unmount_default_slot != null
+                    && slotValue == loaded.unmount_default_slot;
+                document.getElementById('preview-drive').innerHTML = `
+                    <div class="slot-num">Slot ${escapeHtml(slotValue)}</div>
+                    <div>${original ? 'where it came from' : 'chosen'}</div>
+                `;
+                preview.querySelector('.mount-preview-title').textContent = 'Unmount Preview';
+                preview.classList.add('active');
+                submitBtn.textContent = 'Unmount Tape';
+                submitBtn.disabled = false;
+                return;
+            }
+            document.querySelectorAll('.slot-compact.targetable')
+                .forEach(el => el.classList.remove('targetable'));
+            preview.querySelector('.mount-preview-title').textContent = 'Mount Preview';
+            submitBtn.textContent = 'Mount Tape';
 
             // A tape with no drive to go to is worth saying before a drive is picked.
             if (slotValue && !driveValue && libraryData) {

@@ -20,6 +20,27 @@ from pathlib import Path
 DEFAULT_CONFIG_DIR = '/etc/mhvtl'
 DEFAULT_HOME_DIR = '/opt/mhvtl'
 
+#: Which directory the RUNNING DAEMONS read, when that is not the one this
+#: process is working in.
+#:
+#: Unset by default, and then the daemons are taken to read config_dir() - the
+#: directory this process reads and writes. That is right for the web app,
+#: whose setting IS the live directory, and for the test suite, whose setting is
+#: a local copy that stands in for it.
+#:
+#: It is SET by the CLI whenever --config-dir points somewhere else
+#: (mhvtl_cli/main.py), because then the two genuinely differ: the command works
+#: on a copy while systemd keeps serving /etc/mhvtl. Without that,
+#: daemons_are_ours() compared the copy against config_dir() - which
+#: --config-dir had already moved to the copy - so it compared a directory with
+#: itself and said yes. On 1 October 2026 that let add_ltfs_media_workflow
+#: restart the live vtllibrary@60 from a scratch directory, which unloaded the
+#: cartridge from drive 0 while an `ltfs` process still held the device.
+#:
+#: The same class of mistake cost three stopped units once before, which is why
+#: the CLI defaults to /etc/mhvtl whatever the Django settings say.
+DAEMON_CONFIG_DIR_SETTING = 'MHVTL_DAEMON_CONFIG_DIR'
+
 #: Name of the lock guarding every configuration write. One lock for the whole
 #: directory: a library change touches device.conf and library_contents together.
 LOCK_NAME = '.mhvtl-config.lock'
@@ -37,6 +58,17 @@ def _setting(name: str, default: str) -> str:
 def config_dir() -> Path:
     """Where device.conf and library_contents.N live."""
     return Path(_setting('MHVTL_CONFIG_DIR', DEFAULT_CONFIG_DIR))
+
+
+def daemon_config_dir() -> Path:
+    """The directory the running daemons read.
+
+    config_dir() unless something has said otherwise, so the default is "the
+    daemons read what we read" - true for the web app and for the tests. The
+    CLI sets it when --config-dir makes the two differ. See
+    DAEMON_CONFIG_DIR_SETTING for why that case needs saying out loud.
+    """
+    return Path(_setting(DAEMON_CONFIG_DIR_SETTING, str(config_dir())))
 
 
 def home_dir() -> Path:

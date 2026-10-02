@@ -15,7 +15,8 @@ Modules:
 from .errors import (CommandFailed, ConfigError, DeviceNotFound, MhvtlError,
                      ValidationFailed)
 from .locking import FileLock, LockTimeout, atomic_write_text
-from .paths import (config_dir, device_conf_path, home_dir, library_contents_path,
+from .paths import (config_dir, daemon_config_dir, device_conf_path, home_dir,
+                    library_contents_path,
                     lock_path, media_dir)
 from .retry import is_transient, retry_on_busy
 from .results import (ServiceResult, ValidationResult, failure_result,
@@ -27,7 +28,8 @@ __all__ = [
     'success_result', 'failure_result',
     'run', 'sudo', 'sudo_cat', 'sudo_tee', 'CommandResult', 'QUICK', 'NORMAL', 'SLOW',
     'FileLock', 'LockTimeout', 'atomic_write_text',
-    'config_dir', 'home_dir', 'device_conf_path', 'library_contents_path',
+    'config_dir', 'daemon_config_dir', 'home_dir', 'device_conf_path',
+    'library_contents_path',
     'media_dir', 'lock_path',
     'retry_on_busy', 'is_transient',
     'MhvtlError', 'ConfigError', 'DeviceNotFound', 'CommandFailed', 'ValidationFailed',

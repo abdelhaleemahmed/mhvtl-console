@@ -138,10 +138,19 @@ def as_live(test, directory):
     lifecycle and orphans only start or stop daemons for the configuration
     directory the daemons actually read, so a test that checks the units are
     controlled has to say that this is that directory.
+
+    BOTH names, because there are two: config_dir() is where this process reads
+    and writes, and daemon_config_dir() is where the daemons read. They are the
+    same unless something says otherwise - the CLI does, when --config-dir
+    points at a copy - and daemons_are_ours() compares against the second. A
+    helper that pinned only the first left daemons_are_ours() asking the real
+    setting, so the units went uncontrolled and five tests failed on the
+    assertion rather than on the behaviour.
     """
-    patch = mock.patch.object(lifecycle, 'config_dir', return_value=directory)
-    patch.start()
-    test.addCleanup(patch.stop)
+    for name in ('config_dir', 'daemon_config_dir'):
+        patch = mock.patch.object(lifecycle, name, return_value=directory)
+        patch.start()
+        test.addCleanup(patch.stop)
 
 
 class CreateTests(TestCase):

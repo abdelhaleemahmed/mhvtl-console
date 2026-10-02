@@ -50,8 +50,9 @@ from ..config import library_contents as library_contents_format
 from ..config.service import ConfigService
 from ..console import units
 from ..profiles import personalities
-from ..core import (FileLock, ServiceResult, config_dir, failure_result,
-                    library_contents_path, lock_path, shell, success_result)
+from ..core import (FileLock, ServiceResult, config_dir, daemon_config_dir,
+                    failure_result, library_contents_path, lock_path, shell,
+                    success_result)
 from . import spec as spec_rules
 from . import validation
 
@@ -61,11 +62,20 @@ logger = logging.getLogger(__name__)
 def daemons_are_ours(directory) -> bool:
     """Do the running daemons read this configuration directory?
 
-    They read the live one. An operation writing somewhere else - a test, a
-    scratch copy, a restore staged elsewhere - must not start or stop them:
-    it would apply a file they never read, and stop libraries that are in use.
+    They read /etc/mhvtl, through their systemd units. An operation writing
+    somewhere else - a test, a scratch copy, a restore staged elsewhere - must
+    not start or stop them: it would apply a file they never read, and stop
+    libraries that are in use.
+
+    Compared against core.daemon_config_dir(), which is config_dir() unless
+    something has said the two differ. They differ when the CLI is given
+    --config-dir: that moves config_dir() to the copy, so comparing against it
+    compared a directory with itself and answered yes. On 1 October 2026 that
+    let add_ltfs_media_workflow restart the live vtllibrary@60 from a scratch
+    directory, which unloaded the cartridge from drive 0 while an `ltfs`
+    process still held the device. Nothing was lost.
     """
-    return Path(directory).resolve() == Path(config_dir()).resolve()
+    return Path(directory).resolve() == daemon_config_dir().resolve()
 
 
 def allocate_targets(device_text: str, num_drives: int) -> Tuple[int, List[int]]:
@@ -408,13 +418,34 @@ def delete(library_id: int, *, force: bool = False, remove_media: bool = False,
         detail = f' ({media_removed} media file set(s) removed'
         detail += f', {len(media_failed)} failed)' if media_failed else ')'
 
+    # The database is a cache of device.conf, and the library is no longer in
+    # it. Scoped to this library: a delete must not reconcile anything else.
+    database = _forget(library_id)
+
     return success_result(f'Library {library_id} deleted{detail}', {
         'library_id': library_id,
+        'database': database,
         'drive_ids': drive_ids,
         'media_removed': media_removed,
         'media_failed': media_failed,
         'backup_path': backup_path,
     }, operation_id)
+
+
+def _forget(library_id: int) -> str:
+    """Mark this library inactive in the database. Never fails a delete.
+
+    The configuration is already gone by the time this runs, so a database that
+    could not be updated is a stale cache, not a failed deletion.
+    """
+    from ..sync import forget_library
+
+    try:
+        return forget_library(library_id)['message']
+    except Exception as exc:                           # noqa: BLE001 - reported
+        logger.warning('library %s deleted but the database was not updated: %s',
+                       library_id, exc)
+        return f'the database was not updated: {exc}'
 
 
 def _remove_media(barcodes: List[str]) -> Tuple[int, List[str]]:

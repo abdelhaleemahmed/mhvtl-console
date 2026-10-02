@@ -37,7 +37,7 @@ DEFAULT_SETTINGS = 'mhvtl_system.settings.development'
 SYSTEM_CONFIG_DIR = '/etc/mhvtl'
 SYSTEM_HOME_DIR = '/opt/mhvtl'
 
-COMMAND_MODULES = ('library', 'drive', 'tape', 'operations', 'status',
+COMMAND_MODULES = ('library', 'drive', 'tape', 'ltfs', 'operations', 'status',
                    'service', 'config', 'scsi', 'iscsi', 'console')
 
 
@@ -92,9 +92,18 @@ def setup_django(config_dir: Optional[str] = None) -> None:
     django.setup()
 
     from django.conf import settings
-    settings.MHVTL_CONFIG_DIR = config_dir or os.environ.get(
-        'MHVTL_CONFIG_DIR', SYSTEM_CONFIG_DIR)
+    live = os.environ.get('MHVTL_CONFIG_DIR', SYSTEM_CONFIG_DIR)
+    settings.MHVTL_CONFIG_DIR = config_dir or live
     settings.MHVTL_HOME_DIR = os.environ.get('MHVTL_HOME_DIR', SYSTEM_HOME_DIR)
+
+    # Where the DAEMONS read, which --config-dir does not move. Without this,
+    # a command given --config-dir had config_dir() pointing at the copy and
+    # lifecycle.daemons_are_ours() comparing the copy against it - a directory
+    # against itself, which answers yes. `ltfs add-media --config-dir <copy>`
+    # then restarted the live vtllibrary@60 and unloaded a cartridge from under
+    # a live `ltfs` mount. The same class of mistake once stopped three real
+    # units, which is why this CLI reads /etc/mhvtl whatever the settings say.
+    settings.MHVTL_DAEMON_CONFIG_DIR = live
 
 
 def _project_root():

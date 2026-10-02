@@ -89,6 +89,39 @@ class AddDriveTests(DriveServiceTestCase):
         self.assertEqual(result.data['slot'], 5)
         self.assertEqual(result.data['drive_id'], 10 + result.data['slot'])
 
+    def test_a_given_revision_is_written_to_device_conf(self):
+        """render_drive() wrote no `Product revision level` line at all, while
+        generate_device_conf() always did - so a drive added after creation
+        reported no firmware, which is the field LTFS reads to decide whether it
+        will open the drive."""
+        result = self.service.add(10, {'revision': 'HB82'})
+        self.assertTrue(result.success, result.message)
+        self.assertEqual(result.data['revision'], 'HB82')
+        stanza = self.device_conf().split('Drive: 15 ')[1].split('Drive:')[0]
+        self.assertIn(' Product revision level: HB82\n', stanza)
+
+    def test_the_revision_comes_back_out_of_the_parser(self):
+        """Written and then read: `Product revision level` was absent from
+        device_conf.FIELDS, so the line could be written and never read back."""
+        self.service.add(10, {'revision': 'HB82'})
+        added = next(d for d in self.service.list(10).data['drives']
+                     if d['drive_id'] == 15)
+        self.assertEqual(added['revision'], 'HB82')
+
+    def test_the_revision_is_inherited_from_the_other_drives(self):
+        """An added drive should report what its siblings report."""
+        self.service.add(10, {'revision': 'HB82'})
+        inherited = self.service.add(10)
+        self.assertEqual(inherited.data['revision'], 'HB82')
+
+    def test_no_revision_anywhere_writes_no_line(self):
+        """The fixture comments its revision lines out, as MHVTL's own sample
+        does, so there is nothing to inherit and nothing should be invented."""
+        result = self.service.add(10)
+        self.assertEqual(result.data['revision'], '')
+        stanza = self.device_conf().split('Drive: 15 ')[1].split('Drive:')[0]
+        self.assertNotIn('Product revision level', stanza)
+
     def test_takes_the_lowest_free_scsi_target(self):
         """Reusing a taken target would give two devices the same address."""
         self.assertEqual(self.service.add(10).data['target'], 5)

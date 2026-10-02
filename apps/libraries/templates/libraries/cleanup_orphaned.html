@@ -46,6 +46,34 @@
             </div>
         </div>
 
+        {% comment %} The same reconcile the library list page runs as "Full
+           Scan", here as a form post because this page is server-rendered and
+           the decision is the service's either way. It belongs on this page
+           because this is where the database is put right - and a
+           whole-configuration reconcile is an explicit repair, not something
+           that should happen as a side effect of another operation. {% endcomment %}
+        <div class="card">
+            <div class="section-title">Reconcile the database with device.conf</div>
+            <p>
+                <code>/etc/mhvtl/device.conf</code> is the authority and the
+                database is a view of it. A full scan reads the files and makes
+                the database match: rows are created for libraries it declares,
+                corrected where the details have changed, reactivated if they
+                came back, and deactivated where it no longer declares them.
+            </p>
+            <p style="color: var(--text-dim);">
+                Nothing is written to <code>device.conf</code>. The flow is one
+                way. A library absent from the file is meant to be absent from
+                the database, so deactivating its row is the point of this,
+                not a risk of it.
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="full_scan">
+                <button type="submit" class="btn btn-secondary">Full Scan</button>
+            </form>
+        </div>
+
         <!-- Comparison Grid -->
         <div class="comparison-grid">
             <!-- MHVTL Config Libraries -->
@@ -312,4 +340,81 @@
             {% endif %}
         </div>
         {% endif %}
+
+        {% comment %} The backups every config write takes. They belong on this
+           page because this is where an operator comes to tidy up, and because
+           the cleanup above takes one before it removes anything - that copy is
+           the way back. Nothing listed them before, and 949 had collected.
+        {% endcomment %}
+        <div class="card">
+            <div class="section-title">Configuration backups</div>
+
+            {% if backups_error %}
+            <div class="alert alert-danger">Could not list backups: {{ backups_error }}</div>
+            {% elif backups %}
+            <p>
+                {{ backups_count }} backup{{ backups_count|pluralize }} in
+                <code>{{ backups_path }}</code>, {{ backups_total_bytes|filesizeformat }}.
+                One is taken before every write to <code>device.conf</code> or a
+                <code>library_contents</code> file, including by the cleanup above.
+                {% if backups_hidden %}
+                The newest {{ backups|length }} are listed;
+                {{ backups_hidden }} older one{{ backups_hidden|pluralize }}
+                {{ backups_hidden|pluralize:"is,are" }} not shown - use the prune.
+                {% endif %}
+            </p>
+
+            <form method="post" class="backup-prune">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="prune_backups">
+                <label for="prune-keep">Keep the newest</label>
+                <input id="prune-keep" type="number" name="keep" min="1" value="20"
+                       required>
+                <button type="submit" class="btn btn-secondary">
+                    Remove the rest
+                </button>
+                <span class="hint">
+                    Backups that predate the dated-directory shape are left alone.
+                </span>
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Backup</th><th>Taken</th><th>Size</th>
+                        <th>Holds</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for backup in backups %}
+                    <tr>
+                        <td><code>{{ backup.name }}</code>
+                            {% if not backup.recognised %}
+                            <div class="hint">predates the dated-directory shape</div>
+                            {% endif %}</td>
+                        <td>{{ backup.taken|default:"-" }}</td>
+                        <td>{{ backup.bytes|filesizeformat }}</td>
+                        <td>{{ backup.file_count }} file{{ backup.file_count|pluralize }}
+                            {% if not backup.has_device_conf %}
+                            <div class="hint">no device.conf - cannot be restored from</div>
+                            {% endif %}</td>
+                        <td>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="remove_backup">
+                                <input type="hidden" name="name" value="{{ backup.name }}">
+                                <button type="submit" class="btn btn-secondary">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-success" style="margin: 0;">
+                No backups have been taken yet.
+            </div>
+            {% endif %}
+        </div>
 {% endblock %}
+

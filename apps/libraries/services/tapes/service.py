@@ -30,10 +30,10 @@ from typing import Dict, List, Optional
 from ..config import library_contents as contents_format
 from ..config.service import ConfigService
 from ..profiles import data as profiles_data
-from ..profiles import personalities
+from ..profiles import ltfs_support, personalities
 from ..core import (FileLock, ServiceResult, config_dir, failure_result,
                     library_contents_path, lock_path, shell, success_result)
-from . import barcodes, media
+from . import barcodes, ltfs_state, media, palette
 from .models import TapeInfo
 
 #: library_contents.10 -> 10, as in libraries/orphans.
@@ -64,13 +64,35 @@ class TapeService:
             return None
         return contents_format.parse(result.stdout)
 
-    def list(self, library_id: int, *, with_usage: bool = True) -> ServiceResult:
+    def list(self, library_id: int, *, with_usage: bool = True,
+             with_ltfs: bool = False) -> ServiceResult:
         """Every tape in a library.
 
         with_usage=False skips the disk measurement entirely, for callers that
         only need to know what is in which slot.
+
+        with_ltfs is OFF by default, and that is the point. Reading whether each
+        cartridge is an LTFS volume means reading each cartridge's own memory,
+        and most callers never show the answer - a backup application wants a
+        tape device, not a filesystem. Only the two callers that display it ask:
+        the library detail page's chips and `mhvtl ltfs tapes`.
+
+        It needs with_usage, because the partition count comes from that pass, so
+        asking for LTFS turns usage on rather than silently returning nothing.
+
+        Even when asked, two gates come first and neither touches a cartridge:
+
+            1. does any drive in this library open LTFS at all? If not, the
+               whole library is answered here - see _ltfs_possible_here()
+            2. is the cartridge a generation that can be partitioned?
+               ltfs_state.could_hold_ltfs(), from the barcode
+
+        What is skipped reports NOT_ASKED, never PLAIN. A cartridge nobody read
+        may still be an LTFS volume written elsewhere.
         """
         operation_id = str(uuid.uuid4())[:8]
+        if with_ltfs:
+            with_usage = True
         contents = self._contents(library_id)
         if contents is None:
             return failure_result(
@@ -85,6 +107,15 @@ class TapeService:
         if with_usage and tapes:
             # One pass over the media directory, not two sudo calls per tape.
             usage = media.usage_for_all([t.barcode for t in tapes], self.media_dir)
+            # A second pass for the LTFS state, only when a caller asked for it
+            # and only where it is possible: one tar for the whole library, the
+            # same shape as the first. The partition count comes from the usage
+            # pass, which already counted the data.N files.
+            states = (ltfs_state.state_for_all(
+                [t.barcode for t in tapes],
+                {b: u.partitions for b, u in usage.items()},
+                self.media_dir)
+                if with_ltfs and self._ltfs_possible_here(library_id) else {})
             for tape in tapes:
                 found = usage.get(tape.barcode)
                 if found:
@@ -92,12 +123,59 @@ class TapeService:
                     tape.capacity_mb = found.capacity_mb
                     tape.media_exists = found.exists
                     tape.layout = found.layout
+                    tape.partitions = found.partitions
+                state = states.get(tape.barcode)
+                if state:
+                    tape.ltfs_state = state.state
+                    tape.ltfs_was = state.was_ltfs
 
         return success_result(
             f'{len(tapes)} tape{"s" if len(tapes) != 1 else ""} in library {library_id}',
             {'library_id': library_id, 'count': len(tapes),
              'tapes': [tape.to_dict() for tape in tapes],
              'summary': contents.summary()}, operation_id)
+
+    def _ltfs_possible_here(self, library_id: int) -> bool:
+        """Can any drive in this library open LTFS?
+
+        The cheapest of the gates and the one that saves the most: it reads
+        device.conf, which is a file, and asks a table. No cartridge, no media
+        directory, no privilege beyond the configuration read. A library with no
+        LTFS-capable drive is answered in one step however many tapes it holds -
+        on this host that is every SONY and StorageTek library, because LTFS has
+        no table for either vendor id.
+
+        LAYERING: the drives come from ConfigService and the verdict from
+        profiles/ltfs_support, both of which this module already imports.
+        `operations.mounting.library_drives()` would read better and cannot be
+        used: operations/ imports tapes/, so tapes/ -> operations/ would close a
+        cycle. See rule 7 in services/__init__.py.
+        """
+        conf = ConfigService(self.config_dir).device_conf()
+        if conf is None:
+            # Cannot tell, so do not filter. A caller that asked for LTFS state
+            # gets the read rather than a silent "no".
+            return True
+        for _, drive in sorted(conf.drives_of(int(library_id)).items()):
+            if ltfs_support.supports(drive.get('vendor', ''),
+                                     drive.get('product', ''),
+                                     drive.get('revision') or None).supported:
+                return True
+        return False
+
+    def palette(self) -> ServiceResult:
+        """Every generation, its real shell colour and how it is drawn.
+
+        Reference data, no library and no hardware: the CLI prints it as a
+        legend and the web renders the same tokens through the stylesheet.
+        """
+        rows = palette.rows()
+        return success_result(
+            f'{len(rows) - 1} LTO generations, and one entry for media that is '
+            f'not LTO at all',
+            data={'palette': rows,
+                  'collisions': palette.collisions()},
+            operation_id='tape_palette')
 
     def barcodes_in(self, library_id: int) -> List[str]:
         contents = self._contents(library_id)

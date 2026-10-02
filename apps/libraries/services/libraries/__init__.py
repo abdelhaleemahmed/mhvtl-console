@@ -19,7 +19,11 @@ the check that MHVTL sees the library, and the tape files.
 from . import lifecycle, spec, validation
 from .models import LibraryInfo
 from .service import LibraryService
-from .workflow import WorkflowReport, create_library_workflow
+from .workflow import (WorkflowReport, add_ltfs_drive_workflow,
+                       add_ltfs_media_workflow, create_library_workflow,
+                       ltfs_provisioning)
 
 __all__ = ['LibraryService', 'LibraryInfo', 'create_library_workflow',
+           'add_ltfs_drive_workflow', 'add_ltfs_media_workflow',
+           'ltfs_provisioning',
            'WorkflowReport', 'validation', 'spec', 'lifecycle']

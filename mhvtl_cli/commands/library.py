@@ -58,6 +58,11 @@ def register(subparsers) -> None:
     create.add_argument('--drive-model', dest='drive_model',
                         help="drive model; the model's default if omitted")
     create.add_argument('--serial', help='unit serial number')
+    create.add_argument('--drive-revision', metavar='REV',
+                        help="drive firmware revision, four characters "
+                             "(default: the profile's). LTFS refuses an LTO-5 "
+                             "drive below B170, LTO-8 below HB81 and TS1140 "
+                             "below 3694; see 'mhvtl ltfs support'")
     create.add_argument('--no-start', action='store_true',
                         help='write the configuration but do not start the daemons')
     create.add_argument('--no-media', action='store_true',
@@ -179,6 +184,7 @@ def do_create(args) -> int:
                        ('product', args.library_model),
                        ('drive_model', args.drive_model),
                        ('drive_product', args.drive_model),
+                       ('drive_revision', args.drive_revision),
                        ('serial', args.serial)):
         if value is not None:
             spec[key] = value

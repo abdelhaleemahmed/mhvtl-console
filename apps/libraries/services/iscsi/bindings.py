@@ -56,7 +56,10 @@ logger = logging.getLogger(__name__)
 CONFIGFS = '/sys/kernel/config/target/core'
 DEFAULT_STATE = '/var/lib/mhvtl-gui/iscsi-bindings.json'
 
-#: `/sys/.../pscsi_2/lib10_changer/info:  SCSI Device Bus Location: Channel ID: 0 Target ID: 1 LUN: 0 Host ID: 16`
+#: One ``targetcli ls`` info line: the backstore's name, and the address of
+#: the kernel device it is bound to::
+#:
+#:     /sys/.../pscsi_2/lib10_changer/info:  SCSI Device Bus Location: Channel ID: 0 Target ID: 1 LUN: 0 Host ID: 16
 INFO_RE = re.compile(r'/pscsi_\d+/(?P<name>[^/]+)/info:.*Channel ID:\s*(?P<channel>\d+)'
                      r'\s+Target ID:\s*(?P<target>\d+)\s+LUN:\s*(?P<lun>\d+)')
 

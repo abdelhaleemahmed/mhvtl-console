@@ -79,6 +79,14 @@ autodoc_mock_imports = [
     'django_extensions', 'debug_toolbar', 'environ', 'rest_framework',
 ]
 
+# viewcode renders a "Source code for ..." page per module. Left to itself it
+# follows an imported name back to where it is defined, so `from pathlib import
+# Path` and `re.compile(...)` made it publish the whole of Python's pathlib.py
+# (465 KB) and re.py (321 KB) under this project's title and theme. Nothing
+# linked to either: unlinked copies of someone else's source, with our name on
+# them. This keeps viewcode to the modules that are actually ours.
+viewcode_follow_imported_members = False
+
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False
 napoleon_include_init_with_doc = True

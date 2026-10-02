@@ -112,8 +112,8 @@
 {% endblock %}
 
 {% block extra_js %}
-{# The media each library's drives load, for tape-media.js. The conversion to
-   the base template dropped this line, and every density list came up empty. #}
+{% comment %} The media each library's drives load, for tape-media.js. The conversion to
+   the base template dropped this line, and every density list came up empty. {% endcomment %}
 {{ media_info|json_script:"media-info" }}
 <script src="{% static 'js/tape-media.js' %}"></script>
 <script>

@@ -1104,7 +1104,20 @@ def get_library_status_with_lto_ajax(request, library_id):
         return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
 
     try:
-        result = mounting.mount_status(library_id)
+        # with_ltfs: the map colours LTFS volumes and marks which drives can
+        # open one. Gated in the service - a library with no capable drive
+        # reads no cartridge at all - so this costs nothing where it cannot
+        # help.
+        result = mounting.mount_status(library_id, with_ltfs=True)
+        if result.success:
+            # Which drives hold a mounted filesystem and so cannot be emptied.
+            # Composed here rather than inside mount_status(), because
+            # operations/ may not import ltfs/ - it is a leaf and a caller's to
+            # combine. One /proc/mounts read; see services/ltfs/tape_moves.py.
+            from apps.libraries.services import ltfs
+            blocked = ltfs.blocked_drives(library_id)
+            for drive in result.data['drives']:
+                drive['unmount_blocked'] = blocked.get(drive['drive_num'], '')
         status = ({'success': True, **result.data} if result.success
                   else {'success': False, 'error': result.message,
                         'library_id': library_id})

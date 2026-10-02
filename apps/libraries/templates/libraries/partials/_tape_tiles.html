@@ -19,7 +19,7 @@ empty the day the Arabic interface is switched on.
     <div class="tape-tile {{ tape.fullness }}">
         <div class="tape-tile-head">
             <span class="tape-tile-barcode">{{ tape.barcode }}</span>
-            <span class="lto-chip {{ tape.density_class }}">{{ tape.density|default:"?" }}</span>
+            <span class="lto-chip {{ tape.generation_token }}">{{ tape.density|default:"?" }}</span>
         </div>
 
         <div class="tape-bar {{ tape.fullness }}" role="img"
@@ -38,6 +38,18 @@ empty the day the Arabic interface is switched on.
             {% else %}Not in this library{% endif %}
             {% if tape.kind != 'data' %} &middot; {{ tape.kind }}{% endif %}
             {% if not tape.media_exists %} &middot; <span class="tape-tile-missing">no data on disk</span>{% endif %}
+            {% comment %}
+            LTFS state, only where it is worth the pixels: a volume, a cartridge
+            whose MAM claims LTFS while it cannot be mounted, or one we could not
+            read. A plain single-partition cartridge says nothing, because on most
+            libraries that is every tile. The wording comes from the service -
+            ltfs_summary - so this page, the inventory and `mhvtl tape ltfs` all
+            say the same thing about the same cartridge.
+            {% endcomment %}
+            {% if tape.ltfs %} &middot; <span class="tape-chip ltfs" title="{{ tape.ltfs_summary }}">LTFS</span>
+            {% elif tape.ltfs_was %} &middot; <span class="tape-chip ltfs-former" title="{{ tape.ltfs_summary }}">was LTFS</span>
+            {% elif tape.ltfs_state == 'unknown' %} &middot; <span class="tape-chip ltfs-unknown" title="LTFS state could not be read">LTFS?</span>
+            {% endif %}
         </div>
     </div>
     {% empty %}

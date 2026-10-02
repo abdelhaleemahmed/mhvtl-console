@@ -12,6 +12,75 @@ in MHVTL that each one comes from, so that the web UI and the CLI can say before
 writing device.conf what MHVTL will do with it. It is checked against the MHVTL
 source by tests/test_personalities.py whenever the source tree is present.
 
+VERIFIED COMPLETE AGAINST THE MHVTL SOURCE. DO NOT "CORRECT" THESE TABLES.
+==========================================================================
+
+Checked by reading usr/cmd/vtllibrary.c, usr/cmd/vtltape.c and the personality
+modules under usr/pm on 30 September 2026::
+
+    library personalities      MHVTL 13   here 13   missing 0  extra 0
+    drive models tape_drives[] MHVTL 64   here 64   missing 0  extra 0
+
+No row missing, none extra, and no row disagreeing about which personality a
+model gets. 127 tests across tests/test_personalities.py,
+test_library_matrix.py, test_compatibility.py and test_ltfs_support.py hold
+these tables to the source, several of them looping over every row with
+subTest.
+
+So: if a table here appears to be missing something MHVTL supports, IT IS NOT.
+Measure before editing, and read the two paragraphs below first, because the
+one asymmetry in MHVTL is easy to get backwards.
+
+A LIBRARY'S VENDOR ID IS FUNCTIONAL. A DRIVE'S IS A LABEL.
+
+    customise_lu()   usr/cmd/vtllibrary.c:1461
+    branches on the LIBRARY's vendor id first, then its product::
+
+        vendor stk       -> SL500 -> init_stkslxx
+                            L20 / L40 / L80 -> init_stkl20
+                            otherwise -> init_stklxx
+        vendor IBM       -> 3573-TL -> init_ibmts3100
+                            03584   -> init_ibm3584
+                            otherwise -> init_default_smc
+        vendor HP        -> MSL -> init_hp_msl_smc, otherwise init_hp_eml_smc
+        product OVERLAND -> init_overland_smc
+        product ADIC | QUANTUM -> init_scalar_smc
+        vendor SPECTRA   -> PYTHON | GATOR | 215 | default -> spectra variants
+        otherwise        -> init_default_smc
+
+    Change a library's vendor id and you change the emulated robot - its
+    element addresses, its drive and slot ceilings, its MAP. Never casually.
+
+    config_lu()      usr/cmd/vtltape.c:1897
+    picks the DRIVE personality by PRODUCT ID ALONE::
+
+        strncmp(tape_drives[i].name, lu->product_id, ...)
+
+    The drive's vendor id is not in that comparison and nothing in MHVTL
+    branches on it. It is copied three times and never read: into INQUIRY
+    byte 8 (vtltape.c:2147), into VPD page 0x83 (vtllib.c:2312), and into
+    the cartridge MAM as DevMakeSerialLastLoad (vtltape.c:1204).
+
+WHAT THAT DOES NOT LICENCE
+
+A drive's vendor id being inert in MHVTL does not make it ours to set freely.
+It is what backup software identifies a device by - see the note at
+config/device_conf.py:272 - and it is what LTFS matches on before it will open
+a drive. An LTFS-shaped reason to relabel a drive is not a reason to edit a
+table that describes real hardware: the console can add a drive with a chosen
+vendor id through libraries/workflow.add_ltfs_drive_workflow(), which is the
+supported way to make a library LTFS-capable without rewriting what its
+existing drives claim to be.
+
+There is one genuine inconsistency in the tables below, and it is recorded as
+an open question rather than fixed: the STK profile offers ULT3580-* and
+ULTRIUM-* drives - IBM part numbers - with drive_vendor STK, while MHVTL's own
+etc/device.conf pairs `STK L700` with `IBM ULT3580-TD8`. Do not change it
+without reading guides/library-limits.rst on it first.
+
+--------------------------------------------------------------------------
+
+
 Source: the MHVTL tree this project builds and installs,
 
     1.8-0_release-108-g25c683e   (local, with six patches on top)

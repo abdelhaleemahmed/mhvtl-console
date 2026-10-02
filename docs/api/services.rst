@@ -62,12 +62,34 @@ Retrying SCSI operations that report a transient busy state.
    :undoc-members:
    :show-inheritance:
 
+``samples``
+~~~~~~~~~~~
+
+The last reading of each drive, shared by every worker and
+every command.
+
+.. automodule:: apps.libraries.services.core.samples
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``shell``
 ~~~~~~~~~
 
 The only place this project runs a subprocess.
 
 .. automodule:: apps.libraries.services.core.shell
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``units``
+~~~~~~~~~
+
+Sizes written the way a person reads them - formatted once, for both
+front ends.
+
+.. automodule:: apps.libraries.services.core.units
    :members:
    :undoc-members:
    :show-inheritance:
@@ -138,6 +160,17 @@ Vendor and model reference data. Pure, no I/O.
 Vendor and model reference data.
 
 .. automodule:: apps.libraries.services.profiles.data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``ltfs_support``
+~~~~~~~~~~~~~~~~
+
+Which drives LTFS will open, and which it refuses. Separate from
+``personalities`` on purpose: this is a fact about LTFS, not about MHVTL.
+
+.. automodule:: apps.libraries.services.profiles.ltfs_support
    :members:
    :undoc-members:
    :show-inheritance:
@@ -277,6 +310,17 @@ Can this cartridge go in that drive?
    :undoc-members:
    :show-inheritance:
 
+``ltfs_state``
+~~~~~~~~~~~~~~
+
+What a cartridge's own memory says about LTFS, read from ``mhvtl_data``
+rather than ``mam``.
+
+.. automodule:: apps.libraries.services.tapes.ltfs_state
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``media``
 ~~~~~~~~~
 
@@ -293,6 +337,17 @@ The tape files on disk, under the media directory.
 Tape dataclasses.
 
 .. automodule:: apps.libraries.services.tapes.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``palette``
+~~~~~~~~~~~
+
+Which colour a tape generation is drawn in. The only copy of this rule;
+the stylesheet and the terminal both render its tokens.
+
+.. automodule:: apps.libraries.services.tapes.palette
    :members:
    :undoc-members:
    :show-inheritance:
@@ -367,6 +422,17 @@ The vtlcmd wrapper - MHVTL's message-queue control channel.
 -----------------
 
 SCSI discovery, and mapping a library or drive to its device node.
+
+``ch_policy``
+~~~~~~~~~~~~~
+
+Whether the kernel ``ch`` driver can reach MHVTL's changers, and what
+keeps it off them.
+
+.. automodule:: apps.libraries.services.scsi.ch_policy
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 ``lsscsi``
 ~~~~~~~~~~
@@ -478,6 +544,26 @@ systemd state for the MHVTL units, and starting and stopping them.
 
 Exporting libraries and drives over iSCSI, through targetcli.
 
+``bindings``
+~~~~~~~~~~~~
+
+Keeping live pscsi backstores bound to the devices they export.
+
+.. automodule:: apps.libraries.services.iscsi.bindings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``initiator``
+~~~~~~~~~~~~~
+
+This host as an iSCSI initiator of its own exports.
+
+.. automodule:: apps.libraries.services.iscsi.initiator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``models``
 ~~~~~~~~~~
 
@@ -534,6 +620,45 @@ The targetcli wrapper, and the checks that belong in front of it.
 Exporting a whole library over iSCSI, in one step.
 
 .. automodule:: apps.libraries.services.iscsi.workflow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``services.ltfs``
+-----------------
+
+Mounting a cartridge as a filesystem. Its own package, like ``iscsi``, because
+it wraps an external tool with a lifetime of its own - and a leaf of the import
+graph: it imports ``operations`` and nothing imports it.
+
+``mounts``
+~~~~~~~~~~
+
+Which LTFS volumes are mounted, read from ``/proc/mounts``. Deliberately no
+state file.
+
+.. automodule:: apps.libraries.services.ltfs.mounts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``service``
+~~~~~~~~~~~
+
+``LtfsService``: status, mount, unmount, check, format_cartridge.
+
+.. automodule:: apps.libraries.services.ltfs.service
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``tape_moves``
+~~~~~~~~~~~~~~
+
+Unloading a cartridge, refused while its filesystem is mounted. Here rather
+than in ``operations`` because the import graph points this way.
+
+.. automodule:: apps.libraries.services.ltfs.tape_moves
    :members:
    :undoc-members:
    :show-inheritance:

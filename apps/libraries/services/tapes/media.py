@@ -5,13 +5,19 @@ Gathers tape_operations_service.py:1934 (mktape), :2060 (the rm -rf),
 
 Three things are different here, each for a reason found on a running host.
 
-1. BOTH MEDIA LAYOUTS. mhvtl 1.7 wrote one set of files per tape:
+1. BOTH MEDIA LAYOUTS. mhvtl 1.7 wrote one set of files per tape::
 
        E01001L8/data  E01001L8/indx  E01001L8/meta
 
-   1.8 splits them per LTFS partition, and adds a MAM file:
+   1.8 splits them per LTFS partition and adds two more files::
 
-       E01001L8/data.0  E01001L8/indx.0  E01001L8/meta.0  E01001L8/mam
+       E01001L8/data.0  E01001L8/indx.0  E01001L8/meta.0
+       E01001L8/mam           the SCSI attributes, read below
+       E01001L8/mhvtl_data    mhvtl's own attributes - partition geometry,
+                              per-partition coherency records. NOT read here;
+                              the ids are a separate namespace that collides
+                              numerically with the SCSI ones. See
+                              docs/sphinx/guides/cartridge-mam.rst.
 
    Code that looked for a file named exactly `data` reported every tape as
    0 bytes after the upgrade, silently.
@@ -92,6 +98,13 @@ class MediaUsage:
     capacity_bytes: Optional[int] = None      # None means "not known from disk"
     remaining_bytes: Optional[int] = None     # what the MAM says is left
     layout: str = ''                          # '1.7' | '1.8' | ''
+    #: How many partitions the cartridge has, counted from its data.N files.
+    #: Counted here rather than read from the MAM's NUM_PARTITIONS because that
+    #: field is not authoritative: mhvtl recomputes the count at every load by
+    #: counting these same files (usr/vtlcart.c:1351), and mktape leaves the
+    #: stored value at 2 on a cartridge that has only ever had one. A 1.7
+    #: cartridge, whose data file has no suffix, has exactly one.
+    partitions: int = 0
 
     @property
     def used_mb(self) -> int:
@@ -116,6 +129,7 @@ class MediaUsage:
             'capacity_mb': self.capacity_mb,
             'used_percent': self.used_percent,
             'layout': self.layout,
+            'partitions': self.partitions,
         }
 
 
@@ -166,9 +180,13 @@ def capacity_from_mam(blob: bytes):
     return total, left
 
 
-def read_mams(barcode_list: List[str], base=None) -> Dict[str, bytes]:
-    """Every tape's MAM file in one call, for the same reason usage_for_all
-    exists: one sudo per page, not one per tape.
+def read_media_files(barcode_list: List[str], wanted=('mam',),
+                     base=None) -> Dict[str, Dict[str, bytes]]:
+    """Several files from each cartridge in one call, {barcode: {name: bytes}}.
+
+    Same reason usage_for_all exists: one sudo per page, not one per tape - and
+    one page even when two files per cartridge are wanted, which is what reading
+    both `mam` and `mhvtl_data` needs.
 
     Through tar, because the sudoers rules allow tar and do not allow a shell
     - and should not: a rule for `sh -c` is a rule for anything. tar names
@@ -182,7 +200,7 @@ def read_mams(barcode_list: List[str], base=None) -> Dict[str, bytes]:
             path_for(barcode, base)                 # refuses anything odd
         except (barcodes.InvalidBarcode, MediaPathRefused):
             continue
-        names.append(f'{barcode}/mam')
+        names.extend(f'{barcode}/{name}' for name in wanted)
     if not names:
         return {}
 
@@ -197,7 +215,7 @@ def read_mams(barcode_list: List[str], base=None) -> Dict[str, bytes]:
                            error.strip()[:200])
         return {}
 
-    blobs = {}
+    blobs: Dict[str, Dict[str, bytes]] = {}
     try:
         with tarfile.open(fileobj=io.BytesIO(archive)) as bundle:
             for member in bundle.getmembers():
@@ -206,11 +224,19 @@ def read_mams(barcode_list: List[str], base=None) -> Dict[str, bytes]:
                 handle = bundle.extractfile(member)
                 if handle is None:
                     continue
-                blobs[Path(member.name).parent.name] = handle.read()
+                path = Path(member.name)
+                blobs.setdefault(path.parent.name, {})[path.name] = handle.read()
     except tarfile.TarError:
         logger.warning('the MAM archive from %s could not be read', root,
                        exc_info=True)
     return blobs
+
+
+def read_mams(barcode_list: List[str], base=None) -> Dict[str, bytes]:
+    """Every tape's `mam` file, {barcode: bytes}. The single-file case."""
+    found = read_media_files(barcode_list, ('mam',), base)
+    return {barcode: files['mam'] for barcode, files in found.items()
+            if 'mam' in files}
 
 
 def exists(barcode: str, base=None) -> bool:
@@ -262,6 +288,7 @@ def usage_for_all(barcode_list: List[str], base=None) -> Dict[str, MediaUsage]:
         if DATA_FILE_RE.match(name):
             entry.used_bytes += int(size)
             entry.layout = '1.8' if '.' in name else '1.7'
+            entry.partitions += 1          # free: this loop already sees them
         elif name == 'mam':
             entry.layout = entry.layout or '1.8'
             with_mam.append(entry.barcode)

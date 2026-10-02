@@ -1,5 +1,5 @@
 %define name mhvtl-gui
-%define version 2.1.1
+%define version 3.0.0
 %define release 1%{?dist}
 %define installdir /opt/mhvtl-gui
 %define servicename mhvtl-gui
@@ -228,6 +228,43 @@ fi
 %dir /var/lib/mhvtl-gui/targetcli
 
 %changelog
+* Fri Oct 02 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.0.0-1
+- LTFS: a cartridge can be opened as a filesystem from the console or the
+  command line. Which drives LTFS will open and which cartridges are volumes,
+  mounting and unmounting one, checking it, and provisioning a library that
+  has no capable drive - adding one LTFS accepts, and creating media its
+  drives can WRITE rather than merely load. Its own page and its own group on
+  the operator dashboard.
+- LTFS: a drive whose filesystem is mounted cannot be unloaded, from the page
+  or the command line. Pulling the cartridge out from under a live mount left
+  ltfs holding a device with no medium; a daemon restart did exactly that
+  during development.
+- Tape generations are drawn in the real LTO cartridge shell colours, tailored
+  so that generations the shell colours give the same colour can still be told
+  apart - LTO-6 and LTO-8 are both "Dark red", and a library can hold both.
+  All ten generations, where there were five; LTO-4 no longer borrows LTO-5's
+  colour and LTO-10 is no longer drawn as "unknown".
+- The rule that decides it lives in one place, services/tapes/palette.py, and
+  is rendered twice: by the stylesheet for a browser and by mhvtl_cli/colour.py
+  for a terminal. The mount page used to carry two more copies of it, which
+  disagreed with each other.
+- Mounting and unmounting a tape are one page. Click a tape and an empty drive
+  to mount; click a loaded drive to unload it. The destination slot defaults to
+  the one the cartridge came from and can be changed. /operator/unmount/
+  redirects.
+- New commands: `mhvtl op layout` draws a library in the terminal - drives,
+  slots, the import/export port and a legend - and `mhvtl op palette` prints
+  the generations and their colours.
+- Unexporting a library finds its target by the backstores it exports rather
+  than by a name generated from today's date. A library exported in one month
+  and unexported in the next was not found, the miss was reported as success,
+  and its backstores were deleted anyway.
+- An LTFS-capable drive added to a library now has its own daemon started. It
+  was written to device.conf and left with no device node at all.
+- BREAKING: the tape JSON field `density_class` is now `generation_token`, and
+  services.tapes.barcodes.generation_class() and GENERATION_CLASS are removed.
+- 1582 tests.
+
 * Tue Sep 22 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 2.1.1-1
 - The disk usage page shows the disks again. It asked the disk service for
   fields it never had, so on every host it drew an empty bar, a bare "%" and

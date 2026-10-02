@@ -126,6 +126,16 @@ urlpatterns += [
     path('ajax/drive-status/<int:drive_id>/', tape_operations_views.drive_status_ajax, name='drive_status_ajax'),
 
     # Tape Operations AJAX
+    path('operator/ltfs/', tape_operations_views.LtfsView.as_view(), name='ltfs'),
+    # LTFS: the same service the `mhvtl tape ltfs-*` commands call.
+    path('api/ltfs/<int:library_id>/', tape_operations_views.ltfs_drives_ajax,
+         name='api_ltfs_drives'),
+    path('ajax/ltfs-mount/', tape_operations_views.ltfs_mount_ajax,
+         name='ltfs_mount_ajax'),
+    path('ajax/ltfs-unmount/', tape_operations_views.ltfs_unmount_ajax,
+         name='ltfs_unmount_ajax'),
+    path('ajax/ltfs-check/', tape_operations_views.ltfs_check_ajax,
+         name='ltfs_check_ajax'),
     path('ajax/mount-tape/', tape_operations_views.mount_tape_ajax, name='mount_tape_ajax'),
     path('ajax/unmount-tape/', tape_operations_views.unmount_tape_ajax, name='unmount_tape_ajax'),
     path('ajax/move-tape/', tape_operations_views.move_tape_ajax, name='move_tape_ajax'),

@@ -243,33 +243,79 @@ def unexport_library(library_id: int, *, iqn: str = None,
 
     remove_backstores=False deletes the target and leaves them, which is what
     the old behaviour was; it is here for a caller that means it.
+
+    WITHOUT AN IQN THE TARGET IS FOUND BY ITS BACKSTORES, NOT BY ITS NAME.
+    This used to generate the name with default_iqn(), which stamps today's
+    year and month - so a library exported in one month and unexported in the
+    next was looked for under a name that had never existed, was not found,
+    and the miss was reported as success while its backstores were deleted
+    anyway. That leaves a live target whose LUNs point at nothing.
+
+    library_of() already reads which library a target exports from the
+    backstores its LUNs use, and already says why: the name is only a default,
+    and an export made with --iqn says nothing about the library. The date was
+    just the commonest way to hit that.
+
+    More than one target can answer - a library exported twice under different
+    names has two - and all of them are deleted, because all of them export
+    this library.
     """
     operation_id = str(uuid.uuid4())[:8]
     service = service or IscsiService()
-    iqn = iqn or default_iqn(library_id)
-    report = ExportReport(iqn=iqn, library_id=int(library_id))
+    report = ExportReport(iqn=iqn or '', library_id=int(library_id))
 
     listed = service.targets()
-    known = {t.get('iqn') for t in (listed.data or {}).get('targets', [])} \
-        if listed.success else set()
+    targets = (listed.data or {}).get('targets', []) if listed.success else []
 
-    if iqn in known:
-        deleted = service.delete_target(iqn)
-        report.record('delete target', deleted.success, deleted.message)
+    if iqn:
+        # A caller that names one means it, and the web always does.
+        wanted = [iqn] if iqn in {t.get('iqn') for t in targets} else []
+    else:
+        wanted = [t.get('iqn') for t in targets
+                  if library_of(t) == int(library_id) and t.get('iqn')]
+    report.iqn = iqn or (wanted[0] if wanted else '')
+
+    for name in wanted:
+        deleted = service.delete_target(name)
+        report.record(f'delete target {name}', deleted.success, deleted.message)
         if not deleted.success:
             report.errors.extend(deleted.errors or [deleted.message])
-            return failure_result(f'Could not delete target {iqn}',
+            return failure_result(f'Could not delete target {name}',
                                   report.errors, operation_id)
-    else:
-        # Not an error: the target may already be gone, and the backstores it
-        # left are exactly what this is for.
-        report.record('delete target', True, f'{iqn} was not there')
+
+    # Read before saying anything about a missing target: whether one was
+    # there is only half the question. The list is a read, so looking now
+    # rather than after costs nothing.
+    found = service.backstores() if remove_backstores else None
+    ours = _our_backstores(library_id,
+                           (found.data or {}).get('backstores', [])) \
+        if found is not None and found.success else []
+
+    if not wanted:
+        # Two different situations that used to read the same.
+        #
+        # Nothing here at all is a clean no-op: unexport run twice, or a
+        # library that was never exported. Worth no more than a line.
+        #
+        # No target but backstores still named after this library is NOT that.
+        # It is a half-finished export, or a target deleted by hand, or - the
+        # case this plan exists for - an earlier unexport that looked under a
+        # generated name, missed, and removed the backstores anyway. The call
+        # still does its job, because removing them is what it is for, but it
+        # should say what it found rather than report a clean success.
+        if ours:
+            report.record(
+                'delete target', False,
+                f'no target exports library {library_id}, but '
+                f'{len(ours)} backstore(s) of its are still here: '
+                f'{", ".join(b.get("name", "?") for b in ours)}')
+        else:
+            report.record('delete target', True,
+                          f'{iqn} was not there' if iqn
+                          else f'nothing exports library {library_id}')
 
     removed = []
     if remove_backstores:
-        found = service.backstores()
-        ours = _our_backstores(library_id, (found.data or {}).get('backstores', [])) \
-            if found.success else []
         for backstore in ours:
             name = backstore.get('name')
             gone = service.delete_backstore(backstore.get('plugin') or 'pscsi', name)

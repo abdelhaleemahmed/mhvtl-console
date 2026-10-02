@@ -682,6 +682,12 @@ body.mhvtl-console {
     gap: 12px;
 }
 .mhvtl-console .operation-group { margin-bottom: 24px; }
+/* A group's heading sat on top of its buttons with the browser's default
+ * half-em under it, so "Tape Operations" read as part of the row above it as
+ * much as the row below. 12px matches the gap between the buttons themselves,
+ * and stays well under the 24px between groups - so a heading binds to the
+ * group it names rather than floating between two. */
+.mhvtl-console .operation-group h3 { margin: 0 0 12px; }
 
 /* Per-tile accents on the libraries dashboard, so a row of numbers is not
  * one undifferentiated colour. */
@@ -715,21 +721,85 @@ body.mhvtl-console {
 
 /* Media generations.
  *
- * The mount page colours a slot by the generation of the tape in it, which is
- * genuinely useful in a library holding several. The palette lived in that
- * page as two dozen fixed colours, so in a dark theme the slots were pastel
- * boxes on a navy grid. It is here now, built from the theme's own tokens,
- * and a theme that wants its own can override these six. */
-.mhvtl-console .slot-compact.lto-9,
-.mhvtl-console .lto-9 { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
-.mhvtl-console .slot-compact.lto-8,
-.mhvtl-console .lto-8 { background: var(--info-bg); border-color: var(--info); color: var(--alert-info-text, var(--text)); }
-.mhvtl-console .slot-compact.lto-7,
-.mhvtl-console .lto-7 { background: var(--ok-bg); border-color: var(--ok); color: var(--alert-ok-text); }
-.mhvtl-console .slot-compact.lto-6,
-.mhvtl-console .lto-6 { background: var(--warn-bg); border-color: var(--warn); color: var(--alert-warn-text); }
+ * The real LTO cartridge shell colours, tailored. WHICH generation is drawn in
+ * WHICH colour is decided once, in apps/libraries/services/tapes/palette.py,
+ * and rendered twice: here for a browser, and in mhvtl_cli/colour.py for a
+ * terminal. The service hands out a token - `lto-8` - and the class below is
+ * named after the token rather than the other way round.
+ *
+ * apps/libraries/tests/test_palette.py checks these values against that table,
+ * so the two cannot drift.
+ *
+ * WHY THEY ARE NOT THE SHELL COLOURS EXACTLY. The typical shell colour repeats
+ * on a five-generation cycle: LTO-6 and LTO-8 are both "Dark red", LTO-5 and
+ * LTO-9 are both "Green (dark)", and LTO-1, 2, 7 and 10 are all "Black".
+ * Library 10 holds LTO-8 AND LTO-6 cartridges, so that first collision is not
+ * hypothetical. Each generation keeps its real hue and is separated inside it
+ * by lightness - older darker, newer lighter.
+ *
+ * COLOUR IS A HINT, NEVER THE IDENTIFIER. Every tile and chip prints its
+ * generation as text beside the colour, which is what makes grading the four
+ * "black" generations honest rather than a lie, and what keeps the map usable
+ * for a colour-blind operator and on a printed page.
+ *
+ * These live here rather than in the theme blocks above so the palette is one
+ * thing to read. A theme wanting its own must override them after this point.
+ *
+ * What this replaces: five classes borrowing --ok/--warn/--bad/--info/--accent.
+ * That is a SEVERITY palette, which is why there were only five of it - and it
+ * left LTO-4 borrowing LTO-5's colour and LTO-10 drawn as "unknown". */
+:root,
+[data-theme="navy"],
+[data-theme="graphite"] {
+    --lto-1: #3f3f46;  --lto-1-ink: #fafafa;
+    --lto-2: #52525b;  --lto-2-ink: #fafafa;
+    --lto-3: #7e22ce;  --lto-3-ink: #fafafa;
+    --lto-4: #64748b;  --lto-4-ink: #fafafa;
+    --lto-5: #15803d;  --lto-5-ink: #fafafa;
+    --lto-6: #9f1239;  --lto-6-ink: #fafafa;
+    --lto-7: #a1a1aa;  --lto-7-ink: #18181b;
+    --lto-8: #e11d48;  --lto-8-ink: #fafafa;
+    --lto-9: #22c55e;  --lto-9-ink: #18181b;
+    --lto-10: #d4d4d8;  --lto-10-ink: #18181b;
+}
+
+[data-theme="daylight"],
+[data-theme="sepia"] {
+    --lto-1: #52525b;  --lto-1-ink: #fafafa;
+    --lto-2: #71717a;  --lto-2-ink: #fafafa;
+    --lto-3: #6b21a8;  --lto-3-ink: #fafafa;
+    --lto-4: #475569;  --lto-4-ink: #fafafa;
+    --lto-5: #166534;  --lto-5-ink: #fafafa;
+    --lto-6: #881337;  --lto-6-ink: #fafafa;
+    --lto-7: #3f3f46;  --lto-7-ink: #fafafa;
+    --lto-8: #be123c;  --lto-8-ink: #fafafa;
+    --lto-9: #15803d;  --lto-9-ink: #fafafa;
+    --lto-10: #27272a;  --lto-10-ink: #fafafa;
+}
+
+.mhvtl-console .slot-compact.lto-1,
+.mhvtl-console .lto-1 { background: var(--lto-1); border-color: var(--lto-1); color: var(--lto-1-ink); }
+.mhvtl-console .slot-compact.lto-2,
+.mhvtl-console .lto-2 { background: var(--lto-2); border-color: var(--lto-2); color: var(--lto-2-ink); }
+.mhvtl-console .slot-compact.lto-3,
+.mhvtl-console .lto-3 { background: var(--lto-3); border-color: var(--lto-3); color: var(--lto-3-ink); }
+.mhvtl-console .slot-compact.lto-4,
+.mhvtl-console .lto-4 { background: var(--lto-4); border-color: var(--lto-4); color: var(--lto-4-ink); }
 .mhvtl-console .slot-compact.lto-5,
-.mhvtl-console .lto-5 { background: var(--bad-bg); border-color: var(--bad); color: var(--alert-bad-text); }
+.mhvtl-console .lto-5 { background: var(--lto-5); border-color: var(--lto-5); color: var(--lto-5-ink); }
+.mhvtl-console .slot-compact.lto-6,
+.mhvtl-console .lto-6 { background: var(--lto-6); border-color: var(--lto-6); color: var(--lto-6-ink); }
+.mhvtl-console .slot-compact.lto-7,
+.mhvtl-console .lto-7 { background: var(--lto-7); border-color: var(--lto-7); color: var(--lto-7-ink); }
+.mhvtl-console .slot-compact.lto-8,
+.mhvtl-console .lto-8 { background: var(--lto-8); border-color: var(--lto-8); color: var(--lto-8-ink); }
+.mhvtl-console .slot-compact.lto-9,
+.mhvtl-console .lto-9 { background: var(--lto-9); border-color: var(--lto-9); color: var(--lto-9-ink); }
+.mhvtl-console .slot-compact.lto-10,
+.mhvtl-console .lto-10 { background: var(--lto-10); border-color: var(--lto-10); color: var(--lto-10-ink); }
+
+/* Media with no LTO generation at all - a T10000 or a 3592. Not a generation
+ * called "unknown", so it is given no colour rather than a wrong one. */
 .mhvtl-console .slot-compact.lto-unknown,
 .mhvtl-console .lto-unknown { background: var(--surface-deep); border-color: var(--border); color: var(--text-dim); }
 
@@ -858,6 +928,23 @@ body.mhvtl-console {
 .mhvtl-console .lto-chip {
     padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600;
     border: 1px solid transparent;
+}
+/* LTFS state on a tape tile. Three states, all drawn from theme tokens - no
+   literal colours, so the outstanding theme pass has nothing new to fix here.
+   A plain single-partition cartridge gets no chip at all: on most libraries
+   that is every tile. */
+.mhvtl-console .tape-chip {
+    padding: 0 6px; border-radius: 9px; font-size: 10px; font-weight: 600;
+    border: 1px solid transparent; white-space: nowrap;
+}
+.mhvtl-console .tape-chip.ltfs {
+    background: var(--ok-bg); color: var(--ok); border-color: var(--ok);
+}
+.mhvtl-console .tape-chip.ltfs-former {
+    background: var(--warn-bg); color: var(--warn); border-color: var(--warn);
+}
+.mhvtl-console .tape-chip.ltfs-unknown {
+    background: var(--info-bg); color: var(--info); border-color: var(--info);
 }
 .mhvtl-console .tape-bar {
     height: 10px; border-radius: 5px; overflow: hidden;

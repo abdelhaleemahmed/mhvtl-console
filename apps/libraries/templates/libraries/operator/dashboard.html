@@ -25,9 +25,32 @@
             <div class="operation-group">
                 <h3>Tape Operations</h3>
                 <div class="btn-grid">
-                    <a href="{% url 'libraries:mount_tape' %}" class="btn btn-success">Mount Tape</a>
-                    <a href="{% url 'libraries:unmount_tape' %}" class="btn btn-warning">Unmount Tape</a>
+                    {% comment %} One page, both directions - see guides/plan-mount-unmount.
+                       Two buttons to the same place said there were two jobs. {% endcomment %}
+                    <a href="{% url 'libraries:mount_tape' %}" class="btn btn-success">Mount / Unmount Tape</a>
                     <a href="{% url 'libraries:move_tape' %}" class="btn btn-secondary">Move Tape</a>
+                </div>
+            </div>
+
+            <!-- LTFS Operations -->
+            {% comment %}
+            Its own group. LTFS used to sit under Tape Operations, on the
+            grounds that it is mounting a cartridge one step further than the
+            robot does - true, but it undersold what is there. The LTFS page
+            reads drive and volume status, mounts and unmounts a filesystem,
+            checks one, provisions an LTFS-capable drive and creates media for
+            it. That is not one more tape operation; it is a set of them,
+            against a different thing - a filesystem rather than a robot.
+
+            The two "mounts" are the reason to keep them apart on the menu as
+            well as on the page: Tape Operations moves a cartridge into a
+            drive, LTFS Operations opens what is in the drive as a filesystem.
+            See guides/architecture, "Two different things are called mount".
+            {% endcomment %}
+            <div class="operation-group">
+                <h3>LTFS Operations</h3>
+                <div class="btn-grid">
+                    <a href="{% url 'libraries:ltfs' %}" class="btn btn-secondary">LTFS</a>
                 </div>
             </div>
 

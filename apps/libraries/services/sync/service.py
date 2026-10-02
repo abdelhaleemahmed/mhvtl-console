@@ -18,6 +18,8 @@ Rules for this layer:
 """
 import logging
 
+from typing import Dict
+
 from django.utils import timezone
 
 from apps.libraries.models import Library, LibraryBrand, LibraryModel, Drive
@@ -71,38 +73,9 @@ def sync_mhvtl_to_django(config_directory=None):
         if library_id in db_ids:
             continue
 
-        vendor = lib.get('vendor') or 'Unknown'
-        product = lib.get('product') or 'Unknown'
-        brand, _ = LibraryBrand.objects.get_or_create(
-            name=vendor.upper(),
-            defaults={'display_name': vendor}
-        )
-        model, _ = LibraryModel.objects.get_or_create(
-            brand=brand,
-            name=product,
-            defaults={'product_identification': product}
-        )
-
-        db_lib = Library.objects.create(
-            library_id=library_id,
-            channel=lib.get('channel') or 0,
-            target=lib.get('target') or 0,
-            lun=lib.get('lun') or 0,
-            brand=brand,
-            model=model,
-            vendor_identification=vendor,
-            product_identification=product,
-            unit_serial_number=lib.get('serial') or '',
-            naa=lib.get('naa'),
-            home_directory=lib.get('home_directory'),
-            discovery_status='discovered',
-            config_source='device.conf',
-            is_active=True,
-        )
-
+        db_lib = _create_library(library_id, lib)
         drives_count += _import_drives(db_lib, conf.drives_of(library_id))
         created_count += 1
-        logger.info('Created library %s: %s %s', library_id, vendor, product)
 
     # Bring existing rows back in line with what device.conf now says.
     # The slot counts come from library_contents, not device.conf, and they
@@ -149,6 +122,124 @@ def sync_mhvtl_to_django(config_directory=None):
         'total_db': Library.objects.filter(is_active=True).count(),
         'total_drives': Drive.objects.filter(is_active=True).count(),
     }
+
+
+def record_library(library_id: int, config_directory=None) -> Dict:
+    """Make the database row for ONE library match device.conf.
+
+    This is what an operation that just changed one library calls, and it is
+    deliberately scoped: it reads the whole file, because that is the only way
+    to know what the library is, but it writes only this library's row and this
+    library's drives.
+
+    sync_mhvtl_to_django() reconciles everything, and everything is the wrong
+    blast radius for "I just created library 60": it also deactivates every row
+    device.conf does not mention, which on a truncated or garbage-but-readable
+    file means every row at all - the parser does not raise, it returns a
+    smaller library list. A scoped write cannot do that, whatever state the file
+    is in.
+
+    Never raises. Returns a dict a caller can render as one step:
+
+        {'ok': bool, 'message': str, 'created': bool, 'drives': int}
+    """
+    library_id = int(library_id)
+    config = ConfigService(config_directory)
+    conf = config.device_conf()
+    if conf is None:
+        return {'ok': False, 'created': False, 'drives': 0,
+                'message': 'device.conf could not be read; the database was '
+                           'left as it is'}
+
+    declared = conf.libraries.get(library_id)
+    if declared is None:
+        return {'ok': False, 'created': False, 'drives': 0,
+                'message': f'device.conf does not declare library '
+                           f'{library_id}; the database was left as it is'}
+
+    db_lib = Library.objects.filter(library_id=library_id).first()
+    created = db_lib is None
+    if created:
+        db_lib = _create_library(library_id, declared)
+    else:
+        _refresh(db_lib, declared, config.library_contents(library_id))
+        if not db_lib.is_active:
+            db_lib.is_active = True
+            db_lib.save(update_fields=['is_active'])
+
+    drives_declared = conf.drives_of(library_id)
+    ids = list(drives_declared)
+    _import_drives(db_lib, drives_declared)
+    db_lib.drives.filter(drive_id__in=ids, is_active=False).update(is_active=True)
+    # A drive removed from device.conf is deactivated here, but only within this
+    # library - which is the whole point of the scope.
+    db_lib.drives.filter(is_active=True).exclude(drive_id__in=ids).update(is_active=False)
+
+    active = db_lib.drives.filter(is_active=True).count()
+    return {'ok': True, 'created': created, 'drives': active,
+            'message': f'Library {library_id} and its {active} drive'
+                       f'{"" if active == 1 else "s"} recorded in the database'}
+
+
+def forget_library(library_id: int) -> Dict:
+    """Deactivate one library's row and its drives, after a delete.
+
+    Deactivate and not delete: removing rows is the cleanup page's decision -
+    it asks first and has a dry run - and a row kept inactive is what lets a
+    recreated id be recognised rather than duplicated.
+    """
+    library_id = int(library_id)
+    db_lib = Library.objects.filter(library_id=library_id).first()
+    if db_lib is None:
+        return {'ok': True, 'drives': 0,
+                'message': f'No database row for library {library_id}'}
+
+    drives = db_lib.drives.filter(is_active=True).update(is_active=False)
+    if db_lib.is_active:
+        db_lib.is_active = False
+        db_lib.save(update_fields=['is_active'])
+    return {'ok': True, 'drives': drives,
+            'message': f'Library {library_id} marked inactive in the database'}
+
+
+def _create_library(library_id: int, declared) -> Library:
+    """The database row for a library device.conf declares and the DB lacks.
+
+    One copy of these fields, shared by the whole-configuration reconcile and
+    by record_library(): they used to exist only inside the reconcile's loop,
+    so a second caller would have had to repeat them.
+    """
+    vendor = declared.get('vendor') or 'Unknown'
+    product = declared.get('product') or 'Unknown'
+    brand, _ = LibraryBrand.objects.get_or_create(
+        name=vendor.upper(), defaults={'display_name': vendor})
+    model, _ = LibraryModel.objects.get_or_create(
+        brand=brand, name=product, defaults={'product_identification': product})
+
+    fields = dict(
+        library_id=library_id,
+        channel=declared.get('channel') or 0,
+        target=declared.get('target') or 0,
+        lun=declared.get('lun') or 0,
+        brand=brand,
+        model=model,
+        vendor_identification=vendor,
+        product_identification=product,
+        unit_serial_number=declared.get('serial') or '',
+        naa=declared.get('naa'),
+        discovery_status='discovered',
+        config_source='device.conf',
+        is_active=True,
+    )
+    # A stanza with no `Home directory:` line gives None here, and the column is
+    # NOT NULL - passing None overrides the field's default instead of falling
+    # back to it, so the row fails to insert. Omit it and let the model decide.
+    if declared.get('home_directory'):
+        fields['home_directory'] = declared['home_directory']
+
+    db_lib = Library.objects.create(**fields)
+    logger.info('Created library %s: %s %s', library_id, vendor, product)
+    return db_lib
 
 
 def _import_drives(db_lib, declared) -> int:
