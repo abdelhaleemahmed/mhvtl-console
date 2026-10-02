@@ -1,0 +1,46 @@
+# /etc/sudoers.d/ltfs
+#
+# Shipped by the ltfs-mhvtl-config package. Installing that package grants the
+# rights below to the mhvtl-gui service account; read this file first.
+#
+# Installing by hand instead:
+#     sudo install -o root -g root -m 0440 ltfs.sudoers /etc/sudoers.d/ltfs
+#     sudo visudo -c
+#
+# It mirrors /etc/sudoers.d/mhvtl-gui: the service account, named commands,
+# absolute paths, no wildcard on the binary itself.
+
+# LTFS lives in /usr/bin when it comes from the RPM and in /usr/local/bin when
+# it is a source install (./configure --prefix=/usr/local). /usr/local/bin is
+# not in this host's default secure_path (/sbin:/bin:/usr/sbin:/usr/bin), so
+# without this line `sudo ltfs` fails with "command not found" for a source
+# install while `sudo /usr/local/bin/ltfs` works. /usr/bin comes first, so an
+# installed RPM wins over a leftover source build.
+Defaults secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
+# Read-only: enumerate drives, check a volume's consistency. Both prefixes, so
+# the rules hold whether LTFS came from the RPM or from source.
+mhvtl-gui ALL=(ALL) NOPASSWD: /usr/bin/ltfs -o device_list, \
+    /usr/bin/ltfsck *, \
+    /usr/local/bin/ltfs -o device_list, \
+    /usr/local/bin/ltfsck *
+
+# Mount, and unmount. `ltfs` holds the drive for as long as the mount lives, so
+# whatever made the mount must be able to release it. The mount point is
+# restricted to the tree ltfs-mhvtl-config creates.
+mhvtl-gui ALL=(ALL) NOPASSWD: /usr/bin/ltfs *, \
+    /usr/local/bin/ltfs *, \
+    /bin/fusermount -u /var/lib/ltfs/mnt/*, \
+    /usr/bin/fusermount -u /var/lib/ltfs/mnt/*
+
+# The mount point itself: one directory per drive is created before a mount and
+# removed after the unmount, so a host does not collect one per drive per library
+# for ever. Both are scoped to the mount tree, and the service uses rmdir rather
+# than rm -rf - if anything is left in the directory it is not ours to delete.
+mhvtl-gui ALL=(ALL) NOPASSWD: /usr/bin/mkdir -p /var/lib/ltfs/mnt/*, \
+    /bin/rmdir /var/lib/ltfs/mnt/*, \
+    /usr/bin/rmdir /var/lib/ltfs/mnt/*
+
+# mkltfs is deliberately NOT granted, from either prefix. It partitions and
+# formats a cartridge and destroys everything on it; that stays a deliberate act
+# by a human with root.

@@ -10,6 +10,11 @@ TWO FILES, because two packages grant rights to the same account:
     packaging/rpm/mhvtl-gui.sudoers          mhvtl-gui itself
     packaging/ltfs-rpm/SOURCES/ltfs.sudoers  ltfs-mhvtl-config, for LTFS
 
+Both are in this repository. The second used to be read from a sibling tree
+outside it, which meant these tests passed on one machine and failed for
+everyone who cloned the repo - CI found that, three failures, after v3.0.0
+went out.
+
 A command granted in either is allowed on an installed host, so both are read
 here. Keeping them apart is deliberate: installing LTFS support is a separate
 decision from installing the console, and the LTFS rules are narrower than a
@@ -23,7 +28,7 @@ from django.test import SimpleTestCase
 
 GUI = Path(__file__).resolve().parents[3]
 SUDOERS = GUI / 'packaging' / 'rpm' / 'mhvtl-gui.sudoers'
-LTFS_SUDOERS = GUI.parent / 'packaging' / 'ltfs-rpm' / 'SOURCES' / 'ltfs.sudoers'
+LTFS_SUDOERS = GUI / 'packaging' / 'ltfs-rpm' / 'SOURCES' / 'ltfs.sudoers'
 SUDOERS_FILES = [path for path in (SUDOERS, LTFS_SUDOERS) if path.exists()]
 SOURCES = [p for p in (GUI / 'apps').rglob('*.py') if '/tests/' not in str(p)] + \
           [p for p in (GUI / 'mhvtl_cli').rglob('*.py') if '/tests/' not in str(p)]
