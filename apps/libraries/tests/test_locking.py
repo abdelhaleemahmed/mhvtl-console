@@ -13,7 +13,7 @@ import threading
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core import shell
 from apps.libraries.services.core.locking import FileLock, LockTimeout
@@ -22,7 +22,7 @@ from apps.libraries.services.core.locking import FileLock, LockTimeout
 class LockTests(TestCase):
 
     def setUp(self):
-        self.directory = Path(tempfile.mkdtemp())
+        self.directory = self.tmpdir()
         self.lock = self.directory / '.mhvtl-config.lock'
 
     def read_only_directory(self):

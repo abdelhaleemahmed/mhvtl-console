@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core import success_result
 from apps.libraries.services.drives import DriveInfo, DriveService
@@ -30,7 +30,7 @@ class DriveServiceTestCase(TestCase):
     """Gives each test its own copy of the configuration."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in CONFIG_FILES:
             shutil.copy(FIXTURES / name, self.config)
         self.service = DriveService(self.config)
@@ -67,7 +67,7 @@ class ListingTests(DriveServiceTestCase):
         self.assertIn('not found', result.message)
 
     def test_unreadable_config_is_reported(self):
-        service = DriveService(Path(tempfile.mkdtemp()))
+        service = DriveService(self.tmpdir())
         result = service.list()
         self.assertFalse(result.success)
         self.assertIn('Could not read', result.message)
@@ -341,7 +341,7 @@ class DaemonTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         shutil.copy(FIXTURES / 'library_contents.10', self.config)
         self.service = DriveService(self.config)
@@ -623,7 +623,7 @@ class SharedSampleTests(TestCase):
     def setUp(self):
         from apps.libraries.services.core import samples
         self.samples = samples
-        self.state = Path(tempfile.mkdtemp())
+        self.state = self.tmpdir()
         override = self.settings(MHVTL_GUI_STATE_DIR=str(self.state))
         override.enable()
         self.addCleanup(override.disable)

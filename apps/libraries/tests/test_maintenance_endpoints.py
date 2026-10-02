@@ -13,7 +13,8 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory
+from .base import TestCase
 
 from apps.libraries import ajax_views
 from apps.libraries.services.config.service import ConfigService
@@ -34,7 +35,7 @@ class RegenerateTests(TestCase):
     """`generate_device_conf --force` is not a maintenance action."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.service = ConfigService(self.config)
 
@@ -59,18 +60,18 @@ class RegenerateTests(TestCase):
             self.assertTrue((self.config / f'library_contents.{library_id}').exists())
 
     def test_a_failure_comes_back_as_a_result_not_an_exception(self):
-        result = ConfigService(tempfile.mkdtemp()).regenerate_library_contents(force=True)
+        result = ConfigService(self.tmpdir()).regenerate_library_contents(force=True)
         self.assertFalse(result.success)
         self.assertTrue(result.message)
 
 
 class ValidateTests(TestCase):
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10', 'library_contents.20',
                      'library_contents.30'):
             shutil.copy(FIXTURES / name, self.config)
-        self.media = tempfile.mkdtemp()
+        self.media = self.tmpdir()
 
     def check(self, config=None):
         return ajax_views._config_check(config or self.config, self.media)
@@ -101,7 +102,7 @@ class ValidateTests(TestCase):
         self.assertTrue(any('91' in issue for issue in issues))
 
     def test_an_unreadable_device_conf_is_an_issue(self):
-        valid, issues = self.check(Path(tempfile.mkdtemp()))
+        valid, issues = self.check(self.tmpdir())
         self.assertFalse(valid)
         self.assertTrue(issues)
 
@@ -131,7 +132,7 @@ class AvailabilityTests(TestCase):
     def test_a_missing_program_makes_it_unavailable(self):
         modules_patch, units_patch = self._state()
         with modules_patch, units_patch:
-            status = system.mhvtl_installation(bin_dir=tempfile.mkdtemp())
+            status = system.mhvtl_installation(bin_dir=self.tmpdir())
         self.assertFalse(status['available'])
         self.assertTrue(any('not installed' in e for e in status['errors']))
 
@@ -183,7 +184,7 @@ class PreviewTests(TestCase):
     """What create() would write, before anything is written."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
 
     def preview(self, spec):
@@ -256,7 +257,7 @@ class ExportSpecTests(TestCase):
         self.assertEqual(spec['serial'], 'SER40')
 
     def test_a_refused_create_comes_back_with_its_reasons(self):
-        config = Path(tempfile.mkdtemp())
+        config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', config)
         result = LibraryService(config).create({'library_id': 10, 'profile': 'IBM'},
                                                start_services=False)

@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.tapes import TapeService, ltfs_state, media
 
@@ -68,7 +68,7 @@ class LibraryGateTests(TestCase):
     """Gate 1: a library with no LTFS-capable drive reads nothing."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in CONFIG_FILES:
             shutil.copy(FIXTURES / name, self.config)
         self.service = TapeService(self.config)

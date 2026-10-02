@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.console import disk, metrics, units
 from apps.libraries.services.core.shell import CommandResult
@@ -101,7 +101,7 @@ class LibraryMetricsTests(TestCase):
     """The drive ids come from device.conf, not from a range."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         import shutil
         shutil.copy(FIXTURES / 'device.conf', self.config)
 
@@ -166,7 +166,7 @@ class LibraryMetricsTests(TestCase):
     def test_an_unreadable_device_conf_reports_no_drives_not_guessed_ones(self):
         active, is_ = self._active({'vtllibrary@10.service'})
         with active, is_:
-            found = metrics.for_library(10, config_dir=tempfile.mkdtemp())
+            found = metrics.for_library(10, config_dir=self.tmpdir())
 
         self.assertEqual((found.drives_online, found.drives_total), (0, 0))
 

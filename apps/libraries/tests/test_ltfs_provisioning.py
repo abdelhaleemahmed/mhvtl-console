@@ -13,7 +13,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.libraries import workflow as workflow_module
 from apps.libraries.services.libraries import add_ltfs_drive_workflow
@@ -30,7 +30,7 @@ CONFIG_FILES = [p.name for p in FIXTURES.iterdir() if p.is_file()]
 class LtfsDriveWorkflowTests(TestCase):
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in CONFIG_FILES:
             shutil.copy(FIXTURES / name, self.config)
 
@@ -216,7 +216,7 @@ class LtfsMediaWorkflowTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in CONFIG_FILES:
             shutil.copy(FIXTURES / name, self.config)
 
@@ -430,7 +430,7 @@ class LtfsProvisioningReadTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in CONFIG_FILES:
             shutil.copy(FIXTURES / name, self.config)
 
@@ -553,7 +553,7 @@ class DaemonGuardTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in CONFIG_FILES:
             shutil.copy(FIXTURES / name, self.config)
 

@@ -7,7 +7,7 @@ case - an empty list, and so every library deactivated - went unnoticed.
 import tempfile
 from pathlib import Path
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.models import Drive, Library, LibraryBrand, LibraryModel
 from apps.libraries.services.sync.service import (ConfigUnreadable, forget_library,
@@ -34,7 +34,7 @@ def drive(drive_id, library_id, slot, target, product='ULT3580-TD8'):
 class SyncServiceTest(TestCase):
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
 
     def sync(self, text):
         (self.config / 'device.conf').write_text('VERSION: 5\n\n' + text)
@@ -177,7 +177,7 @@ class RecordOneLibraryTest(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
 
     def write(self, text):
         (self.config / 'device.conf').write_text('VERSION: 5\n\n' + text)

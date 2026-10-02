@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.config import device_conf
 from apps.libraries.services.core.shell import CommandResult
@@ -132,7 +132,7 @@ class RemapTests(TestCase):
     def setUp(self):
         import shutil
         import tempfile
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.saved = (FIXTURES / 'targetcli-saveconfig.json').read_text()
         self.writes = []
@@ -208,7 +208,7 @@ class RemapTests(TestCase):
         """Without it nothing can be resolved, and target.service should not
         restore a file this could not check."""
         import tempfile
-        result = remap.remap(config_directory=tempfile.mkdtemp())
+        result = remap.remap(config_directory=self.tmpdir())
         self.assertFalse(result.success)
 
     def test_malformed_json_is_a_failure(self):

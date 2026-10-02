@@ -26,7 +26,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.config import device_conf, library_contents
 from apps.libraries.services.libraries import lifecycle, validation
@@ -95,11 +95,11 @@ def combinations():
 
 class MatrixTests(TestCase):
     def setUp(self):
-        self.base = Path(tempfile.mkdtemp())
+        self.base = self.tmpdir()
 
     def _fresh_config(self):
         """A scratch /etc/mhvtl holding the three real fixture libraries."""
-        directory = Path(tempfile.mkdtemp(dir=self.base))
+        directory = self.tmpdir(parent=self.base)
         for name in ('device.conf', 'library_contents.10',
                      'library_contents.20', 'library_contents.30'):
             shutil.copy(FIXTURES / name, directory)
@@ -183,7 +183,7 @@ class LimitTests(TestCase):
     """The layouts' limits are refused before anything is written."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
 
     def _validate(self, **spec):
@@ -253,7 +253,7 @@ class DefaultsTests(TestCase):
     def test_every_library_model_accepts_its_own_defaults(self):
         for (key, model) in sorted(EXPECTED_LAYOUT):
             with self.subTest(profile=key, model=model):
-                config = Path(tempfile.mkdtemp())
+                config = self.tmpdir()
                 shutil.copy(FIXTURES / 'device.conf', config)
                 drive = get_valid_drives_for_library(key, model)[0]
                 spec = {'profile': key, 'library_id': NEW_LIBRARY_ID,
@@ -287,7 +287,7 @@ class DefaultsTests(TestCase):
         self.assertLessEqual(filled['media_count'] + filled['empty_slots'], 30)
 
     def test_an_explicit_value_over_the_limit_is_still_refused(self):
-        config = Path(tempfile.mkdtemp())
+        config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', config)
         refused = validation.validate({'profile': 'OVERLAND', 'library_id': 40,
                                        'library_model': 'OVERLAND',
@@ -305,7 +305,7 @@ class NothingChosenTests(TestCase):
     def test_every_library_model_creates_with_nothing_chosen(self):
         for (key, model) in sorted(EXPECTED_LAYOUT):
             with self.subTest(profile=key, model=model):
-                config = Path(tempfile.mkdtemp())
+                config = self.tmpdir()
                 shutil.copy(FIXTURES / 'device.conf', config)
                 spec = {'profile': key, 'library_id': NEW_LIBRARY_ID,
                         'library_model': model}

@@ -13,7 +13,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.config import library_contents as contents_format
 from apps.libraries.services.core.shell import CommandResult
@@ -157,7 +157,7 @@ class CreateTests(TestCase):
     """The write path, against a scratch /etc/mhvtl."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         as_live(self, self.config)
         patch = mock.patch.object(lifecycle.units, 'start_library',
@@ -240,7 +240,7 @@ class CreateRollbackTests(TestCase):
     """A create that fails part way through must leave nothing behind."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.before = (self.config / 'device.conf').read_text()
         as_live(self, self.config)
@@ -276,7 +276,7 @@ class CreateRollbackTests(TestCase):
 
 class DeleteTests(TestCase):
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10', 'library_contents.20',
                      'library_contents.30'):
             shutil.copy(FIXTURES / name, self.config)
@@ -378,7 +378,7 @@ class DeleteTests(TestCase):
 
 class DeleteRollbackTests(TestCase):
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10'):
             shutil.copy(FIXTURES / name, self.config)
         self.before = (self.config / 'device.conf').read_text()
@@ -455,7 +455,7 @@ class UpdateTests(TestCase):
     """An update is a delete and a create, under one lock and one backup."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         shutil.copy(FIXTURES / 'library_contents.10', self.config)
 
@@ -522,7 +522,7 @@ class RecognitionTests(TestCase):
     """Three things have to agree before a library is really there."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         shutil.copy(FIXTURES / 'library_contents.10', self.config)
 
@@ -551,7 +551,7 @@ class NewHostTests(TestCase):
     """The first library on a host that has no device.conf at all."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         patch = mock.patch.object(lifecycle.units, 'start_library', return_value={})
         patch.start()
         self.addCleanup(patch.stop)
@@ -589,7 +589,7 @@ class DaemonsBelongToTheLiveDirectoryTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10'):
             shutil.copy(FIXTURES / name, self.config)
 
@@ -626,7 +626,7 @@ class EmptySlotTests(TestCase):
             ' Product identification: 03584L32\n')
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         self.addCleanup(shutil.rmtree, self.config, True)
         (self.config / 'device.conf').write_text(self.CONF)
         self.write(['Slot 1: E40001L8', 'Slot 2: E40002L8', 'Slot 3:'])

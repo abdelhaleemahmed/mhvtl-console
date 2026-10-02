@@ -17,7 +17,8 @@ from unittest import mock
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory
+from .base import TestCase
 
 from apps.libraries import tape_operations_views as views
 from apps.libraries.services.core.shell import CommandResult
@@ -45,11 +46,11 @@ def _request(method='get', data=None, body=None):
 class FixtureConfigMixin:
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10', 'library_contents.30'):
             shutil.copy(FIXTURES / name, self.config)
         self.status = mtx.parse((FIXTURES / 'mtx-status-lib10.txt').read_text())
-        self.media = Path(tempfile.mkdtemp())
+        self.media = self.tmpdir()
         override = self.settings(MHVTL_CONFIG_DIR=str(self.config),
                                  MHVTL_HOME_DIR=str(self.media))
         override.enable()

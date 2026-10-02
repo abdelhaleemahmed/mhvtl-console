@@ -12,7 +12,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core.shell import CommandResult
 from apps.libraries.services.libraries import orphans
@@ -41,7 +41,7 @@ def ok(stdout=''):
 
 class FindTests(TestCase):
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         (self.config / 'device.conf').write_text(DEVICE_CONF)
         (self.config / 'library_contents.10').write_text('VERSION: 2\n')
         (self.config / 'library_contents.90').write_text('VERSION: 2\n')
@@ -124,7 +124,7 @@ class FindTests(TestCase):
 
     def test_an_unreadable_device_conf_names_nothing_as_an_orphan(self):
         """Every library would look orphaned."""
-        empty = Path(tempfile.mkdtemp())
+        empty = self.tmpdir()
         (empty / 'library_contents.10').write_text('VERSION: 2\n')
 
         found = orphans.find(empty)
@@ -138,12 +138,12 @@ class FindTests(TestCase):
         self.assertIn('1 drives', result.message)
 
     def test_the_result_wrapper_fails_when_the_config_is_unreadable(self):
-        self.assertFalse(orphans.find_result(Path(tempfile.mkdtemp())).success)
+        self.assertFalse(orphans.find_result(self.tmpdir()).success)
 
 
 class CleanupTests(TestCase):
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         (self.config / 'device.conf').write_text(DEVICE_CONF)
         (self.config / 'library_contents.10').write_text('VERSION: 2\n')
         (self.config / 'library_contents.90').write_text('VERSION: 2\n')
@@ -216,7 +216,7 @@ class CleanupTests(TestCase):
 
     def test_an_unreadable_device_conf_cleans_nothing(self):
         """With no device.conf every library looks orphaned."""
-        empty = Path(tempfile.mkdtemp())
+        empty = self.tmpdir()
         (empty / 'library_contents.10').write_text('VERSION: 2\n')
 
         result = orphans.cleanup(config_directory=empty)

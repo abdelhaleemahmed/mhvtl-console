@@ -16,7 +16,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.scsi import lsscsi, mapping
 from apps.libraries.services.scsi.models import ScsiAddress, ScsiDevice
@@ -68,7 +68,7 @@ TAPES = [
 
 class DeviceMappingTests(TestCase):
     def setUp(self):
-        self.config = tempfile.mkdtemp()
+        self.config = self.tmpdir()
         Path(self.config, 'device.conf').write_text(DEVICE_CONF)
 
     def library(self, library_id, config=None):
@@ -124,7 +124,7 @@ class DeviceMappingTests(TestCase):
 
     def test_missing_device_conf_is_survivable(self):
         with self._with_devices():
-            self.assertIsNone(self.library(10, config=tempfile.mkdtemp()))
+            self.assertIsNone(self.library(10, config=self.tmpdir()))
 
 
 class ServicePathsFromSettingsTests(TestCase):

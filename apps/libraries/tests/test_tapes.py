@@ -13,7 +13,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core.shell import CommandResult
 from apps.libraries.services.tapes import TapeService, barcodes, media
@@ -105,7 +105,7 @@ class BarcodeSeriesTests(TestCase):
 
 class MediaPathTests(TestCase):
     def setUp(self):
-        self.root = Path(tempfile.mkdtemp())
+        self.root = self.tmpdir()
 
     def test_resolves_inside_the_media_directory(self):
         self.assertEqual(media.path_for('E01001L8', self.root),
@@ -127,7 +127,7 @@ class MediaUsageTests(TestCase):
     """Both media layouts, measured in one pass."""
 
     def setUp(self):
-        self.root = Path(tempfile.mkdtemp())
+        self.root = self.tmpdir()
 
     def _make(self, barcode, files):
         directory = self.root / barcode
@@ -274,11 +274,11 @@ class MediaUsageTests(TestCase):
 
 class TapeServiceTests(TestCase):
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10', 'library_contents.20',
                      'library_contents.30'):
             shutil.copy(FIXTURES / name, self.config)
-        self.media = Path(tempfile.mkdtemp())
+        self.media = self.tmpdir()
         self.service = TapeService(self.config, self.media)
 
     def contents(self, library_id=10):
@@ -387,7 +387,7 @@ class TapeServiceTests(TestCase):
         self.assertIn('not in library', result.message)
 
     def test_unreadable_library_is_reported(self):
-        service = TapeService(Path(tempfile.mkdtemp()), self.media)
+        service = TapeService(self.tmpdir(), self.media)
         self.assertFalse(service.list(10).success)
 
 
@@ -399,10 +399,10 @@ class LibraryMediaTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10', 'library_contents.30'):
             shutil.copy(FIXTURES / name, self.config)
-        self.service = TapeService(self.config, Path(tempfile.mkdtemp()))
+        self.service = TapeService(self.config, self.tmpdir())
 
     def test_what_library_10_takes(self):
         info = self.service.media_for_library(10)
@@ -587,10 +587,10 @@ class CreateMissingTests(TestCase):
     """Media files for barcodes library_contents lists but disk does not hold."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10'):
             shutil.copy(FIXTURES / name, self.config)
-        self.media = Path(tempfile.mkdtemp())
+        self.media = self.tmpdir()
         self.service = TapeService(self.config, self.media)
 
     def test_only_missing_tapes_are_made_with_their_own_density(self):
@@ -628,7 +628,7 @@ class CreatePageTests(TestCase):
 
         from apps.libraries import tape_operations_views as views
 
-        service = TapeService(FIXTURES, tempfile.mkdtemp())
+        service = TapeService(FIXTURES, self.tmpdir())
 
         request = RequestFactory().get('/')
         request.session = {'mhvtl_logged_in': True}
@@ -680,11 +680,11 @@ class AdoptTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10', 'library_contents.20',
                      'library_contents.30'):
             shutil.copy(FIXTURES / name, self.config)
-        self.media = Path(tempfile.mkdtemp())
+        self.media = self.tmpdir()
         self.service = TapeService(self.config, self.media)
         # An orphan on disk: files, but in no library_contents.
         self.orphan = self.media / 'E01099L8'

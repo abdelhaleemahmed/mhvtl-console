@@ -8,7 +8,8 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import Client, TestCase, override_settings
+from django.test import Client, override_settings
+from .base import TestCase
 from django.urls import reverse
 
 from apps.authentication.models import DEFAULT_PASSWORD
@@ -32,7 +33,7 @@ Slot 4:
 
 class MediaSummaryTests(TestCase):
     def _with_config(self, files):
-        tmp = tempfile.mkdtemp()
+        tmp = self.tmpdir()
         for name, content in files.items():
             Path(tmp, name).write_text(content)
         return tmp

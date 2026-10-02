@@ -13,7 +13,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core import ServiceResult, failure_result, success_result
 from apps.libraries.services.libraries import (LibraryInfo, LibraryService,
@@ -26,7 +26,7 @@ FIXTURES = Path(__file__).parent / 'fixtures'
 
 class LibraryListingTests(TestCase):
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10', 'library_contents.20',
                      'library_contents.30'):
             shutil.copy(FIXTURES / name, self.config)
@@ -69,7 +69,7 @@ class LibraryListingTests(TestCase):
         self.assertEqual(self.service.next_id().data['library_id'], 40)
 
     def test_unreadable_config_is_reported(self):
-        service = LibraryService(Path(tempfile.mkdtemp()))
+        service = LibraryService(self.tmpdir())
         result = service.list()
         self.assertFalse(result.success)
         self.assertIn('Could not read', result.message)
@@ -246,7 +246,7 @@ class ValidationTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.spec = {'library_id': 40, 'profile': 'IBM', 'product': '03584L32',
                      'drive_product': 'ULT3580-TD6', 'media_type': 'LTO6',
@@ -285,7 +285,7 @@ class ValidationTests(TestCase):
     def test_a_missing_device_conf_is_not_an_error(self):
         """The first library on a host is created before the file exists."""
         from apps.libraries.services.libraries import validation
-        result = validation.validate(self.spec, Path(tempfile.mkdtemp()))
+        result = validation.validate(self.spec, self.tmpdir())
         self.assertTrue(result.is_valid, result.errors)
 
 
@@ -338,7 +338,7 @@ class RegenerateContentsTests(TestCase):
 
     def setUp(self):
         from apps.libraries.services.config.service import ConfigService
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.service = ConfigService(self.config)
 
@@ -379,7 +379,7 @@ class RegenerateContentsTests(TestCase):
 
     def test_an_unreadable_device_conf_is_a_failure_not_an_empty_success(self):
         from apps.libraries.services.config.service import ConfigService
-        result = ConfigService(Path(tempfile.mkdtemp())).regenerate_library_contents()
+        result = ConfigService(self.tmpdir()).regenerate_library_contents()
         self.assertFalse(result.success)
 
 
@@ -392,10 +392,10 @@ class CreateMediaStepTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         for name in ('device.conf', 'library_contents.10'):
             shutil.copy(FIXTURES / name, self.config)
-        self.media_dir = Path(tempfile.mkdtemp())
+        self.media_dir = self.tmpdir()
 
     def test_the_step_creates_every_listed_tape(self):
         from apps.libraries.services.core.shell import CommandResult

@@ -12,7 +12,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core.shell import CommandResult
 from apps.libraries.services.verification import (StepResult,
@@ -34,7 +34,7 @@ def failed(stderr='no'):
 
 class DataGenerationTests(TestCase):
     def setUp(self):
-        self.dir = Path(tempfile.mkdtemp())
+        self.dir = self.tmpdir()
 
     def test_writes_the_requested_number_of_files(self):
         files = test_data.generate(self.dir, size_mb=2, file_count=4)
@@ -61,7 +61,7 @@ class DataGenerationTests(TestCase):
 
 class ChecksumTests(TestCase):
     def setUp(self):
-        self.dir = Path(tempfile.mkdtemp())
+        self.dir = self.tmpdir()
         test_data.generate(self.dir, size_mb=1, file_count=3)
 
     def test_checksums_every_file(self):
@@ -152,7 +152,7 @@ class TapeDeviceTests(TestCase):
             calls.append(argv[0])
             return ok()
 
-        target = Path(tempfile.mkdtemp())
+        target = self.tmpdir()
         with mock.patch.object(tape_io.shell, 'sudo', side_effect=sudo):
             tape_io.read_archive('/dev/nst0', target)
         self.assertEqual(calls[:2], ['mt', 'tar'])
@@ -166,7 +166,7 @@ class TapeDeviceTests(TestCase):
             return ok()
 
         with mock.patch.object(tape_io.shell, 'sudo', side_effect=sudo):
-            tape_io.read_archive('/dev/nst0', Path(tempfile.mkdtemp()))
+            tape_io.read_archive('/dev/nst0', self.tmpdir())
         self.assertIn('chown', calls)
 
     def test_a_failed_extract_does_not_chown(self):
@@ -174,19 +174,19 @@ class TapeDeviceTests(TestCase):
             return ok() if argv[0] == 'mt' else failed('not a tar archive')
 
         with mock.patch.object(tape_io.shell, 'sudo', side_effect=sudo) as sudo_mock:
-            result = tape_io.read_archive('/dev/nst0', Path(tempfile.mkdtemp()))
+            result = tape_io.read_archive('/dev/nst0', self.tmpdir())
         self.assertFalse(result.ok)
         self.assertNotIn('chown', [c[0][0][0] for c in sudo_mock.call_args_list])
 
     def test_the_extracted_root_is_the_directory_tar_created(self):
         """An extract into restore/ produces restore/source/; returning the
         wrapper would make every file look missing."""
-        target = Path(tempfile.mkdtemp())
+        target = self.tmpdir()
         (target / 'source').mkdir()
         self.assertEqual(tape_io.extracted_root(target), target / 'source')
 
     def test_an_unexpected_layout_falls_back_to_the_target(self):
-        target = Path(tempfile.mkdtemp())
+        target = self.tmpdir()
         (target / 'one').mkdir()
         (target / 'two').mkdir()
         self.assertEqual(tape_io.extracted_root(target), target)
@@ -197,7 +197,7 @@ class DriveNumberTests(TestCase):
 
     def setUp(self):
         import shutil
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
 
     def test_the_first_drive_of_a_library_is_mtx_drive_zero(self):
@@ -222,9 +222,9 @@ class StepOrderTests(TestCase):
 
     def setUp(self):
         import shutil
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
-        self.work = Path(tempfile.mkdtemp())
+        self.work = self.tmpdir()
 
         self.calls = []
         self.loaded = True              # what mtx says the drive holds
@@ -393,11 +393,11 @@ class MissingExtractTests(TestCase):
     def test_a_directory_that_does_not_exist_is_not_an_exception(self):
         """It should report every file missing, which is the truth, rather than
         raising inside the step and reporting the traceback instead."""
-        missing = Path(tempfile.mkdtemp()) / 'never-created'
+        missing = self.tmpdir() / 'never-created'
         self.assertEqual(tape_io.extracted_root(missing), missing)
 
     def test_an_empty_extract_verifies_as_all_missing(self):
-        empty = Path(tempfile.mkdtemp())
+        empty = self.tmpdir()
         verified, corrupted, missing = test_data.verify(
             empty, {'a.dat': {'sha256': 'x'}, 'b.dat': {'sha256': 'y'}})
         self.assertEqual(verified, [])

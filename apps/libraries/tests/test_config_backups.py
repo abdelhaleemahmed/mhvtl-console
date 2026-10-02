@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 from django.urls import reverse
 
 from apps.libraries.services.config import service as config_service
@@ -20,7 +20,7 @@ from apps.libraries.services.config.service import ConfigService
 class BackupListingTests(TestCase):
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         self.root = self.config / 'backups'
 
     def make(self, name, files=('device.conf',), size=10):
@@ -96,7 +96,7 @@ class BackupListingTests(TestCase):
 class RemoveBackupTests(TestCase):
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         self.root = self.config / 'backups'
         self.service = ConfigService(self.config)
 
@@ -128,7 +128,7 @@ class RemoveBackupTests(TestCase):
 class PruneBackupsTests(TestCase):
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         self.root = self.config / 'backups'
         self.service = ConfigService(self.config)
         for day in range(1, 11):
@@ -182,7 +182,7 @@ class NoExecuteBitTests(TestCase):
     """
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         self.root = self.config / 'backups'
         for day in (1, 2, 3):
             target = self.root / f'202603{day:02d}_010101'

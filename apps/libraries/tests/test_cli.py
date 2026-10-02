@@ -13,7 +13,7 @@ import json
 from contextlib import redirect_stderr, redirect_stdout
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core import failure_result, success_result
 from mhvtl_cli import main, output, privileges
@@ -879,7 +879,7 @@ class ConfigCommandTests(TestCase):
         from pathlib import Path
         from apps.libraries.services.config.service import ConfigService
 
-        base = Path(tempfile.mkdtemp())
+        base = self.tmpdir()
         (base / 'backups' / '20260917_101500').mkdir(parents=True)
         with mock.patch.object(privileges, 'can_write', return_value=True), \
              mock.patch.object(ConfigService, 'restore',

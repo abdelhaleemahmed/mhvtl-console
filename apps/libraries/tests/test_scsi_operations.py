@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
-from django.test import TestCase
+from .base import TestCase
 
 from apps.libraries.services.core.shell import CommandResult
 from apps.libraries.services.operations import OperationsService, mt, mtx, vtlcmd
@@ -79,7 +79,7 @@ class MappingTests(TestCase):
     """The mapping rule: match on the address, never on position."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.devices = lsscsi.parse(fixture('lsscsi-g.txt'))
 
@@ -206,7 +206,7 @@ class OperationsTests(TestCase):
     """mtx is faked: the point is the decisions, not the robot."""
 
     def setUp(self):
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.ops = OperationsService(self.config)
         self.status = mtx.parse(fixture('mtx-status-lib10.txt'))
@@ -445,7 +445,7 @@ class MountingTests(TestCase):
     def setUp(self):
         from apps.libraries.services.operations import mounting
         self.mounting = mounting
-        self.config = Path(tempfile.mkdtemp())
+        self.config = self.tmpdir()
         shutil.copy(FIXTURES / 'device.conf', self.config)
         self.status = mtx.parse(fixture('mtx-status-lib10.txt'))
         for patch in (mock.patch.object(mapping, 'device_for_library',
