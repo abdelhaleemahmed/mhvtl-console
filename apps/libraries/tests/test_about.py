@@ -55,6 +55,33 @@ class ProjectIdentityTests(SimpleTestCase):
         self.assertIn(f'Packager:       {expected}', spec)
         self.assertIn(f'License:        {mhvtl_system.__licence__}', spec)
 
+    def test_no_document_tells_people_to_install_a_stale_version(self):
+        """README.md said 2.1.1 through two releases.
+
+        It is the first thing anyone reads and the only published file that
+        carries a package filename, so a stale number there sends people to a
+        release that is not the latest. The same rot had reached five other
+        documents, each frozen at whichever version was current when it was
+        written: 1.0.0, 1.1.1, 1.2.0, 2.1.0, 2.1.1.
+        """
+        import re
+
+        filename = re.compile(r'mhvtl-gui-(\d+\.\d+\.\d+)')
+        wrong = []
+        for name in ('README.md', 'docs/INSTALL.md', 'docs/index.html',
+                     'docs/sphinx/guides/installation.rst',
+                     'docs/sphinx/guides/packaging.rst',
+                     'docs/sphinx/guides/releasing.rst',
+                     'docs/developer/working/releasing.rst'):
+            path = GUI / name
+            if not path.exists():
+                continue
+            for found in sorted(set(filename.findall(path.read_text()))):
+                if found != mhvtl_system.__version__:
+                    wrong.append(f'{name}: says mhvtl-gui-{found}, '
+                                 f'this is {mhvtl_system.__version__}')
+        self.assertEqual(wrong, [], '\n'.join(wrong))
+
     def test_the_check_would_notice_a_disagreement(self):
         """A test that cannot fail protects nothing."""
         self.assertNotEqual(mhvtl_system.__version__, '1.1.1')
