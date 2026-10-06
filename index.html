@@ -292,7 +292,15 @@ Library 50: 1 of 2 drive(s) hold a tape, 1 working
             <h2 class="reveal">Quick install</h2>
             <p class="sub reveal">The RPM from the latest release, on Rocky Linux, AlmaLinux or RHEL 9 with MHVTL 1.7+ installed.</p>
             <div class="install-row reveal">
-                <code id="cmd">sudo dnf install https://github.com/abdelhaleemahmed/mhvtl-console/releases/download/v2.1.1/mhvtl-gui-2.1.1-1.el9.noarch.rpm</code>
+                <!-- The fallback, shown when GitHub cannot be asked - offline, or
+                     rate-limited, which is 60 requests an hour per address for an
+                     unauthenticated caller and does happen. The script below
+                     replaces it with whatever the latest release actually is.
+                     This line said v2.1.1 across four releases because nothing
+                     checked it: test_no_document_tells_people_to_install_a_stale
+                     _version reads README.md, docs/INSTALL.md, docs/index.html and
+                     four guide pages, and this file is in none of those lists. -->
+                <code id="cmd">sudo dnf install https://github.com/abdelhaleemahmed/mhvtl-console/releases/download/v3.3.1/mhvtl-gui-3.3.1-1.el9.noarch.rpm</code>
                 <button class="copy-btn" id="copyBtn" type="button">Copy</button>
             </div>
             <p class="install-note reveal">Then open <code>http://your-server/</code> — the password is <code>mhvtl</code>; change it at <code>/auth/password/</code>.

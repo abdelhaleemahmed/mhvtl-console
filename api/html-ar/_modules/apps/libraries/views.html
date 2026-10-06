@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>apps.libraries.views &mdash; MHVTL GUI API Reference 3.1.0 — التوثيق العربي</title>
+  <title>apps.libraries.views &mdash; MHVTL Console API Reference 3.3.1 — التوثيق العربي</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/lang-switch.css?v=16e3750c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=39b55bc4"></script>
+      <script src="../../../_static/documentation_options.js?v=7e674b6f"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=87cb2081"></script>
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            MHVTL GUI API Reference
+            MHVTL Console API Reference
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -64,6 +64,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#paths"><code class="docutils literal notranslate"><span class="pre">paths</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.DAEMON_CONFIG_DIR_SETTING"><code class="docutils literal notranslate"><span class="pre">DAEMON_CONFIG_DIR_SETTING</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.LOCK_NAME"><code class="docutils literal notranslate"><span class="pre">LOCK_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.DEFAULT_GUI_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">DEFAULT_GUI_CONFIG_DIR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.config_dir"><code class="docutils literal notranslate"><span class="pre">config_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.daemon_config_dir"><code class="docutils literal notranslate"><span class="pre">daemon_config_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.home_dir"><code class="docutils literal notranslate"><span class="pre">home_dir()</span></code></a></li>
@@ -71,6 +72,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.library_contents_path"><code class="docutils literal notranslate"><span class="pre">library_contents_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.media_dir"><code class="docutils literal notranslate"><span class="pre">media_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.lock_path"><code class="docutils literal notranslate"><span class="pre">lock_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.presets_dir"><code class="docutils literal notranslate"><span class="pre">presets_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.presets_path"><code class="docutils literal notranslate"><span class="pre">presets_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.presets_example_path"><code class="docutils literal notranslate"><span class="pre">presets_example_path()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#results"><code class="docutils literal notranslate"><span class="pre">results</span></code></a><ul>
@@ -140,6 +144,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.next_library_id"><code class="docutils literal notranslate"><span class="pre">next_library_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.drive_ids"><code class="docutils literal notranslate"><span class="pre">drive_ids()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.free_targets"><code class="docutils literal notranslate"><span class="pre">free_targets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.free_drive_ids"><code class="docutils literal notranslate"><span class="pre">free_drive_ids()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.targets"><code class="docutils literal notranslate"><span class="pre">targets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.plan_library"><code class="docutils literal notranslate"><span class="pre">plan_library()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.empty_conf"><code class="docutils literal notranslate"><span class="pre">empty_conf()</span></code></a></li>
@@ -166,6 +171,23 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.library_contents.render_new"><code class="docutils literal notranslate"><span class="pre">render_new()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#presets"><code class="docutils literal notranslate"><span class="pre">presets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#text-in-data-out-no-file-i-o-here">TEXT IN, DATA OUT - NO FILE I/O HERE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#why-toml">WHY TOML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#the-keys-are-the-command-line-s">THE KEYS ARE THE COMMAND LINE'S</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.KEY_TO_SPEC"><code class="docutils literal notranslate"><span class="pre">KEY_TO_SPEC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.LIST_KEYS"><code class="docutils literal notranslate"><span class="pre">LIST_KEYS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.IMPLIED_BY_LIST"><code class="docutils literal notranslate"><span class="pre">IMPLIED_BY_LIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.PresetError"><code class="docutils literal notranslate"><span class="pre">PresetError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.savable"><code class="docutils literal notranslate"><span class="pre">savable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.FLAG_FOR"><code class="docutils literal notranslate"><span class="pre">FLAG_FOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.FLAG_FOR_LIST"><code class="docutils literal notranslate"><span class="pre">FLAG_FOR_LIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.as_words"><code class="docutils literal notranslate"><span class="pre">as_words()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.as_commands"><code class="docutils literal notranslate"><span class="pre">as_commands()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.render"><code class="docutils literal notranslate"><span class="pre">render()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#service"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.service.BACKUP_STAMP_FORMAT"><code class="docutils literal notranslate"><span class="pre">BACKUP_STAMP_FORMAT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.service.ConfigService"><code class="docutils literal notranslate"><span class="pre">ConfigService</span></code></a></li>
@@ -174,6 +196,24 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-profiles"><code class="docutils literal notranslate"><span class="pre">services.profiles</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#catalogue"><code class="docutils literal notranslate"><span class="pre">catalogue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-this-replaces">WHAT THIS REPLACES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#writes-is-not-loads">WRITES IS NOT LOADS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#on-order">ON ORDER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.UnknownProfile"><code class="docutils literal notranslate"><span class="pre">UnknownProfile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.writes"><code class="docutils literal notranslate"><span class="pre">writes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.default_density_for"><code class="docutils literal notranslate"><span class="pre">default_density_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.default_drive_for"><code class="docutils literal notranslate"><span class="pre">default_drive_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.form_lookups"><code class="docutils literal notranslate"><span class="pre">form_lookups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.names"><code class="docutils literal notranslate"><span class="pre">names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.summaries"><code class="docutils literal notranslate"><span class="pre">summaries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.media_family"><code class="docutils literal notranslate"><span class="pre">media_family()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.media_order"><code class="docutils literal notranslate"><span class="pre">media_order()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.densities_of"><code class="docutils literal notranslate"><span class="pre">densities_of()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#data"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#do-not-edit-a-profile-to-suit-another-tool">DO NOT EDIT A PROFILE TO SUIT ANOTHER TOOL</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.data.MEDIA_SUFFIX"><code class="docutils literal notranslate"><span class="pre">MEDIA_SUFFIX</span></code></a></li>
@@ -219,6 +259,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.MAX_LUN"><code class="docutils literal notranslate"><span class="pre">MAX_LUN</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.MAX_NAA_FIELD"><code class="docutils literal notranslate"><span class="pre">MAX_NAA_FIELD</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.VENDOR_ID_LEN"><code class="docutils literal notranslate"><span class="pre">VENDOR_ID_LEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.truncate_serial"><code class="docutils literal notranslate"><span class="pre">truncate_serial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.device_serial"><code class="docutils literal notranslate"><span class="pre">device_serial()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.LibraryLayout"><code class="docutils literal notranslate"><span class="pre">LibraryLayout</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.LAYOUTS"><code class="docutils literal notranslate"><span class="pre">LAYOUTS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.LIBRARY_SELECTOR"><code class="docutils literal notranslate"><span class="pre">LIBRARY_SELECTOR</span></code></a></li>
@@ -269,22 +312,55 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.orphans.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id1"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id1"><code class="docutils literal notranslate"><span class="pre">presets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#why-the-work-is-split-with-config-presets-py">WHY THE WORK IS SPLIT WITH config/presets.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-a-preset-is-as-data">WHAT A PRESET IS, AS DATA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#incomplete-is-a-legal-state">INCOMPLETE IS A LEGAL STATE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.LOCK_NAME"><code class="docutils literal notranslate"><span class="pre">LOCK_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.names"><code class="docutils literal notranslate"><span class="pre">names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.for_profile"><code class="docutils literal notranslate"><span class="pre">for_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.USABLE_NAME"><code class="docutils literal notranslate"><span class="pre">USABLE_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.rename"><code class="docutils literal notranslate"><span class="pre">rename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.forget"><code class="docutils literal notranslate"><span class="pre">forget()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id2"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.service.LibraryService"><code class="docutils literal notranslate"><span class="pre">LibraryService</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#setup-form"><code class="docutils literal notranslate"><span class="pre">setup_form</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#why-it-exists">WHY IT EXISTS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#nothing-here-is-a-new-rule">NOTHING HERE IS A NEW RULE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.setup_form.FALLBACK_LIBRARY_ID"><code class="docutils literal notranslate"><span class="pre">FALLBACK_LIBRARY_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.setup_form.state"><code class="docutils literal notranslate"><span class="pre">state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.setup_form.as_spec"><code class="docutils literal notranslate"><span class="pre">as_spec()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#spec"><code class="docutils literal notranslate"><span class="pre">spec</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.UnknownProfile"><code class="docutils literal notranslate"><span class="pre">UnknownProfile</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.profile_key_of"><code class="docutils literal notranslate"><span class="pre">profile_key_of()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.truncate_serial"><code class="docutils literal notranslate"><span class="pre">truncate_serial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.apply_defaults"><code class="docutils literal notranslate"><span class="pre">apply_defaults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_drive_runs"><code class="docutils literal notranslate"><span class="pre">asked_drive_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_media_runs"><code class="docutils literal notranslate"><span class="pre">asked_media_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_drive_models"><code class="docutils literal notranslate"><span class="pre">asked_drive_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_densities"><code class="docutils literal notranslate"><span class="pre">asked_densities()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_drive_count"><code class="docutils literal notranslate"><span class="pre">asked_drive_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_media_count"><code class="docutils literal notranslate"><span class="pre">asked_media_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.parse_runs"><code class="docutils literal notranslate"><span class="pre">parse_runs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.drive_ids"><code class="docutils literal notranslate"><span class="pre">drive_ids()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#validation"><code class="docutils literal notranslate"><span class="pre">validation</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.DEFAULT_NUM_DRIVES"><code class="docutils literal notranslate"><span class="pre">DEFAULT_NUM_DRIVES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.check_against_profile"><code class="docutils literal notranslate"><span class="pre">check_against_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.check_partial"><code class="docutils literal notranslate"><span class="pre">check_partial()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#workflow"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
@@ -299,11 +375,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-drives"><code class="docutils literal notranslate"><span class="pre">services.drives</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id2"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id3"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.drives.models.DriveInfo"><code class="docutils literal notranslate"><span class="pre">DriveInfo</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id3"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id4"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.drives.service.DEFAULT_VENDOR"><code class="docutils literal notranslate"><span class="pre">DEFAULT_VENDOR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.drives.service.DriveService"><code class="docutils literal notranslate"><span class="pre">DriveService</span></code></a></li>
 </ul>
@@ -383,7 +459,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.media.list_media"><code class="docutils literal notranslate"><span class="pre">list_media()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id4"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id5"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.models.TapeInfo"><code class="docutils literal notranslate"><span class="pre">TapeInfo</span></code></a></li>
 </ul>
 </li>
@@ -406,8 +482,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.palette.collisions"><code class="docutils literal notranslate"><span class="pre">collisions()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id5"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id6"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.CONTENTS_RE"><code class="docutils literal notranslate"><span class="pre">CONTENTS_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.UNKNOWN_SIZE_MB"><code class="docutils literal notranslate"><span class="pre">UNKNOWN_SIZE_MB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.native_size_mb"><code class="docutils literal notranslate"><span class="pre">native_size_mb()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.TapeService"><code class="docutils literal notranslate"><span class="pre">TapeService</span></code></a></li>
 </ul>
 </li>
@@ -439,7 +517,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.operations.mtx.inventory"><code class="docutils literal notranslate"><span class="pre">inventory()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id6"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id7"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.operations.service.OperationsService"><code class="docutils literal notranslate"><span class="pre">OperationsService</span></code></a></li>
 </ul>
 </li>
@@ -495,7 +573,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.mapping.map_all"><code class="docutils literal notranslate"><span class="pre">map_all()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id7"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id8"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.models.CHANGER"><code class="docutils literal notranslate"><span class="pre">CHANGER</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.models.ScsiAddress"><code class="docutils literal notranslate"><span class="pre">ScsiAddress</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.models.ScsiDevice"><code class="docutils literal notranslate"><span class="pre">ScsiDevice</span></code></a></li>
@@ -535,7 +613,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.modules.summary"><code class="docutils literal notranslate"><span class="pre">summary()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id8"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id9"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.service.ConsoleService"><code class="docutils literal notranslate"><span class="pre">ConsoleService</span></code></a></li>
 </ul>
 </li>
@@ -550,7 +628,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.system.mhvtl_installation"><code class="docutils literal notranslate"><span class="pre">mhvtl_installation()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id9"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id10"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.units.UnitState"><code class="docutils literal notranslate"><span class="pre">UnitState</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.units.MhvtlServiceStatus"><code class="docutils literal notranslate"><span class="pre">MhvtlServiceStatus</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.units.is_active"><code class="docutils literal notranslate"><span class="pre">is_active()</span></code></a></li>
@@ -620,7 +698,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.initiator.detach"><code class="docutils literal notranslate"><span class="pre">detach()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id10"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id11"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.models.IscsiBackstore"><code class="docutils literal notranslate"><span class="pre">IscsiBackstore</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.models.IscsiLun"><code class="docutils literal notranslate"><span class="pre">IscsiLun</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.models.IscsiAcl"><code class="docutils literal notranslate"><span class="pre">IscsiAcl</span></code></a></li>
@@ -654,7 +732,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.remap.remap"><code class="docutils literal notranslate"><span class="pre">remap()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id11"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id12"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.service.CONFIG_PATH"><code class="docutils literal notranslate"><span class="pre">CONFIG_PATH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.service.SERVICE_UNIT"><code class="docutils literal notranslate"><span class="pre">SERVICE_UNIT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.service.IscsiService"><code class="docutils literal notranslate"><span class="pre">IscsiService</span></code></a></li>
@@ -691,7 +769,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.targetcli.set_attribute"><code class="docutils literal notranslate"><span class="pre">set_attribute()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id12"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id13"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.workflow.ExportReport"><code class="docutils literal notranslate"><span class="pre">ExportReport</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.workflow.default_iqn"><code class="docutils literal notranslate"><span class="pre">default_iqn()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.workflow.export_library"><code class="docutils literal notranslate"><span class="pre">export_library()</span></code></a></li>
@@ -712,7 +790,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.ltfs.mounts.point_for"><code class="docutils literal notranslate"><span class="pre">point_for()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id13"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id14"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-this-does-not-keep">WHAT THIS DOES NOT KEEP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#the-destructive-one">THE DESTRUCTIVE ONE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.ltfs.service.MOUNT_ROOT"><code class="docutils literal notranslate"><span class="pre">MOUNT_ROOT</span></code></a></li>
@@ -733,7 +811,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-verification"><code class="docutils literal notranslate"><span class="pre">services.verification</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id14"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id15"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.CHUNK_BYTES"><code class="docutils literal notranslate"><span class="pre">CHUNK_BYTES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.MANIFEST_NAME"><code class="docutils literal notranslate"><span class="pre">MANIFEST_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.generate"><code class="docutils literal notranslate"><span class="pre">generate()</span></code></a></li>
@@ -742,12 +820,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.verify"><code class="docutils literal notranslate"><span class="pre">verify()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id15"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id16"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.models.StepResult"><code class="docutils literal notranslate"><span class="pre">StepResult</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.models.VerificationReport"><code class="docutils literal notranslate"><span class="pre">VerificationReport</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id16"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id17"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.service.VerificationService"><code class="docutils literal notranslate"><span class="pre">VerificationService</span></code></a></li>
 </ul>
 </li>
@@ -760,7 +838,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.tape_io.extracted_root"><code class="docutils literal notranslate"><span class="pre">extracted_root()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id17"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id18"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.workflow.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.workflow.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
 </ul>
@@ -768,7 +846,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-dashboard"><code class="docutils literal notranslate"><span class="pre">services.dashboard</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id18"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.dashboard.service.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.dashboard.service.get_dashboard_summary"><code class="docutils literal notranslate"><span class="pre">get_dashboard_summary()</span></code></a></li>
 </ul>
@@ -776,9 +854,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-about"><code class="docutils literal notranslate"><span class="pre">services.about</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-is-a-fact-about-the-project-and-what-is-a-fact-about-this-host">WHAT IS A FACT ABOUT THE PROJECT, AND WHAT IS A FACT ABOUT THIS HOST</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.running_from"><code class="docutils literal notranslate"><span class="pre">running_from()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.runtime"><code class="docutils literal notranslate"><span class="pre">runtime()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.facts"><code class="docutils literal notranslate"><span class="pre">facts()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.one_line"><code class="docutils literal notranslate"><span class="pre">one_line()</span></code></a></li>
@@ -787,8 +866,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.ConfigUnreadable"><code class="docutils literal notranslate"><span class="pre">ConfigUnreadable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id21"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.sync_mhvtl_to_django"><code class="docutils literal notranslate"><span class="pre">sync_mhvtl_to_django()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.record_library"><code class="docutils literal notranslate"><span class="pre">record_library()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.forget_library"><code class="docutils literal notranslate"><span class="pre">forget_library()</span></code></a></li>
@@ -991,6 +1069,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandSelectionView.post"><code class="docutils literal notranslate"><span class="pre">BrandSelectionView.post()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.setup_form_ajax"><code class="docutils literal notranslate"><span class="pre">setup_form_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandConfigView"><code class="docutils literal notranslate"><span class="pre">BrandConfigView</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandConfigView.template_name"><code class="docutils literal notranslate"><span class="pre">BrandConfigView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandConfigView.get"><code class="docutils literal notranslate"><span class="pre">BrandConfigView.get()</span></code></a></li>
@@ -1098,10 +1177,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.validate_config_ajax"><code class="docutils literal notranslate"><span class="pre">validate_config_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.preview_config_ajax"><code class="docutils literal notranslate"><span class="pre">preview_config_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.refresh_discovery_ajax"><code class="docutils literal notranslate"><span class="pre">refresh_discovery_ajax()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.run_discovery_ajax"><code class="docutils literal notranslate"><span class="pre">run_discovery_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.sync_library_ajax"><code class="docutils literal notranslate"><span class="pre">sync_library_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.cleanup_orphaned_ajax"><code class="docutils literal notranslate"><span class="pre">cleanup_orphaned_ajax()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.discovery_stats_ajax"><code class="docutils literal notranslate"><span class="pre">discovery_stats_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.get_library_status_with_lto_ajax"><code class="docutils literal notranslate"><span class="pre">get_library_status_with_lto_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.check_mount_compatibility_ajax"><code class="docutils literal notranslate"><span class="pre">check_mount_compatibility_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.get_drive_info_ajax"><code class="docutils literal notranslate"><span class="pre">get_drive_info_ajax()</span></code></a></li>
@@ -1212,6 +1289,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.library_activity"><code class="docutils literal notranslate"><span class="pre">library_activity()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.drive_placement_ajax"><code class="docutils literal notranslate"><span class="pre">drive_placement_ajax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.DRIVE_CHOICES"><code class="docutils literal notranslate"><span class="pre">DRIVE_CHOICES</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.AddDriveView"><code class="docutils literal notranslate"><span class="pre">AddDriveView</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.AddDriveView.template_name"><code class="docutils literal notranslate"><span class="pre">AddDriveView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.AddDriveView.get"><code class="docutils literal notranslate"><span class="pre">AddDriveView.get()</span></code></a></li>
@@ -1497,6 +1575,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../cli.html#main"><code class="docutils literal notranslate"><span class="pre">main</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.DEFAULT_SETTINGS"><code class="docutils literal notranslate"><span class="pre">DEFAULT_SETTINGS</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.SYSTEM_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">SYSTEM_CONFIG_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.COMMAND_MODULES"><code class="docutils literal notranslate"><span class="pre">COMMAND_MODULES</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.build_parser"><code class="docutils literal notranslate"><span class="pre">build_parser()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.setup_django"><code class="docutils literal notranslate"><span class="pre">setup_django()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
@@ -1532,6 +1611,45 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.privileges.require_write_access"><code class="docutils literal notranslate"><span class="pre">require_write_access()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.privileges.can_read_config"><code class="docutils literal notranslate"><span class="pre">can_read_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.privileges.require_read_access"><code class="docutils literal notranslate"><span class="pre">require_read_access()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#prompt"><code class="docutils literal notranslate"><span class="pre">prompt</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#why-the-prompts-go-to-stderr">WHY THE PROMPTS GO TO STDERR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#why-it-is-a-class">WHY IT IS A CLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#not-a-terminal-is-a-refusal-not-a-hang">NOT A TERMINAL IS A REFUSAL, NOT A HANG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Interrupted"><code class="docutils literal notranslate"><span class="pre">Interrupted</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.require_terminal"><code class="docutils literal notranslate"><span class="pre">require_terminal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt"><code class="docutils literal notranslate"><span class="pre">Prompt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.asked"><code class="docutils literal notranslate"><span class="pre">Prompt.asked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.say"><code class="docutils literal notranslate"><span class="pre">Prompt.say()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.ask"><code class="docutils literal notranslate"><span class="pre">Prompt.ask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.ask_int"><code class="docutils literal notranslate"><span class="pre">Prompt.ask_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.choose"><code class="docutils literal notranslate"><span class="pre">Prompt.choose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.confirm"><code class="docutils literal notranslate"><span class="pre">Prompt.confirm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.menu"><code class="docutils literal notranslate"><span class="pre">Prompt.menu()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#runs"><code class="docutils literal notranslate"><span class="pre">runs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#why-this-is-not-in-commands-library-py">WHY THIS IS NOT IN commands/library.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#a-count-and-a-list-are-two-answers-to-one-question">A COUNT AND A LIST ARE TWO ANSWERS TO ONE QUESTION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind"><code class="docutils literal notranslate"><span class="pre">Kind</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.flag"><code class="docutils literal notranslate"><span class="pre">Kind.flag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.metavar"><code class="docutils literal notranslate"><span class="pre">Kind.metavar</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.dest"><code class="docutils literal notranslate"><span class="pre">Kind.dest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.key"><code class="docutils literal notranslate"><span class="pre">Kind.key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.what"><code class="docutils literal notranslate"><span class="pre">Kind.what</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.singles"><code class="docutils literal notranslate"><span class="pre">Kind.singles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.example"><code class="docutils literal notranslate"><span class="pre">Kind.example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.KINDS"><code class="docutils literal notranslate"><span class="pre">KINDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Refused"><code class="docutils literal notranslate"><span class="pre">Refused</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.add_options"><code class="docutils literal notranslate"><span class="pre">add_options()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.collect"><code class="docutils literal notranslate"><span class="pre">collect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.one_answer_per_question"><code class="docutils literal notranslate"><span class="pre">one_answer_per_question()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../cli.html#config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a><ul>
@@ -1589,6 +1707,22 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.library.do_create"><code class="docutils literal notranslate"><span class="pre">do_create()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.library.do_slots"><code class="docutils literal notranslate"><span class="pre">do_slots()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.library.do_delete"><code class="docutils literal notranslate"><span class="pre">do_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#preset"><code class="docutils literal notranslate"><span class="pre">preset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_list"><code class="docutils literal notranslate"><span class="pre">do_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_show"><code class="docutils literal notranslate"><span class="pre">do_show()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_set"><code class="docutils literal notranslate"><span class="pre">do_set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_rename"><code class="docutils literal notranslate"><span class="pre">do_rename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_unset"><code class="docutils literal notranslate"><span class="pre">do_unset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_delete"><code class="docutils literal notranslate"><span class="pre">do_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#profile"><code class="docutils literal notranslate"><span class="pre">profile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.profile.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.profile.do_list"><code class="docutils literal notranslate"><span class="pre">do_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.profile.do_show"><code class="docutils literal notranslate"><span class="pre">do_show()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../cli.html#ltfs"><code class="docutils literal notranslate"><span class="pre">ltfs</span></code></a><ul>
@@ -1660,7 +1794,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">MHVTL GUI API Reference</a>
+          <a href="../../../index.html">MHVTL Console API Reference</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -1681,10 +1815,11 @@
   <h1>Source code for apps.libraries.views</h1><div class="highlight"><pre>
 <span></span><span class="c1"># apps/libraries/views.py - library pages, on apps/libraries/services</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlencode</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">Http404</span><span class="p">,</span> <span class="n">HttpResponse</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">Http404</span><span class="p">,</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">JsonResponse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
@@ -1710,9 +1845,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.drives</span><span class="w"> </span><span class="kn">import</span> <span class="n">DriveService</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.tapes</span><span class="w"> </span><span class="kn">import</span> <span class="n">TapeService</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">LibraryService</span><span class="p">,</span> <span class="n">lifecycle</span><span class="p">,</span> <span class="n">orphans</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">presets</span> <span class="k">as</span> <span class="n">library_presets</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">validation</span> <span class="k">as</span> <span class="n">library_validation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">personalities</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_profile</span><span class="p">,</span> <span class="n">get_profile_options</span><span class="p">,</span> <span class="n">MEDIA_SUFFIX</span>
+<span class="c1"># get_profile_options and MEDIA_SUFFIX were imported here to compose the setup</span>
+<span class="c1"># form's embedded JSON. libraries/setup_form composes the form now, and the</span>
+<span class="c1"># page renders it, so neither reaches this module any more.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_profile</span>
 
 <span class="c1"># Kept for the templates and branches that still test them; the services are</span>
 <span class="c1"># part of this app and always importable.</span>
@@ -1865,13 +2004,13 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">MHVTL_SERVICE_AVAILABLE</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_mhvtl_to_django</span>
-            <span class="n">stats</span> <span class="o">=</span> <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
-            <span class="n">synced</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'created'</span><span class="p">]</span> <span class="o">+</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'activated'</span><span class="p">]</span> <span class="o">+</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'deactivated'</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">synced</span><span class="p">,</span> <span class="kc">None</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_mhvtl_to_django</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">message</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'created'</span><span class="p">]</span> <span class="o">+</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'activated'</span><span class="p">]</span> <span class="o">+</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'deactivated'</span><span class="p">],</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="LibraryDashboardView.get">
 <a class="viewcode-back" href="../../../libraries.html#apps.libraries.views.LibraryDashboardView.get">[المستندات]</a>
@@ -2017,6 +2156,8 @@
             <span class="s1">'discovered_libraries'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">libraries</span><span class="p">),</span>
             <span class="s1">'created_libraries'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">libraries</span><span class="p">),</span>
             <span class="s1">'total_media'</span><span class="p">:</span> <span class="n">_tape_count</span><span class="p">(),</span>
+            <span class="c1"># And the strip, from the service, in the words the terminal uses.</span>
+            <span class="s1">'summary'</span><span class="p">:</span> <span class="n">_host_summary</span><span class="p">(),</span>
         <span class="p">})</span>
 
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -2027,40 +2168,75 @@
 <div class="viewcode-block" id="SetupChoiceView">
 <a class="viewcode-back" href="../../../libraries.html#apps.libraries.views.SetupChoiceView">[المستندات]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetupChoiceView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Setup workflow - choose between standard and custom setup"""</span>
+<span class="w">    </span><span class="sd">"""Setup workflow - choose between standard, custom, and a saved preset."""</span>
     <span class="n">template_name</span> <span class="o">=</span> <span class="s1">'libraries/setup_choice.html'</span>
-    
+
 <div class="viewcode-block" id="SetupChoiceView.get">
 <a class="viewcode-back" href="../../../libraries.html#apps.libraries.views.SetupChoiceView.get">[المستندات]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mhvtl_logged_in'</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'authentication:login'</span><span class="p">)</span>
-        
+
+        <span class="c1"># The same presets `mhvtl preset list` shows, because it is</span>
+        <span class="c1"># the same service call. Offered as a third way in only when there</span>
+        <span class="c1"># are some: a card listing nothing teaches nothing.</span>
+        <span class="n">saved</span> <span class="o">=</span> <span class="n">library_presets</span><span class="o">.</span><span class="n">names</span><span class="p">()</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Choose Setup Method'</span>
+            <span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Choose Setup Method'</span><span class="p">,</span>
+            <span class="s1">'presets'</span><span class="p">:</span> <span class="p">([</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">saved</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'presets'</span><span class="p">]</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">'complete'</span><span class="p">]]</span>
+                        <span class="k">if</span> <span class="n">saved</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="s1">'presets_path'</span><span class="p">:</span> <span class="n">saved</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'path'</span><span class="p">]</span> <span class="k">if</span> <span class="n">saved</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="s1">''</span><span class="p">,</span>
         <span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">saved</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">saved</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
-    
+
 <div class="viewcode-block" id="SetupChoiceView.post">
 <a class="viewcode-back" href="../../../libraries.html#apps.libraries.views.SetupChoiceView.post">[المستندات]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Handle setup choice form submission"""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mhvtl_logged_in'</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'authentication:login'</span><span class="p">)</span>
-        
+
         <span class="n">setup_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'setup_type'</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">setup_type</span> <span class="o">==</span> <span class="s1">'standard'</span><span class="p">:</span>
             <span class="c1"># Redirect to brand selection for standard setup</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:brand_selection'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">setup_type</span> <span class="o">==</span> <span class="s1">'custom'</span><span class="p">:</span>
             <span class="c1"># Redirect to custom setup</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:custom_setup'</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">setup_type</span> <span class="o">==</span> <span class="s1">'preset'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_preset</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">'Please select a setup method.'</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
-</div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_from_preset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""A saved configuration names its own vendor, so the catalogue step</span>
+<span class="sd">        is skipped: this opens that vendor's form with the preset applied.</span>
+
+<span class="sd">        The refusal is the service's, fixes included - the same words the</span>
+<span class="sd">        command line prints for the same preset.</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'preset'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">'Please choose a saved configuration.'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="n">resolved</span> <span class="o">=</span> <span class="n">library_presets</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resolved</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">resolved</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">fix</span> <span class="ow">in</span> <span class="n">resolved</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fix</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">resolved</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'spec'</span><span class="p">][</span><span class="s1">'profile'</span><span class="p">]</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">'libraries:brand_config'</span><span class="p">,</span>
+                      <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">'brand_name'</span><span class="p">:</span> <span class="n">profile</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">?</span><span class="si">{</span><span class="n">urlencode</span><span class="p">({</span><span class="s2">"preset"</span><span class="p">:</span><span class="w"> </span><span class="n">name</span><span class="p">})</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
 
 
 
@@ -2072,43 +2248,45 @@
 <span class="sd">    that table had grown case-duplicated pairs (Dell and DELL, Spectra and</span>
 <span class="sd">    SPECTRA, ...) and a TestVendor left by a test run, while a profile with no</span>
 <span class="sd">    row would not have appeared at all.</span>
-<span class="sd">    """</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">PROFILES</span><span class="p">,</span> <span class="n">personalities</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_valid_drives_for_library</span>
 
-    <span class="n">catalogue</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">PROFILES</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-        <span class="n">media</span><span class="p">,</span> <span class="n">drives</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(),</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">library_models</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">drive</span> <span class="ow">in</span> <span class="n">get_valid_drives_for_library</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-                <span class="n">drives</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">drive</span><span class="p">)</span>
-                <span class="n">media</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">drive_media_by_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">drive</span><span class="p">,</span> <span class="p">()))</span>
-        <span class="n">catalogue</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s1">'key'</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
-            <span class="s1">'display'</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">library_vendor</span><span class="p">,</span>
-            <span class="s1">'models'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">library_models</span><span class="p">),</span>
-            <span class="s1">'model_count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">library_models</span><span class="p">),</span>
-            <span class="s1">'drive_count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">drives</span><span class="p">),</span>
-            <span class="s1">'media'</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">media</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="p">(</span><span class="n">_media_family</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">m</span><span class="p">)),</span>
-            <span class="s1">'families'</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">_media_family</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">media</span><span class="p">}),</span>
-            <span class="s1">'newest_lto'</span><span class="p">:</span> <span class="n">_newest_lto</span><span class="p">(</span><span class="n">media</span><span class="p">),</span>
-            <span class="s1">'default_model'</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">library_product_default</span><span class="p">,</span>
-            <span class="s1">'layouts'</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">personalities</span><span class="o">.</span><span class="n">library_layout</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">library_vendor</span><span class="p">,</span>
-                                                            <span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">title</span>
-                               <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">library_models</span><span class="p">}),</span>
+<span class="sd">    Composed by services/profiles/catalogue, which is what `mhvtl profile</span>
+<span class="sd">    list` reads as well. This function walked the profile tables itself until</span>
+<span class="sd">    4 October 2026 - the same composition DriveService.models_for_profile was</span>
+<span class="sd">    doing for the terminal - and now adds only what these cards need on top:</span>
+<span class="sd">    the family grouping, the newest LTO generation, and the layout titles.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalogue</span> <span class="k">as</span> <span class="n">profiles_catalogue</span>
+
+    <span class="n">cards</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">profiles_catalogue</span><span class="o">.</span><span class="n">summaries</span><span class="p">():</span>
+        <span class="n">described</span> <span class="o">=</span> <span class="n">profiles_catalogue</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'profile'</span><span class="p">])</span>
+        <span class="n">densities</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'densities'</span><span class="p">]</span>
+        <span class="n">cards</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">'key'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'profile'</span><span class="p">],</span>
+            <span class="s1">'display'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'vendor'</span><span class="p">],</span>
+            <span class="s1">'models'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'library_models'</span><span class="p">],</span>
+            <span class="s1">'model_count'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'model_count'</span><span class="p">],</span>
+            <span class="s1">'drive_count'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'drive_count'</span><span class="p">],</span>
+            <span class="s1">'media'</span><span class="p">:</span> <span class="n">densities</span><span class="p">,</span>
+            <span class="s1">'families'</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">_media_family</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">densities</span><span class="p">}),</span>
+            <span class="s1">'newest_lto'</span><span class="p">:</span> <span class="n">_newest_lto</span><span class="p">(</span><span class="n">densities</span><span class="p">),</span>
+            <span class="s1">'default_model'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'default_model'</span><span class="p">],</span>
+            <span class="s1">'layouts'</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">model</span><span class="p">[</span><span class="s1">'layout'</span><span class="p">]</span> <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">described</span><span class="p">[</span><span class="s1">'models'</span><span class="p">]</span>
+                               <span class="k">if</span> <span class="n">model</span><span class="p">[</span><span class="s1">'layout'</span><span class="p">]}),</span>
         <span class="p">})</span>
-    <span class="k">return</span> <span class="n">catalogue</span>
+    <span class="k">return</span> <span class="n">cards</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_media_family</span><span class="p">(</span><span class="n">density</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""LTO, T10000, 9840, 9940, 3592, AIT, SDLT or DLT, for grouping."""</span>
-    <span class="k">for</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">family</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">'LTO'</span><span class="p">,</span> <span class="s1">'LTO'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'T10K'</span><span class="p">,</span> <span class="s1">'T10000'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'9840'</span><span class="p">,</span> <span class="s1">'9840'</span><span class="p">),</span>
-                           <span class="p">(</span><span class="s1">'9940'</span><span class="p">,</span> <span class="s1">'9940'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'AIT'</span><span class="p">,</span> <span class="s1">'AIT'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'SDLT'</span><span class="p">,</span> <span class="s1">'SDLT'</span><span class="p">),</span>
-                           <span class="p">(</span><span class="s1">'DLT'</span><span class="p">,</span> <span class="s1">'DLT'</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="n">density</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">family</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s1">'J1A'</span><span class="p">:</span> <span class="s1">'3592'</span><span class="p">,</span> <span class="s1">'E05'</span><span class="p">:</span> <span class="s1">'3592'</span><span class="p">,</span> <span class="s1">'E06'</span><span class="p">:</span> <span class="s1">'3592'</span><span class="p">,</span> <span class="s1">'E07'</span><span class="p">:</span> <span class="s1">'3592'</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="n">density</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Which family a density belongs to, for grouping the cards.</span>
+
+<span class="sd">    The rule is the service's - this page had its own copy until the terminal</span>
+<span class="sd">    needed the same grouping for `profile show`. Kept as a one-line wrapper</span>
+<span class="sd">    because the templates and the two views below read better for it.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalogue</span>
+
+    <span class="k">return</span> <span class="n">catalogue</span><span class="o">.</span><span class="n">media_family</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_newest_lto</span><span class="p">(</span><span class="n">media</span><span class="p">):</span>
@@ -2165,15 +2343,65 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_wanted_media</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">profile_options</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""The tape the operator asked for, when this vendor can take it.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_asked</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The choices a form state is composed from, out of GET or POST.</span>
 
-<span class="sd">    Comes from ?media= - the vendor page's filter links carry it - and is</span>
-<span class="sd">    ignored rather than refused when it is not one this vendor's drives load,</span>
-<span class="sd">    so a stale link opens the page instead of failing.</span>
+<span class="sd">    Each one is a dropdown the operator changed, except `wanted_media`, which</span>
+<span class="sd">    the vendor page's filter links also carry. setup_form.state ignores</span>
+<span class="sd">    anything this vendor cannot do rather than refusing it, so a stale link</span>
+<span class="sd">    opens the page.</span>
+
+<span class="sd">    One name per question, and ``wanted_media`` is the name worth explaining:</span>
+<span class="sd">    the filter was called ``media`` too, and a cartridge row is</span>
+<span class="sd">    ``media=LTO8:20``. QueryDict.get returns the LAST value, so the row</span>
+<span class="sd">    answered the filter - the wanted tape arrived as 'LTO8:20', no vendor</span>
+<span class="sd">    takes a density by that name, and choosing a tape at the top of the form</span>
+<span class="sd">    quietly stopped narrowing the drives below it. The vendor list keeps</span>
+<span class="sd">    ``?media=`` for its own filtering; it has no rows to collide with.</span>
 <span class="sd">    """</span>
-    <span class="n">wanted</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'media'</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">wanted</span> <span class="k">if</span> <span class="n">wanted</span> <span class="ow">in</span> <span class="n">profile_options</span><span class="p">[</span><span class="s1">'media_types'</span><span class="p">]</span> <span class="k">else</span> <span class="s1">''</span>
+    <span class="n">asked</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'wanted_media'</span><span class="p">:</span> <span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'wanted_media'</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="s1">'library_model'</span><span class="p">:</span> <span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'library_model'</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+        <span class="c1"># One row per kind, in the order the page has them, as MODEL:COUNT -</span>
+        <span class="c1"># the same spelling `--drive` takes, parsed by the same service</span>
+        <span class="c1"># (libraries.spec.parse_runs). getlist, because the rows repeat.</span>
+        <span class="s1">'drive_runs'</span><span class="p">:</span> <span class="p">[</span><span class="n">run</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">'drive'</span><span class="p">)</span> <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">strip</span><span class="p">()],</span>
+        <span class="s1">'media_runs'</span><span class="p">:</span> <span class="p">[</span><span class="n">run</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">'media'</span><span class="p">)</span> <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">strip</span><span class="p">()],</span>
+    <span class="p">}</span>
+    <span class="c1"># The empty slots are a single number and stay one. The drive and</span>
+    <span class="c1"># cartridge counts live in their rows now: they used to be sent on their</span>
+    <span class="c1"># own, which is why a preset holding two kinds lost its counts to the</span>
+    <span class="c1"># profile's defaults.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'empty_slots'</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="n">asked</span><span class="p">[</span><span class="s1">'empty_slots'</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">'empty_slots'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="c1"># "Add another kind": a word, because what a new row may hold is the</span>
+    <span class="c1"># catalogue's answer - whatever the rows above have not taken.</span>
+    <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'add'</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'drive'</span><span class="p">,</span> <span class="s1">'media'</span><span class="p">):</span>
+        <span class="n">asked</span><span class="p">[</span><span class="s1">'add'</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">'add'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">asked</span>
+
+
+<div class="viewcode-block" id="setup_form_ajax">
+<a class="viewcode-back" href="../../../libraries.html#apps.libraries.views.setup_form_ajax">[المستندات]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_form_ajax</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">brand_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The form after a change, rendered - the page swaps the parts in.</span>
+
+<span class="sd">    The same view and the same template as a fresh page, so a changed</span>
+<span class="sd">    dropdown, an added row and a freshly opened page are all answered by one</span>
+<span class="sd">    piece of code. It returned JSON until the rows arrived: with one choice</span>
+<span class="sd">    per question the script could map values onto fields, but a row carries</span>
+<span class="sd">    its own options, its own marks and its own sentence, and a script that</span>
+<span class="sd">    built those from JSON would be composing the page again - which is the</span>
+<span class="sd">    thing this form was rebuilt to stop.</span>
+
+<span class="sd">    It costs a whole page per change on a console served over a LAN, and</span>
+<span class="sd">    buys one template with nothing to keep in sync with a second one.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mhvtl_logged_in'</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">'success'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">'error'</span><span class="p">:</span> <span class="s1">'Not authenticated'</span><span class="p">},</span>
+                            <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">BrandConfigView</span><span class="o">.</span><span class="n">as_view</span><span class="p">()(</span><span class="n">request</span><span class="p">,</span> <span class="n">brand_name</span><span class="o">=</span><span class="n">brand_name</span><span class="p">)</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_tape_count</span><span class="p">():</span>
@@ -2192,31 +2420,65 @@
     <span class="k">return</span> <span class="n">total</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_sync_database</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Bring the database back in line with device.conf, and say so."""</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_mhvtl_to_django</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_host_summary</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""What this host holds, for the strip above a page's libraries.</span>
+
+<span class="sd">    ``LibraryService.summary`` reads device.conf and the contents files, and</span>
+<span class="sd">    ``mhvtl library list`` ends with the same sentence. None of it is</span>
+<span class="sd">    composed here: a view that did its own counting is what the panel this</span>
+<span class="sd">    replaces was - five numbers from context keys nobody set.</span>
+
+<span class="sd">    None when it cannot be read, because the partial shows nothing rather</span>
+<span class="sd">    than zeros. Zeros were the bug.</span>
+
+<span class="sd">    Whether MHVTL is running travels with the counts. It was a badge beside a</span>
+<span class="sd">    "System Overview" heading on the landing page, over three tiles that</span>
+<span class="sd">    said what this strip says - and it was on that one page only, while the</span>
+<span class="sd">    counts are on both.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">LibraryService</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">stats</span> <span class="o">=</span> <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># noqa: BLE001 - shown to the operator</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'syncing the database with device.conf: </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'The database was not updated: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">LibraryService</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>                       <span class="c1"># noqa: BLE001 - the page stands</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'reading the host summary'</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">'Database updated from device.conf'</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stats</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="n">_mhvtl_service_status</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="s1">'mhvtl_running'</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'running'</span><span class="p">)),</span>
+            <span class="s1">'mhvtl_known'</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'available'</span><span class="p">))}</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_free_targets</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""SCSI targets left on this host, or None when device.conf is unreadable.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sync_database</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Bring the database back in line with device.conf, and say so.</span>
 
-<span class="sd">    Each drive of a new library takes one, as does the library, so this -</span>
-<span class="sd">    not the model's element layout - is usually what limits the drive count.</span>
+<span class="sd">    A rendering of the service's answer, not a second copy of it: the sync</span>
+<span class="sd">    reports its own refusal now, where it used to raise and leave each of</span>
+<span class="sd">    nine callers to invent the handling.</span>
 <span class="sd">    """</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ids</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.config.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigService</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_mhvtl_to_django</span>
 
-    <span class="n">conf</span> <span class="o">=</span> <span class="n">ConfigService</span><span class="p">()</span><span class="o">.</span><span class="n">device_conf</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">ids</span><span class="o">.</span><span class="n">free_targets</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span> <span class="k">if</span> <span class="n">conf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'syncing the database with device.conf: </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span>
+                       <span class="n">result</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'The database was not updated: '</span>
+                                  <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Database updated from device.conf: '</span>
+                           <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
+
+
+<span class="c1">#: _free_targets() was here until 4 October 2026: it read device.conf and</span>
+<span class="c1">#: asked config/ids how many SCSI targets were left, so that the form could</span>
+<span class="c1">#: cap its drive count by the host rather than by the model's element layout.</span>
+<span class="c1">#: It was the best thing on the page and the terminal never had it, because a</span>
+<span class="c1">#: helper in views.py is reachable only from the web. It is</span>
+<span class="c1">#: libraries/setup_form._limits now, where `--interactive` asks it too.</span>
 
 
 <div class="viewcode-block" id="BrandConfigView">
@@ -2244,59 +2506,57 @@
         <span class="n">models</span> <span class="o">=</span> <span class="p">(</span><span class="n">LibraryModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">brand</span><span class="o">=</span><span class="n">brand</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                   <span class="k">if</span> <span class="n">brand</span><span class="o">.</span><span class="n">pk</span> <span class="k">else</span> <span class="p">[])</span>
 
-        <span class="c1"># Get next available library ID using the actual service method</span>
-        <span class="c1"># Default to 10 (first standard MHVTL library ID) if service unavailable</span>
-        <span class="n">next_id</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="k">if</span> <span class="n">MHVTL_SERVICE_AVAILABLE</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">next_id</span> <span class="o">=</span> <span class="n">_next_library_id</span><span class="p">()</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Could not determine next library ID: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-        <span class="c1"># Get profile for barcode prefix and cascading dropdown data</span>
-        <span class="n">default_barcode_prefix</span> <span class="o">=</span> <span class="s2">"L"</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">next_id</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># Fallback</span>
         <span class="n">profile_key</span> <span class="o">=</span> <span class="n">brand</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="n">profile_json</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span>  <span class="c1"># Fallback empty JSON</span>
-        <span class="n">default_media_count</span> <span class="o">=</span> <span class="n">default_empty_slots</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">profile</span> <span class="o">=</span> <span class="n">get_profile</span><span class="p">(</span><span class="n">profile_key</span><span class="p">)</span>
-            <span class="n">default_barcode_prefix</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">barcode_leading</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">next_id</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">"</span>
-            <span class="c1"># Get full profile options for cascading dropdowns</span>
-            <span class="n">profile_options</span> <span class="o">=</span> <span class="n">get_profile_options</span><span class="p">(</span><span class="n">profile_key</span><span class="p">)</span>
-            <span class="n">profile_options</span><span class="p">[</span><span class="s1">'media_suffixes'</span><span class="p">]</span> <span class="o">=</span> <span class="n">MEDIA_SUFFIX</span>
-            <span class="n">profile_options</span><span class="p">[</span><span class="s1">'free_targets'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_free_targets</span><span class="p">()</span>
-            <span class="c1"># "I want an LTO-10 library": the tape carries over from the vendor</span>
-            <span class="c1"># page's filter, and can be changed on this page. Choosing one</span>
-            <span class="c1"># leaves only the models and drives that take it.</span>
-            <span class="n">profile_options</span><span class="p">[</span><span class="s1">'media_labels'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">density</span><span class="p">:</span> <span class="n">personalities</span><span class="o">.</span><span class="n">media_label</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">density</span> <span class="ow">in</span> <span class="n">profile_options</span><span class="p">[</span><span class="s1">'media_types'</span><span class="p">]}</span>
-            <span class="n">profile_options</span><span class="p">[</span><span class="s1">'wanted_media'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_wanted_media</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">profile_options</span><span class="p">)</span>
-            <span class="n">profile_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">profile_options</span><span class="p">)</span>
-            <span class="c1"># The form's starting counts come from the profile, so the command</span>
-            <span class="c1"># line, the service and this page cannot disagree about them.</span>
-            <span class="n">default_media_count</span> <span class="o">=</span> <span class="n">profile_options</span><span class="p">[</span><span class="s1">'defaults'</span><span class="p">][</span><span class="s1">'media_count'</span><span class="p">]</span>
-            <span class="n">default_empty_slots</span> <span class="o">=</span> <span class="n">profile_options</span><span class="p">[</span><span class="s1">'defaults'</span><span class="p">][</span><span class="s1">'empty_slots'</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Could not load profile data: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="c1"># SCSI addressing - Channel is always 0, Target/LUN are auto-calculated during creation</span>
-        <span class="n">next_channel</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">next_target</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Will be auto-calculated by service based on available targets</span>
-        <span class="n">next_lun</span> <span class="o">=</span> <span class="mi">0</span>     <span class="c1"># Always 0 for MHVTL</span>
+        <span class="c1"># ?preset=NAME applies a saved configuration to this form. Resolved</span>
+        <span class="c1"># here, by the same call `mhvtl library create --preset NAME` makes,</span>
+        <span class="c1"># so the two cannot offer different things; the operator can still</span>
+        <span class="c1"># change every field before creating.</span>
+        <span class="n">chosen</span><span class="p">,</span> <span class="n">chosen_name</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'preset'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">chosen_name</span><span class="p">:</span>
+            <span class="n">resolved</span> <span class="o">=</span> <span class="n">library_presets</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">chosen_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resolved</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="n">chosen</span> <span class="o">=</span> <span class="n">resolved</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'spec'</span><span class="p">]</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+                              <span class="sa">f</span><span class="s2">"Starting from the saved configuration "</span>
+                              <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">chosen_name</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">resolved</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">fix</span> <span class="ow">in</span> <span class="n">resolved</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fix</span><span class="p">)</span>
+
+        <span class="c1"># The presets this vendor has, which is what makes them findable</span>
+        <span class="c1"># without reading the file.</span>
+        <span class="n">offered</span> <span class="o">=</span> <span class="n">library_presets</span><span class="o">.</span><span class="n">for_profile</span><span class="p">(</span><span class="n">profile_key</span><span class="p">)</span>
+
+        <span class="c1"># The whole form, decided by the service: every dropdown's options</span>
+        <span class="c1"># with the selected one marked, the counts, the limits this host can</span>
+        <span class="c1"># actually give it, the serial and barcode creation will write, and</span>
+        <span class="c1"># the sentences. This block used to compose a JSON profile for the</span>
+        <span class="c1"># page's script to narrow for itself - which is how the page came to</span>
+        <span class="c1"># filter on what a drive loads where the services mean what it writes,</span>
+        <span class="c1"># and to choose a half-height HH9 for LTO-9 where the services choose</span>
+        <span class="c1"># a TD9. See services/libraries/setup_form.</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_form</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">setup_form</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="n">profile_key</span><span class="p">,</span> <span class="n">preset</span><span class="o">=</span><span class="n">chosen</span><span class="p">,</span>
+                                 <span class="o">**</span><span class="n">_asked</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{}</span>
 
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">'brand'</span><span class="p">:</span> <span class="n">brand</span><span class="p">,</span>
             <span class="s1">'models'</span><span class="p">:</span> <span class="n">models</span><span class="p">,</span>
             <span class="s1">'profile_key'</span><span class="p">:</span> <span class="n">profile_key</span><span class="p">,</span>
-            <span class="s1">'profile_json'</span><span class="p">:</span> <span class="n">profile_json</span><span class="p">,</span>
-            <span class="s1">'next_library_id'</span><span class="p">:</span> <span class="n">next_id</span><span class="p">,</span>
-            <span class="s1">'next_channel'</span><span class="p">:</span> <span class="n">next_channel</span><span class="p">,</span>
-            <span class="s1">'next_target'</span><span class="p">:</span> <span class="n">next_target</span><span class="p">,</span>
-            <span class="s1">'next_lun'</span><span class="p">:</span> <span class="n">next_lun</span><span class="p">,</span>
-            <span class="s1">'default_barcode_prefix'</span><span class="p">:</span> <span class="n">default_barcode_prefix</span><span class="p">,</span>
-            <span class="s1">'default_media_count'</span><span class="p">:</span> <span class="n">default_media_count</span><span class="p">,</span>
-            <span class="s1">'default_empty_slots'</span><span class="p">:</span> <span class="n">default_empty_slots</span><span class="p">,</span>
+            <span class="s1">'form'</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+            <span class="s1">'next_library_id'</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'library_id'</span><span class="p">),</span>
+            <span class="c1"># Channel is always 0 and the target is allocated at write time</span>
+            <span class="c1"># against device.conf as it stands, so neither is asked for.</span>
+            <span class="s1">'next_channel'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">'next_lun'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">'presets'</span><span class="p">:</span> <span class="n">offered</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'presets'</span><span class="p">]</span> <span class="k">if</span> <span class="n">offered</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="p">[],</span>
+            <span class="s1">'preset_name'</span><span class="p">:</span> <span class="n">chosen_name</span> <span class="k">if</span> <span class="n">chosen</span> <span class="k">else</span> <span class="s1">''</span><span class="p">,</span>
             <span class="s1">'title'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'Configure </span><span class="si">{</span><span class="n">brand</span><span class="o">.</span><span class="n">display_name</span><span class="si">}</span><span class="s1"> Library'</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -2320,43 +2580,49 @@
             <span class="c1"># Get next available library ID using the actual service method</span>
             <span class="n">library_id</span> <span class="o">=</span> <span class="n">_next_library_id</span><span class="p">()</span>
 
-            <span class="c1"># Get form data - now using profile-based library_model instead of database model_id</span>
-            <span class="n">library_model</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'library_model'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
-            <span class="n">drive_model</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'drive_model'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
-            <span class="n">media_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'media_type'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
-            <span class="n">num_drives</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'num_drives'</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-            <span class="n">media_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'media_count'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
             <span class="n">barcode_prefix</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'barcode_prefix'</span><span class="p">,</span> <span class="s1">'E01'</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-            <span class="n">empty_slots</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'empty_slots'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
             <span class="n">map_count</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'map_count'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
 
-            <span class="c1"># Validate required fields</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">library_model</span><span class="p">:</span>
+            <span class="c1"># The specification is the one the form was SHOWING, built by the</span>
+            <span class="c1"># same service call that rendered it. The alternative - reading</span>
+            <span class="c1"># the posted fields a second time here - is a second reading of</span>
+            <span class="c1"># the same inputs, free to differ from what the operator saw;</span>
+            <span class="c1"># that is how four drives and fifty cartridges came out of a</span>
+            <span class="c1"># preset asking for four and thirty.</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_form</span>
+
+            <span class="n">shown</span> <span class="o">=</span> <span class="n">setup_form</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="n">profile_key</span><span class="p">,</span> <span class="n">library_id</span><span class="o">=</span><span class="n">library_id</span><span class="p">,</span>
+                                     <span class="o">**</span><span class="n">_asked</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">shown</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">shown</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:brand_config'</span><span class="p">,</span> <span class="n">brand_name</span><span class="o">=</span><span class="n">brand_name</span><span class="p">)</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">shown</span><span class="o">.</span><span class="n">data</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">form</span><span class="p">[</span><span class="s1">'library_model'</span><span class="p">][</span><span class="s1">'selected'</span><span class="p">]:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"❌ Please select a library model"</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:brand_config'</span><span class="p">,</span> <span class="n">brand_name</span><span class="o">=</span><span class="n">brand_name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">drive_model</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'selected'</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">form</span><span class="p">[</span><span class="s1">'drives'</span><span class="p">][</span><span class="s1">'rows'</span><span class="p">]):</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"❌ Please select a drive model"</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:brand_config'</span><span class="p">,</span> <span class="n">brand_name</span><span class="o">=</span><span class="n">brand_name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">media_type</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'selected'</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">form</span><span class="p">[</span><span class="s1">'media'</span><span class="p">][</span><span class="s1">'rows'</span><span class="p">]):</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"❌ Please select a media type"</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:brand_config'</span><span class="p">,</span> <span class="n">brand_name</span><span class="o">=</span><span class="n">brand_name</span><span class="p">)</span>
 
-            <span class="c1"># Prepare library data exactly as the service expects</span>
-            <span class="c1"># Now using library_model directly from profile instead of database</span>
             <span class="n">library_data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">'library_id'</span><span class="p">:</span> <span class="n">library_id</span><span class="p">,</span>
-                <span class="s1">'profile'</span><span class="p">:</span> <span class="n">profile_key</span><span class="p">,</span>  <span class="c1"># Profile key for vendor lookup</span>
-                <span class="s1">'library_model'</span><span class="p">:</span> <span class="n">library_model</span><span class="p">,</span>  <span class="c1"># For cascading validation</span>
-                <span class="s1">'product'</span><span class="p">:</span> <span class="n">library_model</span><span class="p">,</span>  <span class="c1"># Product identification (same as library_model)</span>
-                <span class="s1">'serial'</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'unit_serial_number'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'XYZZY_</span><span class="si">{</span><span class="n">library_id</span><span class="si">}</span><span class="s1">'</span><span class="p">),</span>
-                <span class="s1">'num_drives'</span><span class="p">:</span> <span class="n">num_drives</span><span class="p">,</span>
-                <span class="s1">'drive_model'</span><span class="p">:</span> <span class="n">drive_model</span><span class="p">,</span>  <span class="c1"># For cascading validation</span>
-                <span class="s1">'drive_product'</span><span class="p">:</span> <span class="n">drive_model</span><span class="p">,</span>  <span class="c1"># Service expects drive_product</span>
-                <span class="c1"># Media configuration for library_contents generation</span>
-                <span class="s1">'media_type'</span><span class="p">:</span> <span class="n">media_type</span><span class="p">,</span>
-                <span class="s1">'media_count'</span><span class="p">:</span> <span class="n">media_count</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">setup_form</span><span class="o">.</span><span class="n">as_spec</span><span class="p">(</span><span class="n">profile_key</span><span class="p">,</span> <span class="n">library_id</span><span class="p">,</span>
+                                     <span class="n">form</span><span class="p">[</span><span class="s1">'library_model'</span><span class="p">][</span><span class="s1">'selected'</span><span class="p">],</span>
+                                     <span class="n">form</span><span class="p">[</span><span class="s1">'drives'</span><span class="p">],</span> <span class="n">form</span><span class="p">[</span><span class="s1">'media'</span><span class="p">],</span>
+                                     <span class="n">form</span><span class="p">[</span><span class="s1">'counts'</span><span class="p">]),</span>
+                <span class="c1"># Only when the form sends one. An absent or empty field is a</span>
+                <span class="c1"># question for the service, which answers it the same way for</span>
+                <span class="c1"># the terminal (profiles.personalities.device_serial); the</span>
+                <span class="c1"># default here was `XYZZY_{library_id}` while the page's own</span>
+                <span class="c1"># script posted `library_id + 80000000`, so one form had two</span>
+                <span class="c1"># answers and neither was the service's.</span>
+                <span class="o">**</span><span class="p">({</span><span class="s1">'serial'</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">'unit_serial_number'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()}</span>
+                   <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'unit_serial_number'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                   <span class="k">else</span> <span class="p">{}),</span>
                 <span class="s1">'barcode_prefix'</span><span class="p">:</span> <span class="n">barcode_prefix</span><span class="p">,</span>
-                <span class="s1">'empty_slots'</span><span class="p">:</span> <span class="n">empty_slots</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="c1"># The form used to send num_maps: 4, a key nothing reads; with no</span>
             <span class="c1"># map_count the spec fits the profile default to the model.</span>
@@ -2389,12 +2655,42 @@
             <span class="c1"># be here, which is why a library created from the CLI was</span>
             <span class="c1"># configured, running, and invisible in every dropdown.</span>
 
+            <span class="bp">self</span><span class="o">.</span><span class="n">_keep_preset</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">library_data</span><span class="p">)</span>
+
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:dashboard'</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'❌ Unexpected error creating library: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">'libraries:brand_config'</span><span class="p">,</span> <span class="n">brand_name</span><span class="o">=</span><span class="n">brand_name</span><span class="p">)</span></div>
-</div>
+
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_keep_preset</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">library_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Save this configuration under a name, if one was asked for.</span>
+
+<span class="sd">        `--save-preset NAME` on the command line, a field on this form, one</span>
+<span class="sd">        service call either way: config.presets.savable decides what is kept</span>
+<span class="sd">        and libraries.presets.save writes it. Only reached after a successful</span>
+<span class="sd">        create, for the same reason the CLI only saves then - a preset that</span>
+<span class="sd">        recreates a failure is worse than no preset.</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'save_preset'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.config.presets</span><span class="w"> </span><span class="kn">import</span> <span class="n">savable</span>
+
+        <span class="n">kept</span> <span class="o">=</span> <span class="n">library_presets</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">savable</span><span class="p">(</span><span class="n">library_data</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">kept</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">kept</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">kept</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'warnings'</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">warning</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'The library was created, but the '</span>
+                                      <span class="sa">f</span><span class="s1">'preset was not saved: </span><span class="si">{</span><span class="n">kept</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">fix</span> <span class="ow">in</span> <span class="n">kept</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fix</span><span class="p">)</span></div>
 
 
 
@@ -2441,7 +2737,10 @@
                 <span class="s1">'library_id'</span><span class="p">:</span> <span class="n">library_id</span><span class="p">,</span>
                 <span class="s1">'vendor'</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'vendor'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
                 <span class="s1">'product'</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'product'</span><span class="p">,</span> <span class="s1">''</span><span class="p">),</span>
-                <span class="s1">'serial'</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'serial'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'XYZZY_</span><span class="si">{</span><span class="n">library_id</span><span class="si">}</span><span class="s1">'</span><span class="p">),</span>
+                <span class="c1"># As on the brand form: only what was given. The service</span>
+                <span class="c1"># answers an empty one, and the same way for both front ends.</span>
+                <span class="o">**</span><span class="p">({</span><span class="s1">'serial'</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">'serial'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()}</span>
+                   <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'serial'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="p">{}),</span>
                 <span class="s1">'num_drives'</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'num_drives'</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
             <span class="p">}</span>
 
@@ -2561,6 +2860,9 @@
 
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">'libraries'</span><span class="p">:</span> <span class="n">libraries</span><span class="p">,</span>
+            <span class="c1"># What the host holds, from the service that reads device.conf.</span>
+            <span class="c1"># The panel this replaces read the database and showed zeros.</span>
+            <span class="s1">'summary'</span><span class="p">:</span> <span class="n">_host_summary</span><span class="p">(),</span>
             <span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Library List'</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -2581,11 +2883,15 @@
     <span class="k">except</span> <span class="n">Library</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="k">pass</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_mhvtl_to_django</span>
-        <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>                                  <span class="c1"># noqa: BLE001 - falls through to 404</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'sync while opening library </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="n">library_id</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_mhvtl_to_django</span>
+
+    <span class="n">synced</span> <span class="o">=</span> <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">synced</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+        <span class="c1"># Falls through to the 404, which is the honest answer: the page was</span>
+        <span class="c1"># asked for a library the database does not have, and the one file</span>
+        <span class="c1"># that could say otherwise could not be read.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'sync while opening library </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="n">library_id</span><span class="p">,</span>
+                       <span class="n">synced</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Library</span><span class="p">,</span> <span class="n">library_id</span><span class="o">=</span><span class="n">library_id</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
@@ -3372,30 +3678,29 @@
 <span class="sd">        guides/architecture.rst. Deactivating rows device.conf does not declare</span>
 <span class="sd">        is what it is for, not a side effect to be guarded against.</span>
 <span class="sd">        """</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">ConfigUnreadable</span><span class="p">,</span>
-                                                          <span class="n">sync_mhvtl_to_django</span><span class="p">)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.sync.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_mhvtl_to_django</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">stats</span> <span class="o">=</span> <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">ConfigUnreadable</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="c1"># device.conf could not be READ - which is not the same as saying</span>
-            <span class="c1"># there are no libraries, and the sync refuses rather than emptying</span>
-            <span class="c1"># the database.</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Full scan refused: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-            <span class="k">return</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">sync_mhvtl_to_django</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>                       <span class="c1"># noqa: BLE001 - shown</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">'running a full scan'</span><span class="p">)</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Full scan failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="c1"># device.conf could not be READ - which is not the same as saying</span>
+            <span class="c1"># there are no libraries, and the sync refuses rather than</span>
+            <span class="c1"># emptying the database. A refusal, not a failure: it is reported</span>
+            <span class="c1"># rather than raised, so this is a branch and not an except.</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Full scan refused: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">detail</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">detail</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
 
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
-            <span class="n">request</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">'Full scan complete: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"libraries_found"</span><span class="p">]</span><span class="si">}</span><span class="s1"> library/libraries '</span>
-            <span class="sa">f</span><span class="s1">'in device.conf, </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"created"</span><span class="p">]</span><span class="si">}</span><span class="s1"> new, </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"updated"</span><span class="p">]</span><span class="si">}</span><span class="s1"> '</span>
-            <span class="sa">f</span><span class="s1">'corrected, </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"activated"</span><span class="p">]</span><span class="si">}</span><span class="s1"> reactivated, '</span>
-            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"deactivated"</span><span class="p">]</span><span class="si">}</span><span class="s1"> deactivated; </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"drives_imported"</span><span class="p">]</span><span class="si">}</span><span class="s1"> '</span>
-            <span class="sa">f</span><span class="s1">'drive(s) imported, </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"drives_activated"</span><span class="p">]</span><span class="si">}</span><span class="s1"> reactivated, '</span>
-            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"drives_deactivated"</span><span class="p">]</span><span class="si">}</span><span class="s1"> deactivated'</span><span class="p">)</span>
+        <span class="c1"># The sentence is the service's: this page, two AJAX endpoints and</span>
+        <span class="c1"># the command line each composed one from the same counts, and two of</span>
+        <span class="c1"># them said nearly the same thing in different words.</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Full scan complete: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
                       <span class="sa">f</span><span class="s1">'The database now holds </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"total_db"</span><span class="p">]</span><span class="si">}</span><span class="s1"> active '</span>
                       <span class="sa">f</span><span class="s1">'library/libraries and </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"total_drives"</span><span class="p">]</span><span class="si">}</span><span class="s1"> drive(s)'</span><span class="p">)</span>

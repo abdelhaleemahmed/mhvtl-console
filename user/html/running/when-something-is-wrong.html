@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>When something is wrong &mdash; MHVTL GUI User Guide 3.1.0</title>
+  <title>When something is wrong &mdash; MHVTL Console User Guide 3.3.1</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/lang-switch.css?v=16e3750c" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=dd1205ac"></script>
+      <script src="../_static/documentation_options.js?v=9ac01507"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/lang-switch.js?v=8f8661c5"></script>
@@ -33,7 +33,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            MHVTL GUI User Guide
+            MHVTL Console User Guide
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -228,7 +228,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">MHVTL GUI User Guide</a>
+          <a href="../index.html">MHVTL Console User Guide</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -394,29 +394,50 @@ reboot clears it.</p>
 looks exactly like a problem. Three places answer it, and all three read the
 same value:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>--version
-<span class="go">mhvtl-gui 3.1.0</span>
+<span class="go">mhvtl-console 3.3.1</span>
 <span class="go">Ahmed Abdelhaleem Ahmed &lt;ahmedhal@gmail.com&gt;</span>
 <span class="go">GPL-2.0-only</span>
 <span class="go">https://github.com/abdelhaleemahmed/mhvtl-console</span>
+<span class="go">running from /opt/mhvtl-gui</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">mhvtl</span> <span class="pre">status</span> <span class="pre">system</span></code> prints it above the rest of the host’s state, which
 makes it the one command to quote in a bug report:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>status<span class="w"> </span>system
-<span class="go">mhvtl-gui     3.1.0</span>
-<span class="go">reading       /etc/mhvtl/</span>
-<span class="go">mhvtl.target  running</span>
-<span class="go">enabled       yes</span>
-<span class="go">backend       mhvtl</span>
-<span class="go">libraries     7/7 running</span>
-<span class="go">drives        21/21 running</span>
-<span class="go">healthy       yes</span>
+<span class="go">mhvtl-console  3.3.1</span>
+<span class="go">running from   /opt/mhvtl-gui</span>
+<span class="go">reading        /etc/mhvtl</span>
+<span class="go">mhvtl.target   running</span>
+<span class="go">enabled        yes</span>
+<span class="go">backend        mhvtl</span>
+<span class="go">libraries      7/7 running</span>
+<span class="go">drives         21/21 running</span>
+<span class="go">healthy        yes</span>
 </pre></div>
 </div>
 <p>In the console it is <strong>About</strong>, in the header of every page. That page adds
 what the command line cannot easily show - the Python and Django versions,
 the kernel, and the host’s name - which is the rest of what a bug report
 needs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>The program is</strong> <code class="docutils literal notranslate"><span class="pre">mhvtl-console</span></code>; <strong>the package is</strong> <code class="docutils literal notranslate"><span class="pre">mhvtl-gui</span></code>.
+Both names are correct and they mean different things. <code class="docutils literal notranslate"><span class="pre">mhvtl-console</span></code>
+is the product, which is what the version line and the About page say.
+<code class="docutils literal notranslate"><span class="pre">mhvtl-gui</span></code> is the RPM, the directory <code class="docutils literal notranslate"><span class="pre">/opt/mhvtl-gui</span></code>, the account the
+service runs as, and the unit <code class="docutils literal notranslate"><span class="pre">mhvtl-gui.service</span></code> - so <code class="docutils literal notranslate"><span class="pre">rpm</span> <span class="pre">-q</span></code>,
+<code class="docutils literal notranslate"><span class="pre">systemctl</span></code> and the paths all keep the older name. It was renamed in
+3.3.0 because an unrelated, older interface to MHVTL is also called
+mhvtl-gui, and a bug report quoting a version could not say which program
+it was about.</p>
+</div>
+<p>The last line, <code class="docutils literal notranslate"><span class="pre">running</span> <span class="pre">from</span></code>, is which copy of the code answered. A host
+can carry two - the installed tree under <code class="docutils literal notranslate"><span class="pre">/opt/mhvtl-gui</span></code> and a developer’s
+checkout - and they print the same version, so one typed command can be two
+different programs. <code class="docutils literal notranslate"><span class="pre">sudo</span></code> always resolves <code class="docutils literal notranslate"><span class="pre">/usr/bin/mhvtl</span></code> and therefore
+the installed tree, because sudoers sets <code class="docutils literal notranslate"><span class="pre">secure_path</span></code>; plain <code class="docutils literal notranslate"><span class="pre">mhvtl</span></code> can
+be pointed elsewhere by <code class="docutils literal notranslate"><span class="pre">PATH</span></code>. If a command behaves unlike the
+documentation, read this line first.</p>
 <p>If the page and the command disagree, the service was upgraded and not
 restarted: the workers hold the code they started with. <code class="docutils literal notranslate"><span class="pre">systemctl</span> <span class="pre">restart</span>
 <span class="pre">mhvtl-gui</span></code> settles it. The packaged RPM restarts the service on an upgrade

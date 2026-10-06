@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mhvtl_cli.commands.library &mdash; MHVTL GUI API Reference 3.1.0 — التوثيق العربي</title>
+  <title>mhvtl_cli.commands.library &mdash; MHVTL Console API Reference 3.3.1 — التوثيق العربي</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/lang-switch.css?v=16e3750c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=39b55bc4"></script>
+      <script src="../../../_static/documentation_options.js?v=7e674b6f"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=87cb2081"></script>
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            MHVTL GUI API Reference
+            MHVTL Console API Reference
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -64,6 +64,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#paths"><code class="docutils literal notranslate"><span class="pre">paths</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.DAEMON_CONFIG_DIR_SETTING"><code class="docutils literal notranslate"><span class="pre">DAEMON_CONFIG_DIR_SETTING</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.LOCK_NAME"><code class="docutils literal notranslate"><span class="pre">LOCK_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.DEFAULT_GUI_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">DEFAULT_GUI_CONFIG_DIR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.config_dir"><code class="docutils literal notranslate"><span class="pre">config_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.daemon_config_dir"><code class="docutils literal notranslate"><span class="pre">daemon_config_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.home_dir"><code class="docutils literal notranslate"><span class="pre">home_dir()</span></code></a></li>
@@ -71,6 +72,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.library_contents_path"><code class="docutils literal notranslate"><span class="pre">library_contents_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.media_dir"><code class="docutils literal notranslate"><span class="pre">media_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.lock_path"><code class="docutils literal notranslate"><span class="pre">lock_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.presets_dir"><code class="docutils literal notranslate"><span class="pre">presets_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.presets_path"><code class="docutils literal notranslate"><span class="pre">presets_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.core.paths.presets_example_path"><code class="docutils literal notranslate"><span class="pre">presets_example_path()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#results"><code class="docutils literal notranslate"><span class="pre">results</span></code></a><ul>
@@ -140,6 +144,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.next_library_id"><code class="docutils literal notranslate"><span class="pre">next_library_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.drive_ids"><code class="docutils literal notranslate"><span class="pre">drive_ids()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.free_targets"><code class="docutils literal notranslate"><span class="pre">free_targets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.free_drive_ids"><code class="docutils literal notranslate"><span class="pre">free_drive_ids()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.targets"><code class="docutils literal notranslate"><span class="pre">targets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.plan_library"><code class="docutils literal notranslate"><span class="pre">plan_library()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.ids.empty_conf"><code class="docutils literal notranslate"><span class="pre">empty_conf()</span></code></a></li>
@@ -166,6 +171,23 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.library_contents.render_new"><code class="docutils literal notranslate"><span class="pre">render_new()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#presets"><code class="docutils literal notranslate"><span class="pre">presets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#text-in-data-out-no-file-i-o-here">TEXT IN, DATA OUT - NO FILE I/O HERE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#why-toml">WHY TOML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#the-keys-are-the-command-line-s">THE KEYS ARE THE COMMAND LINE'S</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.KEY_TO_SPEC"><code class="docutils literal notranslate"><span class="pre">KEY_TO_SPEC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.LIST_KEYS"><code class="docutils literal notranslate"><span class="pre">LIST_KEYS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.IMPLIED_BY_LIST"><code class="docutils literal notranslate"><span class="pre">IMPLIED_BY_LIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.PresetError"><code class="docutils literal notranslate"><span class="pre">PresetError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.savable"><code class="docutils literal notranslate"><span class="pre">savable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.FLAG_FOR"><code class="docutils literal notranslate"><span class="pre">FLAG_FOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.FLAG_FOR_LIST"><code class="docutils literal notranslate"><span class="pre">FLAG_FOR_LIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.as_words"><code class="docutils literal notranslate"><span class="pre">as_words()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.as_commands"><code class="docutils literal notranslate"><span class="pre">as_commands()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.presets.render"><code class="docutils literal notranslate"><span class="pre">render()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#service"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.service.BACKUP_STAMP_FORMAT"><code class="docutils literal notranslate"><span class="pre">BACKUP_STAMP_FORMAT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.config.service.ConfigService"><code class="docutils literal notranslate"><span class="pre">ConfigService</span></code></a></li>
@@ -174,6 +196,24 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-profiles"><code class="docutils literal notranslate"><span class="pre">services.profiles</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#catalogue"><code class="docutils literal notranslate"><span class="pre">catalogue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-this-replaces">WHAT THIS REPLACES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#writes-is-not-loads">WRITES IS NOT LOADS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#on-order">ON ORDER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.UnknownProfile"><code class="docutils literal notranslate"><span class="pre">UnknownProfile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.writes"><code class="docutils literal notranslate"><span class="pre">writes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.default_density_for"><code class="docutils literal notranslate"><span class="pre">default_density_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.default_drive_for"><code class="docutils literal notranslate"><span class="pre">default_drive_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.form_lookups"><code class="docutils literal notranslate"><span class="pre">form_lookups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.names"><code class="docutils literal notranslate"><span class="pre">names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.summaries"><code class="docutils literal notranslate"><span class="pre">summaries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.media_family"><code class="docutils literal notranslate"><span class="pre">media_family()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.media_order"><code class="docutils literal notranslate"><span class="pre">media_order()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.catalogue.densities_of"><code class="docutils literal notranslate"><span class="pre">densities_of()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#data"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#do-not-edit-a-profile-to-suit-another-tool">DO NOT EDIT A PROFILE TO SUIT ANOTHER TOOL</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.data.MEDIA_SUFFIX"><code class="docutils literal notranslate"><span class="pre">MEDIA_SUFFIX</span></code></a></li>
@@ -219,6 +259,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.MAX_LUN"><code class="docutils literal notranslate"><span class="pre">MAX_LUN</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.MAX_NAA_FIELD"><code class="docutils literal notranslate"><span class="pre">MAX_NAA_FIELD</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.VENDOR_ID_LEN"><code class="docutils literal notranslate"><span class="pre">VENDOR_ID_LEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.truncate_serial"><code class="docutils literal notranslate"><span class="pre">truncate_serial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.device_serial"><code class="docutils literal notranslate"><span class="pre">device_serial()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.LibraryLayout"><code class="docutils literal notranslate"><span class="pre">LibraryLayout</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.LAYOUTS"><code class="docutils literal notranslate"><span class="pre">LAYOUTS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.profiles.personalities.LIBRARY_SELECTOR"><code class="docutils literal notranslate"><span class="pre">LIBRARY_SELECTOR</span></code></a></li>
@@ -269,22 +312,55 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.orphans.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id1"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id1"><code class="docutils literal notranslate"><span class="pre">presets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#why-the-work-is-split-with-config-presets-py">WHY THE WORK IS SPLIT WITH config/presets.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-a-preset-is-as-data">WHAT A PRESET IS, AS DATA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#incomplete-is-a-legal-state">INCOMPLETE IS A LEGAL STATE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.LOCK_NAME"><code class="docutils literal notranslate"><span class="pre">LOCK_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.names"><code class="docutils literal notranslate"><span class="pre">names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.for_profile"><code class="docutils literal notranslate"><span class="pre">for_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.USABLE_NAME"><code class="docutils literal notranslate"><span class="pre">USABLE_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.rename"><code class="docutils literal notranslate"><span class="pre">rename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.presets.forget"><code class="docutils literal notranslate"><span class="pre">forget()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id2"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.service.LibraryService"><code class="docutils literal notranslate"><span class="pre">LibraryService</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#setup-form"><code class="docutils literal notranslate"><span class="pre">setup_form</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#why-it-exists">WHY IT EXISTS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#nothing-here-is-a-new-rule">NOTHING HERE IS A NEW RULE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.setup_form.FALLBACK_LIBRARY_ID"><code class="docutils literal notranslate"><span class="pre">FALLBACK_LIBRARY_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.setup_form.state"><code class="docutils literal notranslate"><span class="pre">state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.setup_form.as_spec"><code class="docutils literal notranslate"><span class="pre">as_spec()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#spec"><code class="docutils literal notranslate"><span class="pre">spec</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.UnknownProfile"><code class="docutils literal notranslate"><span class="pre">UnknownProfile</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.profile_key_of"><code class="docutils literal notranslate"><span class="pre">profile_key_of()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.truncate_serial"><code class="docutils literal notranslate"><span class="pre">truncate_serial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.apply_defaults"><code class="docutils literal notranslate"><span class="pre">apply_defaults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_drive_runs"><code class="docutils literal notranslate"><span class="pre">asked_drive_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_media_runs"><code class="docutils literal notranslate"><span class="pre">asked_media_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_drive_models"><code class="docutils literal notranslate"><span class="pre">asked_drive_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_densities"><code class="docutils literal notranslate"><span class="pre">asked_densities()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_drive_count"><code class="docutils literal notranslate"><span class="pre">asked_drive_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.asked_media_count"><code class="docutils literal notranslate"><span class="pre">asked_media_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.parse_runs"><code class="docutils literal notranslate"><span class="pre">parse_runs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.spec.drive_ids"><code class="docutils literal notranslate"><span class="pre">drive_ids()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#validation"><code class="docutils literal notranslate"><span class="pre">validation</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.DEFAULT_NUM_DRIVES"><code class="docutils literal notranslate"><span class="pre">DEFAULT_NUM_DRIVES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.check_against_profile"><code class="docutils literal notranslate"><span class="pre">check_against_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.libraries.validation.check_partial"><code class="docutils literal notranslate"><span class="pre">check_partial()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../services.html#workflow"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
@@ -299,11 +375,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-drives"><code class="docutils literal notranslate"><span class="pre">services.drives</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id2"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id3"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.drives.models.DriveInfo"><code class="docutils literal notranslate"><span class="pre">DriveInfo</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id3"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id4"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.drives.service.DEFAULT_VENDOR"><code class="docutils literal notranslate"><span class="pre">DEFAULT_VENDOR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.drives.service.DriveService"><code class="docutils literal notranslate"><span class="pre">DriveService</span></code></a></li>
 </ul>
@@ -383,7 +459,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.media.list_media"><code class="docutils literal notranslate"><span class="pre">list_media()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id4"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id5"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.models.TapeInfo"><code class="docutils literal notranslate"><span class="pre">TapeInfo</span></code></a></li>
 </ul>
 </li>
@@ -406,8 +482,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.palette.collisions"><code class="docutils literal notranslate"><span class="pre">collisions()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id5"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id6"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.CONTENTS_RE"><code class="docutils literal notranslate"><span class="pre">CONTENTS_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.UNKNOWN_SIZE_MB"><code class="docutils literal notranslate"><span class="pre">UNKNOWN_SIZE_MB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.native_size_mb"><code class="docutils literal notranslate"><span class="pre">native_size_mb()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.tapes.service.TapeService"><code class="docutils literal notranslate"><span class="pre">TapeService</span></code></a></li>
 </ul>
 </li>
@@ -439,7 +517,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.operations.mtx.inventory"><code class="docutils literal notranslate"><span class="pre">inventory()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id6"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id7"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.operations.service.OperationsService"><code class="docutils literal notranslate"><span class="pre">OperationsService</span></code></a></li>
 </ul>
 </li>
@@ -495,7 +573,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.mapping.map_all"><code class="docutils literal notranslate"><span class="pre">map_all()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id7"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id8"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.models.CHANGER"><code class="docutils literal notranslate"><span class="pre">CHANGER</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.models.ScsiAddress"><code class="docutils literal notranslate"><span class="pre">ScsiAddress</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.scsi.models.ScsiDevice"><code class="docutils literal notranslate"><span class="pre">ScsiDevice</span></code></a></li>
@@ -535,7 +613,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.modules.summary"><code class="docutils literal notranslate"><span class="pre">summary()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id8"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id9"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.service.ConsoleService"><code class="docutils literal notranslate"><span class="pre">ConsoleService</span></code></a></li>
 </ul>
 </li>
@@ -550,7 +628,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.system.mhvtl_installation"><code class="docutils literal notranslate"><span class="pre">mhvtl_installation()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id9"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id10"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.units.UnitState"><code class="docutils literal notranslate"><span class="pre">UnitState</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.units.MhvtlServiceStatus"><code class="docutils literal notranslate"><span class="pre">MhvtlServiceStatus</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.console.units.is_active"><code class="docutils literal notranslate"><span class="pre">is_active()</span></code></a></li>
@@ -620,7 +698,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.initiator.detach"><code class="docutils literal notranslate"><span class="pre">detach()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id10"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id11"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.models.IscsiBackstore"><code class="docutils literal notranslate"><span class="pre">IscsiBackstore</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.models.IscsiLun"><code class="docutils literal notranslate"><span class="pre">IscsiLun</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.models.IscsiAcl"><code class="docutils literal notranslate"><span class="pre">IscsiAcl</span></code></a></li>
@@ -654,7 +732,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.remap.remap"><code class="docutils literal notranslate"><span class="pre">remap()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id11"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id12"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.service.CONFIG_PATH"><code class="docutils literal notranslate"><span class="pre">CONFIG_PATH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.service.SERVICE_UNIT"><code class="docutils literal notranslate"><span class="pre">SERVICE_UNIT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.service.IscsiService"><code class="docutils literal notranslate"><span class="pre">IscsiService</span></code></a></li>
@@ -691,7 +769,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.targetcli.set_attribute"><code class="docutils literal notranslate"><span class="pre">set_attribute()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id12"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id13"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.workflow.ExportReport"><code class="docutils literal notranslate"><span class="pre">ExportReport</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.workflow.default_iqn"><code class="docutils literal notranslate"><span class="pre">default_iqn()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.iscsi.workflow.export_library"><code class="docutils literal notranslate"><span class="pre">export_library()</span></code></a></li>
@@ -712,7 +790,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.ltfs.mounts.point_for"><code class="docutils literal notranslate"><span class="pre">point_for()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id13"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id14"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-this-does-not-keep">WHAT THIS DOES NOT KEEP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#the-destructive-one">THE DESTRUCTIVE ONE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.ltfs.service.MOUNT_ROOT"><code class="docutils literal notranslate"><span class="pre">MOUNT_ROOT</span></code></a></li>
@@ -733,7 +811,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-verification"><code class="docutils literal notranslate"><span class="pre">services.verification</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id14"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id15"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.CHUNK_BYTES"><code class="docutils literal notranslate"><span class="pre">CHUNK_BYTES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.MANIFEST_NAME"><code class="docutils literal notranslate"><span class="pre">MANIFEST_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.generate"><code class="docutils literal notranslate"><span class="pre">generate()</span></code></a></li>
@@ -742,12 +820,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.data.verify"><code class="docutils literal notranslate"><span class="pre">verify()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id15"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id16"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.models.StepResult"><code class="docutils literal notranslate"><span class="pre">StepResult</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.models.VerificationReport"><code class="docutils literal notranslate"><span class="pre">VerificationReport</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id16"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id17"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.service.VerificationService"><code class="docutils literal notranslate"><span class="pre">VerificationService</span></code></a></li>
 </ul>
 </li>
@@ -760,7 +838,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.tape_io.extracted_root"><code class="docutils literal notranslate"><span class="pre">extracted_root()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id17"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id18"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.workflow.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.verification.workflow.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
 </ul>
@@ -768,7 +846,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-dashboard"><code class="docutils literal notranslate"><span class="pre">services.dashboard</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id18"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.dashboard.service.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.dashboard.service.get_dashboard_summary"><code class="docutils literal notranslate"><span class="pre">get_dashboard_summary()</span></code></a></li>
 </ul>
@@ -776,9 +854,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-about"><code class="docutils literal notranslate"><span class="pre">services.about</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#what-is-a-fact-about-the-project-and-what-is-a-fact-about-this-host">WHAT IS A FACT ABOUT THE PROJECT, AND WHAT IS A FACT ABOUT THIS HOST</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.running_from"><code class="docutils literal notranslate"><span class="pre">running_from()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.runtime"><code class="docutils literal notranslate"><span class="pre">runtime()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.facts"><code class="docutils literal notranslate"><span class="pre">facts()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.about.service.one_line"><code class="docutils literal notranslate"><span class="pre">one_line()</span></code></a></li>
@@ -787,8 +866,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.ConfigUnreadable"><code class="docutils literal notranslate"><span class="pre">ConfigUnreadable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../services.html#id21"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.sync_mhvtl_to_django"><code class="docutils literal notranslate"><span class="pre">sync_mhvtl_to_django()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.record_library"><code class="docutils literal notranslate"><span class="pre">record_library()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../services.html#apps.libraries.services.sync.service.forget_library"><code class="docutils literal notranslate"><span class="pre">forget_library()</span></code></a></li>
@@ -991,6 +1069,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandSelectionView.post"><code class="docutils literal notranslate"><span class="pre">BrandSelectionView.post()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.setup_form_ajax"><code class="docutils literal notranslate"><span class="pre">setup_form_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandConfigView"><code class="docutils literal notranslate"><span class="pre">BrandConfigView</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandConfigView.template_name"><code class="docutils literal notranslate"><span class="pre">BrandConfigView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.views.BrandConfigView.get"><code class="docutils literal notranslate"><span class="pre">BrandConfigView.get()</span></code></a></li>
@@ -1098,10 +1177,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.validate_config_ajax"><code class="docutils literal notranslate"><span class="pre">validate_config_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.preview_config_ajax"><code class="docutils literal notranslate"><span class="pre">preview_config_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.refresh_discovery_ajax"><code class="docutils literal notranslate"><span class="pre">refresh_discovery_ajax()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.run_discovery_ajax"><code class="docutils literal notranslate"><span class="pre">run_discovery_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.sync_library_ajax"><code class="docutils literal notranslate"><span class="pre">sync_library_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.cleanup_orphaned_ajax"><code class="docutils literal notranslate"><span class="pre">cleanup_orphaned_ajax()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.discovery_stats_ajax"><code class="docutils literal notranslate"><span class="pre">discovery_stats_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.get_library_status_with_lto_ajax"><code class="docutils literal notranslate"><span class="pre">get_library_status_with_lto_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.check_mount_compatibility_ajax"><code class="docutils literal notranslate"><span class="pre">check_mount_compatibility_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.ajax_views.get_drive_info_ajax"><code class="docutils literal notranslate"><span class="pre">get_drive_info_ajax()</span></code></a></li>
@@ -1212,6 +1289,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.library_activity"><code class="docutils literal notranslate"><span class="pre">library_activity()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.drive_placement_ajax"><code class="docutils literal notranslate"><span class="pre">drive_placement_ajax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.DRIVE_CHOICES"><code class="docutils literal notranslate"><span class="pre">DRIVE_CHOICES</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.AddDriveView"><code class="docutils literal notranslate"><span class="pre">AddDriveView</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.AddDriveView.template_name"><code class="docutils literal notranslate"><span class="pre">AddDriveView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../libraries.html#apps.libraries.tape_operations_views.AddDriveView.get"><code class="docutils literal notranslate"><span class="pre">AddDriveView.get()</span></code></a></li>
@@ -1497,6 +1575,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../cli.html#main"><code class="docutils literal notranslate"><span class="pre">main</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.DEFAULT_SETTINGS"><code class="docutils literal notranslate"><span class="pre">DEFAULT_SETTINGS</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.SYSTEM_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">SYSTEM_CONFIG_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.COMMAND_MODULES"><code class="docutils literal notranslate"><span class="pre">COMMAND_MODULES</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.build_parser"><code class="docutils literal notranslate"><span class="pre">build_parser()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.setup_django"><code class="docutils literal notranslate"><span class="pre">setup_django()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
@@ -1532,6 +1611,45 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.privileges.require_write_access"><code class="docutils literal notranslate"><span class="pre">require_write_access()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.privileges.can_read_config"><code class="docutils literal notranslate"><span class="pre">can_read_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.privileges.require_read_access"><code class="docutils literal notranslate"><span class="pre">require_read_access()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#prompt"><code class="docutils literal notranslate"><span class="pre">prompt</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#why-the-prompts-go-to-stderr">WHY THE PROMPTS GO TO STDERR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#why-it-is-a-class">WHY IT IS A CLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#not-a-terminal-is-a-refusal-not-a-hang">NOT A TERMINAL IS A REFUSAL, NOT A HANG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Interrupted"><code class="docutils literal notranslate"><span class="pre">Interrupted</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.require_terminal"><code class="docutils literal notranslate"><span class="pre">require_terminal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt"><code class="docutils literal notranslate"><span class="pre">Prompt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.asked"><code class="docutils literal notranslate"><span class="pre">Prompt.asked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.say"><code class="docutils literal notranslate"><span class="pre">Prompt.say()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.ask"><code class="docutils literal notranslate"><span class="pre">Prompt.ask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.ask_int"><code class="docutils literal notranslate"><span class="pre">Prompt.ask_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.choose"><code class="docutils literal notranslate"><span class="pre">Prompt.choose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.confirm"><code class="docutils literal notranslate"><span class="pre">Prompt.confirm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.prompt.Prompt.menu"><code class="docutils literal notranslate"><span class="pre">Prompt.menu()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#runs"><code class="docutils literal notranslate"><span class="pre">runs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#why-this-is-not-in-commands-library-py">WHY THIS IS NOT IN commands/library.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#a-count-and-a-list-are-two-answers-to-one-question">A COUNT AND A LIST ARE TWO ANSWERS TO ONE QUESTION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind"><code class="docutils literal notranslate"><span class="pre">Kind</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.flag"><code class="docutils literal notranslate"><span class="pre">Kind.flag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.metavar"><code class="docutils literal notranslate"><span class="pre">Kind.metavar</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.dest"><code class="docutils literal notranslate"><span class="pre">Kind.dest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.key"><code class="docutils literal notranslate"><span class="pre">Kind.key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.what"><code class="docutils literal notranslate"><span class="pre">Kind.what</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.singles"><code class="docutils literal notranslate"><span class="pre">Kind.singles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Kind.example"><code class="docutils literal notranslate"><span class="pre">Kind.example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.KINDS"><code class="docutils literal notranslate"><span class="pre">KINDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.Refused"><code class="docutils literal notranslate"><span class="pre">Refused</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.add_options"><code class="docutils literal notranslate"><span class="pre">add_options()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.collect"><code class="docutils literal notranslate"><span class="pre">collect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.runs.one_answer_per_question"><code class="docutils literal notranslate"><span class="pre">one_answer_per_question()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../cli.html#config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a><ul>
@@ -1589,6 +1707,22 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.library.do_create"><code class="docutils literal notranslate"><span class="pre">do_create()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.library.do_slots"><code class="docutils literal notranslate"><span class="pre">do_slots()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.library.do_delete"><code class="docutils literal notranslate"><span class="pre">do_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#preset"><code class="docutils literal notranslate"><span class="pre">preset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_list"><code class="docutils literal notranslate"><span class="pre">do_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_show"><code class="docutils literal notranslate"><span class="pre">do_show()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_set"><code class="docutils literal notranslate"><span class="pre">do_set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_rename"><code class="docutils literal notranslate"><span class="pre">do_rename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_unset"><code class="docutils literal notranslate"><span class="pre">do_unset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.preset.do_delete"><code class="docutils literal notranslate"><span class="pre">do_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#profile"><code class="docutils literal notranslate"><span class="pre">profile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.profile.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.profile.do_list"><code class="docutils literal notranslate"><span class="pre">do_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#mhvtl_cli.commands.profile.do_show"><code class="docutils literal notranslate"><span class="pre">do_show()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../cli.html#ltfs"><code class="docutils literal notranslate"><span class="pre">ltfs</span></code></a><ul>
@@ -1660,7 +1794,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">MHVTL GUI API Reference</a>
+          <a href="../../../index.html">MHVTL Console API Reference</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -1679,13 +1813,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for mhvtl_cli.commands.library</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""list, show, create, update, delete, orphans, next-id.</span>
+<span></span><span class="sd">"""list, show, create, delete, orphans, next-id, slots.</span>
 
 <span class="sd">Argument handling and printing only; every verb is one call into</span>
 <span class="sd">services/libraries. Where a verb changes something it asks privileges first, so</span>
 <span class="sd">the refusal names the group rather than arriving as a sudo error eight steps in.</span>
 <span class="sd">"""</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">output</span><span class="p">,</span> <span class="n">privileges</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">output</span><span class="p">,</span> <span class="n">privileges</span><span class="p">,</span> <span class="n">runs</span>
 
 
 <div class="viewcode-block" id="register">
@@ -1723,15 +1857,36 @@
     <span class="n">slots</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">handler</span><span class="o">=</span><span class="n">do_slots</span><span class="p">)</span>
 
     <span class="n">create</span> <span class="o">=</span> <span class="n">verbs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">'create'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'create a library and its drives'</span><span class="p">)</span>
-    <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--profile'</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">'vendor profile, e.g. IBM, STK, SONY'</span><span class="p">)</span>
+    <span class="c1"># A profile is a catalogue to choose from, a preset is a configuration</span>
+    <span class="c1"># already chosen. One or the other, never both: a preset names its own</span>
+    <span class="c1"># profile, so --profile beside it would be either redundant or a</span>
+    <span class="c1"># contradiction nobody could see.</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">create</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--profile'</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">'vendor catalogue to take the defaults from, '</span>
+                             <span class="s2">"e.g. IBM, STK, SONY. 'mhvtl profile list' "</span>
+                             <span class="s1">'names them'</span><span class="p">)</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--preset'</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">'a configuration built earlier; '</span>
+                             <span class="s2">"'mhvtl preset list' names them"</span><span class="p">)</span>
+    <span class="c1"># In the same group: it asks for the vendor, so --profile and --preset</span>
+    <span class="c1"># answer the question it exists to ask. Opt in and never inferred, and it</span>
+    <span class="c1"># refuses to start without a terminal rather than hanging a cron job.</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--interactive'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">'ask for each choice, offering what the vendor '</span>
+                             <span class="s1">'catalogue holds, then create it, keep it as a '</span>
+                             <span class="s1">'preset, preview it or quit'</span><span class="p">)</span>
     <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--id'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'library_id'</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">'library id; the next free one if omitted'</span><span class="p">)</span>
     <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--drives'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'num_drives'</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">'how many drives'</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">'how many drives, all of one model'</span><span class="p">)</span>
     <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--media-type'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'e.g. LTO8'</span><span class="p">)</span>
     <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--tapes'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'media_count'</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">'how many cartridges to put in slots'</span><span class="p">)</span>
+    <span class="c1"># A library with more than one kind of drive or tape, in slot order.</span>
+    <span class="c1"># Registered by runs.py, which `preset set` registers from as well: the</span>
+    <span class="c1"># same flag, spelled once, with one parser behind it.</span>
+    <span class="n">runs</span><span class="o">.</span><span class="n">add_options</span><span class="p">(</span><span class="n">create</span><span class="p">)</span>
     <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--empty-slots'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'empty_slots'</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">'slots to leave empty, for tapes added later '</span>
                              <span class="s2">"(the profile's default if omitted)"</span><span class="p">)</span>
@@ -1752,6 +1907,10 @@
                         <span class="n">help</span><span class="o">=</span><span class="s1">'do not create the tape files library_contents lists'</span><span class="p">)</span>
     <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--dry-run'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">'print the device.conf text it would write, and stop'</span><span class="p">)</span>
+    <span class="n">create</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--save-preset'</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">'NAME'</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">'after creating it, keep this configuration '</span>
+                             <span class="s1">'under a name, for --preset next time. The same '</span>
+                             <span class="s1">'thing by hand is: mhvtl preset set NAME ...'</span><span class="p">)</span>
     <span class="n">create</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">handler</span><span class="o">=</span><span class="n">do_create</span><span class="p">)</span>
 
     <span class="n">delete</span> <span class="o">=</span> <span class="n">verbs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">'delete'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'remove a library and its drives'</span><span class="p">)</span>
@@ -1781,7 +1940,8 @@
 <div class="viewcode-block" id="do_list">
 <a class="viewcode-back" href="../../../cli.html#mhvtl_cli.commands.library.do_list">[المستندات]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">do_list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">_service</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">_service</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">json</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">as_json</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
 
@@ -1794,6 +1954,13 @@
                  <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'library_id'</span><span class="p">,</span> <span class="s1">'model'</span><span class="p">,</span> <span class="s1">'serial'</span><span class="p">,</span> <span class="s1">'drives'</span><span class="p">,</span>
                           <span class="s1">'slot_count'</span><span class="p">,</span> <span class="s1">'tape_count'</span><span class="p">],</span>
                  <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'model'</span><span class="p">,</span> <span class="s1">'serial'</span><span class="p">,</span> <span class="s1">'drives'</span><span class="p">,</span> <span class="s1">'slots'</span><span class="p">,</span> <span class="s1">'tapes'</span><span class="p">])</span>
+    <span class="c1"># What the table adds up to. The same sentence the console shows above</span>
+    <span class="c1"># its libraries, from the same call, so the two cannot disagree about</span>
+    <span class="c1"># what this host holds.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">summary</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'says'</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">EXIT_OK</span></div>
 
 
@@ -1872,7 +2039,50 @@
 <span class="w">    </span><span class="sd">"""The same sequence the web form runs: validate, write, start, verify,</span>
 <span class="sd">    make the tape files (services/libraries/workflow). It used to stop after</span>
 <span class="sd">    writing, so a library created here had barcodes and no tapes."""</span>
-    <span class="n">spec</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'profile'</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">profile</span><span class="p">}</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">presets</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">interactive</span><span class="p">:</span>
+        <span class="n">refused</span> <span class="o">=</span> <span class="n">_only_interactive</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">refused</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">refused</span>
+        <span class="n">asked</span> <span class="o">=</span> <span class="n">_ask_for_a_library</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">asked</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>                  <span class="c1"># quit, or Ctrl-C: nothing written</span>
+            <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">EXIT_OK</span>
+        <span class="n">spec</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">save_preset</span> <span class="o">=</span> <span class="n">asked</span>
+        <span class="k">return</span> <span class="n">_create</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">presets</span><span class="p">)</span>
+
+    <span class="n">refused</span> <span class="o">=</span> <span class="n">runs</span><span class="o">.</span><span class="n">one_answer_per_question</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">refused</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">refused</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">preset</span><span class="p">:</span>
+        <span class="n">resolved</span> <span class="o">=</span> <span class="n">presets</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">preset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resolved</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">resolved</span><span class="p">,</span> <span class="n">as_json</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">resolved</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'spec'</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'profile'</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">profile</span><span class="p">}</span>
+
+    <span class="c1"># A library with more than one kind of drive or tape. A list replaces a</span>
+    <span class="c1"># preset's own list, which is what every other argument here does, and it</span>
+    <span class="c1"># takes out what the list implies - the count, and the single model or</span>
+    <span class="c1"># density - so that a preset's `drives = 4` cannot be left beside a list</span>
+    <span class="c1"># of two. Which keys those are is the preset format's rule, asked rather</span>
+    <span class="c1"># than repeated.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.config.presets</span><span class="w"> </span><span class="kn">import</span> <span class="n">IMPLIED_BY_LIST</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lists</span><span class="p">,</span> <span class="n">_replace</span> <span class="o">=</span> <span class="n">runs</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">runs</span><span class="o">.</span><span class="n">Refused</span> <span class="k">as</span> <span class="n">problem</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">problem</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">lists</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">spec</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">for</span> <span class="n">implied</span> <span class="ow">in</span> <span class="n">IMPLIED_BY_LIST</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">implied</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># An explicit argument beats the preset, which is what this existing loop</span>
+    <span class="c1"># already does: only values that were given are applied over what is</span>
+    <span class="c1"># there. Nothing new was needed for the override rule.</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">'library_id'</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">library_id</span><span class="p">),</span>
                        <span class="p">(</span><span class="s1">'num_drives'</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">num_drives</span><span class="p">),</span>
                        <span class="p">(</span><span class="s1">'media_type'</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">media_type</span><span class="p">),</span>
@@ -1888,8 +2098,30 @@
             <span class="n">spec</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dry_run</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">save_preset</span><span class="p">:</span>
+            <span class="c1"># Saving is for a configuration that has been proved, and a dry</span>
+            <span class="c1"># run proves nothing. Refused rather than quietly skipped: a</span>
+            <span class="c1"># --save-preset that printed a preview and saved nothing would</span>
+            <span class="c1"># look like it had worked.</span>
+            <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
+                <span class="s1">'--save-preset needs a real creation, not a dry run'</span><span class="p">,</span>
+                <span class="s1">'a preset is kept because the configuration worked'</span><span class="p">,</span>
+                <span class="s1">'drop --dry-run, or save it with: '</span>
+                <span class="sa">f</span><span class="s1">'mhvtl preset set </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">save_preset</span><span class="si">}</span><span class="s1"> ...'</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">_preview</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
 
+    <span class="k">return</span> <span class="n">_create</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">presets</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">presets</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Write it, start it, verify it, make its tapes - then keep the preset.</span>
+
+<span class="sd">    Shared by the flag-driven path and the interactive one, so that a library</span>
+<span class="sd">    created by answering questions goes through exactly the same workflow as</span>
+<span class="sd">    one created by typing arguments. The interactive loop is a way of filling</span>
+<span class="sd">    in `spec`, not a second way of creating a library.</span>
+<span class="sd">    """</span>
     <span class="n">privileges</span><span class="o">.</span><span class="n">require_write_access</span><span class="p">(</span><span class="s1">'creating a library'</span><span class="p">)</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_library_workflow</span>
 
@@ -1906,8 +2138,393 @@
         <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'steps'</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="n">mark</span> <span class="o">=</span> <span class="s1">'ok  '</span> <span class="k">if</span> <span class="n">step</span><span class="p">[</span><span class="s1">'ok'</span><span class="p">]</span> <span class="k">else</span> <span class="p">(</span><span class="s1">'FAIL'</span> <span class="k">if</span> <span class="n">step</span><span class="p">[</span><span class="s1">'fatal'</span><span class="p">]</span> <span class="k">else</span> <span class="s1">'warn'</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mark</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s2">"step"</span><span class="p">]</span><span class="si">:</span><span class="s1">9s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s2">"message"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">as_json</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">)</span></div>
 
+    <span class="c1"># Only keep a configuration that worked. Saving one that failed would hand</span>
+    <span class="c1"># somebody a preset that recreates the failure.</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">save_preset</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+        <span class="n">kept</span> <span class="o">=</span> <span class="n">presets</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">save_preset</span><span class="p">,</span> <span class="n">_savable</span><span class="p">(</span><span class="n">spec</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">json</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">kept</span><span class="o">.</span><span class="n">message</span> <span class="k">if</span> <span class="n">kept</span><span class="o">.</span><span class="n">success</span>
+                  <span class="k">else</span> <span class="sa">f</span><span class="s1">'preset not saved: </span><span class="si">{</span><span class="n">kept</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">as_json</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_savable</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""What `--save-preset` keeps, decided by the service.</span>
+
+<span class="sd">    This used to be a comprehension over a tuple in this file. The setup</span>
+<span class="sd">    wizard saves a preset too and cannot import the CLI, so the rule moved to</span>
+<span class="sd">    config.presets.savable and every caller asks it - this one, the wizard,</span>
+<span class="sd">    and `mhvtl preset set`.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.config.presets</span><span class="w"> </span><span class="kn">import</span> <span class="n">savable</span>
+
+    <span class="k">return</span> <span class="n">savable</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+
+<span class="c1"># -- interactive -----------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># A form, not a brain. The loop asks questions and calls six things, every one</span>
+<span class="c1"># of which existed before it:</span>
+<span class="c1">#</span>
+<span class="c1">#     the options at each step   profiles.catalogue</span>
+<span class="c1">#     the default at each step   libraries.spec.apply_defaults</span>
+<span class="c1">#     the check on the result    libraries.lifecycle.preview</span>
+<span class="c1">#     keeping it afterwards      libraries.presets.save</span>
+<span class="c1">#     the library itself         libraries.create_library_workflow</span>
+<span class="c1">#     the id to offer            LibraryService.next_id</span>
+<span class="c1">#</span>
+<span class="c1"># If it ever needs a seventh thing that does not exist yet, that thing belongs</span>
+<span class="c1"># in a service and not in a prompt. See docs/sphinx/guides/plan-cli-catalogue,</span>
+<span class="c1"># "the six calls".</span>
+
+<span class="c1">#: Flags that answer a question the loop exists to ask. Refused rather than</span>
+<span class="c1">#: allowed to overrule a typed answer from outside the conversation.</span>
+<span class="n">_NOT_WITH_INTERACTIVE</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s1">'--id'</span><span class="p">,</span> <span class="s1">'library_id'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'--drives'</span><span class="p">,</span> <span class="s1">'num_drives'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'--media-type'</span><span class="p">,</span> <span class="s1">'media_type'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'--tapes'</span><span class="p">,</span> <span class="s1">'media_count'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'--empty-slots'</span><span class="p">,</span> <span class="s1">'empty_slots'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'--model'</span><span class="p">,</span> <span class="s1">'library_model'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'--drive-model'</span><span class="p">,</span> <span class="s1">'drive_model'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'--serial'</span><span class="p">,</span> <span class="s1">'serial'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'--drive-revision'</span><span class="p">,</span> <span class="s1">'drive_revision'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'--save-preset'</span><span class="p">,</span> <span class="s1">'save_preset'</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_only_interactive</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""None when --interactive may go ahead, or the exit code to return.</span>
+
+<span class="sd">    Two refusals. A terminal, because a cron entry that runs this by mistake</span>
+<span class="sd">    has to fail at once rather than wait for an answer that will never come -</span>
+<span class="sd">    the discipline colour.enabled() applies to stdout, applied to stdin. And</span>
+<span class="sd">    nothing else on the command line but --no-start and --no-media, which are</span>
+<span class="sd">    about what happens after the specification is settled.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">prompt</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">prompt</span><span class="o">.</span><span class="n">require_terminal</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
+            <span class="s1">'--interactive needs a terminal'</span><span class="p">,</span>
+            <span class="s1">'stdin is not a tty, so there is nobody to answer the questions'</span><span class="p">,</span>
+            <span class="s1">'in a script, give the values instead: mhvtl library create '</span>
+            <span class="s1">'--profile IBM --drives 2 --tapes 20'</span><span class="p">)</span>
+
+    <span class="n">given</span> <span class="o">=</span> <span class="p">[</span><span class="n">flag</span> <span class="k">for</span> <span class="n">flag</span><span class="p">,</span> <span class="n">dest</span> <span class="ow">in</span> <span class="n">_NOT_WITH_INTERACTIVE</span>
+             <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dry_run</span><span class="p">:</span>
+        <span class="n">given</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'--dry-run'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">:</span>
+        <span class="n">given</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'--json'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">given</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"--interactive cannot be combined with </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">given</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="s1">'it asks for each value, so a flag would quietly overrule an answer'</span><span class="p">,</span>
+        <span class="s1">'the menu at the end offers both the preview and keeping it as a '</span>
+        <span class="s1">'preset'</span><span class="p">,</span>
+        <span class="s1">'only --no-start and --no-media go with it'</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ask_for_a_library</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">asker</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""(spec, preset name or None), or None when the operator quit.</span>
+
+<span class="sd">    Nothing is written before the final choice - including by the preview -</span>
+<span class="sd">    so quitting at any question, or a Ctrl-C, leaves the host untouched.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">prompt</span>
+
+    <span class="n">ask</span> <span class="o">=</span> <span class="n">asker</span> <span class="ow">or</span> <span class="n">prompt</span><span class="o">.</span><span class="n">Prompt</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_questions</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">prompt</span><span class="o">.</span><span class="n">Interrupted</span> <span class="k">as</span> <span class="n">stopped</span><span class="p">:</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Nothing was written. (</span><span class="si">{</span><span class="n">stopped</span><span class="si">}</span><span class="s1">)'</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">stopped</span><span class="p">)</span>
+                <span class="k">else</span> <span class="s1">'Nothing was written.'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_questions</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The narrowing order, which is a property of the data rather than a</span>
+<span class="sd">    decision here: a vendor, then one of its models, then a drive that model</span>
+<span class="sd">    takes, then a density that drive writes, then the counts its layout</span>
+<span class="sd">    allows."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalogue</span>
+
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">'Creating a library. An empty answer takes the [default];'</span><span class="p">)</span>
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">'Ctrl-C quits and writes nothing.'</span><span class="p">)</span>
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">()</span>
+
+    <span class="c1"># No default vendor. There are nine real catalogues and no function in</span>
+    <span class="c1"># this project that prefers one, so a default here would be this file</span>
+    <span class="c1"># choosing a favourite. Every answer after it has one, and each comes</span>
+    <span class="c1"># from the profile.</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s1">'Vendor profile'</span><span class="p">,</span> <span class="n">catalogue</span><span class="o">.</span><span class="n">names</span><span class="p">())</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'profile'</span><span class="p">:</span> <span class="n">profile</span><span class="p">}</span>
+    <span class="n">described</span> <span class="o">=</span> <span class="n">catalogue</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s1">'Library model'</span><span class="p">,</span>
+                       <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">'model'</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">described</span><span class="p">[</span><span class="s1">'models'</span><span class="p">]],</span>
+                       <span class="n">_would_be</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">'product'</span><span class="p">))</span>
+    <span class="n">spec</span><span class="p">[</span><span class="s1">'library_model'</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="n">for_model</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">described</span><span class="p">[</span><span class="s1">'models'</span><span class="p">]</span>
+                     <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">'model'</span><span class="p">]</span> <span class="o">==</span> <span class="n">model</span><span class="p">)</span>
+
+    <span class="c1"># How many drives and slots this library may really have: the model's</span>
+    <span class="c1"># element layout, the host's free SCSI targets and its free device ids,</span>
+    <span class="c1"># whichever is smallest. The same answer the web form shows, from the</span>
+    <span class="c1"># same service - this loop capped by the layout alone, so on a host with</span>
+    <span class="c1"># 71 targets free it would offer an IBM 3584's 511 drives and the</span>
+    <span class="c1"># creation would then be refused.</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">_room_for</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
+
+    <span class="c1"># Drives, one kind at a time. A library can hold more than one model -</span>
+    <span class="c1"># two LTO-8 drives and two LTO-6 - and the order asked is the order</span>
+    <span class="c1"># written, because slot order is SCSI target order.</span>
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'bound_by'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'bound_by'</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">'the model'</span><span class="p">:</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">room</span><span class="p">[</span><span class="s1">'max_drives'</span><span class="p">]</span><span class="si">}</span><span class="s2"> drive(s) at most here, limited by "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">room</span><span class="p">[</span><span class="s1">'bound_by'</span><span class="p">]</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+    <span class="n">drives</span> <span class="o">=</span> <span class="n">_one_kind_at_a_time</span><span class="p">(</span>
+        <span class="n">ask</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="s1">'Drive model'</span><span class="p">,</span> <span class="s1">'How many drives'</span><span class="p">,</span> <span class="s1">'drive type'</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">for_model</span><span class="p">[</span><span class="s1">'drives'</span><span class="p">],</span>
+        <span class="n">default_name</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">_would_be</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">'drive_product'</span><span class="p">),</span>
+        <span class="n">default_count</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">_would_be</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">'num_drives'</span><span class="p">),</span>
+        <span class="n">maximum</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'max_drives'</span><span class="p">,</span> <span class="n">for_model</span><span class="p">[</span><span class="s1">'max_drives'</span><span class="p">]),</span> <span class="n">what</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span>
+        <span class="n">after</span><span class="o">=</span><span class="k">lambda</span> <span class="n">model</span><span class="p">:</span> <span class="n">_say_read_only</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">described</span><span class="p">,</span> <span class="n">model</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">drives</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># One kind stays the simple pair, so a preset saved from this reads</span>
+        <span class="c1"># as the command somebody would have typed.</span>
+        <span class="n">spec</span><span class="p">[</span><span class="s1">'drive_model'</span><span class="p">]</span> <span class="o">=</span> <span class="n">drives</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'model'</span><span class="p">]</span>
+        <span class="n">spec</span><span class="p">[</span><span class="s1">'num_drives'</span><span class="p">]</span> <span class="o">=</span> <span class="n">drives</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'count'</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spec</span><span class="p">[</span><span class="s1">'drive'</span><span class="p">]</span> <span class="o">=</span> <span class="n">drives</span>
+
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">()</span>
+    <span class="n">media</span> <span class="o">=</span> <span class="n">_one_kind_at_a_time</span><span class="p">(</span>
+        <span class="n">ask</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="s1">'Cartridge density'</span><span class="p">,</span> <span class="s1">'How many cartridges'</span><span class="p">,</span> <span class="s1">'density'</span><span class="p">,</span>
+        <span class="c1"># Only the densities a drive in this library can WRITE: one it merely</span>
+        <span class="c1"># loads would give a library that restores and never backs up, and</span>
+        <span class="c1"># `tape bulk` can still add those deliberately afterwards.</span>
+        <span class="n">options</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">_writable_in</span><span class="p">(</span><span class="n">catalogue</span><span class="p">,</span> <span class="n">drives</span><span class="p">),</span>
+        <span class="n">default_name</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">_would_be</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">'media_type'</span><span class="p">),</span>
+        <span class="n">default_count</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">_would_be</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">'media_count'</span><span class="p">),</span>
+        <span class="n">maximum</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'max_slots'</span><span class="p">,</span> <span class="n">for_model</span><span class="p">[</span><span class="s1">'max_slots'</span><span class="p">]),</span> <span class="n">what</span><span class="o">=</span><span class="s1">'density'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">media</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">spec</span><span class="p">[</span><span class="s1">'media_type'</span><span class="p">]</span> <span class="o">=</span> <span class="n">media</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'density'</span><span class="p">]</span>
+        <span class="n">spec</span><span class="p">[</span><span class="s1">'media_count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">media</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'count'</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spec</span><span class="p">[</span><span class="s1">'media'</span><span class="p">]</span> <span class="o">=</span> <span class="n">media</span>
+
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">()</span>
+    <span class="n">cartridges</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">run</span><span class="p">[</span><span class="s1">'count'</span><span class="p">]</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">media</span><span class="p">)</span>
+    <span class="n">max_slots</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'max_slots'</span><span class="p">,</span> <span class="n">for_model</span><span class="p">[</span><span class="s1">'max_slots'</span><span class="p">])</span>
+    <span class="n">slots_left</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">max_slots</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">max_slots</span> <span class="o">-</span> <span class="n">cartridges</span>
+    <span class="n">spec</span><span class="p">[</span><span class="s1">'empty_slots'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">ask_int</span><span class="p">(</span>
+        <span class="s1">'Empty slots'</span><span class="p">,</span> <span class="n">_would_be</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">'empty_slots'</span><span class="p">),</span>
+        <span class="n">minimum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="n">slots_left</span><span class="p">)</span>
+
+    <span class="n">allocated</span> <span class="o">=</span> <span class="n">_service</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">next_id</span><span class="p">()</span>
+    <span class="n">spec</span><span class="p">[</span><span class="s1">'library_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">ask_int</span><span class="p">(</span>
+        <span class="s1">'Library id'</span><span class="p">,</span>
+        <span class="n">allocated</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'library_id'</span><span class="p">]</span> <span class="k">if</span> <span class="n">allocated</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">minimum</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_then_what</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">catalogue</span><span class="o">.</span><span class="n">names</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_room_for</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""How many drives and slots this library may have, here and now.</span>
+
+<span class="sd">    The web form's answer, from the service both now ask:</span>
+<span class="sd">    libraries.setup_form composes the model's element layout with the host's</span>
+<span class="sd">    free SCSI targets and its free device ids, and names the one that binds.</span>
+
+<span class="sd">    An empty answer when the profile cannot be resolved, which cannot happen</span>
+<span class="sd">    by this point - the vendor was chosen from catalogue.names() - so the</span>
+<span class="sd">    caller falls back to the model's layout rather than carrying a refusal</span>
+<span class="sd">    through the questions.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_form</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">setup_form</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s1">'profile'</span><span class="p">],</span>
+                              <span class="n">library_model</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'library_model'</span><span class="p">),</span>
+                              <span class="n">config_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">config_dir</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'limits'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_one_kind_at_a_time</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">name_question</span><span class="p">,</span> <span class="n">count_question</span><span class="p">,</span> <span class="n">another</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                        <span class="n">options</span><span class="p">,</span> <span class="n">default_name</span><span class="p">,</span> <span class="n">default_count</span><span class="p">,</span> <span class="n">maximum</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span>
+                        <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Ask for a model (or density) and a count, then whether there is another.</span>
+
+<span class="sd">    Returns ``[{what: name, 'count': n}, ...]`` in the order asked, which is</span>
+<span class="sd">    the order they are written - the same shape the file format and</span>
+<span class="sd">    ``--drive MODEL:COUNT`` produce, so the loop composes a specification</span>
+<span class="sd">    rather than a special case of one.</span>
+
+<span class="sd">    Only the first of each kind is offered a default. A second drive type has</span>
+<span class="sd">    no sensible default: the profile's answer is already in the first, and</span>
+<span class="sd">    repeating it would suggest asking twice was pointless.</span>
+<span class="sd">    """</span>
+    <span class="n">runs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">remaining</span> <span class="o">=</span> <span class="n">maximum</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">runs</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="n">choice</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">options</span><span class="p">()</span>
+                   <span class="k">if</span> <span class="n">choice</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">run</span><span class="p">[</span><span class="n">what</span><span class="p">]</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">choices</span><span class="p">:</span>
+            <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  No other </span><span class="si">{</span><span class="n">another</span><span class="si">}</span><span class="s1"> is left to add.'</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="n">name_question</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span>
+                          <span class="n">default_name</span><span class="p">()</span> <span class="k">if</span> <span class="n">first</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">ask_int</span><span class="p">(</span><span class="n">count_question</span><span class="p">,</span> <span class="n">default_count</span><span class="p">()</span> <span class="k">if</span> <span class="n">first</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">minimum</span><span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="n">what</span> <span class="o">==</span> <span class="s1">'model'</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="n">maximum</span><span class="o">=</span><span class="n">remaining</span><span class="p">)</span>
+        <span class="n">runs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">what</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">'count'</span><span class="p">:</span> <span class="n">count</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">after</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">after</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remaining</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">remaining</span> <span class="o">-=</span> <span class="n">count</span>
+            <span class="k">if</span> <span class="n">remaining</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ask</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Add another </span><span class="si">{</span><span class="n">another</span><span class="si">}</span><span class="s1">?'</span><span class="p">):</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">runs</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_writable_in</span><span class="p">(</span><span class="n">catalogue</span><span class="p">,</span> <span class="n">drives</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Every density some drive in the library can write, in slot order.</span>
+
+<span class="sd">    The same order and the same rule the services use, so the loop offers</span>
+<span class="sd">    what creation will accept - a mixed library's LTO-6 is offered because</span>
+<span class="sd">    its TD6 writes it, and nothing offers LTO-1 because nothing writes that.</span>
+<span class="sd">    """</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">drives</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">density</span> <span class="ow">in</span> <span class="n">catalogue</span><span class="o">.</span><span class="n">writes</span><span class="p">(</span><span class="n">run</span><span class="p">[</span><span class="s1">'model'</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">density</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+                <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">found</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_say_read_only</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">described</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Name what this drive loads and cannot write, having chosen it."""</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">described</span><span class="p">[</span><span class="s1">'drives'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">'model'</span><span class="p">]</span> <span class="o">==</span> <span class="n">model</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s1">'reads_only'</span><span class="p">]:</span>
+            <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> also loads "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'reads_only'</span><span class="p">])</span><span class="si">}</span><span class="s2">, which it cannot write."</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_would_be</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""What apply_defaults would fill in, given the answers so far.</span>
+
+<span class="sd">    The same function creation fills a specification with, so a default</span>
+<span class="sd">    offered here is the value the library would really get rather than a</span>
+<span class="sd">    second guess at it. The id is a placeholder: nothing read here depends on</span>
+<span class="sd">    it, and the real one is asked for at the end.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">spec</span> <span class="k">as</span> <span class="n">spec_rules</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">spec_rules</span><span class="o">.</span><span class="n">apply_defaults</span><span class="p">({</span><span class="o">**</span><span class="n">spec</span><span class="p">,</span> <span class="s1">'library_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">spec_rules</span><span class="o">.</span><span class="n">UnknownProfile</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_then_what</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">profiles</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The summary, the check, and the four ways out."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">lifecycle</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">checked</span> <span class="o">=</span> <span class="n">lifecycle</span><span class="o">.</span><span class="n">preview</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">spec</span><span class="p">),</span> <span class="n">args</span><span class="o">.</span><span class="n">config_dir</span><span class="p">)</span>
+        <span class="n">_summarise</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">checked</span><span class="p">)</span>
+        <span class="n">choice</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">menu</span><span class="p">(</span><span class="s1">'Now what'</span><span class="p">,</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'create it'</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">'s'</span><span class="p">,</span> <span class="s1">'create it and keep this configuration as a preset'</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">'p'</span><span class="p">,</span> <span class="s1">'print the device.conf it would write'</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">'q'</span><span class="p">,</span> <span class="s1">'quit, writing nothing'</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s1">'q'</span><span class="p">:</span>
+            <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">'Nothing was written.'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s1">'p'</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="n">checked</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'text'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+                <span class="c1"># The configuration is data, so it goes to stdout even here:</span>
+                <span class="c1"># `--interactive &gt; my.conf` keeps the questions on the</span>
+                <span class="c1"># terminal and the preview in the file.</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'There is nothing to preview: </span><span class="si">{</span><span class="n">checked</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s1">'s'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">spec</span><span class="p">,</span> <span class="n">_a_name_of_its_own</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">profiles</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spec</span><span class="p">,</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_a_name_of_its_own</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">profiles</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A name for the preset, which may not be a vendor's.</span>
+
+<span class="sd">    The service refuses that as well - it is the rule and it stays there -</span>
+<span class="sd">    but asking again is better than creating the library and then reporting</span>
+<span class="sd">    that the preset was not kept.</span>
+<span class="sd">    """</span>
+    <span class="n">reserved</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">}</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">ask</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="s1">'Keep it as'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reserved</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">name</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">' is a vendor catalogue, not a configuration of "</span>
+                <span class="sa">f</span><span class="s2">"your own - try </span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">-small."</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_summarise</span><span class="p">(</span><span class="n">ask</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">checked</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The library as it stands, and what validation makes of it.</span>
+
+<span class="sd">    Read from the specification the way the writers read it, so a mixed</span>
+<span class="sd">    library is summarised as the two kinds it is rather than as its first.</span>
+<span class="sd">    The loop writes the single pair when there is one kind and the list when</span>
+<span class="sd">    there are several - a preset saved from the first should read as the</span>
+<span class="sd">    command somebody would have typed - and the service answers for both</span>
+<span class="sd">    shapes, so printing does not have to know which arrived.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">apps.libraries.services.libraries</span><span class="w"> </span><span class="kn">import</span> <span class="n">spec</span> <span class="k">as</span> <span class="n">spec_rules</span>
+
+    <span class="n">drives</span> <span class="o">=</span> <span class="n">spec_rules</span><span class="o">.</span><span class="n">asked_drive_runs</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="n">media</span> <span class="o">=</span> <span class="n">spec_rules</span><span class="o">.</span><span class="n">asked_media_runs</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="n">cartridges</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">count</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">media</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">cartridges</span> <span class="o">+</span> <span class="n">spec</span><span class="p">[</span><span class="s1">'empty_slots'</span><span class="p">]</span>
+
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">()</span>
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'profile'</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'library_model'</span><span class="p">]</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"id </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'library_id'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">'  drives      '</span>
+            <span class="o">+</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1"> x </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">drives</span><span class="p">))</span>
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">'  cartridges  '</span>
+            <span class="o">+</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1"> x </span><span class="si">{</span><span class="n">density</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">density</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">media</span><span class="p">))</span>
+    <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  slots       </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">cartridges</span><span class="si">}</span><span class="s2"> full, "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'empty_slots'</span><span class="p">]</span><span class="si">}</span><span class="s2"> empty)"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">checked</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  checked: </span><span class="si">{</span><span class="n">checked</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">checked</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'errors'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  checked: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s1"> problem(s)'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">problem</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    error: </span><span class="si">{</span><span class="n">problem</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fix</span> <span class="ow">in</span> <span class="n">checked</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'fixes'</span><span class="p">]:</span>
+            <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'      </span><span class="si">{</span><span class="n">fix</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">'  checked: valid'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">checked</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'warnings'</span><span class="p">]:</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    warning: </span><span class="si">{</span><span class="n">warning</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="c1"># Nothing about mixed libraries to apologise for any more: creation writes</span>
+    <span class="c1"># one block per slot, so what was asked for is what gets built. Only the</span>
+    <span class="c1"># one thing this loop still does not ask about is named.</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'empty_slots'</span><span class="p">):</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">()</span>
+        <span class="n">ask</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'empty_slots'</span><span class="p">]</span><span class="si">}</span><span class="s2"> slot(s) are left empty for cartridges "</span>
+                <span class="sa">f</span><span class="s2">"added later: mhvtl tape bulk </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'library_id'</span><span class="p">]</span><span class="si">}</span><span class="s2"> &lt;count&gt;"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_preview</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -1928,6 +2545,7 @@
     <span class="c1"># so a perfectly creatable library - LTO3 in a drive that only reads it -</span>
     <span class="c1"># looked like a refusal.</span>
     <span class="n">errors</span><span class="p">,</span> <span class="n">warnings</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'errors'</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'warnings'</span><span class="p">]</span>
+    <span class="n">fixes</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'fixes'</span><span class="p">,</span> <span class="p">[])</span>
     <span class="n">code</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">EXIT_FAILED</span> <span class="k">if</span> <span class="n">errors</span> <span class="k">else</span> <span class="n">output</span><span class="o">.</span><span class="n">EXIT_OK</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">:</span>
         <span class="n">output</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">as_json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1940,6 +2558,11 @@
         <span class="n">output</span><span class="o">.</span><span class="n">note</span><span class="p">(</span><span class="sa">f</span><span class="s1">'error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">warnings</span><span class="p">:</span>
         <span class="n">output</span><span class="o">.</span><span class="n">note</span><span class="p">(</span><span class="sa">f</span><span class="s1">'warning: </span><span class="si">{</span><span class="n">warning</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="c1"># Only when something was refused: on a clean preview the valid values are</span>
+    <span class="c1"># not news, and they are long.</span>
+    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">fix</span> <span class="ow">in</span> <span class="n">fixes</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">note</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">fix</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">code</span>
 
 

@@ -166,10 +166,11 @@ same value:
 .. code-block:: console
 
    $ mhvtl --version
-   mhvtl-gui 3.1.0
+   mhvtl-console 3.3.1
    Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com>
    GPL-2.0-only
    https://github.com/abdelhaleemahmed/mhvtl-console
+   running from /opt/mhvtl-gui
 
 ``mhvtl status system`` prints it above the rest of the host's state, which
 makes it the one command to quote in a bug report:
@@ -177,19 +178,40 @@ makes it the one command to quote in a bug report:
 .. code-block:: console
 
    $ sudo mhvtl status system
-   mhvtl-gui     3.1.0
-   reading       /etc/mhvtl/
-   mhvtl.target  running
-   enabled       yes
-   backend       mhvtl
-   libraries     7/7 running
-   drives        21/21 running
-   healthy       yes
+   mhvtl-console  3.3.1
+   running from   /opt/mhvtl-gui
+   reading        /etc/mhvtl
+   mhvtl.target   running
+   enabled        yes
+   backend        mhvtl
+   libraries      7/7 running
+   drives         21/21 running
+   healthy        yes
 
 In the console it is **About**, in the header of every page. That page adds
 what the command line cannot easily show - the Python and Django versions,
 the kernel, and the host's name - which is the rest of what a bug report
 needs.
+
+.. note::
+
+   **The program is** ``mhvtl-console``; **the package is** ``mhvtl-gui``.
+   Both names are correct and they mean different things. ``mhvtl-console``
+   is the product, which is what the version line and the About page say.
+   ``mhvtl-gui`` is the RPM, the directory ``/opt/mhvtl-gui``, the account the
+   service runs as, and the unit ``mhvtl-gui.service`` - so ``rpm -q``,
+   ``systemctl`` and the paths all keep the older name. It was renamed in
+   3.3.0 because an unrelated, older interface to MHVTL is also called
+   mhvtl-gui, and a bug report quoting a version could not say which program
+   it was about.
+
+The last line, ``running from``, is which copy of the code answered. A host
+can carry two - the installed tree under ``/opt/mhvtl-gui`` and a developer's
+checkout - and they print the same version, so one typed command can be two
+different programs. ``sudo`` always resolves ``/usr/bin/mhvtl`` and therefore
+the installed tree, because sudoers sets ``secure_path``; plain ``mhvtl`` can
+be pointed elsewhere by ``PATH``. If a command behaves unlike the
+documentation, read this line first.
 
 If the page and the command disagree, the service was upgraded and not
 restarted: the workers hold the code they started with. ``systemctl restart

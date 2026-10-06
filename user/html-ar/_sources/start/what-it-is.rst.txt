@@ -69,3 +69,10 @@ The words used here
 
 **Changer**
    The robot, as the kernel sees it: a SCSI device of type ``mediumx``.
+
+**Profile**
+   A vendor's catalogue: which libraries IBM or STK or Sony make, which
+   drives each of those takes, which cartridges each drive writes, and a
+   sensible default for each. It ships with the console and is never edited.
+   Naming one is usually all you have to do - ``mhvtl library create
+   --profile IBM`` picks the rest for you.

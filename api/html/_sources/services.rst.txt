@@ -139,6 +139,17 @@ Read and write library_contents.N - a library's slot inventory.
    :undoc-members:
    :show-inheritance:
 
+``presets``
+~~~~~~~~~~~
+
+Named library configurations: TOML text in, partial specifications out. A
+profile is a catalogue; a preset is a configuration made from one.
+
+.. automodule:: apps.libraries.services.config.presets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``service``
 ~~~~~~~~~~~
 
@@ -153,6 +164,19 @@ Config orchestration: read, back up, write, restore.
 ---------------------
 
 Vendor and model reference data. Pure, no I/O.
+
+``catalogue``
+~~~~~~~~~~~~~
+
+The tables above composed into the answers a caller wants: the vendors, or
+one vendor explained. Asked by ``mhvtl profile list``, ``mhvtl profile show``,
+the web's vendor page and ``library create --interactive`` - which is three
+copies of the composition that no longer exist.
+
+.. automodule:: apps.libraries.services.profiles.catalogue
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 ``data``
 ~~~~~~~~
@@ -220,12 +244,36 @@ Leftovers: things one part of the system believes in and another does not.
    :undoc-members:
    :show-inheritance:
 
+``presets``
+~~~~~~~~~~~
+
+Named configurations an operator saved: the file, the lock, and checking one
+against its profile.
+
+.. automodule:: apps.libraries.services.libraries.presets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``service``
 ~~~~~~~~~~~
 
 Library listing and lifecycle.
 
 .. automodule:: apps.libraries.services.libraries.service
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``setup_form``
+~~~~~~~~~~~~~~
+
+The create-a-library form, decided in one call: which options each dropdown
+holds, which one is selected, what this host's SCSI targets and device ids
+allow, and the finished sentences. The browser and the AJAX endpoint behind
+every change both render this answer.
+
+.. automodule:: apps.libraries.services.libraries.setup_form
    :members:
    :undoc-members:
    :show-inheritance:

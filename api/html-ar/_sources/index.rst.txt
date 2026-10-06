@@ -1,5 +1,5 @@
-MHVTL GUI — API Reference
-=========================
+MHVTL Console — API Reference
+=============================
 
 The Python API, generated from the docstrings in the source. Nothing here is
 written twice: if a paragraph is wrong, it is wrong in the module it

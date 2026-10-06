@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Command line &mdash; MHVTL GUI API Reference 3.1.0</title>
+  <title>Command line &mdash; MHVTL Console API Reference 3.3.1</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/lang-switch.css?v=16e3750c" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=dd1205ac"></script>
+      <script src="_static/documentation_options.js?v=9ac01507"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/lang-switch.js?v=8f8661c5"></script>
@@ -33,7 +33,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            MHVTL GUI API Reference
+            MHVTL Console API Reference
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -63,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="services.html#paths"><code class="docutils literal notranslate"><span class="pre">paths</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.DAEMON_CONFIG_DIR_SETTING"><code class="docutils literal notranslate"><span class="pre">DAEMON_CONFIG_DIR_SETTING</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.LOCK_NAME"><code class="docutils literal notranslate"><span class="pre">LOCK_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.DEFAULT_GUI_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">DEFAULT_GUI_CONFIG_DIR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.config_dir"><code class="docutils literal notranslate"><span class="pre">config_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.daemon_config_dir"><code class="docutils literal notranslate"><span class="pre">daemon_config_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.home_dir"><code class="docutils literal notranslate"><span class="pre">home_dir()</span></code></a></li>
@@ -70,6 +71,9 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.library_contents_path"><code class="docutils literal notranslate"><span class="pre">library_contents_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.media_dir"><code class="docutils literal notranslate"><span class="pre">media_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.lock_path"><code class="docutils literal notranslate"><span class="pre">lock_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.presets_dir"><code class="docutils literal notranslate"><span class="pre">presets_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.presets_path"><code class="docutils literal notranslate"><span class="pre">presets_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.core.paths.presets_example_path"><code class="docutils literal notranslate"><span class="pre">presets_example_path()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#results"><code class="docutils literal notranslate"><span class="pre">results</span></code></a><ul>
@@ -139,6 +143,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.ids.next_library_id"><code class="docutils literal notranslate"><span class="pre">next_library_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.ids.drive_ids"><code class="docutils literal notranslate"><span class="pre">drive_ids()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.ids.free_targets"><code class="docutils literal notranslate"><span class="pre">free_targets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.ids.free_drive_ids"><code class="docutils literal notranslate"><span class="pre">free_drive_ids()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.ids.targets"><code class="docutils literal notranslate"><span class="pre">targets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.ids.plan_library"><code class="docutils literal notranslate"><span class="pre">plan_library()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.ids.empty_conf"><code class="docutils literal notranslate"><span class="pre">empty_conf()</span></code></a></li>
@@ -165,6 +170,23 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.library_contents.render_new"><code class="docutils literal notranslate"><span class="pre">render_new()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#presets"><code class="docutils literal notranslate"><span class="pre">presets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#text-in-data-out-no-file-i-o-here">TEXT IN, DATA OUT - NO FILE I/O HERE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#why-toml">WHY TOML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#the-keys-are-the-command-line-s">THE KEYS ARE THE COMMAND LINE’S</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.KEY_TO_SPEC"><code class="docutils literal notranslate"><span class="pre">KEY_TO_SPEC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.LIST_KEYS"><code class="docutils literal notranslate"><span class="pre">LIST_KEYS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.IMPLIED_BY_LIST"><code class="docutils literal notranslate"><span class="pre">IMPLIED_BY_LIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.PresetError"><code class="docutils literal notranslate"><span class="pre">PresetError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.savable"><code class="docutils literal notranslate"><span class="pre">savable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.FLAG_FOR"><code class="docutils literal notranslate"><span class="pre">FLAG_FOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.FLAG_FOR_LIST"><code class="docutils literal notranslate"><span class="pre">FLAG_FOR_LIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.as_words"><code class="docutils literal notranslate"><span class="pre">as_words()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.as_commands"><code class="docutils literal notranslate"><span class="pre">as_commands()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.presets.render"><code class="docutils literal notranslate"><span class="pre">render()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#service"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.service.BACKUP_STAMP_FORMAT"><code class="docutils literal notranslate"><span class="pre">BACKUP_STAMP_FORMAT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.config.service.ConfigService"><code class="docutils literal notranslate"><span class="pre">ConfigService</span></code></a></li>
@@ -173,6 +195,24 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-profiles"><code class="docutils literal notranslate"><span class="pre">services.profiles</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#catalogue"><code class="docutils literal notranslate"><span class="pre">catalogue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#what-this-replaces">WHAT THIS REPLACES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#writes-is-not-loads">WRITES IS NOT LOADS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#on-order">ON ORDER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.UnknownProfile"><code class="docutils literal notranslate"><span class="pre">UnknownProfile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.writes"><code class="docutils literal notranslate"><span class="pre">writes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.default_density_for"><code class="docutils literal notranslate"><span class="pre">default_density_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.default_drive_for"><code class="docutils literal notranslate"><span class="pre">default_drive_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.form_lookups"><code class="docutils literal notranslate"><span class="pre">form_lookups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.names"><code class="docutils literal notranslate"><span class="pre">names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.summaries"><code class="docutils literal notranslate"><span class="pre">summaries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.media_family"><code class="docutils literal notranslate"><span class="pre">media_family()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.media_order"><code class="docutils literal notranslate"><span class="pre">media_order()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.catalogue.densities_of"><code class="docutils literal notranslate"><span class="pre">densities_of()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#data"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#do-not-edit-a-profile-to-suit-another-tool">DO NOT EDIT A PROFILE TO SUIT ANOTHER TOOL</a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.data.MEDIA_SUFFIX"><code class="docutils literal notranslate"><span class="pre">MEDIA_SUFFIX</span></code></a></li>
@@ -218,6 +258,9 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.MAX_LUN"><code class="docutils literal notranslate"><span class="pre">MAX_LUN</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.MAX_NAA_FIELD"><code class="docutils literal notranslate"><span class="pre">MAX_NAA_FIELD</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.VENDOR_ID_LEN"><code class="docutils literal notranslate"><span class="pre">VENDOR_ID_LEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.truncate_serial"><code class="docutils literal notranslate"><span class="pre">truncate_serial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.device_serial"><code class="docutils literal notranslate"><span class="pre">device_serial()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.LibraryLayout"><code class="docutils literal notranslate"><span class="pre">LibraryLayout</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.LAYOUTS"><code class="docutils literal notranslate"><span class="pre">LAYOUTS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.profiles.personalities.LIBRARY_SELECTOR"><code class="docutils literal notranslate"><span class="pre">LIBRARY_SELECTOR</span></code></a></li>
@@ -268,22 +311,55 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.orphans.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id1"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id1"><code class="docutils literal notranslate"><span class="pre">presets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#why-the-work-is-split-with-config-presets-py">WHY THE WORK IS SPLIT WITH config/presets.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#what-a-preset-is-as-data">WHAT A PRESET IS, AS DATA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#incomplete-is-a-legal-state">INCOMPLETE IS A LEGAL STATE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.LOCK_NAME"><code class="docutils literal notranslate"><span class="pre">LOCK_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.names"><code class="docutils literal notranslate"><span class="pre">names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.for_profile"><code class="docutils literal notranslate"><span class="pre">for_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.USABLE_NAME"><code class="docutils literal notranslate"><span class="pre">USABLE_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.rename"><code class="docutils literal notranslate"><span class="pre">rename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.presets.forget"><code class="docutils literal notranslate"><span class="pre">forget()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id2"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.service.LibraryService"><code class="docutils literal notranslate"><span class="pre">LibraryService</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#setup-form"><code class="docutils literal notranslate"><span class="pre">setup_form</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#why-it-exists">WHY IT EXISTS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#nothing-here-is-a-new-rule">NOTHING HERE IS A NEW RULE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.setup_form.FALLBACK_LIBRARY_ID"><code class="docutils literal notranslate"><span class="pre">FALLBACK_LIBRARY_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.setup_form.state"><code class="docutils literal notranslate"><span class="pre">state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.setup_form.as_spec"><code class="docutils literal notranslate"><span class="pre">as_spec()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#spec"><code class="docutils literal notranslate"><span class="pre">spec</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.UnknownProfile"><code class="docutils literal notranslate"><span class="pre">UnknownProfile</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.profile_key_of"><code class="docutils literal notranslate"><span class="pre">profile_key_of()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.truncate_serial"><code class="docutils literal notranslate"><span class="pre">truncate_serial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.apply_defaults"><code class="docutils literal notranslate"><span class="pre">apply_defaults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.asked_drive_runs"><code class="docutils literal notranslate"><span class="pre">asked_drive_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.asked_media_runs"><code class="docutils literal notranslate"><span class="pre">asked_media_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.asked_drive_models"><code class="docutils literal notranslate"><span class="pre">asked_drive_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.asked_densities"><code class="docutils literal notranslate"><span class="pre">asked_densities()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.asked_drive_count"><code class="docutils literal notranslate"><span class="pre">asked_drive_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.asked_media_count"><code class="docutils literal notranslate"><span class="pre">asked_media_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.parse_runs"><code class="docutils literal notranslate"><span class="pre">parse_runs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.spec.drive_ids"><code class="docutils literal notranslate"><span class="pre">drive_ids()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#validation"><code class="docutils literal notranslate"><span class="pre">validation</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.validation.MAX_SERIAL_LENGTH"><code class="docutils literal notranslate"><span class="pre">MAX_SERIAL_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.validation.DEFAULT_NUM_DRIVES"><code class="docutils literal notranslate"><span class="pre">DEFAULT_NUM_DRIVES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.validation.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.validation.check_against_profile"><code class="docutils literal notranslate"><span class="pre">check_against_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.libraries.validation.check_partial"><code class="docutils literal notranslate"><span class="pre">check_partial()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="services.html#workflow"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
@@ -298,11 +374,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-drives"><code class="docutils literal notranslate"><span class="pre">services.drives</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id2"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id3"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.drives.models.DriveInfo"><code class="docutils literal notranslate"><span class="pre">DriveInfo</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id3"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id4"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.drives.service.DEFAULT_VENDOR"><code class="docutils literal notranslate"><span class="pre">DEFAULT_VENDOR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.drives.service.DriveService"><code class="docutils literal notranslate"><span class="pre">DriveService</span></code></a></li>
 </ul>
@@ -382,7 +458,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.media.list_media"><code class="docutils literal notranslate"><span class="pre">list_media()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id4"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id5"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.models.TapeInfo"><code class="docutils literal notranslate"><span class="pre">TapeInfo</span></code></a></li>
 </ul>
 </li>
@@ -405,8 +481,10 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.palette.collisions"><code class="docutils literal notranslate"><span class="pre">collisions()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id5"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id6"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.service.CONTENTS_RE"><code class="docutils literal notranslate"><span class="pre">CONTENTS_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.service.UNKNOWN_SIZE_MB"><code class="docutils literal notranslate"><span class="pre">UNKNOWN_SIZE_MB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.service.native_size_mb"><code class="docutils literal notranslate"><span class="pre">native_size_mb()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.tapes.service.TapeService"><code class="docutils literal notranslate"><span class="pre">TapeService</span></code></a></li>
 </ul>
 </li>
@@ -438,7 +516,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.operations.mtx.inventory"><code class="docutils literal notranslate"><span class="pre">inventory()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id6"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id7"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.operations.service.OperationsService"><code class="docutils literal notranslate"><span class="pre">OperationsService</span></code></a></li>
 </ul>
 </li>
@@ -494,7 +572,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.mapping.map_all"><code class="docutils literal notranslate"><span class="pre">map_all()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id7"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id8"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.models.CHANGER"><code class="docutils literal notranslate"><span class="pre">CHANGER</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.models.ScsiAddress"><code class="docutils literal notranslate"><span class="pre">ScsiAddress</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.scsi.models.ScsiDevice"><code class="docutils literal notranslate"><span class="pre">ScsiDevice</span></code></a></li>
@@ -534,7 +612,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.modules.summary"><code class="docutils literal notranslate"><span class="pre">summary()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id8"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id9"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.service.ConsoleService"><code class="docutils literal notranslate"><span class="pre">ConsoleService</span></code></a></li>
 </ul>
 </li>
@@ -549,7 +627,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.system.mhvtl_installation"><code class="docutils literal notranslate"><span class="pre">mhvtl_installation()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id9"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id10"><code class="docutils literal notranslate"><span class="pre">units</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.units.UnitState"><code class="docutils literal notranslate"><span class="pre">UnitState</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.units.MhvtlServiceStatus"><code class="docutils literal notranslate"><span class="pre">MhvtlServiceStatus</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.console.units.is_active"><code class="docutils literal notranslate"><span class="pre">is_active()</span></code></a></li>
@@ -619,7 +697,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.initiator.detach"><code class="docutils literal notranslate"><span class="pre">detach()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id10"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id11"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.models.IscsiBackstore"><code class="docutils literal notranslate"><span class="pre">IscsiBackstore</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.models.IscsiLun"><code class="docutils literal notranslate"><span class="pre">IscsiLun</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.models.IscsiAcl"><code class="docutils literal notranslate"><span class="pre">IscsiAcl</span></code></a></li>
@@ -653,7 +731,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.remap.remap"><code class="docutils literal notranslate"><span class="pre">remap()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id11"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id12"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.service.CONFIG_PATH"><code class="docutils literal notranslate"><span class="pre">CONFIG_PATH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.service.SERVICE_UNIT"><code class="docutils literal notranslate"><span class="pre">SERVICE_UNIT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.service.IscsiService"><code class="docutils literal notranslate"><span class="pre">IscsiService</span></code></a></li>
@@ -690,7 +768,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.targetcli.set_attribute"><code class="docutils literal notranslate"><span class="pre">set_attribute()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id12"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id13"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.workflow.ExportReport"><code class="docutils literal notranslate"><span class="pre">ExportReport</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.workflow.default_iqn"><code class="docutils literal notranslate"><span class="pre">default_iqn()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.iscsi.workflow.export_library"><code class="docutils literal notranslate"><span class="pre">export_library()</span></code></a></li>
@@ -711,7 +789,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.mounts.point_for"><code class="docutils literal notranslate"><span class="pre">point_for()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id13"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id14"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#what-this-does-not-keep">WHAT THIS DOES NOT KEEP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#the-destructive-one">THE DESTRUCTIVE ONE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.ltfs.service.MOUNT_ROOT"><code class="docutils literal notranslate"><span class="pre">MOUNT_ROOT</span></code></a></li>
@@ -732,7 +810,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-verification"><code class="docutils literal notranslate"><span class="pre">services.verification</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id14"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id15"><code class="docutils literal notranslate"><span class="pre">data</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.CHUNK_BYTES"><code class="docutils literal notranslate"><span class="pre">CHUNK_BYTES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.MANIFEST_NAME"><code class="docutils literal notranslate"><span class="pre">MANIFEST_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.generate"><code class="docutils literal notranslate"><span class="pre">generate()</span></code></a></li>
@@ -741,12 +819,12 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.data.verify"><code class="docutils literal notranslate"><span class="pre">verify()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id15"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id16"><code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.models.StepResult"><code class="docutils literal notranslate"><span class="pre">StepResult</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.models.VerificationReport"><code class="docutils literal notranslate"><span class="pre">VerificationReport</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id16"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id17"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.service.VerificationService"><code class="docutils literal notranslate"><span class="pre">VerificationService</span></code></a></li>
 </ul>
 </li>
@@ -759,7 +837,7 @@
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.tape_io.extracted_root"><code class="docutils literal notranslate"><span class="pre">extracted_root()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id17"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id18"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.workflow.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.verification.workflow.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
 </ul>
@@ -767,7 +845,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-dashboard"><code class="docutils literal notranslate"><span class="pre">services.dashboard</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id18"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.dashboard.service.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.dashboard.service.get_dashboard_summary"><code class="docutils literal notranslate"><span class="pre">get_dashboard_summary()</span></code></a></li>
 </ul>
@@ -775,9 +853,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-about"><code class="docutils literal notranslate"><span class="pre">services.about</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id19"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#what-is-a-fact-about-the-project-and-what-is-a-fact-about-this-host">WHAT IS A FACT ABOUT THE PROJECT, AND WHAT IS A FACT ABOUT THIS HOST</a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.about.service.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.about.service.running_from"><code class="docutils literal notranslate"><span class="pre">running_from()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.about.service.runtime"><code class="docutils literal notranslate"><span class="pre">runtime()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.about.service.facts"><code class="docutils literal notranslate"><span class="pre">facts()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.about.service.one_line"><code class="docutils literal notranslate"><span class="pre">one_line()</span></code></a></li>
@@ -786,8 +865,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="services.html#services-sync"><code class="docutils literal notranslate"><span class="pre">services.sync</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="services.html#id20"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.ConfigUnreadable"><code class="docutils literal notranslate"><span class="pre">ConfigUnreadable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#id21"><code class="docutils literal notranslate"><span class="pre">service</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.sync_mhvtl_to_django"><code class="docutils literal notranslate"><span class="pre">sync_mhvtl_to_django()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.record_library"><code class="docutils literal notranslate"><span class="pre">record_library()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="services.html#apps.libraries.services.sync.service.forget_library"><code class="docutils literal notranslate"><span class="pre">forget_library()</span></code></a></li>
@@ -990,6 +1068,7 @@
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.views.BrandSelectionView.post"><code class="docutils literal notranslate"><span class="pre">BrandSelectionView.post()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.views.setup_form_ajax"><code class="docutils literal notranslate"><span class="pre">setup_form_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.views.BrandConfigView"><code class="docutils literal notranslate"><span class="pre">BrandConfigView</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.views.BrandConfigView.template_name"><code class="docutils literal notranslate"><span class="pre">BrandConfigView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.views.BrandConfigView.get"><code class="docutils literal notranslate"><span class="pre">BrandConfigView.get()</span></code></a></li>
@@ -1097,10 +1176,8 @@
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.validate_config_ajax"><code class="docutils literal notranslate"><span class="pre">validate_config_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.preview_config_ajax"><code class="docutils literal notranslate"><span class="pre">preview_config_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.refresh_discovery_ajax"><code class="docutils literal notranslate"><span class="pre">refresh_discovery_ajax()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.run_discovery_ajax"><code class="docutils literal notranslate"><span class="pre">run_discovery_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.sync_library_ajax"><code class="docutils literal notranslate"><span class="pre">sync_library_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.cleanup_orphaned_ajax"><code class="docutils literal notranslate"><span class="pre">cleanup_orphaned_ajax()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.discovery_stats_ajax"><code class="docutils literal notranslate"><span class="pre">discovery_stats_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.get_library_status_with_lto_ajax"><code class="docutils literal notranslate"><span class="pre">get_library_status_with_lto_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.check_mount_compatibility_ajax"><code class="docutils literal notranslate"><span class="pre">check_mount_compatibility_ajax()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.ajax_views.get_drive_info_ajax"><code class="docutils literal notranslate"><span class="pre">get_drive_info_ajax()</span></code></a></li>
@@ -1211,6 +1288,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.library_activity"><code class="docutils literal notranslate"><span class="pre">library_activity()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.drive_placement_ajax"><code class="docutils literal notranslate"><span class="pre">drive_placement_ajax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.DRIVE_CHOICES"><code class="docutils literal notranslate"><span class="pre">DRIVE_CHOICES</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.AddDriveView"><code class="docutils literal notranslate"><span class="pre">AddDriveView</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.AddDriveView.template_name"><code class="docutils literal notranslate"><span class="pre">AddDriveView.template_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="libraries.html#apps.libraries.tape_operations_views.AddDriveView.get"><code class="docutils literal notranslate"><span class="pre">AddDriveView.get()</span></code></a></li>
@@ -1496,6 +1574,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#main"><code class="docutils literal notranslate"><span class="pre">main</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.main.DEFAULT_SETTINGS"><code class="docutils literal notranslate"><span class="pre">DEFAULT_SETTINGS</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.main.SYSTEM_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">SYSTEM_CONFIG_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.main.COMMAND_MODULES"><code class="docutils literal notranslate"><span class="pre">COMMAND_MODULES</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.main.build_parser"><code class="docutils literal notranslate"><span class="pre">build_parser()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.main.setup_django"><code class="docutils literal notranslate"><span class="pre">setup_django()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
@@ -1531,6 +1610,45 @@
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.privileges.require_write_access"><code class="docutils literal notranslate"><span class="pre">require_write_access()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.privileges.can_read_config"><code class="docutils literal notranslate"><span class="pre">can_read_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.privileges.require_read_access"><code class="docutils literal notranslate"><span class="pre">require_read_access()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#prompt"><code class="docutils literal notranslate"><span class="pre">prompt</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-the-prompts-go-to-stderr">WHY THE PROMPTS GO TO STDERR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-it-is-a-class">WHY IT IS A CLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#not-a-terminal-is-a-refusal-not-a-hang">NOT A TERMINAL IS A REFUSAL, NOT A HANG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.prompt.Interrupted"><code class="docutils literal notranslate"><span class="pre">Interrupted</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.prompt.require_terminal"><code class="docutils literal notranslate"><span class="pre">require_terminal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt"><code class="docutils literal notranslate"><span class="pre">Prompt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt.asked"><code class="docutils literal notranslate"><span class="pre">Prompt.asked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt.say"><code class="docutils literal notranslate"><span class="pre">Prompt.say()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt.ask"><code class="docutils literal notranslate"><span class="pre">Prompt.ask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt.ask_int"><code class="docutils literal notranslate"><span class="pre">Prompt.ask_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt.choose"><code class="docutils literal notranslate"><span class="pre">Prompt.choose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt.confirm"><code class="docutils literal notranslate"><span class="pre">Prompt.confirm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.prompt.Prompt.menu"><code class="docutils literal notranslate"><span class="pre">Prompt.menu()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#runs"><code class="docutils literal notranslate"><span class="pre">runs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-this-is-not-in-commands-library-py">WHY THIS IS NOT IN commands/library.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#a-count-and-a-list-are-two-answers-to-one-question">A COUNT AND A LIST ARE TWO ANSWERS TO ONE QUESTION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.runs.Kind"><code class="docutils literal notranslate"><span class="pre">Kind</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.runs.Kind.flag"><code class="docutils literal notranslate"><span class="pre">Kind.flag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.runs.Kind.metavar"><code class="docutils literal notranslate"><span class="pre">Kind.metavar</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.runs.Kind.dest"><code class="docutils literal notranslate"><span class="pre">Kind.dest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.runs.Kind.key"><code class="docutils literal notranslate"><span class="pre">Kind.key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.runs.Kind.what"><code class="docutils literal notranslate"><span class="pre">Kind.what</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.runs.Kind.singles"><code class="docutils literal notranslate"><span class="pre">Kind.singles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mhvtl_cli.runs.Kind.example"><code class="docutils literal notranslate"><span class="pre">Kind.example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.runs.KINDS"><code class="docutils literal notranslate"><span class="pre">KINDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.runs.Refused"><code class="docutils literal notranslate"><span class="pre">Refused</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.runs.add_options"><code class="docutils literal notranslate"><span class="pre">add_options()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.runs.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.runs.collect"><code class="docutils literal notranslate"><span class="pre">collect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.runs.one_answer_per_question"><code class="docutils literal notranslate"><span class="pre">one_answer_per_question()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a><ul>
@@ -1588,6 +1706,22 @@
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.library.do_create"><code class="docutils literal notranslate"><span class="pre">do_create()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.library.do_slots"><code class="docutils literal notranslate"><span class="pre">do_slots()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.library.do_delete"><code class="docutils literal notranslate"><span class="pre">do_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#preset"><code class="docutils literal notranslate"><span class="pre">preset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.preset.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.preset.do_list"><code class="docutils literal notranslate"><span class="pre">do_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.preset.do_show"><code class="docutils literal notranslate"><span class="pre">do_show()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.preset.do_set"><code class="docutils literal notranslate"><span class="pre">do_set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.preset.do_rename"><code class="docutils literal notranslate"><span class="pre">do_rename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.preset.do_unset"><code class="docutils literal notranslate"><span class="pre">do_unset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.preset.do_delete"><code class="docutils literal notranslate"><span class="pre">do_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#profile"><code class="docutils literal notranslate"><span class="pre">profile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.profile.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.profile.do_list"><code class="docutils literal notranslate"><span class="pre">do_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mhvtl_cli.commands.profile.do_show"><code class="docutils literal notranslate"><span class="pre">do_show()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ltfs"><code class="docutils literal notranslate"><span class="pre">ltfs</span></code></a><ul>
@@ -1659,7 +1793,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MHVTL GUI API Reference</a>
+          <a href="index.html">MHVTL Console API Reference</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -1732,6 +1866,13 @@ whatever a development settings file points at.</p>
 <dd class="field-odd"><p>What a system administration tool manages</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="mhvtl_cli.main.COMMAND_MODULES">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.main.</span></span><span class="sig-name descname"><span class="pre">COMMAND_MODULES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('profile',</span> <span class="pre">'preset',</span> <span class="pre">'library',</span> <span class="pre">'drive',</span> <span class="pre">'tape',</span> <span class="pre">'ltfs',</span> <span class="pre">'operations',</span> <span class="pre">'status',</span> <span class="pre">'service',</span> <span class="pre">'config',</span> <span class="pre">'scsi',</span> <span class="pre">'iscsi',</span> <span class="pre">'console')</span></span><a class="headerlink" href="#mhvtl_cli.main.COMMAND_MODULES" title="Link to this definition"></a></dt>
+<dd><p><cite>profile</cite> and <cite>preset</cite> come first because they are what a library is built
+from, and <cite>–help</cite> lists them in this order.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2011,6 +2152,272 @@ else.</p>
 </dd></dl>
 
 </section>
+<section id="prompt">
+<h2><code class="docutils literal notranslate"><span class="pre">prompt</span></code><a class="headerlink" href="#prompt" title="Link to this heading"></a></h2>
+<p>The only file here that reads from stdin, for <code class="docutils literal notranslate"><span class="pre">library</span> <span class="pre">create</span>
+<span class="pre">--interactive</span></code>. It decides nothing about libraries: the options come from
+the profiles catalogue, the defaults from <code class="docutils literal notranslate"><span class="pre">spec.apply_defaults</span></code> and the
+check from <code class="docutils literal notranslate"><span class="pre">lifecycle.preview</span></code>.</p>
+<p id="module-mhvtl_cli.prompt">Asking questions. The only file in the CLI that reads from stdin.</p>
+<p><cite>mhvtl library create –interactive</cite> is a form, not a brain: the options come
+from services/profiles, the defaults from the same table the web’s setup page
+embeds, and the check from services/libraries/validation. What is left over is
+the asking - print a question, read a line, refuse nonsense until an answer
+arrives that can be used. That is this module, and nothing in it knows what a
+library is.</p>
+<section id="why-the-prompts-go-to-stderr">
+<h3>WHY THE PROMPTS GO TO STDERR<a class="headerlink" href="#why-the-prompts-go-to-stderr" title="Link to this heading"></a></h3>
+<p>output.py’s rule is data on stdout and everything else on stderr. The one
+thing an interactive create writes to stdout is the device.conf preview, so
+<cite>–interactive &gt; my.conf</cite> has to leave the questions on the terminal and put
+the configuration in the file. input()’s own prompt argument writes to stdout,
+which is why every question here is printed first and input() is then called
+with no argument.</p>
+</section>
+<section id="why-it-is-a-class">
+<h3>WHY IT IS A CLASS<a class="headerlink" href="#why-it-is-a-class" title="Link to this heading"></a></h3>
+<p>So that a test can answer it. <code class="docutils literal notranslate"><span class="pre">Prompt(answers=[...])</span></code> replaces the reader
+and the writer, which is how test_interactive.py drives the whole loop with no
+terminal anywhere. The alternative - patching builtins.input - replaces a
+global for every other test in the same run.</p>
+</section>
+<section id="not-a-terminal-is-a-refusal-not-a-hang">
+<h3>NOT A TERMINAL IS A REFUSAL, NOT A HANG<a class="headerlink" href="#not-a-terminal-is-a-refusal-not-a-hang" title="Link to this heading"></a></h3>
+<p>require_terminal() is asked before the first question. A cron entry that runs
+<cite>library create –interactive</cite> by mistake has to fail at once rather than wait
+for an answer that will never come: the discipline colour.enabled() applies to
+stdout, applied to stdin.</p>
+</section>
+<dl class="py exception">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Interrupted">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mhvtl_cli.prompt.</span></span><span class="sig-name descname"><span class="pre">Interrupted</span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Interrupted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Interrupted" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>The operator ended it - Ctrl-C, Ctrl-D, or answers that ran out.</p>
+<p>Raised rather than returned so that it unwinds the whole question
+sequence from wherever it happens. The caller writes nothing: an
+interactive create holds everything in a dict until the last answer, which
+is what makes quitting free.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.require_terminal">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.prompt.</span></span><span class="sig-name descname"><span class="pre">require_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#require_terminal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.require_terminal" title="Link to this definition"></a></dt>
+<dd><p>Whether questions can be asked at all.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mhvtl_cli.prompt.</span></span><span class="sig-name descname"><span class="pre">Prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">answers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Prompt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Prompt" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Questions, and the answers to them.</p>
+<p><code class="docutils literal notranslate"><span class="pre">answers</span></code> makes it scripted: each question takes the next one in the
+list, and running out raises Interrupted - so a test that under-answers
+fails as an unfinished conversation rather than blocking on a read.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt.asked">
+<span class="sig-name descname"><span class="pre">asked</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#mhvtl_cli.prompt.Prompt.asked" title="Link to this definition"></a></dt>
+<dd><p>Every question asked, in order, with what came back. The drift test
+reads this: the order of the questions is the order the data
+narrows, and it has to match the web form’s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt.say">
+<span class="sig-name descname"><span class="pre">say</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Prompt.say"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Prompt.say" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt.ask">
+<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Prompt.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Prompt.ask" title="Link to this definition"></a></dt>
+<dd><p>A line of text. Empty takes the default, if there is one.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt.ask_int">
+<span class="sig-name descname"><span class="pre">ask_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Prompt.ask_int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Prompt.ask_int" title="Link to this definition"></a></dt>
+<dd><p>A whole number in range, asked again until it is one.</p>
+<p>The limits are the service’s - a library model’s max_drives and
+max_slots come from profiles/personalities, capped by what this host
+has left (libraries/setup_form) - so the refusal can say what the
+number has to be rather than only that it was wrong.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt.choose">
+<span class="sig-name descname"><span class="pre">choose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Prompt.choose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Prompt.choose" title="Link to this definition"></a></dt>
+<dd><p>One of <code class="docutils literal notranslate"><span class="pre">options</span></code>, by number or by name.</p>
+<p>The list is printed, which is the teaching: the options are what the
+vendor’s catalogue holds for the choices already made, so a drive the
+chosen library model cannot take is never on it. Nothing a caller
+offers here is checked against anything - narrowing happens before the
+question, not after the answer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt.confirm">
+<span class="sig-name descname"><span class="pre">confirm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Prompt.confirm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Prompt.confirm" title="Link to this definition"></a></dt>
+<dd><p>Yes or no, with the default shown as the capital letter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mhvtl_cli.prompt.Prompt.menu">
+<span class="sig-name descname"><span class="pre">menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/prompt.html#Prompt.menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.prompt.Prompt.menu" title="Link to this definition"></a></dt>
+<dd><p>One key from <code class="docutils literal notranslate"><span class="pre">choices</span></code>, given as (key, what it does) pairs.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="runs">
+<h2><code class="docutils literal notranslate"><span class="pre">runs</span></code><a class="headerlink" href="#runs" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">--drive</span> <span class="pre">MODEL[:COUNT]</span></code> and <code class="docutils literal notranslate"><span class="pre">--media</span> <span class="pre">DENSITY[:COUNT]</span></code>: the repeatable
+flags that ask for a library holding more than one kind of drive or
+cartridge. <code class="docutils literal notranslate"><span class="pre">library</span> <span class="pre">create</span></code> and <code class="docutils literal notranslate"><span class="pre">preset</span> <span class="pre">set</span></code> both register them from
+here, so the flag is spelled once and parsed once - and it refuses a count
+beside a list, which is two answers to one question.</p>
+<p id="module-mhvtl_cli.runs"><cite>–drive MODEL[:COUNT]</cite> and <cite>–media DENSITY[:COUNT]</cite>: more than one kind.</p>
+<p>A library may hold two generations of drive, and cartridges for both. The
+command line says so by repeating one flag, in slot order:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>mhvtl library create –profile IBM –drive ULT3580-TD8:2 </dt><dd><p>–drive ULT3580-TD6:2 –media LTO8:20 –media LTO6:10</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Slot order is SCSI target order, so the first –drive fills slot 1 and a
+backup application that addresses a drive by its position notices when that
+position changes. The order given is therefore kept exactly.</p>
+<section id="why-this-is-not-in-commands-library-py">
+<h3>WHY THIS IS NOT IN commands/library.py<a class="headerlink" href="#why-this-is-not-in-commands-library-py" title="Link to this heading"></a></h3>
+<p>Two commands ask the same question. <cite>library create</cite> builds a library and
+<cite>preset set</cite> writes the same choice down under a name, and a preset exists to
+read as the command it replaces - so <cite>–drive</cite> has to mean one thing, spelled
+one way, with one parser behind it. It was in commands/library.py while only
+one command had it; the second caller is what moved it.</p>
+</section>
+<section id="a-count-and-a-list-are-two-answers-to-one-question">
+<h3>A COUNT AND A LIST ARE TWO ANSWERS TO ONE QUESTION<a class="headerlink" href="#a-count-and-a-list-are-two-answers-to-one-question" title="Link to this heading"></a></h3>
+<p><cite>–drives 4 –drive ULT3580-TD8:2</cite> could mean four drives or two, and nothing
+can choose between them: a library created from the wrong reading is the wrong
+size. So the pair is refused here, the preset file refuses it in
+config/presets.py, and validation refuses it once more for a preset edited in
+two steps that passed neither edge.</p>
+<p>Nothing in this module knows what a library is. It parses text into the lists
+the services already take, and the services decide what they mean.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mhvtl_cli.runs.</span></span><span class="sig-name descname"><span class="pre">Kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metavar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">singles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">example</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mhvtl_cli/runs.html#Kind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.runs.Kind" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
+<p>One repeatable flag, and everything said about it in one place.</p>
+<p>A NamedTuple rather than six parallel tables: the metavar in the help, the
+word in the refusal and the key in the specification are the same fact
+about <cite>–drive</cite>, and they drifted - the help said MODEL while the refusal
+said NAME, for the same flag.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind.flag">
+<span class="sig-name descname"><span class="pre">flag</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#mhvtl_cli.runs.Kind.flag" title="Link to this definition"></a></dt>
+<dd><p>what an operator types</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind.metavar">
+<span class="sig-name descname"><span class="pre">metavar</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#mhvtl_cli.runs.Kind.metavar" title="Link to this definition"></a></dt>
+<dd><p>the word in the help and the refusal</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind.dest">
+<span class="sig-name descname"><span class="pre">dest</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#mhvtl_cli.runs.Kind.dest" title="Link to this definition"></a></dt>
+<dd><p>where argparse puts it</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind.key">
+<span class="sig-name descname"><span class="pre">key</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#mhvtl_cli.runs.Kind.key" title="Link to this definition"></a></dt>
+<dd><p>the key in a specification</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind.what">
+<span class="sig-name descname"><span class="pre">what</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#mhvtl_cli.runs.Kind.what" title="Link to this definition"></a></dt>
+<dd><p>the key inside each entry</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind.singles">
+<span class="sig-name descname"><span class="pre">singles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#mhvtl_cli.runs.Kind.singles" title="Link to this definition"></a></dt>
+<dd><p>the single forms it replaces</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Kind.example">
+<span class="sig-name descname"><span class="pre">example</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#mhvtl_cli.runs.Kind.example" title="Link to this definition"></a></dt>
+<dd><p>a correct one, for the refusal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.KINDS">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.runs.</span></span><span class="sig-name descname"><span class="pre">KINDS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('--drive',</span> <span class="pre">'MODEL',</span> <span class="pre">'drive_runs',</span> <span class="pre">'drive',</span> <span class="pre">'model',</span> <span class="pre">(('--drives',</span> <span class="pre">'num_drives'),</span> <span class="pre">('--drive-model',</span> <span class="pre">'drive_model')),</span> <span class="pre">'ULT3580-TD8:2'),</span> <span class="pre">('--media',</span> <span class="pre">'DENSITY',</span> <span class="pre">'media_runs',</span> <span class="pre">'media',</span> <span class="pre">'density',</span> <span class="pre">(('--tapes',</span> <span class="pre">'media_count'),</span> <span class="pre">('--media-type',</span> <span class="pre">'media_type')),</span> <span class="pre">'LTO8:20'))</span></span><a class="headerlink" href="#mhvtl_cli.runs.KINDS" title="Link to this definition"></a></dt>
+<dd><p>The single forms are named here rather than looked up, because a refusal
+has to print the flag an operator typed - <cite>–drives</cite>, not <cite>num_drives</cite>.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.Refused">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mhvtl_cli.runs.</span></span><span class="sig-name descname"><span class="pre">Refused</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fixes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mhvtl_cli/runs.html#Refused"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.runs.Refused" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>The arguments cannot be read, and what to tell the operator.</p>
+<p>Carries the message and the fixes rather than printing them: this module
+is given an argparse namespace, and whether the answer is text or JSON is
+the command’s to decide.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.add_options">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.runs.</span></span><span class="sig-name descname"><span class="pre">add_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">appending</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/runs.html#add_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.runs.add_options" title="Link to this definition"></a></dt>
+<dd><p>Register –drive and –media, and optionally the –add- pair.</p>
+<p>One registration for both commands, so the two cannot drift into
+different metavars or different help for the same flag.</p>
+<p><cite>appending</cite> is for <cite>preset set</cite>, where a preset is built up a piece at a
+time: –add-drive adds a kind to the list and –drive replaces the whole
+list, which is how a mistake gets corrected without deleting the preset.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.parse">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.runs.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">given</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mhvtl_cli/runs.html#parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.runs.parse" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">['ULT3580-TD8:2',</span> <span class="pre">'ULT3580-TD6']</span></code> -&gt; the list the services take.</p>
+<p>The parsing is <code class="docutils literal notranslate"><span class="pre">libraries.spec.parse_runs</span></code>, because the setup form’s
+rows send the same <code class="docutils literal notranslate"><span class="pre">MODEL:COUNT</span></code> back to the server and the web cannot
+import this module - the query string would otherwise be a second
+encoding of one syntax. What stays here is what is genuinely the command
+line’s: the flags, the metavars and the wording of the refusals.</p>
+<p>Raises ValueError, which collect() turns into a refusal naming the form.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.collect">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.runs.</span></span><span class="sig-name descname"><span class="pre">collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mhvtl_cli/runs.html#collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.runs.collect" title="Link to this definition"></a></dt>
+<dd><p>(values, replace) - the lists given, and which of them replace.</p>
+<p>values is {‘drive’: […], ‘media’: […]} for whichever were given, ready
+to go into a specification or into <cite>preset set</cite>. replace names the lists
+that were given as –drive/–media rather than –add-drive/–add-media, so
+presets.save knows which to overwrite and which to add to.</p>
+<p>Raises Refused.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.runs.one_answer_per_question">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.runs.</span></span><span class="sig-name descname"><span class="pre">one_answer_per_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mhvtl_cli/runs.html#one_answer_per_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.runs.one_answer_per_question" title="Link to this definition"></a></dt>
+<dd><p>None when the arguments are consistent, or the exit code to return.</p>
+<p>A list says which models and how many of each, so the single forms beside
+it are a second answer to the question it has already answered.</p>
+</dd></dl>
+
+</section>
 <section id="config">
 <h2><code class="docutils literal notranslate"><span class="pre">config</span></code><a class="headerlink" href="#config" title="Link to this heading"></a></h2>
 <p>list, show, validate, export, backup, restore, regenerate, sync.</p>
@@ -2069,7 +2476,12 @@ anywhere on the filesystem.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="mhvtl_cli.commands.config.do_sync">
 <span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.config.</span></span><span class="sig-name descname"><span class="pre">do_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/config.html#do_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.config.do_sync" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>device.conf into the database, and what it changed.</p>
+<p>One call, rendered like every other service result. It used to print the
+counts with no message and catch nothing, so an unreadable device.conf -
+an ordinary condition, and one the web reports in a sentence - came out
+as a Python traceback under “this is a bug”.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="mhvtl_cli.commands.config.do_backups">
@@ -2133,6 +2545,10 @@ shell=True command, so a log name was a way to run anything.</p>
 <p id="module-mhvtl_cli.commands.drive">list, show, add, remove.</p>
 <p>Argument handling and printing only; every verb is one call into
 services/drives.</p>
+<p><cite>drive</cite> is the noun for the drives on THIS HOST. What a vendor makes is a
+catalogue question, so it is <cite>mhvtl profile show IBM –drives</cite> - this module
+had a <cite>models</cite> verb for it until 4 October 2026, which also put the
+nine-profile summary under <cite>drive</cite>.</p>
 <p>Worth knowing about add and remove: a drive is a device.conf record <em>and</em> a
 <cite>Drive N:</cite> line in the library’s contents file, and the daemons read both. The
 service writes both together; these verbs would be a good place to get that
@@ -2245,8 +2661,8 @@ target.service, which is <cite>targetctl clear</cite> then <cite>targetctl resto
 </section>
 <section id="library">
 <h2><code class="docutils literal notranslate"><span class="pre">library</span></code><a class="headerlink" href="#library" title="Link to this heading"></a></h2>
-<p>list, show, create, update, delete, orphans, next-id.</p>
-<p id="module-mhvtl_cli.commands.library">list, show, create, update, delete, orphans, next-id.</p>
+<p>list, show, create, delete, orphans, next-id, slots.</p>
+<p id="module-mhvtl_cli.commands.library">list, show, create, delete, orphans, next-id, slots.</p>
 <p>Argument handling and printing only; every verb is one call into
 services/libraries. Where a verb changes something it asks privileges first, so
 the refusal names the group rather than arriving as a sudo error eight steps in.</p>
@@ -2296,6 +2712,109 @@ says so rather than leaving the operator with a file the library ignores.</p>
 <dt class="sig sig-object py" id="mhvtl_cli.commands.library.do_delete">
 <span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.library.</span></span><span class="sig-name descname"><span class="pre">do_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/library.html#do_delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.library.do_delete" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+</section>
+<section id="preset">
+<h2><code class="docutils literal notranslate"><span class="pre">preset</span></code><a class="headerlink" href="#preset" title="Link to this heading"></a></h2>
+<p>list, show, set, unset, delete. The configurations an operator built, which
+are profiles they wrote themselves.</p>
+<p id="module-mhvtl_cli.commands.preset">list, show, set, unset, delete - the configurations you built yourself.</p>
+<p>A preset is a profile you built yourself: the same kind of thing as a vendor
+profile, one shipped and one yours, and neither of them is ever <em>created</em>.
+<cite>library create</cite> is the boundary - it is what turns either into something
+lsscsi and mtx can see.</p>
+<p>So <cite>mhvtl preset</cite> is <cite>mhvtl profile</cite>’s sibling, with one difference that is
+the whole point of the pair: a profile has no write verbs, because nothing may
+edit a catalogue of what exists in the world. A preset is yours, so it has
+set, unset and delete.</p>
+<p><cite>list</cite> enumerates the names; <cite>show</cite> explains one as a concept rather than as
+the file it lives in - what it fixes, and what it leaves to its profile. See
+docs/sphinx/guides/plan-cli-catalogue.rst, “Two verbs, and what decides
+between them”.</p>
+<p>Moved out of commands/library.py on 4 October 2026. It was <cite>mhvtl library
+preset …</cite> while the catalogue was <cite>mhvtl profile …</cite>, which put the two
+halves of one vocabulary at two different levels.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.preset.register">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.preset.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subparsers</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/preset.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.preset.register" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.preset.do_list">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.preset.</span></span><span class="sig-name descname"><span class="pre">do_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/preset.html#do_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.preset.do_list" title="Link to this definition"></a></dt>
+<dd><p>The names, and a word about any that cannot be used yet.</p>
+<p>A preset with no profile is legal - building one a piece at a time is the
+point - but <cite>–preset</cite> will refuse it, so the name alone would be a trap.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.preset.do_show">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.preset.</span></span><span class="sig-name descname"><span class="pre">do_show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/preset.html#do_show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.preset.do_show" title="Link to this definition"></a></dt>
+<dd><p>One preset as a concept. The service decides both halves.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.preset.do_set">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.preset.</span></span><span class="sig-name descname"><span class="pre">do_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/preset.html#do_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.preset.do_set" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.preset.do_rename">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.preset.</span></span><span class="sig-name descname"><span class="pre">do_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/preset.html#do_rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.preset.do_rename" title="Link to this definition"></a></dt>
+<dd><p>Move a preset to another name. The service does all of it.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.preset.do_unset">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.preset.</span></span><span class="sig-name descname"><span class="pre">do_unset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/preset.html#do_unset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.preset.do_unset" title="Link to this definition"></a></dt>
+<dd><p>Remove settings. The whole preset is <cite>preset delete</cite>, which is the
+other half of a split made deliberately: one verb doing both jobs had the
+destructive one needing less typing than the careful one.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.preset.do_delete">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.preset.</span></span><span class="sig-name descname"><span class="pre">do_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/preset.html#do_delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.preset.do_delete" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="profile">
+<h2><code class="docutils literal notranslate"><span class="pre">profile</span></code><a class="headerlink" href="#profile" title="Link to this heading"></a></h2>
+<p>list, show. The vendor catalogues, and the only noun with no write verbs:
+nothing may edit what a vendor makes.</p>
+<p id="module-mhvtl_cli.commands.profile">list, show - the vendor catalogues.</p>
+<p>A profile is what a vendor makes: which library models, which drives each of
+those takes, which densities each drive writes. It ships with the console and
+<strong>nothing edits it</strong>, which is why this noun has no write verbs at all - the
+rule at the top of services/profiles/data.py. A preset is the same kind of
+thing built by an operator, and <cite>mhvtl preset</cite> is its sibling.</p>
+<p><cite>list</cite> enumerates, <cite>show</cite> explains one as a concept. See
+docs/sphinx/guides/plan-cli-catalogue.rst, “Two verbs, and what decides
+between them”.</p>
+<p>Argument handling and printing only: every answer here is one call into
+services/profiles/catalogue, which is also what the web’s vendor page
+composes its cards from.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.profile.register">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.profile.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subparsers</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/profile.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.profile.register" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.profile.do_list">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.profile.</span></span><span class="sig-name descname"><span class="pre">do_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/profile.html#do_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.profile.do_list" title="Link to this definition"></a></dt>
+<dd><p>The names, because the names are what the next command needs.</p>
+<p>–media answers the one question names cannot: six of the nine profiles
+are LTO families, and STK is T10000, SONY is AIT, QUANTUM is SDLT.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mhvtl_cli.commands.profile.do_show">
+<span class="sig-prename descclassname"><span class="pre">mhvtl_cli.commands.profile.</span></span><span class="sig-name descname"><span class="pre">do_show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/mhvtl_cli/commands/profile.html#do_show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mhvtl_cli.commands.profile.do_show" title="Link to this definition"></a></dt>
+<dd><p>One catalogue, in three sections, or one section when asked.</p>
+<p>Narrowing beats refusing: –library-model, –media and –like compose, and
+a library model with no drive left after the filter is dropped rather than
+listed with nothing under it.</p>
+</dd></dl>
 
 </section>
 <section id="ltfs">

@@ -60,6 +60,33 @@ Who is allowed to run a mutating command.
    :undoc-members:
    :show-inheritance:
 
+``prompt``
+----------
+
+The only file here that reads from stdin, for ``library create
+--interactive``. It decides nothing about libraries: the options come from
+the profiles catalogue, the defaults from ``spec.apply_defaults`` and the
+check from ``lifecycle.preview``.
+
+.. automodule:: mhvtl_cli.prompt
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``runs``
+--------
+
+``--drive MODEL[:COUNT]`` and ``--media DENSITY[:COUNT]``: the repeatable
+flags that ask for a library holding more than one kind of drive or
+cartridge. ``library create`` and ``preset set`` both register them from
+here, so the flag is spelled once and parsed once - and it refuses a count
+beside a list, which is two answers to one question.
+
+.. automodule:: mhvtl_cli.runs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``config``
 ----------
 
@@ -103,9 +130,31 @@ status, targets, backstores, export, remap, target, lun, acl, portal, service.
 ``library``
 -----------
 
-list, show, create, update, delete, orphans, next-id.
+list, show, create, delete, orphans, next-id, slots.
 
 .. automodule:: mhvtl_cli.commands.library
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``preset``
+----------
+
+list, show, set, unset, delete. The configurations an operator built, which
+are profiles they wrote themselves.
+
+.. automodule:: mhvtl_cli.commands.preset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``profile``
+-----------
+
+list, show. The vendor catalogues, and the only noun with no write verbs:
+nothing may edit what a vendor makes.
+
+.. automodule:: mhvtl_cli.commands.profile
    :members:
    :undoc-members:
    :show-inheritance:

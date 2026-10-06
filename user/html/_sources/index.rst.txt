@@ -1,5 +1,5 @@
-MHVTL GUI — User Guide
-======================
+MHVTL Console — User Guide
+==========================
 
 A web console for MHVTL, the Linux virtual tape library. It creates
 libraries, fills them with tapes, drives the robot, exports them over iSCSI,
