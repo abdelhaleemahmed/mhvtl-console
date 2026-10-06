@@ -252,12 +252,18 @@ class CleanupPageActionTests(TestCase):
         self.url = reverse('libraries:cleanup_orphaned')
 
     def test_full_scan_runs_the_reconcile_and_reports_its_counts(self):
+        """The page prints the service's sentence. It composed its own from
+        the counts, and so did two AJAX endpoints and the command line."""
+        from apps.libraries.services.core import success_result
+
         stats = {'libraries_found': 6, 'created': 1, 'updated': 2,
                  'activated': 3, 'deactivated': 4, 'drives_imported': 5,
                  'drives_activated': 6, 'drives_deactivated': 7,
                  'total_db': 6, 'total_drives': 17}
+        answer = success_result('6 libraries in device.conf, 1 new, '
+                                '4 deactivated', stats)
         with mock.patch('apps.libraries.services.sync.service.'
-                        'sync_mhvtl_to_django', return_value=stats) as sync:
+                        'sync_mhvtl_to_django', return_value=answer) as sync:
             response = self.client.post(self.url, {'action': 'full_scan'},
                                         follow=True)
         sync.assert_called_once_with()
@@ -267,17 +273,21 @@ class CleanupPageActionTests(TestCase):
         self.assertIn('17 drive(s)', said)
 
     def test_an_unreadable_device_conf_refuses_rather_than_emptying_the_database(self):
-        """The sync raises ConfigUnreadable, and "could not read" is not the
-        same claim as "there are no libraries"."""
-        from apps.libraries.services.sync.service import ConfigUnreadable
+        """"Could not read" is not the same claim as "there are no
+        libraries". The sync raised for this and reports it now, so the page
+        branches on the result rather than catching an exception."""
+        from apps.libraries.services.core import failure_result
 
+        refused = failure_result('device.conf could not be read; the database '
+                                 'was left as it is', ['looked in /etc/mhvtl'])
         with mock.patch('apps.libraries.services.sync.service.'
-                        'sync_mhvtl_to_django',
-                        side_effect=ConfigUnreadable('device.conf is not readable')):
+                        'sync_mhvtl_to_django', return_value=refused):
             response = self.client.post(self.url, {'action': 'full_scan'},
                                         follow=True)
         said = ' '.join(m.message for m in response.context['messages'])
         self.assertIn('Full scan refused', said)
+        self.assertIn('could not be read', said)
+        self.assertIn('looked in /etc/mhvtl', said)   # the detail is shown too
 
     def test_a_failing_scan_is_reported_and_not_raised(self):
         with mock.patch('apps.libraries.services.sync.service.'

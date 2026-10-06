@@ -134,6 +134,11 @@ class DriveService:
 
         DriveService().list(library_id=10)
         DriveService().add(10, {'vendor': 'IBM', 'product': 'ULT3580-TD8'})
+
+    The drives on THIS HOST. What a vendor makes is a catalogue question and
+    lives in services/profiles/catalogue.py - this class had a
+    models_for_profile() for it until 4 October 2026, which is also where the
+    web's vendor page had composed the same answer a second time.
     """
 
     def __init__(self, config_directory=None):
@@ -362,10 +367,8 @@ class DriveService:
         layout = personalities.library_layout(vendor, model)
         slot = self._next_free_slot(existing)
 
-        sibling = next(iter(sorted(existing.items())), (None, {}))[1]
+        sibling = self._sibling_of(existing)
         supported = self._allowed_drives(vendor, model, existing)
-        default = (product or sibling.get('product') or
-                   (supported[0] if supported else DEFAULT_PRODUCT))
 
         plan = {
             'library_id': int(library_id),
@@ -374,9 +377,10 @@ class DriveService:
             'layout': layout.title,
             'full': len(existing) >= layout.max_drives,
             'slot': slot,
-            'serial': f"{library.get('serial', 'XYZZY')}D{slot}",
-            'vendor': sibling.get('vendor') or library.get('drive_vendor') or DEFAULT_VENDOR,
-            'product': default,
+            # The same two choosers add() uses, so the page shows what it
+            # will really do rather than a second guess at it.
+            'vendor': self._which_vendor(library, sibling),
+            'product': self._which_drive(supported, sibling, product),
             'supported': supported,
         }
         try:
@@ -384,6 +388,13 @@ class DriveService:
         except ids.OutOfIds:
             plan['drive_id'] = None
         plan['target'] = self._next_free_target(config)
+        # The serial comes from the drive's own id, which is why it is set
+        # after the id is known. It was `{library_serial}D{slot}`, eleven
+        # characters at slot 10 - and standard INQUIRY reports only the first
+        # ten, so slot 10 and slot 1 told lsscsi one serial while telling a
+        # backup application two (personalities.device_serial).
+        plan['serial'] = (personalities.device_serial(plan['drive_id'])
+                          if plan['drive_id'] is not None else None)
 
         if plan['full']:
             refused = failure_result(
@@ -432,6 +443,55 @@ class DriveService:
             if product and product not in allowed:
                 allowed.insert(0, product)
         return allowed
+
+    @staticmethod
+    def _sibling_of(existing: Dict) -> Dict:
+        """One of the drives already in the library: the lowest id.
+
+        What a new drive is modelled on. The lowest rather than any, so the
+        answer does not depend on dictionary order.
+        """
+        return next(iter(sorted(existing.items())), (None, {}))[1]
+
+    @classmethod
+    def _which_drive(cls, allowed: List[str], sibling: Dict,
+                     asked: str = None) -> str:
+        """Which model a new drive gets.
+
+        What was asked for, else the model the library's other drives are,
+        else the first one its model takes - and only then the last-resort
+        default, for a library whose profile is unknown.
+
+        placement() and add() both ask this, because the page shows what add()
+        will do and the two disagreed where it matters most: add() fell back
+        to DEFAULT_PRODUCT with no siblings to copy, so an STK L80 whose
+        drives had all been removed was handed an IBM ULT3580-TD8 - and then
+        refused it, with "STK L80 does not take a ULT3580-TD8", while the page
+        beside it was offering a T10000B.
+        """
+        return (asked or sibling.get('product')
+                or (allowed[0] if allowed else DEFAULT_PRODUCT))
+
+    @classmethod
+    def _which_vendor(cls, library: Dict, sibling: Dict,
+                      asked: str = None) -> str:
+        """Which vendor a new drive reports.
+
+        What was asked for, else what the library's other drives report - a
+        real host's library does not always match its profile, and library 10
+        here is an STK L700 full of IBM LTO-8 drives - else the drive vendor
+        its own profile names. DEFAULT_VENDOR is for a library no profile
+        knows at all.
+        """
+        if asked or sibling.get('vendor') or library.get('drive_vendor'):
+            return (asked or sibling.get('vendor')
+                    or library.get('drive_vendor'))
+        try:
+            profile = profiles_data.get_profile(
+                str(library.get('vendor', '')).upper())
+        except (KeyError, ValueError):
+            return DEFAULT_VENDOR
+        return profile.drive_vendor or DEFAULT_VENDOR
 
     def add(self, library_id: int, drive_data: Dict = None, *,
             restart: bool = True) -> ServiceResult:
@@ -493,10 +553,20 @@ class DriveService:
                     return failure_result('No drive id is free', [str(exc)],
                                           operation_id)
 
-                # Match the drives already in the library unless told otherwise.
-                sibling = next(iter(sorted(existing.items())), (None, {}))[1]
-                vendor = drive_data.get('vendor') or sibling.get('vendor') or DEFAULT_VENDOR
-                product = drive_data.get('product') or sibling.get('product') or DEFAULT_PRODUCT
+                # Match the drives already in the library unless told
+                # otherwise. The library's own profile decides which drives it
+                # takes - the create form has always applied this cascade and
+                # adding a drive afterwards did not - and it is read here,
+                # before the choice, so that the fallback is a drive this
+                # library can actually hold.
+                allowed = self._allowed_drives(library.get('vendor', ''),
+                                               library.get('product', ''),
+                                               existing)
+                sibling = self._sibling_of(existing)
+                vendor = self._which_vendor(library, sibling,
+                                            drive_data.get('vendor'))
+                product = self._which_drive(allowed, sibling,
+                                            drive_data.get('product'))
                 # A sibling's revision, so an added drive reports what the
                 # library's other drives report. render_drive() wrote no
                 # revision line at all until now, while generate_device_conf()
@@ -518,12 +588,7 @@ class DriveService:
                         ['it would be emulated as a generic drive '
                          '(usr/cmd/vtltape.c tape_drives[])'], operation_id)
 
-                # The library's own profile decides which drives it takes; the
-                # create form has always applied this cascade and adding a
-                # drive afterwards did not, so a library could end up with a
-                # drive its model never had.
-                allowed = self._allowed_drives(library.get('vendor', ''),
-                                               library.get('product', ''), existing)
+                # A drive the library's model never had, asked for explicitly.
                 if allowed and product not in allowed:
                     return failure_result(
                         f'{library.get("vendor", "")} {library.get("product", "")} '
@@ -542,8 +607,11 @@ class DriveService:
                     vendor=vendor,
                     product=product,
                     revision=revision,
-                    serial=drive_data.get('serial')
-                            or f"{library.get('serial', 'XYZZY')}D{slot}")
+                    # The drive's own id, the rule a library's drives get at
+                    # creation. See placement() above, and
+                    # personalities.device_serial for why not slot-based.
+                    serial=(drive_data.get('serial')
+                            or personalities.device_serial(drive_id)))
 
                 text = current.stdout.rstrip('\n') + '\n\n' + entry
                 written = self._write_device_conf(text)

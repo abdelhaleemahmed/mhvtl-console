@@ -7,7 +7,7 @@
 <style>
     /* Only what css/mhvtl-console.css has no rule for. */
     .operation-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
-    .preview-box { background: var(--surface-deep); padding: 15px; border-radius: 5px; font-family: monospace; font-size: 13px; margin-top: 10px; }
+    .preview-box { background: var(--surface-deep); padding: 15px; border-radius: 5px; font-family: monospace; font-size: 14px; margin-top: 10px; }
 </style>
 {% endblock %}
 
@@ -77,9 +77,20 @@
 
                     <div class="form-group">
                         <label for="size_mb">Tape Size (MB)</label>
+                        {% comment %}
+                            Empty, not 500000. The script fills it with the
+                            density's native capacity as soon as one is
+                            chosen, and left empty the service uses that same
+                            capacity - so the number lives in
+                            personalities.NATIVE_CAPACITY_GB and nowhere
+                            else. This field, the single-tape form, three
+                            handlers and the CLI's two verbs each carried
+                            500000 of their own, while the service said 500.
+                        {% endcomment %}
                         <input type="number" name="size_mb" id="size_mb" class="form-control"
-                               value="500000" min="1000" max="50000000">
-                        <p class="form-help" id="size-help">Size per tape in megabytes; set to the density's native capacity when you pick one</p>
+                               value="" min="1000" max="50000000"
+                               placeholder="the density's native capacity">
+                        <p class="form-help" id="size-help">Size per tape in megabytes; left empty, each tape gets its density's native capacity</p>
                     </div>
                 </div>
 
@@ -371,7 +382,7 @@
 
             card.style.display = 'block';
             container.innerHTML = existingBarcodes.map(bc =>
-                `<span class="barcode-chip" style="padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 12px;">${bc}</span>`
+                `<span class="barcode-chip" style="padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 14px;">${bc}</span>`
             ).join('');
         }
 

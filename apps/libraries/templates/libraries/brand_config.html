@@ -1,14 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'libraries/base.html' %}
 {% load static %}
 
 {% block title %}Configure {{ brand.display_name }} Library - MHVTL{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/library-config.css' %}">
-{% endblock %}
-
-{% block breadcrumb %}
-    {% include 'includes/_breadcrumb.html' with items=breadcrumb_items %}
 {% endblock %}
 
 {% block content %}
@@ -32,6 +28,132 @@
         </p>
     </div>
 
+    {% comment %}
+        The saved configurations for this vendor - the same ones
+        `mhvtl preset list` shows, from the same service call. Each
+        one fills this form in; every field can still be changed before
+        creating. Outside the form on purpose: choosing one is a GET, so it
+        can be bookmarked and shared, and nothing is written until Create.
+    {% endcomment %}
+    {% if presets %}
+    <div class="form-section presets-section">
+        <h3 class="section-title">
+            <span>💾</span>
+            Saved configurations
+        </h3>
+        {% comment %}
+            Two sentences that each said "start from" ran together here, and
+            the way back out was the tail of the second one in muted help
+            text - a thing to do, dressed as a thing to read. The help says
+            what clicking one does; leaving one is a control, below the list
+            where the one in use can be seen.
+        {% endcomment %}
+        <div class="form-help" style="margin-bottom: 10px;">
+            Each one fills the form in below, where every value can still be
+            changed before the library is created. To make one, fill the form
+            in and name it at the bottom.
+        </div>
+        <div class="preview-grid preset-list">
+            {% for preset in presets %}
+            {% comment %}
+                Folded, because an unfolded card is four things - the name,
+                the breakdown, the total and both commands - and four of them
+                filled 1.2 screens of a phone before the form's first field.
+                Closed it is one line: the name and what the service says it
+                builds.
+
+                <details> rather than a handler: the fold is a browser
+                behaviour, it needs no state of ours, and this section is
+                outside the form so the state fetch never replaces it. Open
+                when it is the one in use, or the only one there is - a single
+                preset behind a click is a click for nothing.
+            {% endcomment %}
+            {% comment %}
+                The one in use is marked on the card and not only in its
+                name: a name in another colour reads as another kind of link,
+                where a marked card can be found without reading anything.
+                The badge is the console's own way of saying a current state -
+                the green of .status-ok, which every other page uses for the
+                thing that is in effect.
+            {% endcomment %}
+            <details class="preview-item{% if preset.name == preset_name %} in-use-card{% endif %}"
+                     {% if preset.name == preset_name or presets|length == 1 %}open{% endif %}>
+                <summary>
+                    <span class="preview-label">
+                    {% if preset.name == preset_name %}
+                        {{ preset.name }} <span class="in-use">in use</span>
+                    {% else %}
+                        <a href="?preset={{ preset.name|urlencode }}">{{ preset.name }}</a>
+                    {% endif %}
+                    </span>
+                    {% comment %}
+                        The headline: the same one line `mhvtl preset list`
+                        prints beside each name, from the same service call.
+                    {% endcomment %}
+                    <span class="form-help">{{ preset.brief }}</span>
+                    {% comment %}
+                        What the triangle used to say, in words. Both are
+                        rendered and the CSS shows one, so the row needs no
+                        script and the words can be translated - which
+                        `content: "Show"` in a stylesheet could not be.
+                    {% endcomment %}
+                    <span class="form-help fold-hint">
+                        <span class="when-closed">Show</span>
+                        <span class="when-open">Hide</span>
+                    </span>
+                </summary>
+                {% comment %}
+                    What the preset fixes, spelled by the service - the same
+                    words `mhvtl preset show` prints under "fixed here", and
+                    nothing filled in for what it leaves to its profile.
+
+                    This was four raw specification fields with
+                    "vendor default" for the ones a preset had not set, which
+                    read as a lie for a mixed preset: its lists IMPLY the
+                    drive count and the density, so the card said "vendor
+                    default drive(s)" for a library of four drives.
+                {% endcomment %}
+                <div class="preview-value">{{ preset.summary }}</div>
+                {% if preset.holds %}
+                {% comment %}
+                    The total above the breakdown: "20 x LTO8 + 10 x LTO6"
+                    never said thirty, and the number of cartridges is the
+                    thing an operator is deciding about.
+                {% endcomment %}
+                <div class="form-help">which is {{ preset.holds }}</div>
+                {% endif %}
+                {% comment %}
+                    The same two lines `mhvtl preset show` ends with, composed
+                    by the same service call. The console is where a preset is
+                    easiest to make and the terminal is where it is most
+                    useful, so this is the page that should say what to type
+                    with it. "Rebuild it" is the one that survives leaving
+                    this host: presets.toml does not travel.
+                {% endcomment %}
+                {% for line in preset.commands %}
+                <div class="form-help" style="margin-top: 6px;">
+                    {{ line.label }}:
+                    <code style="user-select: all;">{{ line.command }}</code>
+                </div>
+                {% endfor %}
+            </details>
+            {% endfor %}
+        </div>
+        {% if preset_name %}
+        {% comment %}
+            The way out, and only while there is something to come out of.
+            A GET to the page with no ?preset=, which is why it is a link -
+            bookmarkable, and nothing is written. The vendor is named rather
+            than called "this vendor": the operator is on one page and the
+            word for it is IBM.
+        {% endcomment %}
+        <a href="?" class="btn btn-secondary btn-compact leave-preset">
+            ↺ Start from {{ brand.display_name }}'s defaults instead
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <form method="post" id="configForm" data-profile-key="{{ profile_key }}">
         {% csrf_token %}
 
@@ -48,9 +170,9 @@
                         Library ID <span class="required">*</span>
                     </label>
                     <input type="number" name="library_id" class="form-input auto-generated"
-                           value="{{ next_library_id }}" readonly
+                           value="{{ form.library_id }}" readonly
                            min="1" max="999" required>
-                    <div class="form-help">Auto-generated unique identifier</div>
+                    <div class="form-help">The next free one</div>
                 </div>
 
                 <div class="form-group">
@@ -63,15 +185,13 @@
                     <div class="form-help">Auto-assigned SCSI channel</div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">
-                        SCSI Target <span class="required">*</span>
-                    </label>
-                    <input type="number" name="target" class="form-input auto-generated"
-                           value="{{ next_target }}" readonly
-                           min="0" max="255" required>
-                    <div class="form-help">SCSI target ID (auto-calculated)</div>
-                </div>
+                {% comment %}
+                No SCSI Target field. It was readonly, always showed 0, and was
+                posted and then ignored: the target is allocated when the
+                configuration is written, against device.conf as it stands, so
+                any number shown here is a guess. The add-drive page stopped
+                asking for the same four values for the same reason.
+                {% endcomment %}
 
                 <div class="form-group">
                     <label class="form-label">
@@ -96,8 +216,22 @@
                 <label class="form-label" for="wantedMedia">
                     Tape you want this library to use
                 </label>
-                <select class="form-select" id="wantedMedia">
-                    <option value="">Any tape this vendor supports</option>
+                {% comment %}
+                Every dropdown on this page is rendered the same way, from the
+                service's answer: its options, and the one it marked. The
+                script replaces them with the answer to the next question and
+                chooses nothing itself. See services/libraries/setup_form.
+                {% endcomment %}
+                {% comment %}
+                `wanted_media`, not `media`: a cartridge row below is
+                `media=LTO8:20`, and two questions under one name made the
+                last one answer both - see views._asked.
+                {% endcomment %}
+                <select class="form-select" id="wantedMedia" name="wanted_media">
+                    {% for option in form.wanted_media.options %}
+                        <option value="{{ option.value }}"
+                                {% if option.selected %}selected{% endif %}>{{ option.label }}</option>
+                    {% endfor %}
                 </select>
                 <div class="form-help" id="wantedMediaHelp">
                     Choosing one leaves only the models and drives that take it,
@@ -118,14 +252,16 @@
                     Select {{ brand.display_name }} Model <span class="required">*</span>
                 </label>
                 <select name="library_model" class="form-select" required id="libraryModelSelect">
-                    <option value="">Choose a model...</option>
-                    <!-- Populated by JavaScript from profile data -->
+                    {% for option in form.library_model.options %}
+                        <option value="{{ option.value }}"
+                                {% if option.selected %}selected{% endif %}>{{ option.label }}</option>
+                    {% endfor %}
                 </select>
                 <div class="form-help">Select the specific library model to emulate</div>
 
-                <div id="modelInfo" class="model-info" style="display: none;">
-                    <div class="model-info-title">Model Information</div>
-                    <div id="modelDetails"></div>
+                <div id="modelInfo" class="model-info">
+                    <div class="model-info-title">What MHVTL emulates for it</div>
+                    <div id="modelDetails">{{ form.limits.layout }}</div>
                 </div>
             </div>
         </div>
@@ -152,7 +288,8 @@
                         Product Identification <span class="required">*</span>
                     </label>
                     <input type="text" name="product_identification" class="form-input auto-generated"
-                           id="productId" readonly maxlength="100" required>
+                           id="productId" value="{{ form.product }}"
+                           readonly maxlength="100" required>
                     <div class="form-help">SCSI product identifier (from model)</div>
                 </div>
 
@@ -161,7 +298,8 @@
                         Product Revision <span class="required">*</span>
                     </label>
                     <input type="text" name="product_revision" class="form-input auto-generated"
-                           id="productRevision" readonly maxlength="20" required>
+                           id="productRevision" value="{{ form.library_revision }}"
+                           readonly maxlength="20" required>
                     <div class="form-help">Firmware revision level</div>
                 </div>
 
@@ -169,9 +307,22 @@
                     <label class="form-label">
                         Unit Serial Number
                     </label>
+                    {% comment %}
+                    The service's, not this page's. It was computed here in
+                    JavaScript - library id plus 80000000 - and posted, so the
+                    browser and the terminal gave the same library different
+                    serials. The convention was right and now belongs to
+                    profiles.personalities.device_serial, which `mhvtl library
+                    create` uses as well. maxlength is ten because standard
+                    INQUIRY reports only ten characters.
+                    {% endcomment %}
                     <input type="text" name="unit_serial_number" class="form-input auto-generated"
-                           id="serialNumber" readonly maxlength="50">
-                    <div class="form-help">Auto-generated based on Library ID</div>
+                           id="serialNumber" value="{{ form.serial }}"
+                           readonly maxlength="10">
+                    <div class="form-help">
+                        From the library id. A backup application identifies
+                        the device by this.
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,34 +334,74 @@
                 Drive Configuration
             </h3>
 
+            {% comment %}
+            One row per kind of drive. A library can hold two generations at
+            once - two LTO-8 drives and two LTO-6 - and the order of the rows
+            is slot order, which is SCSI target order, so a backup
+            application that addresses a drive by its position notices when
+            that position changes.
+
+            The rows are the server's: its options, which one is marked, and
+            how many. Add and Remove re-ask it rather than cloning a row
+            here, so the page still decides nothing - a second row's options
+            are the ones the first has not taken, which is a question only
+            the catalogue can answer.
+
+            Each row posts `drive=MODEL:COUNT`, the same spelling `--drive`
+            takes, parsed by the same service.
+            {% endcomment %}
+            <div id="driveRows">
+                {% for row in form.drives.rows %}
+                <div class="form-grid kind-row" data-kind="drive">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Drive Model <span class="required">*</span>
+                        </label>
+                        <select class="form-select kind-name" required>
+                            {% for option in row.options %}
+                                <option value="{{ option.value }}"
+                                        {% if option.selected %}selected{% endif %}>{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-help">{{ row.says }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            How many <span class="required">*</span>
+                        </label>
+                        <input type="number" class="form-input kind-count"
+                               value="{{ row.count }}" min="1"
+                               max="{{ form.limits.max_drives }}" required>
+                        <div class="form-help">
+                            {% if row.can_remove %}
+                            <a href="#" class="kind-remove">Remove this kind</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-help" id="driveRowsHelp">
+                {% if form.drives.can_add %}
+                <a href="#" id="addDrive">+ Add another kind of drive</a> &mdash;
+                {% else %}
+                {{ form.drives.why_not }} &mdash;
+                {% endif %}
+                {{ form.says.drives }}
+            </div>
+
             <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">
-                        Number of Drives <span class="required">*</span>
-                    </label>
-                    <input type="number" name="num_drives" class="form-input"
-                           id="numDrives" value="4" min="1" required>
-                    <div class="form-help" id="numDrivesHelp">Number of tape drives in this library</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">
-                        Drive Model <span class="required">*</span>
-                    </label>
-                    <select name="drive_model" class="form-select" id="driveModelSelect" required disabled>
-                        <option value="">Select library model first...</option>
-                        <!-- Populated by JavaScript based on library model -->
-                    </select>
-                    <div class="form-help" id="driveHelp">Drive model (filtered by library compatibility)</div>
-                </div>
-
                 <div class="form-group">
                     <label class="form-label">
                         MAP Slots
                     </label>
                     <input type="number" name="map_count" class="form-input"
-                           id="mapCount" min="0">
-                    <div class="form-help" id="mapCountHelp">Import/export (mail slot) positions</div>
+                           id="mapCount" min="0" max="{{ form.limits.max_maps }}">
+                    <div class="form-help" id="mapCountHelp">
+                        Import/export (mail slot) positions, up to
+                        {{ form.limits.max_maps }}. Left empty it is the
+                        vendor's default, fitted to this model.
+                    </div>
                 </div>
             </div>
         </div>
@@ -224,40 +415,68 @@
 
             <div class="warning-box">
                 <div class="warning-title">Limits for this model</div>
-                <span id="limitsText">Select a library model to see how many drives,
-                slots and MAP slots MHVTL emulates for it.</span>
+                <span id="limitsText">{{ form.says.drives }}. {{ form.says.slots }}.</span>
+            </div>
+
+            {% comment %}
+            One row per kind of cartridge, the same way. Barcodes number
+            straight through the runs and only the suffix changes -
+            I90001L8, I90002L8, I90003L6 - because MHVTL reads the density
+            out of the suffix and nothing else.
+
+            A density only one drive here can write is still writable in this
+            library; the label says read-only only when NO drive here writes
+            it. Each row posts `media=DENSITY:COUNT`.
+            {% endcomment %}
+            <div id="mediaRows">
+                {% for row in form.media.rows %}
+                <div class="form-grid kind-row" data-kind="media">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Media Type <span class="required">*</span>
+                        </label>
+                        <select class="form-select kind-name" required>
+                            {% for option in row.options %}
+                                <option value="{{ option.value }}"
+                                        {% if option.selected %}selected{% endif %}>{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            How many <span class="required">*</span>
+                        </label>
+                        <input type="number" class="form-input kind-count"
+                               value="{{ row.count }}" min="0"
+                               max="{{ form.limits.max_slots }}" required>
+                        <div class="form-help">
+                            {% if row.can_remove %}
+                            <a href="#" class="kind-remove">Remove this kind</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-help" id="mediaRowsHelp">
+                {% if form.media.can_add %}
+                <a href="#" id="addMedia">+ Add another kind of tape</a> &mdash;
+                {% else %}
+                {{ form.media.why_not }} &mdash;
+                {% endif %}
+                <span id="mediaHelp">{{ form.says.media }}</span>
             </div>
 
             <div class="form-grid">
                 <div class="form-group">
                     <label class="form-label">
-                        Media Type <span class="required">*</span>
-                    </label>
-                    <select name="media_type" class="form-select" id="mediaTypeSelect" required disabled>
-                        <option value="">Select drive model first...</option>
-                        <!-- Populated by JavaScript based on drive model -->
-                    </select>
-                    <div class="form-help" id="mediaHelp">Media type (filtered by drive compatibility)</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">
                         Barcode Prefix
                     </label>
                     <input type="text" name="barcode_prefix" class="form-input"
-                           id="barcodePrefix" value="{{ default_barcode_prefix }}" maxlength="5"
+                           id="barcodePrefix" value="{{ form.barcode_prefix }}" maxlength="5"
                            style="text-transform: uppercase;">
                     <div class="form-help">Prefix for auto-generated barcodes</div>
-                    <div id="barcodePreview" class="barcode-preview" style="margin-top: 5px; font-family: monospace; color: #0066cc; font-weight: bold;">Example: {{ default_barcode_prefix }}001L8</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">
-                        Media Count <span class="required">*</span>
-                    </label>
-                    <input type="number" name="media_count" class="form-input"
-                           id="mediaCount" value="{{ default_media_count }}" min="0" required>
-                    <div class="form-help">Number of tapes to create initially</div>
+                    <div id="barcodePreview" class="barcode-preview" style="margin-top: 5px; font-family: monospace; color: #0066cc; font-weight: bold;">{{ form.says.barcode }}</div>
                 </div>
 
                 <div class="form-group">
@@ -265,17 +484,23 @@
                         Empty Slots <span class="required">*</span>
                     </label>
                     <input type="number" name="empty_slots" class="form-input"
-                           id="emptySlots" value="{{ default_empty_slots }}" min="0" required>
+                           id="emptySlots" value="{{ form.counts.empty_slots }}"
+                           min="0" max="{{ form.limits.max_slots }}" required>
                     <div class="form-help">Additional empty slots for future tapes</div>
                 </div>
 
                 <div class="form-group full-width">
                     <div class="slots-calculator">
+                        {% comment %}
+                        What the whole form adds up to, said by the service.
+                        A mixed library's totals were visible nowhere: 20
+                        LTO8 and 10 LTO6 made a reader do the addition.
+                        {% endcomment %}
                         <div class="total-slots" id="totalSlots">
-                            Total Slots: <span id="totalValue">{{ default_media_count|add:default_empty_slots }}</span>
+                            <span id="totalValue">{{ form.says.holds }}</span>
                         </div>
                         <div class="form-help" style="text-align: center; margin-top: 5px;" id="maxSlotsText">
-                            Maximum: select a library model
+                            {{ form.says.slots }}
                         </div>
                     </div>
                 </div>
@@ -305,19 +530,50 @@
             <div class="preview-grid">
                 <div class="preview-item">
                     <div class="preview-label">Library ID:</div>
-                    <div class="preview-value">{{ next_library_id }}</div>
+                    <div class="preview-value">{{ form.library_id }}</div>
                 </div>
                 <div class="preview-item">
                     <div class="preview-label">Brand:</div>
                     <div class="preview-value">{{ brand.name }}</div>
                 </div>
                 <div class="preview-item">
-                    <div class="preview-label">SCSI Address:</div>
-                    <div class="preview-value">{{ next_channel }}:0:0</div>
+                    <div class="preview-label">Serial:</div>
+                    <div class="preview-value">{{ form.serial }}</div>
                 </div>
                 <div class="preview-item">
-                    <div class="preview-label">NAA:</div>
-                    <div class="preview-value">{{ next_library_id }}:11:22:33:ab:{{ next_channel|stringformat:"02d" }}:00:00</div>
+                    <div class="preview-label">First barcode:</div>
+                    <div class="preview-value">{{ form.barcode_prefix }}001{{ form.media_suffix }}</div>
+                </div>
+                {% comment %}
+                The SCSI address and the NAA were here and both were wrong.
+                The address said 0:0:0 whatever the host held, because the
+                target is allocated when the configuration is written; and the
+                NAA was spelled `id:11:22:33:ab:...` where device_conf writes
+                `id:22:33:44:ab:...`, so this preview showed an identifier the
+                library would never report. A preview that cannot be right is
+                worse than no preview: the serial and the first barcode above
+                come from the service that writes them.
+                {% endcomment %}
+            </div>
+        </div>
+
+        <!-- Keep this configuration for next time -->
+        <div class="form-section">
+            <h3 class="section-title">
+                <span>💾</span>
+                Keep this configuration (optional)
+            </h3>
+
+            <div class="form-group">
+                <label class="form-label" for="savePreset">Save it as</label>
+                <input type="text" name="save_preset" class="form-input"
+                       id="savePreset" maxlength="40"
+                       placeholder="a name of your own, e.g. {{ profile_key|lower }}-small">
+                <div class="form-help">
+                    Saved only if the library is created. The name cannot be a
+                    vendor's: a profile is a catalogue, a preset is one
+                    configuration made from it. The same thing on the command
+                    line is <code>mhvtl library create ... --save-preset NAME</code>.
                 </div>
             </div>
         </div>
@@ -338,387 +594,179 @@
 
 {% block extra_js %}
 <script>
-/**
- * Library Configuration - Cascading Dropdowns
- * Profile data is embedded from Django context for fast loading
+/* The form asks the service and renders the answer. It narrows nothing and
+ * chooses nothing.
+ *
+ * There were five decision functions here - initLibraryModels,
+ * updateDriveModels, updateMediaTypes, applyLimits and bestDriveFor - and
+ * every one of them answered a question the service layer already answers.
+ * Three of them had drifted: they filtered densities on what a drive LOADS
+ * where the services mean what it can WRITE, they chose the last drive listed
+ * (a half-height HH9 for LTO-9, where the rule gives the full-height TD9),
+ * and applyLimits() reset the drive count on every model change, so a
+ * preset's own count was rendered into the HTML and then overwritten.
+ *
+ * What is left is three jobs that are not decisions: gather the rows as they
+ * stand, ask the endpoint what the form looks like with them, and put that
+ * answer on the screen. Adding and removing a kind are the same job with one
+ * row more or one fewer - the server decides what a new row may offer,
+ * because "what is left to choose" is a catalogue question.
+ *
+ * See services/libraries/setup_form.
  */
-(function() {
-    // Profile data from services/profiles/data.get_profile_options (embedded by Django)
-    const PROFILE = {{ profile_json|safe }};
+(function () {
+    const STATE_URL = "{% url 'libraries:setup_form_ajax' brand.name|lower %}";
 
-    // DOM elements
-    const libraryModelSelect = document.getElementById('libraryModelSelect');
-    const driveModelSelect = document.getElementById('driveModelSelect');
-    const mediaTypeSelect = document.getElementById('mediaTypeSelect');
-    const productIdInput = document.getElementById('productId');
-    const productRevisionInput = document.getElementById('productRevision');
-    const serialNumberInput = document.getElementById('serialNumber');
-    const modelInfo = document.getElementById('modelInfo');
-    const modelDetails = document.getElementById('modelDetails');
-    const mediaCountInput = document.getElementById('mediaCount');
-    const emptySlotsInput = document.getElementById('emptySlots');
-    const totalSlotsDiv = document.getElementById('totalSlots');
-    const totalValueSpan = document.getElementById('totalValue');
-    const barcodePreview = document.getElementById('barcodePreview');
-    const barcodePrefixInput = document.getElementById('barcodePrefix');
+    /* Keyed by the name each field travels under, which is the name the
+     * endpoint reads it by. `wanted_media` is a different question from a
+     * `media` row and now says so. */
+    const picked = {
+        wanted_media: () => document.getElementById('wantedMedia'),
+        library_model: () => document.getElementById('libraryModelSelect'),
+        empty_slots: () => document.getElementById('emptySlots')
+    };
+    const sections = {
+        drive: () => document.getElementById('driveRows'),
+        media: () => document.getElementById('mediaRows')
+    };
     const configForm = document.getElementById('configForm');
     const submitBtn = document.getElementById('submitBtn');
     const submitText = document.getElementById('submitText');
     const submitSpinner = document.getElementById('submitSpinner');
-    const numDrivesInput = document.getElementById('numDrives');
-    const numDrivesHelp = document.getElementById('numDrivesHelp');
-    const mapCountInput = document.getElementById('mapCount');
-    const mapCountHelp = document.getElementById('mapCountHelp');
-    const driveHelp = document.getElementById('driveHelp');
-    const mediaHelp = document.getElementById('mediaHelp');
-    const limitsText = document.getElementById('limitsText');
-    const maxSlotsText = document.getElementById('maxSlotsText');
 
-    // What MHVTL emulates for the chosen model (profiles/personalities via
-    // get_profile_options). Checked again on the server, which is the check;
-    // these keep the form from offering what would be refused.
-    function limits() {
-        return (PROFILE.library_limits || {})[libraryModelSelect.value] || null;
-    }
+    if (!picked.library_model()) { return; }
 
-    function maxDrives() {
-        const lim = limits();
-        if (!lim) return null;
-        // One SCSI target for the library, one per drive.
-        const byTargets = PROFILE.free_targets == null ? Infinity : PROFILE.free_targets - 1;
-        return Math.max(0, Math.min(lim.max_drives, byTargets));
-    }
-
-    function applyLimits() {
-        const lim = limits();
-        if (!lim) return;
-        const drives = maxDrives();
-        numDrivesInput.max = drives;
-        numDrivesInput.value = Math.min(lim.default_num_drives, drives) || Math.min(1, drives);
-        const targetNote = PROFILE.free_targets == null ? ''
-            : `; ${PROFILE.free_targets} SCSI target(s) are free, one for the library and one per drive`;
-        numDrivesHelp.textContent = `1 to ${drives.toLocaleString()} ` +
-            `(the ${lim.layout} layout holds ${lim.max_drives.toLocaleString()}${targetNote})`;
-        mapCountInput.max = lim.max_maps;
-        mapCountInput.value = lim.default_num_maps;
-        mapCountHelp.textContent = `0 to ${lim.max_maps.toLocaleString()} for this model`;
-        mediaCountInput.max = lim.max_slots;
-        emptySlotsInput.max = lim.max_slots;
-        limitsText.textContent = `MHVTL emulates ${libraryModelSelect.value} with the ` +
-            `${lim.layout} layout (${lim.source}): up to ${lim.max_drives.toLocaleString()} drives, ` +
-            `${lim.max_slots.toLocaleString()} storage slots and ${lim.max_maps.toLocaleString()} MAP slots. ` +
-            'Anything past these is silently ignored by MHVTL, so the form will not offer it.';
-        maxSlotsText.textContent = `Maximum: ${lim.max_slots.toLocaleString()} slots`;
-        updateTotalSlots();
-    }
-
-    // -- starting from the tape ------------------------------------------
-    //
-    // "I want an LTO-10 library" is the question this form could not answer:
-    // the operator had to know that LTO-10 needs a TDA drive and pick the
-    // model, the drive and the media in that order. The tape chosen here (or
-    // carried in from the vendor page's filter) leaves only the models and
-    // drives that take it.
-
-    const wantedMediaSelect = document.getElementById('wantedMedia');
-    const wantedMediaHelp = document.getElementById('wantedMediaHelp');
-
-    function drivesFor(model) {
-        return PROFILE.library_drive_mapping[model] || PROFILE.drive_models || [];
-    }
-
-    function driveTakes(drive, media) {
-        return !media || (PROFILE.drive_media_mapping[drive] || []).includes(media);
-    }
-
-    function modelTakes(model, media) {
-        return !media || drivesFor(model).some(drive => driveTakes(drive, media));
-    }
-
-    function wantedMedia() {
-        return wantedMediaSelect ? wantedMediaSelect.value : '';
-    }
-
-    //: the newest drive that writes this tape - the one an operator means
-    function bestDriveFor(model, media) {
-        const drives = drivesFor(model).filter(drive => driveTakes(drive, media));
-        if (!drives.length) return null;
-        const writes = drives.filter(
-            drive => !(PROFILE.read_only_media[drive] || []).includes(media));
-        return (writes.length ? writes : drives)[writes.length ? writes.length - 1
-                                                               : drives.length - 1];
-    }
-
-    function initWantedMedia() {
-        if (!wantedMediaSelect) return;
-        (PROFILE.media_types || []).forEach(media => {
-            const option = document.createElement('option');
-            option.value = media;
-            option.textContent = (PROFILE.media_labels || {})[media] || media;
-            wantedMediaSelect.appendChild(option);
+    /* Every row as MODEL:COUNT, in the order the page has them - which is
+     * slot order, and therefore SCSI target order. The same spelling the
+     * --drive flag takes, parsed by the same service. */
+    function rowsOf(kind) {
+        const rows = [];
+        sections[kind]().querySelectorAll('.kind-row').forEach(function (row) {
+            const name = row.querySelector('.kind-name');
+            const count = row.querySelector('.kind-count');
+            if (name && name.value) {
+                rows.push(name.value + ':' + (count ? count.value || '0' : '0'));
+            }
         });
-        if (PROFILE.wanted_media) {
-            wantedMediaSelect.value = PROFILE.wanted_media;
-        }
-        wantedMediaSelect.addEventListener('change', function () {
-            initLibraryModels();
-            describeWantedMedia();
+        return rows;
+    }
+
+    /* The choices as they stand, which is what the server needs to answer the
+     * next question: all of them, not only what changed, because the answer
+     * depends on them together. */
+    function asked(extra) {
+        const params = new URLSearchParams();
+        Object.keys(picked).forEach(function (name) {
+            const field = picked[name]();
+            if (field && field.value !== '') { params.set(name, field.value); }
         });
-        describeWantedMedia();
+        rowsOf('drive').forEach(run => params.append('drive', run));
+        rowsOf('media').forEach(run => params.append('media', run));
+        (extra || []).forEach(pair => params.append(pair[0], pair[1]));
+        return params;
     }
 
-    function describeWantedMedia() {
-        if (!wantedMediaHelp) return;
-        const media = wantedMedia();
-        if (!media) {
-            wantedMediaHelp.textContent = 'Choosing one leaves only the models and '
-                + 'drives that take it, and picks the newest drive that writes it.';
-            return;
-        }
-        const models = (PROFILE.library_models || []).filter(m => modelTakes(m, media));
-        const drives = new Set();
-        models.forEach(m => drivesFor(m).filter(d => driveTakes(d, media))
-                                        .forEach(d => drives.add(d)));
-        wantedMediaHelp.textContent =
-            `${models.length} model(s) and ${drives.size} drive(s) here take ${media}.`;
+    /* Only the newest answer may be rendered: two changes in quick succession
+     * are two requests and the first can land last. */
+    let latest = 0;
+
+    function ask(extra) {
+        const mine = ++latest;
+        fetch(STATE_URL + '?' + asked(extra).toString(),
+              {headers: {'X-Requested-With': 'XMLHttpRequest'}})
+            .then(response => response.text())
+            .then(function (html) {
+                if (mine !== latest) { return; }
+                render(html);
+            })
+            .catch(function () { /* the page keeps the state it has */ });
     }
 
-    // Initialize library model dropdown
-    function initLibraryModels() {
-        if (!PROFILE.library_models) return;
-
-        const media = wantedMedia();
-        const models = PROFILE.library_models.filter(model => modelTakes(model, media));
-        const previous = libraryModelSelect.value;
-
-        libraryModelSelect.innerHTML = '<option value="">Choose a model...</option>';
-        models.forEach(model => {
-            const option = document.createElement('option');
-            option.value = model;
-            option.textContent = model;
-            libraryModelSelect.appendChild(option);
+    /* The server returns the form's markup; this swaps in the parts that
+     * changed. Rendering, not composing: the rows, the options, the marks,
+     * the counts and the sentences are all decided over there. */
+    function render(html) {
+        const fresh = new DOMParser().parseFromString(html, 'text/html');
+        const swap = ['driveRows', 'mediaRows', 'driveRowsHelp',
+                      'mediaRowsHelp', 'limitsText', 'modelDetails',
+                      'barcodePreview', 'totalSlots', 'maxSlotsText',
+                      'libraryModelSelect', 'wantedMedia'];
+        swap.forEach(function (id) {
+            const was = document.getElementById(id);
+            const now = fresh.getElementById(id);
+            if (was && now) { was.replaceWith(now); }
         });
-
-        libraryModelSelect.value = models.includes(previous) ? previous
-            : (models.includes(PROFILE.defaults.library_model)
-               ? PROFILE.defaults.library_model : (models[0] || ''));
-
-        if (libraryModelSelect.value) {
-            updateDriveModels();
-        }
-    }
-
-    // Update drive models based on selected library model
-    function updateDriveModels() {
-        const libraryModel = libraryModelSelect.value;
-
-        if (!libraryModel) {
-            driveModelSelect.innerHTML = '<option value="">Select library model first...</option>';
-            driveModelSelect.disabled = true;
-            mediaTypeSelect.innerHTML = '<option value="">Select drive model first...</option>';
-            mediaTypeSelect.disabled = true;
-            return;
-        }
-
-        // Only the drives that take the tape the operator asked for
-        const media = wantedMedia();
-        const validDrives = drivesFor(libraryModel).filter(d => driveTakes(d, media));
-
-        driveModelSelect.innerHTML = '<option value="">Choose a drive...</option>';
-        validDrives.forEach(drive => {
-            const option = document.createElement('option');
-            option.value = drive;
-            option.textContent = drive;
-            driveModelSelect.appendChild(option);
+        ['productId', 'productRevision', 'serialNumber', 'barcodePrefix',
+         'emptySlots'].forEach(function (id) {
+            const was = document.getElementById(id);
+            const now = fresh.getElementById(id);
+            if (was && now && was.value !== now.value) { was.value = now.value; }
         });
-        driveModelSelect.disabled = false;
-
-        // The model's default drive, as the server picks it
-        // (get_default_drive_for_library): the profile default if this model
-        // takes it, else the newest LTO it takes. The last drive listed is
-        // not the newest - STK L700's list ends with DLT7000.
-        const preferred = media ? bestDriveFor(libraryModel, media)
-                                : (PROFILE.default_drive_by_library || {})[libraryModel];
-        if (validDrives.length > 0) {
-            driveModelSelect.value = validDrives.includes(preferred)
-                ? preferred : validDrives[validDrives.length - 1];
-            updateMediaTypes();
-        }
-        applyLimits();
-
-        // Update product ID and revision
-        productIdInput.value = libraryModel;
-        productRevisionInput.value = PROFILE.defaults.library_model === libraryModel
-            ? (PROFILE.defaults.library_revision || 'D.02')
-            : 'D.02';
-
-        // Generate serial number
-        const libraryIdInput = document.querySelector('input[name="library_id"]');
-        if (libraryIdInput) {
-            serialNumberInput.value = parseInt(libraryIdInput.value) + 80000000;
-        }
-
-        // Show model info
-        if (modelDetails) {
-            modelDetails.innerHTML = `
-                <strong>Product ID:</strong> ${libraryModel}<br>
-                <strong>Revision:</strong> ${productRevisionInput.value}<br>
-                <strong>Compatible Drives:</strong> ${validDrives.length}
-            `;
-        }
-        if (modelInfo) {
-            modelInfo.style.display = 'block';
-        }
+        listen();
     }
 
-    // Update media types based on selected drive model
-    function updateMediaTypes() {
-        const driveModel = driveModelSelect.value;
-
-        if (!driveModel) {
-            mediaTypeSelect.innerHTML = '<option value="">Select drive model first...</option>';
-            mediaTypeSelect.disabled = true;
-            return;
-        }
-
-        // Get valid media for this drive model
-        const validMedia = PROFILE.drive_media_mapping[driveModel] || [];
-        const readOnly = (PROFILE.read_only_media || {})[driveModel] || [];
-
-        mediaTypeSelect.innerHTML = '<option value="">Choose media type...</option>';
-        validMedia.forEach(media => {
-            const option = document.createElement('option');
-            option.value = media;
-            const suffix = PROFILE.media_suffixes[media] || media.substring(0, 2);
-            option.textContent = `${media} (suffix: ${suffix})` +
-                (readOnly.includes(media) ? ' - read-only in this drive' : '');
-            mediaTypeSelect.appendChild(option);
+    /* Re-attached after every swap, because the elements are new ones. */
+    function listen() {
+        Object.keys(picked).forEach(function (name) {
+            const field = picked[name]();
+            if (field) { field.addEventListener('change', () => ask()); }
         });
-        mediaTypeSelect.disabled = false;
-
-        const writable = validMedia.filter(m => !readOnly.includes(m));
-        const personality = (PROFILE.drive_personality || {})[driveModel];
-        driveHelp.textContent = `${driveModel} is emulated as ${personality || 'a generic drive'}; ` +
-            `it writes ${writable.join(', ') || 'nothing'}` +
-            (readOnly.length ? ` and only reads ${readOnly.join(', ')}` : '') + '.';
-
-        // The tape the operator asked for, else the drive's native one
-        if (validMedia.length > 0) {
-            const media = wantedMedia();
-            mediaTypeSelect.value = validMedia.includes(media) ? media : validMedia[0];
-            updateBarcodePreview();
+        document.querySelectorAll('.kind-name, .kind-count').forEach(function (field) {
+            field.addEventListener('change', () => ask());
+        });
+        document.querySelectorAll('.kind-remove').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                link.closest('.kind-row').remove();
+                ask();
+            });
+        });
+        const addDrive = document.getElementById('addDrive');
+        if (addDrive) {
+            addDrive.addEventListener('click', function (event) {
+                event.preventDefault();
+                // A word, not a half-written row: what a new row may
+                // hold is whatever the rows above have not taken, which is
+                // a catalogue question.
+                ask([['add', 'drive']]);
+            });
+        }
+        const addMedia = document.getElementById('addMedia');
+        if (addMedia) {
+            addMedia.addEventListener('click', function (event) {
+                event.preventDefault();
+                ask([['add', 'media']]);
+            });
         }
     }
 
-    function updateMediaHelp() {
-        const readOnly = (PROFILE.read_only_media || {})[driveModelSelect.value] || [];
-        mediaHelp.textContent = readOnly.includes(mediaTypeSelect.value)
-            ? `${mediaTypeSelect.value} is read-only in ${driveModelSelect.value}: ` +
-              'the library can be restored from but not backed up to.'
-            : 'Media type (filtered by drive compatibility)';
-    }
-
-    // Update barcode preview
-    function updateBarcodePreview() {
-        updateMediaHelp();
-        if (!barcodePreview) return;
-
-        const prefix = (barcodePrefixInput ? barcodePrefixInput.value : 'E01').toUpperCase();
-        const mediaType = mediaTypeSelect ? mediaTypeSelect.value : '';
-        const suffix = PROFILE.media_suffixes[mediaType] || 'L8';
-
-        barcodePreview.textContent = `Example: ${prefix}001${suffix}`;
-    }
-
-    // Update total slots calculation
-    function updateTotalSlots() {
-        if (!mediaCountInput || !emptySlotsInput || !totalValueSpan || !totalSlotsDiv) {
-            return;
-        }
-
-        const mediaCount = parseInt(mediaCountInput.value) || 0;
-        const emptySlots = parseInt(emptySlotsInput.value) || 0;
-        const total = mediaCount + emptySlots;
-        const lim = limits();
-
-        totalValueSpan.textContent = total.toLocaleString();
-
-        if (lim && total > lim.max_slots) {
-            totalSlotsDiv.className = 'total-slots invalid';
-            totalValueSpan.textContent += ' (EXCEEDS LIMIT!)';
-        } else {
-            totalSlotsDiv.className = 'total-slots valid';
-        }
-    }
-
-    // Event listeners
-    libraryModelSelect.addEventListener('change', updateDriveModels);
-    driveModelSelect.addEventListener('change', function() {
-        updateMediaTypes();
-        updateBarcodePreview();
-    });
-    mediaTypeSelect.addEventListener('change', updateBarcodePreview);
-
-    if (barcodePrefixInput) {
-        barcodePrefixInput.addEventListener('input', updateBarcodePreview);
-    }
-    if (mediaCountInput) {
-        mediaCountInput.addEventListener('input', updateTotalSlots);
-    }
-    if (emptySlotsInput) {
-        emptySlotsInput.addEventListener('input', updateTotalSlots);
-    }
-
-    // Form submission
     if (configForm) {
-        configForm.addEventListener('submit', function(e) {
-            // Validate against the model's layout
-            const lim = limits();
-            if (lim && mediaCountInput && emptySlotsInput) {
-                const total = (parseInt(mediaCountInput.value) || 0) + (parseInt(emptySlotsInput.value) || 0);
-                if (total > lim.max_slots) {
-                    e.preventDefault();
-                    alert(`${libraryModelSelect.value} holds at most ${lim.max_slots.toLocaleString()} slots; ` +
-                          `${total.toLocaleString()} requested.`);
-                    return;
-                }
-            }
-            const drives = maxDrives();
-            if (drives != null && (parseInt(numDrivesInput.value) || 0) > drives) {
-                e.preventDefault();
-                alert(`At most ${drives} drive(s) can be added here.`);
-                return;
-            }
-
-            // Validate selections
-            if (!libraryModelSelect.value) {
-                e.preventDefault();
-                alert('Please select a library model.');
-                return;
-            }
-            if (!driveModelSelect.value) {
-                e.preventDefault();
-                alert('Please select a drive model.');
-                return;
-            }
-            if (!mediaTypeSelect.value) {
-                e.preventDefault();
-                alert('Please select a media type.');
-                return;
-            }
-
-            // Show loading state
-            if (submitBtn) submitBtn.disabled = true;
-            if (submitText) submitText.style.display = 'none';
-            if (submitSpinner) submitSpinner.style.display = 'inline-block';
+        configForm.addEventListener('submit', function () {
+            // The rows travel as the fields the POST reads, named the way the
+            // endpoint names them, so the specification the server builds is
+            // the one the form was showing.
+            rowsOf('drive').forEach(function (run) {
+                configForm.appendChild(hidden('drive', run));
+            });
+            rowsOf('media').forEach(function (run) {
+                configForm.appendChild(hidden('media', run));
+            });
+            if (submitBtn) { submitBtn.disabled = true; }
+            if (submitText) { submitText.style.display = 'none'; }
+            if (submitSpinner) { submitSpinner.style.display = 'inline-block'; }
             document.body.classList.add('loading');
         });
     }
 
-    // Initialize on page load
-    initWantedMedia();
-    initLibraryModels();
-    updateTotalSlots();
+    function hidden(name, value) {
+        const field = document.createElement('input');
+        field.type = 'hidden';
+        field.name = name;
+        field.value = value;
+        return field;
+    }
+
+    listen();
 })();
 </script>
 {% endblock %}

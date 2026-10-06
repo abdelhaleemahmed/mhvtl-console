@@ -1,68 +1,94 @@
 {% load static %}
-<!DOCTYPE html>
+{% comment %}
+The console's page frame. Every page extends this one - there is no second.
+
+There were five before it: this file with includes/_header.html,
+libraries/base.html, libraries/operator/base.html, libraries/console/base.html,
+and a header written inline in the authentication dashboard. Fifty pages were
+spread across them and no two of the five offered the same navigation, which
+is how the create-a-library form came to be reachable from one page that two
+of the frames never linked to. See guides/plan-one-console.
+
+The blocks are the ones the old frames already used, so their pages did not
+have to change:
+
+    title           the <title>; defaults to the view's `title`
+    header_title    the page's name, first line of the content
+    header_actions  buttons beside that name
+    section_nav     a section's own links, under the header
+    before_content  anything above the page proper
+    breadcrumb      where the page sits
+    content         the page
+    extra_css       rules the shared stylesheets have no equivalent for
+    extra_js        the page's own script
+
+`body` carries `mhvtl-console` on every page now. The component rules in
+css/mhvtl-console.css are scoped to that class and used to reach forty pages
+out of fifty, so a card on one page and a card on another were two different
+components wearing one name. Where both stylesheets defined the same thing,
+one of the two definitions has gone.
+{% endcomment %}<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}MHVTL Console{% endblock %} - Linux Virtual Tape Library</title>
+    <title>{% block title %}{{ title|default:"MHVTL Console" }} - MHVTL{% endblock %}</title>
 
-    <!-- Favicon -->
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
 
-    <!-- Theme variables first: base.css and the page stylesheets below are
-         written in terms of them, so the theme picker reaches these pages too.
-         The component rules in this file are scoped to body.mhvtl-console,
-         which these pages do not set, so only the variables apply here. -->
+    {% comment %}
+        The theme variables come first: everything below is written in terms
+        of them, and theme.js applies the stored theme before the page paints.
+    {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
     <script src="{% static 'js/theme.js' %}"></script>
-
-    <!-- Base CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
-    <!-- Page-specific CSS -->
     {% block extra_css %}{% endblock %}
 
-    <!-- SEO Meta Tags -->
     <meta name="description" content="MHVTL Web Console - Modern Host Virtual Tape Library Management">
     <meta name="author" content="Ahmed Abdelhaleem Ahmed">
 </head>
-<body class="{% block body_class %}{% endblock %}">
-    <!-- Header -->
-    {% block header %}
-        {% include 'includes/_header.html' %}
-    {% endblock %}
+{% comment %}
+    One class, and no block to add another: the component rules are scoped to
+    it, and a page that could opt out of it would be a page that could not
+    follow the theme. Nothing used the block this replaces.
+{% endcomment %}
+<body class="mhvtl-console">
 
-    <!-- Main Content Area -->
-    <main class="main-container {% block main_class %}{% endblock %}">
-        <!-- Breadcrumb Navigation -->
+    {% include 'includes/_console_header.html' %}
+
+    {% comment %} A section's own links, when it has any. {% endcomment %}
+    {% block section_nav %}{% endblock %}
+
+    <main class="content">
         {% block breadcrumb %}{% endblock %}
 
-        <!-- Django Messages -->
-        {% include 'includes/_messages.html' %}
+        {% comment %}
+            The page's name and its actions, in the same place on every page.
+            It was in the header on forty pages and nowhere on the other ten.
+        {% endcomment %}
+        <div class="page-head">
+            <h1 class="page-title">{% block header_title %}{{ title }}{% endblock %}</h1>
+            <div class="page-actions">{% block header_actions %}{% endblock %}</div>
+        </div>
 
+        {% include 'includes/_messages.html' %}
         {% include 'includes/_default_password_warning.html' %}
 
-        <!-- Page Content -->
-        {% block content %}
-        <!-- Override this block in child templates -->
-        {% endblock %}
+        {% block before_content %}{% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    {% block footer %}
-        {% include 'includes/_footer.html' %}
-    {% endblock %}
+    {% include 'includes/_footer.html' %}
 
     <script src="{% static 'js/csrf.js' %}"></script>
-    <!-- Panels that re-fetch themselves; this replaced htmx, which was loaded
-         from unpkg.com and so did nothing on a host without internet. -->
+    {% comment %}
+        Panels that re-fetch themselves; this replaced htmx, which was loaded
+        from unpkg.com and so did nothing on a host without internet.
+    {% endcomment %}
     <script src="{% static 'js/auto-refresh.js' %}" defer></script>
-
-    <!-- Base JavaScript -->
     <script src="{% static 'js/app.js' %}"></script>
-
-    <!-- Page-specific JavaScript -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -463,6 +463,65 @@ class LibraryMediaTests(TestCase):
             result = self.service.create(10, 'E01099TA', slot=EMPTY_SLOT)
         self.assertTrue(result.success, result.message)
 
+    # -- the other way round: a tape, and where it could go ----------------
+
+    def test_the_libraries_offered_are_the_libraries_that_would_accept(self):
+        """The property that matters, and the one that could drift.
+
+        The adopt form offered every library on the host for every tape,
+        while adopt() refused the ones whose drives cannot load the density -
+        a choice the page knew would fail. The page asks libraries_for() now,
+        so the two have to agree about every pair there is.
+        """
+        for density in ('LTO8', 'LTO6', 'LTO4', 'T10KB', 'T10KA'):
+            offered = {row['library_id'] for row
+                       in self.service.libraries_for(density).data['libraries']}
+            for library_id in (10, 30):
+                with self.subTest(density=density, library=library_id):
+                    accepted = self.service.check_media(library_id, density) is None
+                    self.assertEqual(library_id in offered, accepted)
+
+    def test_a_tape_a_drive_only_reads_is_still_offered_a_home(self):
+        """Loads, not writes: adopting recovers what is on a tape, so the
+        library whose TD6 reads LTO4 and writes none is where an LTO4
+        cartridge belongs."""
+        offered = {row['library_id'] for row
+                   in self.service.libraries_for('LTO4').data['libraries']}
+        self.assertIn(10, offered)
+        self.assertIsNone(self.service.check_media(10, 'LTO4'))
+
+    def test_each_offer_names_the_library_rather_than_numbering_it(self):
+        """"Library 70" and "Library 60" are two IBM 03584L32s on this host;
+        the vendor and model are how an operator tells them apart."""
+        offered = self.service.libraries_for('LTO8').data['libraries']
+        self.assertTrue(offered)
+        for row in offered:
+            self.assertTrue(row['vendor'], row)
+            self.assertTrue(row['product'], row)
+
+    def test_a_density_no_library_takes_says_what_would_take_it(self):
+        """An empty dropdown is not an answer.
+
+        LTO-9 and not AIT-3: the fixture has a SONY library whose drives take
+        AIT, which this test first assumed away. Its three libraries cover
+        LTO8-LTO4, AIT4-AIT2 and T10KB-T10KA, and nothing there reads an
+        LTO-9 cartridge.
+        """
+        answer = self.service.libraries_for('LTO9')
+        self.assertTrue(answer.success)
+        self.assertEqual(answer.data['libraries'], [])
+        self.assertIn('No library on this host has a drive that loads LTO9',
+                      answer.data['says'])
+        self.assertIn('mhvtl drive add', answer.data['says'])
+
+    def test_without_device_conf_it_refuses_rather_than_guessing(self):
+        """The file is where a library exists; with none there is nothing to
+        offer, and saying so beats offering an empty list."""
+        (self.config / 'device.conf').unlink()
+        answer = self.service.libraries_for('LTO8')
+        self.assertFalse(answer.success)
+        self.assertIn('device.conf', ' '.join(answer.errors))
+
     def test_bulk_takes_its_suffix_from_the_density(self):
         with mock.patch.object(media, 'create', return_value=ok()) as mktape:
             result = self.service.create_bulk(10, 2, prefix='E01', start_number=90,

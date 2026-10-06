@@ -99,6 +99,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
+from ..profiles import personalities
+
 LIBRARY_RE = re.compile(
     r'^Library:\s+(\d+)\s+CHANNEL:\s+(\d+)\s+TARGET:\s+(\d+)\s+LUN:\s+(\d+)\s*$')
 DRIVE_RE = re.compile(
@@ -339,12 +341,15 @@ def library_ids(text: str) -> List[int]:
 # hardware it emulates.
 # ---------------------------------------------------------------------------
 
-#: MHVTL truncates a unit serial number to this many characters.
-MAX_SERIAL_LENGTH = 10
-
-
-def _truncate_serial(serial: str) -> str:
-    return (serial or '').strip()[:MAX_SERIAL_LENGTH]
+#: The serial rules are MHVTL's, and live with its other limits in
+#: profiles/personalities - which config/ may import, as ids.py and
+#: library_contents.py already do. This module carried its own
+#: `MAX_SERIAL_LENGTH = 10` and a private _truncate_serial while
+#: libraries/spec.py carried the same two, which is one fact in two places -
+#: and the format was in a third, in the setup form's JavaScript.
+MAX_SERIAL_LENGTH = personalities.MAX_SERIAL_LENGTH
+device_serial = personalities.device_serial
+_truncate_serial = personalities.truncate_serial
 
 
 def _default_home():
@@ -386,6 +391,21 @@ def header_if_empty(text: str) -> str:
     """The header for an empty or absent device.conf, nothing for one that has
     content already. Prepending it twice would declare VERSION twice."""
     return '' if (text or '').strip() else DEVICE_CONF_HEADER.lstrip('\n')
+
+
+def _uniform_slots(library_data: Dict[str, Any]) -> List[Dict[str, str]]:
+    """num_drives slots of one model, for a caller that has no list.
+
+    Everything that creates a library goes through spec.apply_defaults, which
+    builds ``drive_slots`` itself; this is for the callers that do not - a
+    test rendering from literals, and the RPM demo layout. It keeps this
+    function honest on its own rather than making the list a precondition
+    nobody states.
+    """
+    return [{'vendor': str(library_data.get('drive_vendor')),
+             'product': str(library_data.get('drive_product')),
+             'revision': str(library_data.get('drive_revision', ''))}
+            for _ in range(int(library_data.get('num_drives', 4)))]
 
 
 def render_library_and_drives(existing_text: str, library_data: Dict[str, Any],
@@ -440,28 +460,39 @@ def render_library_and_drives(existing_text: str, library_data: Dict[str, Any],
 
     # Drives: ids as allocated by config/ids, or library_id + slot when the
     # caller passes none (the RPM demo layout: 10 -> 11..14).
-    num_drives = int(library_data.get("num_drives", 4))
-    drv_vendor = str(library_data.get("drive_vendor"))
-    drv_product = str(library_data.get("drive_product"))
-    drv_rev = str(library_data.get("drive_revision", ""))
+    #
+    # One entry per slot, in slot order. spec.apply_defaults builds that list
+    # from either shape an operator can give - one model repeated num_drives
+    # times, or their own `[[name.drive]]` list - so this loop has a single
+    # path and cannot write a mixed library as a uniform one by taking the
+    # model from outside the loop, which is what it did until 4 October 2026.
+    slots = library_data.get('drive_slots') or _uniform_slots(library_data)
+    num_drives = len(slots)
 
     # Drive ids come from config/ids when the caller has allocated them. The
     # fallback, library_id + slot, is only safe on an empty namespace: it is
     # what handed a tenth drive on library 10 the id 20.
     if drive_ids is not None and len(drive_ids) != num_drives:
         raise ValueError(f'{num_drives} drives but {len(drive_ids)} drive ids')
+    if len(drive_targets) < num_drives:
+        raise ValueError(f'{num_drives} drives but '
+                         f'{len(drive_targets)} drive targets')
 
-    for slot in range(1, num_drives + 1):
+    for slot, drive in enumerate(slots, start=1):
         did = drive_ids[slot - 1] if drive_ids is not None else library_id + slot
         dtgt = drive_targets[slot - 1]
-        dserial = _truncate_serial(str(library_data.get("drive_serial", f"XYZZY_{did}")))
+        # Its own id, not the library's serial with a slot after it: a drive's
+        # serial has to be unique in ten characters, and `{library_serial}D10`
+        # is eleven (libraries/spec.device_serial says why that matters).
+        dserial = _truncate_serial(str(library_data.get("drive_serial")
+                                       or device_serial(did)))
 
         # Drive block with all SCSI inquiry fields
         parts.append(f"Drive: {did:02d} CHANNEL: {channel:02d} TARGET: {dtgt:02d} LUN: {lun:02d}\n")
         parts.append(f" Library ID: {library_id:02d} Slot: {slot:02d}\n")
-        parts.append(f" Vendor identification: {drv_vendor}\n")
-        parts.append(f" Product identification: {drv_product}\n")
-        parts.append(f" Product revision level: {drv_rev}\n")  # Issue #2: Now uncommented
+        parts.append(f" Vendor identification: {drive['vendor']}\n")
+        parts.append(f" Product identification: {drive['product']}\n")
+        parts.append(f" Product revision level: {drive['revision']}\n")
         parts.append(f" Unit serial number: {dserial}\n")
         parts.append(f" NAA: {library_id:02d}:22:33:44:ab:{channel:02d}:{dtgt:02d}:{lun:02d}\n")
         parts.append(" Compression: factor 1 enabled 1\n")

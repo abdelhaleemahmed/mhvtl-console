@@ -3,9 +3,14 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
+# The distribution keeps the packaging name on purpose: the RPM, /opt, the
+# service unit and the system account are all mhvtl-gui, and renaming the
+# distribution renames the upgrade path on every host that has one. The
+# product's displayed name - mhvtl-console since 3.3.0 - is one string, in
+# apps/libraries/services/about/service.py, which explains the split.
 name = "mhvtl-gui"
-version = "3.1.0"
-description = "Web-based GUI for MHVTL (Virtual Tape Library)"
+version = "3.3.0"
+description = "Web console for MHVTL (Virtual Tape Library)"
 readme = "README.md"
 license = {text = "GPL-2.0-only"}
 requires-python = ">=3.11"

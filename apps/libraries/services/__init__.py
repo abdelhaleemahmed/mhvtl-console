@@ -35,7 +35,7 @@ Layer rules, in one place so they are easy to check in review:
            core          (nothing)
            profiles      (nothing)
            config        core, profiles
-           sync          config
+           sync          config, core
            console       config, core
            scsi          config, core
            tapes         config, core, profiles

@@ -30,7 +30,7 @@
     .stat-box { flex: 1; text-align: center; padding: 10px; background: var(--surface); border-radius: 5px; }
     /* Clickable drives */
             .drive-list { display: flex; flex-direction: column; gap: 8px; }
-    .drive-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--surface); border-radius: 5px; border-left: 4px solid var(--border); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .drive-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--surface); border-radius: 5px; border-left: 4px solid var(--border); font-size: 14px; cursor: pointer; transition: all 0.2s; }
     .drive-item.loaded { border-left-color: var(--ok); background: var(--ok-bg); opacity: 0.6; cursor: not-allowed; }
     /* A loaded drive used to be dead on this page - drawn, then greyed out,
        while the operator was sent to a second page to act on it. It is the
@@ -42,13 +42,14 @@
     .drive-item.empty:hover { background: var(--info-bg); border-left-color: var(--accent); }
     .drive-item.selected { border-left-color: var(--ok); background: var(--ok-bg); box-shadow: 0 0 0 2px var(--ok); }
     .item-label { font-weight: 600; }
-    .item-barcode { font-family: 'Consolas', monospace; color: var(--text); flex: 1; margin: 0 15px; }
-    .item-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+    .item-barcode { font-family: 'Consolas', monospace;
+ font-size: 14px; color: var(--text); flex: 1; margin: 0 15px; }
+    .item-status { font-size: 14px; padding: 2px 8px; border-radius: 10px; }
     .item-status.loaded { background: var(--ok-bg); color: var(--alert-ok-text); }
     .item-status.empty { background: var(--info-bg); color: var(--info); }
     /* Clickable slots */
             .slot-grid-compact { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; max-height: 300px; overflow-y: auto; }
-    .slot-compact { padding: 8px; text-align: center; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .slot-compact { padding: 8px; text-align: center; border-radius: 4px; font-size: 14px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
     /* `full` is a state and no longer a colour: the generation's own class
        provides the fill, and a slot carries both. It used to carry only the
        generation, so this rule never applied to a storage slot at all - which
@@ -73,11 +74,11 @@
      * against the old severity-derived backgrounds and badly against the real
      * shell colours - cyan on LTO-7's light graphite is nearly invisible. The
      * inset outline still carries the accent; the tag only has to be read. */
-    .slot-ltfs { display: block; font-size: 9px; font-weight: 700; letter-spacing: .04em; color: currentColor; }
+    .slot-ltfs { display: block; font-size: 14px; font-weight: 700; letter-spacing: .04em; color: currentColor; }
     .slot-ltfs.was { font-weight: 600; opacity: .7; }
-    .drive-item .drive-ltfs { font-size: 9px; font-weight: 700; color: var(--accent-strong); }
+    .drive-item .drive-ltfs { font-size: 14px; font-weight: 700; color: var(--accent-strong); }
     .slot-num { font-weight: 600; }
-    .slot-barcode { font-family: 'Consolas', monospace; font-size: 10px; display: block; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .slot-barcode { font-family: 'Consolas', monospace; font-size: 14px; display: block; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     /* LTO-based slot colors */
     .no-library { text-align: center; padding: 40px 20px; color: var(--text-dim); }
     .no-library-icon { font-size: 48px; margin-bottom: 10px; }
@@ -88,28 +89,28 @@
     .mount-preview-content { display: flex; align-items: center; justify-content: center; gap: 15px; }
     .mount-preview-item { background: var(--surface); padding: 10px 15px; border-radius: 5px; text-align: center; }
     .mount-preview-arrow { font-size: 24px; color: var(--ok); }
-    .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); flex-wrap: wrap; }
+    .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 14px; color: var(--text-dim); flex-wrap: wrap; }
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-color { width: 16px; height: 16px; border-radius: 3px; }
     .legend-color.empty-slot { background: var(--surface-deep); border: 1px solid var(--border); }
     .legend-color.empty-drive { background: var(--info-bg); border: 1px solid var(--info); }
     .legend-color.loaded-drive { background: var(--ok-bg); border: 1px solid var(--ok); }
     /* LTO Compatibility Styles */
-            .lto-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-left: 5px; }
+            .lto-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 14px; font-weight: 600; margin-left: 5px; }
     .drive-item.incompatible { opacity: 0.5; border-left-color: var(--bad) !important; background: var(--bad-bg) !important; }
     .drive-item.compatible { border-left-color: var(--ok) !important; }
     .drive-item.read-only { border-left-color: var(--warn) !important; background: var(--warn-bg) !important; }
-    .compat-warning { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 5px; padding: 10px 15px; margin-top: 10px; font-size: 13px; display: none; }
+    .compat-warning { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 5px; padding: 10px 15px; margin-top: 10px; font-size: 14px; display: none; }
     .compat-warning.active { display: block; }
     .compat-warning.error { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--alert-bad-text); }
     .compat-warning.success { background: var(--ok-bg); border-color: var(--ok-bg); color: var(--alert-ok-text); }
     .compat-warning.read-only { background: var(--warn-bg); border-color: var(--warn-bg); color: var(--alert-warn-text); }
     .compat-warning.unknown { background: var(--surface-deep); border-color: var(--border); }
     .drive-item.incompatible { cursor: not-allowed; }
-    .drive-model { font-size: 11px; opacity: 0.7; margin-left: 4px; }
+    .drive-model { font-size: 14px; opacity: 0.7; margin-left: 4px; }
     .compat-icon { font-size: 16px; margin-right: 5px; }
-    .slot-lto { font-size: 9px; color: var(--text-dim); display: block; }
-    .drive-lto { font-size: 11px; font-weight: 600; }
+    .slot-lto { font-size: 14px; color: var(--text-dim); display: block; }
+    .drive-lto { font-size: 14px; font-weight: 600; }
     /* The summary spans both cards: it is about the library, not about either
        half of the page. */
     .summary-bar { margin-bottom: 20px; }
@@ -259,7 +260,7 @@ free drives in the card an operator was not looking at while choosing one.
                     <div class="legend-item"><div class="legend-color" style="background: var(--surface-deep); box-shadow: inset 0 0 0 2px var(--accent-strong);"></div> LTFS volume &mdash; mountable as a filesystem</div>
                     <div class="legend-item"><div class="legend-color" style="background: var(--surface-deep); box-shadow: inset 0 0 0 2px var(--border);"></div> was LTFS &mdash; formatted once, since unpartitioned</div>
                 </div>
-                <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                <div style="font-size: 14px; color: var(--text-dim); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
                     LTO-8 drives can read LTO-6/7/8 tapes | LTO-6 drives can only read LTO-4/5/6 tapes<br>
                     A drive marked <span class="drive-ltfs">LTFS</span> can open an LTFS volume. Load one
                     into it here, then mount it as a filesystem on the
@@ -275,7 +276,7 @@ free drives in the card an operator was not looking at while choosing one.
                 <div id="status-panel" class="status-panel" style="display: none;">
                     <div class="status-section">
                         <h4>&#128230; Storage Slots (Click tape to select)</h4>
-                        <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Click a tape to see compatible drives</p>
+                        <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Click a tape to see compatible drives</p>
                         <div class="slot-grid-compact" id="slot-status"></div>
                     </div>
                 </div>

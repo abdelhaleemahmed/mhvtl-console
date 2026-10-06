@@ -10,13 +10,17 @@ Modules:
     workflow.py   create_library_workflow - the multi-step creation that used to
                   live inside a view, and the reason there was no CLI equivalent
     orphans.py    libraries the database and device.conf disagree about
+    presets.py    named configurations an operator saved: the file, the lock,
+                  and checking one against its profile. config/presets.py does
+                  the text; the check lives here because validation.py does and
+                  config/ may not import this package
 
 Creating a library reads as its five steps in lifecycle.create: apply the
 profile defaults, validate, back up, write device.conf, write the contents file.
 Update, delete and preview live in lifecycle too; workflow.py adds the restart,
 the check that MHVTL sees the library, and the tape files.
 """
-from . import lifecycle, spec, validation
+from . import lifecycle, presets, spec, validation
 from .models import LibraryInfo
 from .service import LibraryService
 from .workflow import (WorkflowReport, add_ltfs_drive_workflow,
@@ -26,4 +30,4 @@ from .workflow import (WorkflowReport, add_ltfs_drive_workflow,
 __all__ = ['LibraryService', 'LibraryInfo', 'create_library_workflow',
            'add_ltfs_drive_workflow', 'add_ltfs_media_workflow',
            'ltfs_provisioning',
-           'WorkflowReport', 'validation', 'spec', 'lifecycle']
+           'WorkflowReport', 'validation', 'spec', 'lifecycle', 'presets']

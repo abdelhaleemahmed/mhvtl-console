@@ -3,9 +3,12 @@
  * Library configuration type selection interface
  */
 
+/* 800px until 6 October 2026, which left 720px inside the card's padding -
+ * room for two 300px columns, so the third choice sat alone on a row of its
+ * own. Three of them fit here. */
 .main-container {
-    max-width: 800px;
-    margin: 50px auto;
+    max-width: 1100px;
+    margin: 30px auto;
 }
 
 .setup-card {
@@ -40,19 +43,25 @@
     margin: 0 auto;
 }
 
-/* Setup Options Grid */
+/* Setup Options Grid
+ *
+ * 260px and not 280: at a 1024-wide window this grid has 864px inside it,
+ * and three 280px columns need 880 - sixteen pixels short, so the third
+ * choice dropped onto a row of its own again, which is the whole thing this
+ * unit set out to fix. Three columns need 820 at this minimum.
+ */
 .setup-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
 .option-card {
     background: linear-gradient(135deg, var(--surface-deep), var(--border));
     border: 2px solid var(--border);
     border-radius: 15px;
-    padding: 30px;
+    padding: 22px;
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
@@ -88,23 +97,26 @@
     opacity: 1;
 }
 
+/* Each card is a choice, and a choice should be taken in at a glance. They
+ * were 325 x 549 - a ratio of 1.7, a column of prose with a radio button
+ * attached. The icon was 48px over a 24px title over five ticked lines. */
 .option-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
+    font-size: 30px;
+    margin-bottom: 10px;
     display: block;
 }
 
 .option-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 
 .option-description {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.5;
     opacity: 0.8;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 
 /* Option Features List */
@@ -115,7 +127,7 @@
 }
 
 .option-features li {
-    padding: 8px 0;
+    padding: 3px 0;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -173,9 +185,10 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-    .setup-options {
-        grid-template-columns: 1fr;
-    }
+    /* The one-column override that stood here made a 768px window show one
+     * 658px-wide card where auto-fit gives it two, and auto-fit drops to one
+     * by itself further down. A breakpoint that repeats what the grid
+     * already decides can only disagree with it. */
 
     .form-actions {
         flex-direction: column;

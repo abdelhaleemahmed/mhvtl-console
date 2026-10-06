@@ -44,7 +44,7 @@
                 <td>{{ device.device_path|default:"-" }}</td>
                 <td><code>{{ device.generic_path }}</code></td>
                 <td>
-                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;"
+                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 14px;"
                             id="make-{{ device.suggested_name }}"
                             onclick="createBackstoreFromDevice('{{ device.generic_path }}', '{{ device.suggested_name }}')">
                         Create Backstore
@@ -90,7 +90,7 @@
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="name" value="{{ bs.name }}">
                         <input type="hidden" name="plugin" value="{{ bs.plugin }}">
-                        <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;">Delete</button>
+                        <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Delete</button>
                     </form>
                 </td>
             </tr>

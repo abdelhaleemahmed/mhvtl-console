@@ -1,5 +1,9 @@
+# The package name stays mhvtl-gui: it is the upgrade path for every host
+# that already has one, along with /opt/mhvtl-gui, the mhvtl-gui account and
+# mhvtl-gui.service below. The product is called mhvtl-console from 3.3.0,
+# which is a displayed name and lives in services/about/service.py.
 %define name mhvtl-gui
-%define version 3.1.0
+%define version 3.3.0
 %define release 1%{?dist}
 %define installdir /opt/mhvtl-gui
 %define servicename mhvtl-gui
@@ -72,6 +76,13 @@ install -m 644 packaging/rpm/mhvtl-gui-nginx.conf %{buildroot}%{installdir}/ngin
 # Install environment template
 install -m 640 packaging/rpm/env.template %{buildroot}/etc/mhvtl-gui/env
 
+# The commented example of presets.toml. Installed as .example and never as
+# presets.toml: the live file is the operator's, written by `mhvtl library
+# preset set`, and an upgrade must not replace it. 644 because `mhvtl library
+# preset list` names this path in its output and anyone may run that.
+install -m 644 packaging/presets.toml.example \
+    %{buildroot}/etc/mhvtl-gui/presets.toml.example
+
 # Install sudoers file for passwordless sudo on MHVTL commands
 install -m 440 packaging/rpm/mhvtl-gui.sudoers %{buildroot}/etc/sudoers.d/mhvtl-gui
 
@@ -84,7 +95,19 @@ getent passwd mhvtl-gui >/dev/null || \
 exit 0
 
 %post
-# Create virtual environment and install dependencies
+# Create virtual environment and install dependencies.
+#
+# The directory is REMOVED FIRST. `python3.12 -m venv` over an existing
+# virtualenv leaves the older bin/python3 symlink pointing where it did and
+# both site-packages trees in place, so upgrading a host first installed in the
+# 3.9 era left one virtualenv holding Python 3.9 with Django 4.2 beside Python
+# 3.12 with Django 5.2 - 117 MB of the wrong one, and /usr/bin/mhvtl running it
+# while the service ran the other. It worked, which is why it went unnoticed
+# until a command needed tomllib and found a 3.9 standard library.
+#
+# Nothing in here is worth keeping: it is rebuilt from the requirements every
+# time. The database, the configuration and the logs live outside it.
+rm -rf %{installdir}/venv
 python3.12 -m venv %{installdir}/venv
 %{installdir}/venv/bin/pip install --upgrade pip
 cd %{installdir}
@@ -219,7 +242,12 @@ fi
 %{installdir}
 %{_bindir}/mhvtl
 %{_unitdir}/mhvtl-gui.service
+%dir /etc/mhvtl-gui
 %config(noreplace) /etc/mhvtl-gui/env
+# Not %config: it is documentation, so an upgrade should replace it. The live
+# presets.toml is not packaged at all - it only exists once somebody saves a
+# preset, which is why nothing here would ever overwrite one.
+/etc/mhvtl-gui/presets.toml.example
 %attr(440,root,root) /etc/sudoers.d/mhvtl-gui
 %dir /var/www/mhvtl/static
 %dir /var/www/mhvtl/media
@@ -228,6 +256,100 @@ fi
 %dir /var/lib/mhvtl-gui/targetcli
 
 %changelog
+* Tue Oct 06 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.3.0-1
+- The product is now called mhvtl-console. `mhvtl --version`, `mhvtl status
+  system` and the About page say it; `mhvtl-gui` was also the name of an
+  older, unrelated PHP interface to MHVTL, so a bug report quoting a version
+  did not say which program it was about. The package, /opt/mhvtl-gui, the
+  mhvtl-gui account and mhvtl-gui.service keep their names: those are the
+  upgrade path, not a label.
+- One page frame for all fifty pages. There were five, no two of whose
+  navigations agreed, so the header, the theme picker, who is logged in and
+  the footer with the version reached some pages and not others. One
+  base.html now, extended by a thin wrapper per section.
+- One meaning for each URL, and a way in from anywhere. "Libraries" led to
+  two different pages depending on which header you clicked it from, the
+  create-a-library form was unreachable from most of the console, and three
+  pages had no inbound link at all.
+- The landing page counts what the host holds. Its five numbers had never
+  been anything but zero: the context keys were never set, the poller read
+  keys the endpoint did not return, and both counted database rows instead of
+  device.conf. It reads device.conf, reports what it cannot read rather than
+  calling it zero, and says it in one sentence.
+- A library can hold more than one generation of drive and tape. The form
+  takes several drive types and several media types in one library, and the
+  web can no longer write an IBM LTO-8 drive into a StorageTek library -
+  the form asks the profile service what the vendor makes instead of
+  deciding for itself.
+- Adopting a loose tape offers only the libraries whose drives could load
+  it. Every library was offered for every tape while the service refused the
+  ones that cannot, so the form offered a choice it knew would fail and said
+  so only afterwards. The CLI names where the tape could go when it refuses.
+- Presets say what they build, in one line, on the page and in the terminal;
+  `preset rename` guards the name the file is written with; the preset in use
+  is marked on its whole card rather than by one word.
+- Type and contrast, measured rather than judged: 14px is the smallest type
+  anywhere, forms are 15px, the navigation is 17px and stays legible in all
+  four themes, and the header carries its own colours because the bar is not
+  the page.
+- Fixed: a stray brace in base.css closed a max-width:768px block four rules
+  early, so the console rendered as a phone at every width. A field was
+  focused on every page load. The database sync reported a failure as a
+  result instead of raising.
+- /etc/mhvtl-gui/presets.toml.example ships a library for every vendor, at
+  the newest tape that vendor's drives write: eleven tables covering all nine
+  profiles, where it had covered two and stopped at LTO8. ADIC, Dell, IBM,
+  Overland, Spectra and Quantum reach LTO10, HP's own catalogue ends at LTO8,
+  Sony is AIT4, and StorageTek gets two - its own T10000C and an SL500
+  carrying an IBM LTO drive. Quantum is the one to read: its profile default
+  is an SDLT600, so `--profile QUANTUM` alone builds an SDLT library.
+- Removed two AJAX endpoints no commit ever called, and renamed the tape
+  filter `?media=` to `?wanted_media=` - the rows on that page also use
+  `media`, and QueryDict.get returns the last value, so the filter read a
+  row's value instead of its own.
+* Sun Oct 04 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.2.0-1
+- Two nouns for what a library is built from. `mhvtl profile` is a vendor's
+  catalogue - which library models it makes, which drives each takes, which
+  densities each drive writes - and `mhvtl preset` is a configuration you
+  built from one and named. Both are enumerated by `list` and explained by
+  `show`; a profile has no write verbs at all, because nothing may edit what
+  a vendor makes.
+- `mhvtl library create --interactive` asks for each choice, offering only
+  what the catalogue holds for the answers so far, and ends with create,
+  create-and-keep-as-a-preset, preview the device.conf, or quit. Nothing is
+  written until the last answer, so quitting or Ctrl-C leaves the host
+  untouched.
+- Presets: build one up a piece at a time with `preset set`, keep the
+  configuration a create has just proved with `--save-preset NAME`, use it
+  with `create --preset NAME`. `preset show` reports what a preset fixes AND
+  what it leaves to its profile, so a preset naming only a vendor still
+  describes a whole library. /etc/mhvtl-gui/presets.toml.example ships as a
+  commented example of every key.
+- The setup wizard offers the same presets as the terminal, through the same
+  service: a vendor's form lists that vendor's presets, ?preset=NAME fills
+  the form in, and a name at the bottom keeps the configuration after a
+  successful create.
+- A new cartridge is now as big as its density - an LTO-8 is 12 TB, an LTO-6
+  2.5 TB - taken from the capacities MHVTL itself uses. Six places had a
+  number of their own and they disagreed: a library's own tapes were 500 MB
+  while a tape added to it afterwards was 500 GB. The media files are sparse,
+  so the capacity costs nothing until something writes to it; --size-mb and
+  the forms' size field still override it.
+- The vendor page, the setup form and the terminal now read one catalogue
+  instead of composing it three times. Two rules the page's script had worked
+  out for itself were wrong: it offered a drive that can only READ the chosen
+  tape as a way to write it, and for LTO-9 it chose a half-height ULT3580-HH9
+  where the rule gives a ULT3580-TD9.
+- Removed, and never released: `mhvtl drive models`, which put the vendor
+  summary under the drive noun and left nothing able to list a profile's
+  library models - it is `mhvtl profile show` now - and `mhvtl library preset
+  ...`, which is `mhvtl preset ...`.
+- Fixed: a closed pipe (`mhvtl ... | head`) reported a Python error instead
+  of exiting quietly; --profile's help named a command that was never built;
+  `preset set --serial` parsed and did nothing; a preset could hold a
+  `size_mb` that nothing read; and two leftover .orig files were being
+  packaged.
+
 * Fri Oct 02 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.1.0-1
 - An About page, linked from the header of every page: the version, the
   author, the licence, links to the published documentation, and what a bug

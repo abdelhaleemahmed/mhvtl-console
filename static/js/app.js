@@ -132,11 +132,17 @@
             });
         });
 
-        // Auto-focus on first input in forms
-        const firstInput = document.querySelector('form input:not([type="hidden"]):not([readonly])');
-        if (firstInput) {
-            firstInput.focus();
-        }
+        // No autofocus. There was a rule here that focused the first
+        // editable input of the first form on EVERY page, which is fine for
+        // a login box and wrong for a long form: on the create-a-library
+        // page every earlier field is readonly and the choosers are
+        // <select>, so the first match was "Number of Drives" - and
+        // focusing it scrolled the page past the vendor, the tape and the
+        // library model, on load and on every refresh.
+        //
+        // The one page that wants it does it itself: login.js focuses the
+        // password field. A page that needs focus should ask for it rather
+        // than have it applied to every form in the console.
     });
 
     // Export utilities to window for global access

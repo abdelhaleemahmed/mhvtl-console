@@ -40,7 +40,11 @@ from .service import LibraryService
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_TAPE_SIZE_MB = 500
+#: No tape size here any more. It was 500 MB, while every front end offered
+#: 500000, so a library's own cartridges were a thousandth of the size of any
+#: added to it afterwards. `tape_size_mb` in the specification still overrides
+#: it; with nothing given, services/tapes gives each cartridge its density's
+#: native capacity (tapes.service.native_size_mb).
 
 
 @dataclass
@@ -240,7 +244,7 @@ def _create_media(library_id: int, spec: Dict, config_directory=None):
     try:
         result = TapeService(config_directory).create_missing(
             library_id,
-            size_mb=spec.get('tape_size_mb', DEFAULT_TAPE_SIZE_MB),
+            size_mb=spec.get('tape_size_mb'),
             density=spec.get('media_type') or spec.get('density'))
     except Exception as exc:                           # noqa: BLE001 - reported
         logger.exception('creating media for library %s', library_id)

@@ -1,0 +1,74 @@
+{% comment %}
+The console's header. One of them, on every page.
+
+There were five frames before this and no two of their headers agreed - the
+word Libraries went to /libraries/ from some pages and to /libraries/list/
+from others, the operator and console sections offered no way back to the
+libraries at all, and the operator's name appeared on eight pages out of
+fifty. This is the header the authentication dashboard had, which was the
+one that read best and the one that could not spread, because it was fifteen
+lines written inside a page rather than a template.
+
+What it holds and why:
+
+    the identity      constant, so you always know what you are looking at.
+                      The PAGE's title is not here - it is the first line of
+                      the content, where {% templatetag openblock %} block header_title {% templatetag closeblock %} puts it, so
+                      that every page says what it is in the same place.
+    the sections      the five places the console goes, in the order a
+                      person moves through them.
+    the theme picker  on every page already; kept where it was.
+    who is signed in  was on eight pages. Now on all of them: an operator
+                      acting on a host should be able to see which account
+                      the host will record.
+
+A section's own links are NOT here. They go in {% templatetag openblock %} block section_nav {% templatetag closeblock %}, a second
+row under this one, so the operator and console pages keep their navigation
+without needing a header of their own.
+{% endcomment %}
+<header class="header">
+    <div class="header-content">
+        <a href="{% url 'authentication:dashboard' %}" class="header-identity">
+            <div class="header-title">MHVTL Console</div>
+            <div class="header-subtitle">{{ system_name|default:"Linux Virtual Tape Library System" }}</div>
+        </a>
+
+        <nav class="header-nav">
+            {% comment %}
+                The landing page, not the table. Both exist and both list
+                libraries; this word went to one of them from eight pages and
+                to the other from the rest, which is how an operator could
+                arrive at a list of libraries with no way to make one.
+            {% endcomment %}
+            <a href="{% url 'libraries:dashboard' %}"
+               class="nav-link {% if request.resolver_match.app_name == 'libraries' and 'operator' not in request.path and 'console' not in request.path and 'iscsi' not in request.path %}active{% endif %}">Libraries</a>
+            <a href="{% url 'libraries:operator_dashboard' %}"
+               class="nav-link {% if '/operator/' in request.path or '/iscsi/' in request.path %}active{% endif %}">Tape Operations</a>
+            <a href="{% url 'libraries:console_dashboard' %}"
+               class="nav-link {% if '/console/' in request.path %}active{% endif %}">System Console</a>
+            <a href="{% url 'authentication:change_password' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'change_password' %}active{% endif %}">Password</a>
+            <a href="{% url 'libraries:about' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
+            <a href="{% url 'authentication:logout' %}" class="nav-link">Log out</a>
+
+            {% comment %}
+                The one thing the console is for that was hardest to reach:
+                making a library. The link lived on /libraries/ and nowhere
+                else, and most of the console's pages never offered
+                /libraries/. One click from anywhere now.
+            {% endcomment %}
+            <a href="{% url 'libraries:setup_choice' %}"
+               class="btn btn-primary btn-compact header-action">+ New library</a>
+
+            <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
+
+            {% if user.is_authenticated %}
+            <span class="header-user">
+                <span class="header-user-name">{{ user.username|default:"Admin" }}</span>
+                <span class="header-user-role">{{ user.get_role_display|default:"Administrator" }}</span>
+            </span>
+            {% endif %}
+        </nav>
+    </div>
+</header>

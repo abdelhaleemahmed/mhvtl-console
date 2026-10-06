@@ -51,6 +51,13 @@
 
         <table class="about-facts">
             <tr><th>Host</th><td class="mono">{{ runtime.hostname }}</td></tr>
+            {% comment %}
+                Which copy of the code is serving this page. A host can carry
+                two - the installed tree and a checkout - and they print the
+                same version string, so a bug report that does not say which
+                one can send somebody to the wrong code.
+            {% endcomment %}
+            <tr><th>Running from</th><td class="mono">{{ runtime.running_from }}</td></tr>
             <tr><th>Python</th><td class="mono">{{ runtime.python }}</td></tr>
             <tr><th>Django</th><td class="mono">{{ runtime.django }}</td></tr>
             <tr><th>Kernel</th><td class="mono">{{ runtime.platform }}</td></tr>

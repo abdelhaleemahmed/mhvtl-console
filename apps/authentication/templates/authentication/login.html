@@ -89,7 +89,7 @@
         }
 
         .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 12px; margin-bottom: 8px; opacity: 0.7; }
+        label { display: block; font-size: 14px; margin-bottom: 8px; opacity: 0.7; }
 
         input {
             width: 100%;
@@ -99,6 +99,7 @@
             border-radius: 8px;
             color: white;
             font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
             transition: 0.3s;
             box-sizing: border-box;
         }
@@ -121,7 +122,7 @@
 
         .secure-badge {
             margin-top: 20px;
-            font-size: 12px;
+            font-size: 14px;
             color: #a5d6a7;
             display: flex;
             align-items: center;
@@ -130,7 +131,7 @@
 
         .info-card { margin-bottom: 25px; }
         .info-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 14px; }
-        .info-card p { font-size: 13px; line-height: 1.6; opacity: 0.8; margin: 0; }
+        .info-card p { font-size: 14px; line-height: 1.6; opacity: 0.8; margin: 0; }
 
         .error-message {
             background: rgba(244, 67, 54, 0.2);
@@ -139,7 +140,7 @@
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -172,7 +173,13 @@
                     {% csrf_token %}
                     <div class="input-group">
                         <label>ROOT_PASSWORD</label>
-                        <input type="password" name="pswd" id="pass" placeholder="Enter password" required autocomplete="current-password">
+                        {# autofocus as an attribute, not from a script: this #}
+                        {# page has one field and it is the one to type in.   #}
+                        {# app.js used to focus the first editable input of   #}
+                        {# every form in the console, which did this for free #}
+                        {# and scrolled long forms past their first sections  #}
+                        {# to do it. A page that wants focus asks for it.     #}
+                        <input type="password" name="pswd" id="pass" placeholder="Enter password" required autocomplete="current-password" autofocus>
                     </div>
                     <button type="submit" class="btn-access" id="loginBtn">INITIALIZE SESSION</button>
                 </form>

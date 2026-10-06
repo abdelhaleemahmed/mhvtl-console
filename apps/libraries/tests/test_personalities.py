@@ -143,10 +143,84 @@ class SourceTests(TestCase):
             ('usr/cmd/vtltape.c', 1899): 'strncmp(tape_drives[i].name',
             ('usr/cmd/vtltape.c', 2153): '%-16s',
             ('usr/cmd/vtltape.c', 2430): 'my_id >= MAXPRIOR',
+            # The serial number, every line MAX_SERIAL_LENGTH's comment cites.
+            # Ten is not a file limit and not the buffer: it is the window
+            # standard INQUIRY and VPD page 0x83 report, while page 0x80
+            # reports the whole string. See SerialNumberTests below.
+            ('include/vtllib.h', 72): '#define SCSI_SN_LEN 16',
+            ('include/vtllib.h', 604): 'char lu_serial_no[SCSI_SN_LEN]',
+            ('usr/cmd/vtltape.c', 2141): 'conf_clamp_string(v, SCSI_SN_LEN',
+            ('usr/cmd/vtltape.c', 2142): '"%-10s"',
+            ('usr/cmd/vtllibrary.c', 1243): 'conf_clamp_string(v, SCSI_SN_LEN',
+            ('usr/cmd/vtllibrary.c', 1244): '"%-14s"',
+            ('usr/cmd/vtltape.c', 2237): 'alloc_vpd(strlen(lu->lu_serial_no))',
+            ('usr/vtllib.c', 2292): 'memcpy(vpd_pg->data, p, strlen(',
+            ('usr/vtllib.c', 2314): 'memcpy(&d[28], &lu->lu_serial_no, 10)',
         }
         for (path, number), expected in cited.items():
             with self.subTest(reference=f'{path}:{number}'):
                 self.assertIn(expected, read(path)[number - 1])
+
+
+class SerialNumberTests(TestCase):
+    """One serial rule, and the two properties MHVTL's source makes necessary.
+
+    A serial has to be unique - it is what a backup application identifies a
+    device by - and at most ten characters, because standard INQUIRY and VPD
+    page 0x83 report only the first ten while page 0x80 reports the whole
+    string. Above ten, one device has two identities and two devices can share
+    one of them.
+
+    `{library_serial}D{slot}` broke both at slot 10: eleven characters, and
+    `80000085D10` and `80000085D1` are the same ten bytes to INQUIRY.
+    """
+
+    def test_a_serial_is_the_device_id_with_a_fixed_prefix(self):
+        self.assertEqual(p.device_serial(85), '80000085')
+        self.assertEqual(p.device_serial(1), '80000001')
+        self.assertEqual(p.device_serial(1023), '80001023')
+
+    def test_every_serial_fits_the_inquiry_window(self):
+        """Every id MHVTL can have, not a sample of them."""
+        for device_id in range(1, p.MAX_DEVICE_ID + 1):
+            self.assertLessEqual(len(p.device_serial(device_id)),
+                                 p.MAX_SERIAL_LENGTH)
+
+    def test_no_two_devices_share_a_serial(self):
+        """Including in the first ten characters, which is the only part
+        standard INQUIRY and page 0x83 report."""
+        serials = [p.device_serial(device_id)[:p.MAX_SERIAL_LENGTH]
+                   for device_id in range(1, p.MAX_DEVICE_ID + 1)]
+        self.assertEqual(len(set(serials)), len(serials))
+
+    def test_a_library_and_its_drives_read_as_one_family(self):
+        """Library 85 is 80000085 and its drives 86-89 are 80000086-89, which
+        is the point of using the id: the devices of one library are visibly
+        related without the serial having to carry a slot."""
+        library = p.device_serial(85)
+        self.assertEqual([p.device_serial(i) for i in (86, 87, 88, 89)],
+                         ['80000086', '80000087', '80000088', '80000089'])
+        self.assertTrue(all(drive[:4] == library[:4]
+                            for drive in (p.device_serial(86),
+                                          p.device_serial(89))))
+
+    def test_a_hand_given_serial_is_cut_rather_than_refused(self):
+        self.assertEqual(p.truncate_serial('  ABCDEFGHIJKLMNOP  '),
+                         'ABCDEFGHIJ')
+        self.assertEqual(len(p.truncate_serial('X' * 40)),
+                         p.MAX_SERIAL_LENGTH)
+        self.assertEqual(p.truncate_serial(None), '')
+
+    def test_the_slot_based_scheme_this_replaced_would_collide(self):
+        """The defect, written down as a test so it cannot come back: two
+        drives of one library reported the same ten bytes to INQUIRY."""
+        old = [f'{p.device_serial(85)}D{slot}' for slot in (1, 10)]
+        self.assertNotEqual(old[0], old[1])
+        self.assertEqual(old[0][:p.MAX_SERIAL_LENGTH],
+                         old[1][:p.MAX_SERIAL_LENGTH])
+        new = [p.device_serial(86), p.device_serial(95)]
+        self.assertNotEqual(new[0][:p.MAX_SERIAL_LENGTH],
+                            new[1][:p.MAX_SERIAL_LENGTH])
 
 
 @unittest.skipUnless(HAVE_SOURCE, f'MHVTL source not found at {SOURCE}')

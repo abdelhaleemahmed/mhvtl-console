@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'libraries/base.html' %}
 {% load static %}
 
 {% block title %}Monitor Library {{ library.library_id }} - MHVTL{% endblock %}
@@ -23,39 +23,34 @@
             line-height: 1.2;
         }
         .metric-label {
-            font-size: 0.85rem;
+            font-size: 14px;
             color: var(--text-dim);
             margin-top: 10px;
         }
         .metric-detail {
-            font-size: 0.75rem;
+            font-size: 14px;
             color: var(--text-faint);
             font-weight: normal;
         }
         .metric-subtext {
-            font-size: 0.75rem;
+            font-size: 14px;
             color: var(--text-faint);
             margin-top: 4px;
         }
     </style>
 {% endblock %}
 
-{% block breadcrumb %}
-    {% include 'includes/_breadcrumb.html' with items=breadcrumb_items %}
+{% comment %}
+    The page said "Monitor Library 10" twice - once as the frame's page title
+    and again as an <h1> of its own, with these two buttons under it. The
+    frame renders both, in the same place on every page.
+{% endcomment %}
+{% block header_actions %}
+    <a href="{% url 'libraries:config_files' %}" class="btn btn-secondary btn-compact">Config files</a>
+    <a href="{% url 'libraries:library_detail' library.library_id %}" class="btn btn-secondary btn-compact">Back to detail</a>
 {% endblock %}
 
 {% block content %}
-<div class="monitor-header">
-    <h1 class="page-title">Monitor Library {{ library.library_id }}</h1>
-    <div class="header-actions">
-        <a href="{% url 'libraries:config_files' %}" class="btn btn-secondary">
-            Config Files
-        </a>
-        <a href="{% url 'libraries:library_detail' library.library_id %}" class="btn btn-primary">
-            Back to Detail
-        </a>
-    </div>
-</div>
 
 <!-- Re-fetched every 30 seconds by js/auto-refresh.js -->
 <div class="monitor-grid"
@@ -63,40 +58,7 @@
      data-refresh-url="{% url 'libraries:library_monitor_metrics' library.library_id %}?partial=status"
      data-refresh-seconds="30">
 
-    <!-- Service Status Card -->
-    <div class="status-card">
-        <div class="status-icon {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
-            {% if metrics.is_running %}✅{% else %}⏹️{% endif %}
-        </div>
-        <div class="status-value {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
-            {% if metrics.is_running %}Running{% else %}Stopped{% endif %}
-        </div>
-        <div class="status-label">Service Status</div>
-    </div>
-
-    <div class="status-card">
-        <div class="status-icon status-info">💽</div>
-        <div class="status-value status-info">
-            {% if metrics %}{{ metrics.drive_status.online }}/{{ metrics.drive_status.total }}{% else %}{{ drives.count }}/{{ drives.count }}{% endif %}
-        </div>
-        <div class="status-label">Drives Online</div>
-    </div>
-
-    <div class="status-card">
-        <div class="status-icon status-info">🗃️</div>
-        <div class="status-value status-info">{{ library.total_slots|default:"0" }}</div>
-        <div class="status-label">Total Slots</div>
-    </div>
-
-    <div class="status-card">
-        <div class="status-icon {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
-            {% if metrics.error_count > 0 %}⚠️{% else %}✅{% endif %}
-        </div>
-        <div class="status-value {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
-            {{ metrics.error_count|default:"0" }}
-        </div>
-        <div class="status-label">Errors</div>
-    </div>
+    {% include 'libraries/partials/_monitor_metrics.html' %}
 </div>
 
 <!-- System Metrics - HTMX auto-refresh every 30 seconds -->

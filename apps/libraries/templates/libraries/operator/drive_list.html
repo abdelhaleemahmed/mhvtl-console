@@ -16,7 +16,7 @@
     .drive-id { font-size: 18px; font-weight: bold; color: var(--text); }
     .drive-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
     .detail-item { }
-    .detail-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
+    .detail-label { font-size: 14px; color: var(--text-dim); text-transform: uppercase; }
     .detail-value { font-size: 14px; color: var(--text); font-weight: 500; }
 </style>
 {% endblock %}
@@ -58,6 +58,17 @@
                             <div class="drive-card">
                                 <div class="drive-header">
                                     <div class="drive-id">Drive {{ drive.drive_id }} (Slot {{ drive.slot }})</div>
+                                    {% comment %}
+                                        A drive's own status page has had a
+                                        URL of its own all along and nothing
+                                        linked to it: the status page reached
+                                        drives through a dropdown and a query
+                                        string, so the address that names the
+                                        drive was never offered. It is
+                                        bookmarkable, which a dropdown is not.
+                                    {% endcomment %}
+                                    <a class="drive-status-link"
+                                       href="{% url 'libraries:drive_status_detail' drive_id=drive.drive_id %}">Status</a>
                                 </div>
                                 <div class="drive-details">
                                     <div class="detail-item">

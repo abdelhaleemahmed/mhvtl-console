@@ -1,14 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'libraries/base.html' %}
 {% load static %}
 
 {% block title %}Reset to Defaults - MHVTL Console{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/reset-default.css' %}">
-{% endblock %}
-
-{% block breadcrumb %}
-    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
 {% endblock %}
 
 {% block content %}

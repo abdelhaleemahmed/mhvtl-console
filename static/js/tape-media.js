@@ -103,7 +103,13 @@
 
     // MHVTL has no native capacity for some media (9840, 9940) and gives
     // them 1 GB; the forms suggest the same, and the operator can change it.
-    const UNKNOWN_SIZE_MB = 1000;
+    //
+    // The number comes from the service with the capacities
+    // (tapes.service.UNKNOWN_SIZE_MB) rather than being written here as
+    // well. Leaving the field empty now means "whatever the service would
+    // choose", so a second copy of this could disagree with what actually
+    // gets created - which is exactly what 500 and 500000 did.
+    const UNKNOWN_SIZE_MB = info.unknown_size_mb;
 
     // {mb, text}: the size to suggest for a density, and why.
     function suggestedSize(density) {
@@ -112,7 +118,9 @@
             return {mb: native, text: `${native.toLocaleString()} MB is ${density}'s native capacity`};
         }
         return {mb: UNKNOWN_SIZE_MB,
-                text: `MHVTL has no native capacity for ${density}; 1 GB is suggested, change it as needed`};
+                text: `MHVTL has no native capacity for ${density}; `
+                      + `${UNKNOWN_SIZE_MB.toLocaleString()} MB is suggested, `
+                      + 'change it as needed'};
     }
 
     global.TapeMedia = {info, library, choices, suffixFor, fill, describe, nativeMb,

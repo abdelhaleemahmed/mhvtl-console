@@ -1,0 +1,102 @@
+{% comment %}
+What this host holds, above the libraries it holds it in.
+
+It replaces a panel called "MHVTL Discovery Integration" that showed five
+numbers and had never shown anything but zero. Two faults produced that one
+symptom: the numbers came from context variables - discovered_libraries,
+created_libraries, total_drives, total_media, recent_operations - that
+LibraryListView had never set, so they all rendered |default:0; and the
+sixty-second refresh behind them read keys off an endpoint that does not
+return them, writing 0 over 0.
+
+Under both was the direction: the endpoint counted rows in the *database*,
+through a discovery_status that nothing sets and a media_found that was the
+literal 0. device.conf is the authority and the database is a view of it
+(guides/architecture), so a panel counting the view could not be right about
+the host. These numbers come from LibraryService.summary(), which reads
+device.conf and the contents files - the same call `mhvtl library list`
+prints its last line from.
+
+`summary` is set by the view. A page that does not set it shows nothing
+here rather than showing zeros, which is the whole lesson.
+{% endcomment %}
+{% if summary %}
+<div class="host-summary">
+    <div class="host-summary-counts">
+        <div class="host-count">
+            <span class="host-count-value">{{ summary.libraries }}</span>
+            <span class="host-count-label">librar{{ summary.libraries|pluralize:"y,ies" }}</span>
+        </div>
+        <div class="host-count">
+            <span class="host-count-value">{{ summary.drives }}</span>
+            <span class="host-count-label">drive{{ summary.drives|pluralize }}</span>
+        </div>
+        <div class="host-count">
+            <span class="host-count-value">{{ summary.cartridges }}</span>
+            <span class="host-count-label">cartridge{{ summary.cartridges|pluralize }}</span>
+        </div>
+        <div class="host-count">
+            <span class="host-count-value">{{ summary.free_slots }}</span>
+            <span class="host-count-label">free slot{{ summary.free_slots|pluralize }}</span>
+        </div>
+        {% comment %}
+            Whether the daemons are up, beside what they are serving. It was
+            a badge on the landing page only, over three tiles that said what
+            this strip says.
+        {% endcomment %}
+        <div class="host-count">
+            {% if not summary.mhvtl_known %}
+                <span class="status-badge status-unknown">MHVTL state unknown</span>
+            {% elif summary.mhvtl_running %}
+                <span class="status-badge status-ok">MHVTL running</span>
+            {% else %}
+                <span class="status-badge status-bad">MHVTL stopped</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="host-summary-actions">
+        {% comment %}
+            One button, where there were two that did the same thing: Refresh
+            and Full Scan both called sync_mhvtl_to_django(). There is nothing
+            to scan - device.conf is the authority, and reading it IS the
+            operation - so it is named for what it does.
+        {% endcomment %}
+        <button type="button" class="btn btn-secondary btn-compact"
+                id="rereadDeviceConf">Re-read device.conf</button>
+        <a href="{% url 'libraries:cleanup_orphaned' %}"
+           class="btn btn-secondary btn-compact">Clean up orphans</a>
+    </div>
+</div>
+
+<script>
+/* Re-read device.conf into the database, then show the page again.
+ *
+ * The endpoint is the sync the two old buttons both called. The page reloads
+ * rather than patching numbers into the DOM, which is what the panel before
+ * it did - and it patched them from keys the endpoint does not return, so it
+ * wrote 0 over 0 every sixty seconds. A reload cannot disagree with the
+ * server about what the server said.
+ */
+(function () {
+    var button = document.getElementById('rereadDeviceConf');
+    if (!button) { return; }
+    button.addEventListener('click', function () {
+        button.disabled = true;
+        var was = button.textContent;
+        button.textContent = 'Reading…';
+        fetch("{% url 'libraries:refresh_discovery_ajax' %}", {
+            method: 'POST',
+            headers: {'X-CSRFToken': (document.cookie.match(
+                /csrftoken=([^;]+)/) || [])[1] || ''}
+        })
+        .then(function (response) { return response.json(); })
+        .then(function () { window.location.reload(); })
+        .catch(function () {
+            button.disabled = false;
+            button.textContent = was;
+        });
+    });
+})();
+</script>
+{% endif %}

@@ -10,6 +10,15 @@ Modules:
     ltfs_support.py   which drives LTFS will open, and why it refuses the rest -
                       a fact about LTFS, kept out of personalities.py on purpose
 
+A PROFILE IS A CATALOGUE, NOT A CONFIGURATION. What this package holds is
+what a vendor makes and what may be chosen from it. One set of choices made
+from a profile, under a name, is a *preset*, and presets are the operator's
+rather than ours: they live in config/presets.py and libraries/presets.py and
+nothing here knows about them. A preset may not take a profile's name, which
+is why list_profiles() is passed to the preset parser. See
+docs/sphinx/guides/architecture.rst, "A profile and a preset are different
+things".
+
 data.py is what an operator may choose; personalities.py is what MHVTL will do
 with the choice. libraries/validation checks a specification against both.
 ltfs_support.py answers a third, independent question about the same two

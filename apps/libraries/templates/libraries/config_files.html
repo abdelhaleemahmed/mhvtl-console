@@ -37,7 +37,7 @@
     .mode-badge {
                 padding: 6px 12px;
                 border-radius: 20px;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 600;
                 text-transform: uppercase;
                 margin-left: 15px;
@@ -120,7 +120,7 @@
                 border-radius: 8px;
             }
     .info-label {
-                font-size: 12px;
+                font-size: 14px;
                 color: var(--text-dim);
                 text-transform: uppercase;
                 margin-bottom: 5px;
@@ -129,6 +129,7 @@
                 font-weight: 600;
                 color: var(--text);
                 font-family: monospace;
+                font-size: 14px;
             }
     .files-grid {
                 display: grid;
@@ -165,7 +166,7 @@
     .file-type {
                 padding: 4px 8px;
                 border-radius: 12px;
-                font-size: 10px;
+                font-size: 14px;
                 font-weight: 600;
                 text-transform: uppercase;
             }
@@ -186,7 +187,7 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
                 margin-bottom: 15px;
-                font-size: 12px;
+                font-size: 14px;
             }
     .file-detail {
                 display: flex;
@@ -201,7 +202,7 @@
                 padding: 8px 15px;
                 border-radius: 6px;
                 text-decoration: none;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 600;
                 transition: all 0.3s ease;
                 border: 1px solid var(--border);
@@ -322,7 +323,7 @@
                         <strong>⚠️ Configuration Directory Issue:</strong>
                         <p style="margin: 10px 0 0 0; color: var(--alert-bad-text);">{{ error_message }}</p>
                         {% if not directory_exists %}
-                        <p style="margin: 10px 0 0 0; color: var(--alert-bad-text); font-size: 13px;">
+                        <p style="margin: 10px 0 0 0; color: var(--alert-bad-text); font-size: 14px;">
                             <strong>Note:</strong> This usually means MHVTL is not installed or the configuration path is incorrect.
                             Libraries created through this Django interface will still be tracked in the database, but MHVTL configuration files cannot be displayed until the directory exists.
                         </p>
@@ -544,7 +545,7 @@
                     return;
                 }
 
-                let html = '<div style="font-family:monospace; font-size:13px; line-height:1.8;">';
+                let html = '<div style="font-family:monospace; font-size:14px; line-height:1.8;">';
 
                 // System overview
                 html += '<h3 style="margin:0 0 10px; color:var(--text); border-bottom:2px solid var(--accent); padding-bottom:5px;">System Overview</h3>';
@@ -644,14 +645,14 @@
                 const highlighted = highlightConfig(data.content);
                 const html = `
                     <div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:12px; color:var(--text-dim);">${data.size} bytes</span>
+                        <span style="font-size:14px; color:var(--text-dim);">${data.size} bytes</span>
                         <a href="{% url 'libraries:download_config' filename='PLACEHOLDER' %}".replace('PLACEHOLDER', '${filename}')
-                           style="padding:5px 12px; background:var(--info); color:white; border-radius:4px; text-decoration:none; font-size:12px;">
+                           style="padding:5px 12px; background:var(--info); color:white; border-radius:4px; text-decoration:none; font-size:14px;">
                             💾 Download
                         </a>
                     </div>
                     <pre style="background:var(--surface-deep); color:var(--text); padding:20px; border-radius:8px; overflow-x:auto;
-                                font-size:13px; line-height:1.6; max-height:70vh; overflow-y:auto; margin:0;
+                                font-size:14px; line-height:1.6; max-height:70vh; overflow-y:auto; margin:0;
                                 border:1px solid var(--border-soft);">${highlighted}</pre>`;
                 showModal(`📄 ${filename}`, html);
             })

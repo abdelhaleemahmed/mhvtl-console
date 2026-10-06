@@ -1,37 +1,37 @@
 {% comment %}
-Partial template for library monitoring metrics.
-Loaded via HTMX for auto-refresh without JavaScript.
-{% endcomment %}
+The four readings at the top of a library's monitor page.
 
-<!-- Service Status Card -->
-<div class="status-card">
-    <div class="status-icon {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
-        {% if metrics.is_running %}✅{% else %}⏹️{% endif %}
-    </div>
-    <div class="status-value {% if metrics.is_running %}status-online{% else %}status-offline{% endif %}">
+One copy of them. The page carried these four cards inline and this partial
+carried them again, so the first paint and every thirty-second refresh were
+two pieces of markup kept the same by hand. The page includes this now.
+
+They are `.stat-card`, the console's own component, rather than a
+`.status-card` that existed on this page alone - a 48px emoji over a number
+over a label. The emoji said what the colour says.
+
+Re-fetched by js/auto-refresh.js, which replaces the container's contents;
+`total_slots` and `metrics` are what LibraryMonitorMetricsView passes.
+{% endcomment %}
+<div class="stat-card {% if not metrics.is_running %}danger{% endif %}">
+    <div class="stat-value">
         {% if metrics.is_running %}Running{% else %}Stopped{% endif %}
     </div>
-    <div class="status-label">Service Status</div>
+    <div class="stat-label">Service</div>
 </div>
 
-<div class="status-card">
-    <div class="status-icon status-info">💽</div>
-    <div class="status-value status-info">{{ metrics.drive_status.online }}/{{ metrics.drive_status.total }}</div>
-    <div class="status-label">Drives Online</div>
-</div>
-
-<div class="status-card">
-    <div class="status-icon status-info">🗃️</div>
-    <div class="status-value status-info">{{ total_slots|default:"0" }}</div>
-    <div class="status-label">Total Slots</div>
-</div>
-
-<div class="status-card">
-    <div class="status-icon {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
-        {% if metrics.error_count > 0 %}⚠️{% else %}✅{% endif %}
+<div class="stat-card neutral">
+    <div class="stat-value">
+        {% if metrics %}{{ metrics.drive_status.online }}/{{ metrics.drive_status.total }}{% else %}&mdash;{% endif %}
     </div>
-    <div class="status-value {% if metrics.error_count > 0 %}status-error{% else %}status-online{% endif %}">
-        {{ metrics.error_count }}
-    </div>
-    <div class="status-label">Errors</div>
+    <div class="stat-label">Drives online</div>
+</div>
+
+<div class="stat-card neutral">
+    <div class="stat-value">{{ total_slots|default:"0" }}</div>
+    <div class="stat-label">Slots</div>
+</div>
+
+<div class="stat-card {% if metrics.error_count %}danger{% endif %}">
+    <div class="stat-value">{{ metrics.error_count|default:"0" }}</div>
+    <div class="stat-label">Error{{ metrics.error_count|default:0|pluralize }}</div>
 </div>

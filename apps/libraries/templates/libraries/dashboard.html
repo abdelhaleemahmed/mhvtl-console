@@ -4,53 +4,27 @@
 {% block header_title %}MHVTL Dashboard{% endblock %}
 
 {% block content %}
-<div class="section-title">
-            System Overview
-            {% if mhvtl_status == 'running' %}
-                <span class="status-badge status-success">MHVTL Running</span>
-            {% elif mhvtl_status == 'stopped' %}
-                <span class="status-badge status-warning">MHVTL Stopped</span>
-            {% else %}
-                <span class="status-badge status-info">Status Unknown</span>
-            {% endif %}
-        </div>
+{% comment %}
+    What the host holds, before anything about what the console thinks of it.
+    The same strip the library list carries, and the same sentence `mhvtl
+    library list` ends with.
+{% endcomment %}
+{% include 'includes/_host_summary.html' %}
 
-        <div class="dashboard-grid">
-            <div class="stat-card total-libraries">
-                <div class="stat-value">{{ library_count|default:0 }}</div>
-                <div class="stat-label">Total Libraries</div>
-            </div>
-            <div class="stat-card drives">
-                <div class="stat-value">{{ total_drives|default:0 }}</div>
-                <div class="stat-label">Total Drives</div>
-            </div>
-            <div class="stat-card discovered">
-                <div class="stat-value">{{ operations_count|default:0 }}</div>
-                <div class="stat-label">Recent Operations</div>
-            </div>
-            {% if DISCOVERY_AVAILABLE %}
-            <div class="stat-card created">
-                <div class="stat-value">{{ last_discovery_count|default:0 }}</div>
-                <div class="stat-label">Last Discovery Items</div>
-            </div>
-            <div class="stat-card media">
-                <div class="stat-value">
-                    {% if last_discovery_minutes %}
-                        {% if last_discovery_minutes < 60 %}
-                            {{ last_discovery_minutes }}m
-                        {% elif last_discovery_minutes < 1440 %}
-                            {{ last_discovery_minutes|floatformat:"0"|add:"0"|slice:":2" }}h
-                        {% else %}
-                            {{ last_discovery_minutes|floatformat:"0"|add:"0"|slice:":2" }}d
-                        {% endif %}
-                    {% else %}
-                        --
-                    {% endif %}
-                </div>
-                <div class="stat-label">Since Last Discovery</div>
-            </div>
-            {% endif %}
-        </div>
+{% comment %}
+    "System Overview" and three tiles stood here - Total Libraries, Total
+    Drives, Recent Operations - saying what the strip above says, from
+    different numbers: the tiles counted the database's rows and the strip
+    reads device.conf. Two answers to one question is how the Discovery
+    panel came to show zeros for a host with 156 cartridges.
+
+    The MHVTL badge beside the heading was the one thing here that was not
+    duplicated, so it moved into the strip, where it is on both pages rather
+    than on this one.
+
+    The two tiles behind DISCOVERY_AVAILABLE went with them: there is no
+    discovery app, which is why the flag is never true.
+{% endcomment %}
 
         <!-- Operation Activity (Last 24 Hours) -->
         {% if recent_create_count or recent_update_count or recent_delete_count %}
@@ -71,23 +45,59 @@
         </div>
         {% endif %}
         
-        {% if DISCOVERY_AVAILABLE %}
-            {% if last_discovery %}
-                <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
-                    Last discovery: {{ last_discovery.completed_at|timesince }} ago
-                    ({{ last_discovery_count|default:0 }} items found)
-                </div>
-            {% else %}
-                <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
-                    No discovery sessions yet.
-                </div>
-            {% endif %}
-        {% endif %}
-        
+        {% comment %}
+            Everything this section can do, from the page the word Libraries
+            now leads to. Three of these had nothing linking to them at all
+            before 6 October 2026 - the MHVTL status page, the reset, and a
+            drive's own status page - and an unreachable page is not a safe
+            page: typing its address still works. See guides/plan-one-console.
+        {% endcomment %}
+        <div class="section-title" style="margin-top: 20px;">Managing this host</div>
+        <div class="card-grid">
+            <a class="quick-link" href="{% url 'libraries:setup_choice' %}">
+                <strong>+ New library</strong>
+                <span>From a vendor's defaults, a saved configuration, or by hand</span>
+            </a>
+            <a class="quick-link" href="{% url 'libraries:list' %}">
+                <strong>Every library, in detail</strong>
+                <span>The full table, with what the database knows beside it</span>
+            </a>
+            <a class="quick-link" href="{% url 'libraries:config_files' %}">
+                <strong>Configuration files</strong>
+                <span>device.conf and the library contents, as they are on disk</span>
+            </a>
+            <a class="quick-link" href="{% url 'libraries:mhvtl_status' %}">
+                <strong>MHVTL status</strong>
+                <span>The daemons, the directories and what they hold</span>
+            </a>
+            <a class="quick-link" href="{% url 'libraries:cleanup_orphaned' %}">
+                <strong>Clean up orphans</strong>
+                <span>Rows the database kept for libraries device.conf no longer has</span>
+            </a>
+            <a class="quick-link" href="{% url 'libraries:remove' %}">
+                <strong>Remove a library</strong>
+                <span>One library, with its drives and - if you say so - its tapes</span>
+            </a>
+            {% comment %}
+                Last, and named for what it does. It deletes every library on
+                the host; it was reachable only by typing its address, which
+                made it no safer, only harder to find on purpose.
+            {% endcomment %}
+            <a class="quick-link quick-link-danger" href="{% url 'libraries:reset_default' %}">
+                <strong>Reset to MHVTL defaults</strong>
+                <span>Deletes every library on this host</span>
+            </a>
+        </div>
+
+        {% comment %}
+            Two buttons stood here - Add New Library and Cleanup Orphaned -
+            and both are now within a screen of this heading twice over: in
+            the header, in the strip, and in Managing this host above. Three
+            ways to start the same thing on one page is not three ways in, it
+            is a page that cannot decide where its controls live.
+        {% endcomment %}
         <div class="section-title" style="margin-top: 20px;">
             Active Libraries ({{ library_count }})
-            <a href="{% url 'libraries:setup_choice' %}" class="btn btn-primary" style="float: right;">+ Add New Library</a>
-            <a href="{% url 'libraries:cleanup_orphaned' %}" class="btn btn-secondary" style="float: right; margin-right: 10px;">Cleanup Orphaned</a>
         </div>
 
         <div class="library-card-grid">
@@ -160,32 +170,13 @@
                 }, 5000);
             });
         });
-
-        // AJAX for dashboard stats refresh (optional)
-        const refreshInterval = setInterval(() => {
-            fetch('/libraries/ajax/discovery-stats/')
-            .then(response => response.json())
-            .then(data => {
-                // Update stats without page reload
-                updateStatValue('discovered', data.discovered_count);
-                updateStatValue('created', data.created_count);
-                updateStatValue('drives', data.total_drives);
-            })
-            .catch(error => {
-                console.log('Stats update failed:', error);
-            });
-        }, 60000);
-
-        function updateStatValue(type, value) {
-            const statElement = document.querySelector(`.stat-card.${type} .stat-value`);
-            if (statElement && statElement.textContent !== value.toString()) {
-                statElement.style.transform = 'scale(1.1)';
-                statElement.textContent = value;
-                setTimeout(() => {
-                    statElement.style.transform = 'scale(1)';
-                }, 200);
-            }
-        }
+        {% comment %}
+            A sixty-second poll of /ajax/discovery-stats/ lived here. It read
+            data.discovered_count, data.created_count and data.total_drives -
+            none of which that endpoint returns - so every minute it wrote
+            `0` over three tiles, through `|| 0`. The numbers on this page
+            are rendered by the view now, from the service.
+        {% endcomment %}
 
         // Add CSS animation for notifications
         const style = document.createElement('style');

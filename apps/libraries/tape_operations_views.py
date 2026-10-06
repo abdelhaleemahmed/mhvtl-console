@@ -33,6 +33,7 @@ from .services.profiles import personalities
 from .services.profiles.data import get_profile
 from .services.scsi import lsscsi, mapping
 from .services.tapes import TapeService, barcodes
+from .services.tapes import service as tape_service
 
 #: The operator dashboard template still reads this flag; the services are
 #: part of this app, so they are always there.
@@ -110,6 +111,30 @@ def _tapes():
 def _ltfs():
     from apps.libraries.services.ltfs import LtfsService
     return LtfsService()
+
+
+def _where_each_can_go(tapes):
+    """Each loose tape, with the libraries that could actually take it.
+
+    The adopt form offered every library on the host for every tape, and
+    TapeService.adopt then refused the ones whose drives cannot load that
+    density - so the page could offer a choice it knew would fail. It asks
+    which libraries can take the tape now, from the service that does the
+    refusing.
+
+    Asked once per density rather than once per tape: twenty LTO-8 tapes are
+    one question, and each answer reads device.conf.
+    """
+    answers = {}
+    for tape in tapes:
+        density = tape.get('density')
+        if density and density not in answers:
+            answers[density] = _tapes().libraries_for(density).data or {}
+        answer = answers.get(density, {})
+        tape['can_go_to'] = answer.get('libraries', [])
+        #: Only when nothing can take it; the form says the rest.
+        tape['nowhere'] = answer.get('says') if not tape['can_go_to'] else None
+    return tapes
 
 
 def _as_json(result) -> dict:
@@ -327,6 +352,11 @@ def tape_media_context(libraries) -> dict:
                        for d in personalities.SUFFIX_BY_DENSITY},
             'native_mb': {d: gb * 1000 for d, gb
                           in personalities.NATIVE_CAPACITY_GB.items()},
+            # What a medium with no native capacity gets - 9840, 9940. The
+            # script had this number too; now it has the service's, so the
+            # size the form suggests and the size the service would use
+            # cannot differ.
+            'unknown_size_mb': tape_service.UNKNOWN_SIZE_MB,
         },
     }
 
@@ -1194,7 +1224,8 @@ class TapeListView(View):
             'tapes_result': tapes_data,
             'in_slot_count': sum(1 for t in tapes_list if t.get('location') == 'slot'),
             'in_drive_count': sum(1 for t in tapes_list if t.get('location') == 'drive'),
-            'unassigned': loose.data['tapes'] if loose.success else [],
+            'unassigned': _where_each_can_go(
+                loose.data['tapes'] if loose.success else []),
             'unassigned_error': None if loose.success else loose.message,
             'error': tapes_result.message if tapes_result and not tapes_result.success else None,
             'title': 'Tape Inventory'
@@ -1253,7 +1284,11 @@ class CreateTapeView(View):
         library_id = request.POST.get('library_id')
         barcode = request.POST.get('barcode', '').strip().upper()
         slot = request.POST.get('slot')
-        size_mb = request.POST.get('size_mb', '500000')
+        # No default here either: empty means the density's native capacity,
+        # which services/tapes works out once the density is resolved. This
+        # form carried 500000 of its own, as did the bulk form, the AJAX
+        # handler and the CLI - while the service said 500.
+        size_mb = request.POST.get('size_mb') or None
         tape_type = request.POST.get('tape_type', 'data')
         # No default: the service reads it from the barcode, then the library
         density = request.POST.get('density') or None
@@ -1265,7 +1300,7 @@ class CreateTapeView(View):
         try:
             library_id = int(library_id)
             slot = int(slot)
-            size_mb = int(size_mb)
+            size_mb = int(size_mb) if size_mb else None
 
 
             result = _tapes().create(library_id, barcode, slot=slot, size_mb=size_mb,
@@ -1336,7 +1371,8 @@ class CreateTapesBulkView(View):
         count = request.POST.get('count', '10')
         barcode_prefix = request.POST.get('barcode_prefix') or None
         barcode_suffix = request.POST.get('barcode_suffix') or None
-        size_mb = request.POST.get('size_mb', '500000')
+        # Empty means each tape gets its own density's native capacity.
+        size_mb = request.POST.get('size_mb') or None
         density = request.POST.get('density') or None
         tape_type = request.POST.get('tape_type', 'data')
 
@@ -1347,7 +1383,7 @@ class CreateTapesBulkView(View):
         try:
             library_id = int(library_id)
             count = int(count)
-            size_mb = int(size_mb)
+            size_mb = int(size_mb) if size_mb else None
 
             # Validate count based on tape type
             max_counts = {'data': 999, 'clean': 9, 'WORM': 99}
@@ -1593,6 +1629,38 @@ def drive_placement_ajax(request, library_id):
                          'errors': result.errors, 'plan': result.data or {}})
 
 
+#: What an operator may choose when adding a drive. Everything else about it -
+#: the slot, the drive id, the SCSI target, the firmware revision - the service
+#: decides, and so does any of these three left empty.
+DRIVE_CHOICES = ('vendor', 'product', 'serial')
+
+
+def _chosen_drive(given) -> dict:
+    """What was actually asked for, out of a form post or a JSON body.
+
+    Empty is not a choice. It is a question, and DriveService.add answers it
+    by matching the drives the library already has - which is the only answer
+    that can be right, because a library's drives are one model unless
+    somebody deliberately mixed them.
+
+    Both handlers used to answer it themselves, with a literal:
+    ``request.POST.get('vendor', 'IBM')`` and ``'ULT3580-TD8'``. Adding a
+    drive to library 30 - an STK L80 full of T10000Bs - wrote an IBM
+    ULT3580-TD8 into it whenever the field was absent, which is every
+    scripted call to the AJAX endpoint. The service had the rule right and
+    the page never let it apply it.
+
+    Takes anything with .get, so the form post and the parsed JSON body are
+    read by one function rather than by two that can drift.
+    """
+    chosen = {}
+    for field in DRIVE_CHOICES:
+        value = str(given.get(field) or '').strip()
+        if value:
+            chosen[field] = value
+    return chosen
+
+
 class AddDriveView(View):
     """
     Add a new drive to a library
@@ -1627,9 +1695,6 @@ class AddDriveView(View):
             return redirect('authentication:login')
 
         library_id = request.POST.get('library_id')
-        vendor = request.POST.get('vendor', 'IBM')
-        product = request.POST.get('product', 'ULT3580-TD8')
-        serial = request.POST.get('serial', '').strip()
 
         if not library_id:
             messages.error(request, "Please select a library")
@@ -1637,16 +1702,8 @@ class AddDriveView(View):
 
         try:
             library_id = int(library_id)
-
-
-            drive_data = {
-                'vendor': vendor,
-                'product': product,
-            }
-            if serial:
-                drive_data['serial'] = serial
-
-            result = get_drive_service().add(library_id, drive_data)
+            result = get_drive_service().add(library_id,
+                                             _chosen_drive(request.POST))
 
             if result.success:
                 messages.success(request, result.message)
@@ -1763,7 +1820,8 @@ def create_tape_ajax(request):
         library_id = int(data.get('library_id'))
         barcode = data.get('barcode', '').strip().upper()
         slot = int(data.get('slot'))
-        size_mb = int(data.get('size_mb', 500000))
+        # Absent means the density's native capacity, as on the forms.
+        size_mb = int(data['size_mb']) if data.get('size_mb') else None
         tape_type = data.get('tape_type', 'data')
         # No default: the service reads it from the barcode, then the library
         density = data.get('density') or None
@@ -1865,14 +1923,7 @@ def add_drive_ajax(request):
         data = json.loads(request.body)
         library_id = int(data.get('library_id'))
 
-        drive_data = {
-            'vendor': data.get('vendor', 'IBM'),
-            'product': data.get('product', 'ULT3580-TD8'),
-        }
-        if data.get('serial'):
-            drive_data['serial'] = data['serial']
-
-        result = get_drive_service().add(library_id, drive_data)
+        result = get_drive_service().add(library_id, _chosen_drive(data))
 
         return JsonResponse({
             'success': result.success,

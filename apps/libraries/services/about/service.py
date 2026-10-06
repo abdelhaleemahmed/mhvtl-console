@@ -36,9 +36,23 @@ def project() -> Dict[str, str]:
     Five strings from mhvtl_system, plus the two documentation addresses.
     No I/O, nothing that can fail - a caller that only wants the version
     does not have to handle a failure that cannot happen.
+
+    WHY THE NAME IS NOT THE PACKAGE NAME
+    ------------------------------------
+    This said `mhvtl-gui` until 3.3.0, which is also the name of an older,
+    unrelated PHP interface to MHVTL. Anyone searching for either found both,
+    and a bug report quoting `mhvtl --version` did not say which program it
+    was about. The product is `mhvtl-console`, and this is the one string the
+    About page and `mhvtl --version` read.
+
+    The *packaging* identity deliberately did not move with it: the RPM is
+    still `mhvtl-gui`, installed at /opt/mhvtl-gui, run by the mhvtl-gui
+    account under mhvtl-gui.service. Renaming those renames an upgrade path,
+    a service unit, a sudoers file and a system account on every host that
+    already has one, which is a migration rather than a label.
     """
     return {
-        'name': 'mhvtl-gui',
+        'name': 'mhvtl-console',
         'version': mhvtl_system.__version__,
         'author': mhvtl_system.__author__,
         'email': mhvtl_system.__email__,
@@ -47,6 +61,39 @@ def project() -> Dict[str, str]:
         'docs_user': mhvtl_system.DOCS_USER,
         'docs_api': mhvtl_system.DOCS_API,
     }
+
+
+def running_from() -> str:
+    """Which copy of the code is answering - the installed tree, or a checkout.
+
+    A fact about this process rather than about the project, which is why it
+    is not in project() above. ``--version`` prints it anyway, because that
+    is where it is needed.
+
+    WHY IT IS PRINTED AT ALL
+    ------------------------
+    sudoers on a Red Hat host sets ``secure_path``, so ``sudo mhvtl`` throws
+    the caller's PATH away and always resolves /usr/bin/mhvtl - and therefore
+    the *installed* tree. Plain ``mhvtl`` can be pointed at a working tree
+    with PATH, or with MHVTL_APP. So while a checkout is ahead of the
+    package, one typed command runs two different programs depending on a
+    single word:
+
+        $ mhvtl preset list              worked
+        $ sudo mhvtl preset list         invalid choice: 'preset'
+
+    ``--version`` printed the same four lines for both, because the working
+    tree and the package carried the same version string. That is how a whole
+    terminal recording was made against the wrong copy on 4 October 2026
+    before anybody noticed. Printing the path makes the next one visible in
+    one command.
+
+    No I/O that can fail and no Django: ``--version`` is answered at parse
+    time, before setup_django has run.
+    """
+    from pathlib import Path
+
+    return str(Path(mhvtl_system.__file__).resolve().parent.parent)
 
 
 def runtime(config_directory: Optional[str] = None) -> Dict[str, Any]:
@@ -63,6 +110,7 @@ def runtime(config_directory: Optional[str] = None) -> Dict[str, Any]:
         'django': django.get_version(),
         'platform': platform.platform(),
         'hostname': platform.node(),
+        'running_from': running_from(),
     }
 
     try:
@@ -95,12 +143,16 @@ def facts(config_directory: Optional[str] = None) -> ServiceResult:
 def one_line() -> str:
     """What `mhvtl --version` prints.
 
-    Four lines rather than one, because the question behind "what version is
+    Five lines rather than one, because the question behind "what version is
     this" is usually "and where do I report it" - so the address to report to
     and the licence come with it. argparse calls this once, at parse time.
+
+    The last line is which copy of the code answered. Two copies on one host
+    printed the same four lines for a day; see running_from.
     """
     it = project()
     return (f"{it['name']} {it['version']}\n"
             f"{it['author']} <{it['email']}>\n"
             f"{it['licence']}\n"
-            f"{it['url']}")
+            f"{it['url']}\n"
+            f"running from {running_from()}")

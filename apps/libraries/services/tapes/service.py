@@ -29,6 +29,7 @@ from typing import Dict, List, Optional
 
 from ..config import library_contents as contents_format
 from ..config.service import ConfigService
+from ..profiles import catalogue
 from ..profiles import data as profiles_data
 from ..profiles import ltfs_support, personalities
 from ..core import (FileLock, ServiceResult, config_dir, failure_result,
@@ -41,8 +42,39 @@ CONTENTS_RE = re.compile(r'^library_contents\.(\d+)$')
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SIZE_MB = 500
+#: What MHVTL gives a medium it has no native capacity for - 9840 and 9940 -
+#: and what the create forms already suggest for one. It lived in
+#: static/js/tape-media.js as UNKNOWN_SIZE_MB, which is where the whole rule
+#: used to live.
+UNKNOWN_SIZE_MB = 1000
+
 DEFAULT_DENSITY = 'LTO8'
+
+
+def native_size_mb(density: str) -> int:
+    """How big a new cartridge of this density should claim to be.
+
+    Its native capacity, from ``personalities.NATIVE_CAPACITY_GB`` - which is
+    transcribed from MHVTL and checked against it. An LTO-8 holds 12 TB and a
+    T10KC 5 TB, and a cartridge that claims otherwise is one whose fullness
+    means nothing.
+
+    Two arbitrary numbers stood in for this until 4 October 2026, and they
+    disagreed. This module said 500 MB; every front end said 500000 - both
+    create forms, three web handlers and the CLI's two verbs. So a library's
+    own tapes were 500 MB and any tape added to it afterwards was 500 GB,
+    which `mhvtl tape list` then showed side by side. Neither number was ever
+    a cartridge.
+
+    The forms were already suggesting the native capacity, through
+    ``native_mb`` in tape_operations_views: this is that rule, applied by
+    default rather than only when somebody picks a density by hand.
+
+    The files are sparse, so a 12 TB cartridge costs what a 500 MB one costs
+    until something writes to it.
+    """
+    capacity = personalities.NATIVE_CAPACITY_GB.get((density or '').upper())
+    return capacity * 1000 if capacity else UNKNOWN_SIZE_MB
 
 
 class TapeService:
@@ -225,6 +257,61 @@ class TapeService:
         library = conf.libraries.get(int(library_id)) if conf else None
         return (library or {}).get('vendor', '')
 
+    def libraries_for(self, density: str) -> ServiceResult:
+        """The libraries a tape of this density could go into.
+
+        ``media_for_library`` asked the other way round, for a caller that
+        has a tape and needs the libraries rather than a library and needs
+        the tapes. The console's adopt form and ``tape adopt``'s refusal both
+        use it, so neither decides for itself what a drive can load.
+
+        LOADS, NOT WRITES
+        -----------------
+        An LTO-5 cartridge belongs in a library whose newest drive is an
+        LTO-7: that drive reads LTO-5, and adopting recovers what is on a
+        tape rather than writing to it. ``check_media`` draws the line in the
+        same place, which is what lets this be offered as the choice that is
+        enforced.
+
+        A library whose drives MHVTL gives no media list for is offered, for
+        the same reason ``check_media`` lets it through: it is not known to
+        be wrong.
+        """
+        operation_id = str(uuid.uuid4())[:8]
+        conf = ConfigService(self.config_dir).device_conf()
+        if conf is None:
+            return failure_result(
+                'Could not read the library configuration',
+                ['device.conf is not readable'], operation_id)
+
+        able, unable = [], []
+        for library_id in sorted(conf.libraries):
+            declared = conf.libraries[library_id]
+            takes = self.media_for_library(library_id)
+            offered = [entry['density'] for entry in takes['media']]
+            if not takes['known'] or density in offered:
+                able.append({'library_id': library_id,
+                             'vendor': declared.get('vendor', ''),
+                             'product': declared.get('product', ''),
+                             'takes': offered})
+            else:
+                unable.append({'library_id': library_id, 'takes': offered})
+
+        if able:
+            # No article before the density: "a LTO5" and "an AIT3" would
+            # need a rule about vowels to say nothing.
+            says = (f'{len(able)} librar{"ies" if len(able) != 1 else "y"} '
+                    f'can take {density}')
+        elif unable:
+            says = (f'No library on this host has a drive that loads {density}. '
+                    f'Add one with `mhvtl drive add <library> --model <a drive '
+                    f'that takes {density}>`, or make a library that does.')
+        else:
+            says = 'There are no libraries on this host yet.'
+        return success_result(says,
+                              {'libraries': able, 'cannot': unable,
+                               'density': density, 'says': says}, operation_id)
+
     def media_for_library(self, library_id: int) -> Dict:
         """Which tapes this library's drives can use.
 
@@ -260,10 +347,12 @@ class TapeService:
                     entry[bucket].append(product)
         for entry in media_list:
             entry['writable'] = bool(entry['writable_in'])
-        writable = [m['density'] for m in media_list if m['writable']]
+        # The default is the same rule creation applies before the library
+        # exists, so a mixed library's nominal density is one answer rather
+        # than two: profiles/catalogue.default_density_for.
         return {'library_id': library_id, 'drives': drives,
                 'known': bool(media_list), 'media': media_list,
-                'default': writable[0] if writable else None}
+                'default': catalogue.default_density_for(drives)}
 
     def check_media(self, library_id: int, density: str,
                     barcode: str = None) -> Optional[str]:
@@ -292,13 +381,17 @@ class TapeService:
     # -- writing ----------------------------------------------------------
 
     def create(self, library_id: int, barcode: str, *, slot: int = None,
-               size_mb: int = DEFAULT_SIZE_MB, density: str = None,
+               size_mb: int = None, density: str = None,
                kind: str = None, check_media: bool = True) -> ServiceResult:
         """Create one tape and put it in a slot.
 
         The density defaults to what the barcode's suffix says, then to the
         library's first writable medium. check_media=False skips the drive
         check, for create_bulk, which has already made it once for the run.
+
+        ``size_mb`` of None means the density's native capacity, which is
+        why it is resolved after the density and not in the signature - see
+        native_size_mb.
         """
         operation_id = str(uuid.uuid4())[:8]
 
@@ -310,6 +403,8 @@ class TapeService:
         density = (density or '').upper() or barcodes.density_for(barcode) \
             or self.media_for_library(library_id)['default'] or DEFAULT_DENSITY
         kind = kind or barcodes.kind(barcode)
+        if size_mb is None:
+            size_mb = native_size_mb(density)
 
         if check_media:
             problem = self.check_media(library_id, density, barcode)
@@ -355,7 +450,7 @@ class TapeService:
 
     def create_bulk(self, library_id: int, count: int, *, prefix: str = None,
                     suffix: str = None, start_number: int = None,
-                    size_mb: int = DEFAULT_SIZE_MB,
+                    size_mb: int = None,
                     density: str = None, kind: str = None) -> ServiceResult:
         """Create a numbered run of tapes.
 
@@ -557,7 +652,7 @@ class TapeService:
                 return int(match.group(1))
         return None
 
-    def create_missing(self, library_id: int, *, size_mb: int = DEFAULT_SIZE_MB,
+    def create_missing(self, library_id: int, *, size_mb: int = None,
                        density: str = None) -> ServiceResult:
         """Make the media files for barcodes library_contents lists but that
         have none on disk.
@@ -592,8 +687,14 @@ class TapeService:
                 logger.warning('refusing to create media for %r: %s', slot.barcode, exc)
                 failed.append(slot.barcode)
                 continue
-            made = media.create(barcode, library_id=library_id, size_mb=size_mb,
-                                density=barcodes.density_for(barcode) or fallback,
+            # Per tape, not per run: the density comes from each barcode, so
+            # the capacity has to as well. A library holding LTO-8 and LTO-6
+            # gets 12 TB cartridges and 2.5 TB ones, which is what it would
+            # hold in a rack.
+            for_tape = barcodes.density_for(barcode) or fallback
+            made = media.create(barcode, library_id=library_id,
+                                size_mb=size_mb or native_size_mb(for_tape),
+                                density=for_tape,
                                 kind=barcodes.kind(barcode), base=self.media_dir)
             (created if made.ok else failed).append(barcode)
 

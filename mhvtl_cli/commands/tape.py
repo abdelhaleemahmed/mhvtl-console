@@ -42,8 +42,10 @@ def register(subparsers) -> None:
     create.add_argument('library_id', type=int)
     create.add_argument('barcode')
     create.add_argument('--slot', type=int, help='slot to put it in')
-    create.add_argument('--size-mb', type=int, default=500000,
-                        help='capacity in MB (default 500000)')
+    create.add_argument('--size-mb', type=int,
+                        help="capacity in MB; the density's native capacity "
+                             'if omitted - 12 TB for an LTO-8, which is what '
+                             'the cartridge holds')
     create.add_argument('--density',
                         help='e.g. LTO8; read from the barcode if omitted. '
                              "Must be one the library's drives load "
@@ -59,7 +61,9 @@ def register(subparsers) -> None:
     bulk.add_argument('--suffix', help='override the detected suffix')
     bulk.add_argument('--start', type=int, dest='start_number',
                       help='first number; the next free one if omitted')
-    bulk.add_argument('--size-mb', type=int, default=500000)
+    bulk.add_argument('--size-mb', type=int,
+                      help="capacity in MB; each tape gets its own density's "
+                           'native capacity if omitted')
     bulk.add_argument('--density',
                       help="e.g. LTO8; picks the suffix when --suffix is not "
                            "given. Must be one the library's drives load")
@@ -199,11 +203,40 @@ def do_adopt(args) -> int:
     without --remove-media leaves behind. Nothing is written to the media here.
     """
     privileges.require_write_access('adopting a tape')
-    result = _service(args).adopt(args.library_id, args.barcode, slot=args.slot)
+    service = _service(args)
+    result = service.adopt(args.library_id, args.barcode, slot=args.slot)
     code = output.result(result, as_json=args.json, quiet=args.quiet)
-    if result.success and not args.json and not args.quiet:
+    if args.json or args.quiet:
+        return code
+    if result.success:
         print(_restart_note(args.library_id))
+    else:
+        # Refused, possibly because this library's drives cannot load the
+        # tape. Say where it COULD go rather than leaving an operator to try
+        # the libraries one at a time; the console's form offers the same
+        # list, from the same call.
+        _say_where_it_could_go(service, args.barcode)
     return code
+
+
+def _say_where_it_could_go(service, barcode: str) -> None:
+    """The libraries whose drives can load this tape, after a refusal."""
+    from apps.libraries.services.tapes import barcodes
+
+    density = barcodes.density_for(barcode)
+    if not density:
+        return
+    answer = service.libraries_for(density)
+    if not answer.success:
+        return
+    able = answer.data['libraries']
+    if able:
+        output.note(f'{density} can go in: '
+                    + ', '.join(f"library {row['library_id']} "
+                                f"({row['vendor']} {row['product']})"
+                                for row in able))
+    else:
+        output.note(answer.data['says'])
 
 
 def _restart_note(library_id: int) -> str:

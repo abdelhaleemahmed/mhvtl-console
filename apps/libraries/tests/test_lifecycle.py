@@ -131,6 +131,173 @@ class ContentsRenderingTests(TestCase):
         self.assertIn('Trailing "TA"', contents_format.render_new(40, 1))
 
 
+class MixedSpecTests(TestCase):
+    """One canonical form for a library that holds more than one kind.
+
+    `--drive MODEL:COUNT` repeated, and a preset's [[name.drive]] array, are
+    the same list by the time they reach here. apply_defaults is the only
+    thing that builds drive_slots and media_runs from it, which is why the
+    writers below have one path each rather than a uniform case and a mixed
+    one free to disagree.
+    """
+
+    MIXED = {'library_id': 40, 'profile': 'IBM', 'library_model': '03584L32',
+             'drive': [{'model': 'ULT3580-TD8', 'count': 2},
+                       {'model': 'ULT3580-TD6', 'count': 2}],
+             'media': [{'density': 'LTO8', 'count': 3},
+                       {'density': 'LTO6', 'count': 2}]}
+
+    def test_one_slot_per_drive_in_the_order_asked_for(self):
+        filled = spec.apply_defaults(self.MIXED)
+        self.assertEqual([slot['product'] for slot in filled['drive_slots']],
+                         ['ULT3580-TD8', 'ULT3580-TD8',
+                          'ULT3580-TD6', 'ULT3580-TD6'])
+
+    def test_the_list_decides_how_many_drives_there_are(self):
+        """Not the other way round: num_drives is derived, so nothing can ask
+        for four drives and list two."""
+        filled = spec.apply_defaults(self.MIXED)
+        self.assertEqual(filled['num_drives'], 4)
+        self.assertEqual(filled['media_count'], 5)
+
+    def test_the_nominal_density_is_the_first_one_a_drive_writes(self):
+        """The rule `mhvtl tape media` reports for a library that exists, so a
+        mixed library is described the same way before and after creation."""
+        filled = spec.apply_defaults(self.MIXED)
+        self.assertEqual(filled['media_type'], 'LTO8')
+        self.assertEqual(filled['media_suffix'], 'L8')
+
+    def test_a_uniform_specification_still_fills_its_slots(self):
+        """The same list, one model repeated: no second path through here."""
+        filled = spec.apply_defaults({'library_id': 40, 'profile': 'IBM',
+                                      'num_drives': 3})
+        self.assertEqual(len(filled['drive_slots']), 3)
+        self.assertEqual({slot['product'] for slot in filled['drive_slots']},
+                         {filled['drive_product']})
+        self.assertEqual([run['count'] for run in filled['media_runs']],
+                         [filled['media_count']])
+
+    def test_the_counts_asked_for_are_read_from_whichever_shape_arrived(self):
+        """What validation asks before it checks a layout limit. A preset
+        holding a list has no num_drives at all, and reading the key alone
+        said four - the default - for a library of twelve."""
+        self.assertEqual(spec.asked_drive_count(self.MIXED, 4), 4)
+        self.assertEqual(spec.asked_media_count(self.MIXED, 50), 5)
+        self.assertEqual(spec.asked_drive_models(self.MIXED),
+                         ['ULT3580-TD8', 'ULT3580-TD6'])
+        self.assertEqual(spec.asked_densities(self.MIXED), ['LTO8', 'LTO6'])
+
+    def test_a_filled_specification_answers_the_same(self):
+        filled = spec.apply_defaults(self.MIXED)
+        self.assertEqual(spec.asked_drive_count(filled, 4), 4)
+        self.assertEqual(spec.asked_media_count(filled, 50), 5)
+        self.assertEqual(spec.asked_drive_models(filled),
+                         ['ULT3580-TD8', 'ULT3580-TD6'])
+        self.assertEqual(spec.asked_densities(filled), ['LTO8', 'LTO6'])
+
+
+class RunSyntaxTests(TestCase):
+    """``MODEL:COUNT``, the one syntax both front ends ask in.
+
+    It was mhvtl_cli's while the command line was the only caller. The setup
+    form's rows send the same thing back to the server when a row changes,
+    and the web cannot import mhvtl_cli - so a second encoding of one syntax
+    was the alternative, free to disagree with the first.
+    """
+
+    def test_a_name_and_a_count(self):
+        self.assertEqual(spec.parse_runs(['ULT3580-TD8:2'], 'model'),
+                         [{'model': 'ULT3580-TD8', 'count': 2}])
+
+    def test_no_count_means_one(self):
+        self.assertEqual(spec.parse_runs(['ULT3580-TD8', 'ULT3580-TD6'],
+                                         'model'),
+                         [{'model': 'ULT3580-TD8', 'count': 1},
+                          {'model': 'ULT3580-TD6', 'count': 1}])
+
+    def test_the_order_given_is_the_order_kept(self):
+        """Slot order, and therefore SCSI target order."""
+        self.assertEqual([run['density'] for run in
+                          spec.parse_runs(['LTO6:1', 'LTO8:2'], 'density')],
+                         ['LTO6', 'LTO8'])
+
+    def test_what_it_refuses(self):
+        for bad, why in ((':2', 'names nothing'),
+                         ('ULT3580-TD8:x', 'not a whole number'),
+                         ('ULT3580-TD8:0', 'creates nothing'),
+                         ('ULT3580-TD8:-1', 'creates nothing')):
+            with self.subTest(given=bad):
+                with self.assertRaises(ValueError) as refused:
+                    spec.parse_runs([bad], 'model')
+                self.assertIn(why, str(refused.exception))
+
+    def test_what_it_parses_is_what_apply_defaults_takes(self):
+        """The round trip that matters: the syntax reaches the slots."""
+        filled = spec.apply_defaults({
+            'library_id': 40, 'profile': 'IBM', 'library_model': '03584L32',
+            'drive': spec.parse_runs(['ULT3580-TD8:2', 'ULT3580-TD6:1'],
+                                     'model'),
+            'media': spec.parse_runs(['LTO8:3'], 'density')})
+        self.assertEqual([slot['product'] for slot in filled['drive_slots']],
+                         ['ULT3580-TD8', 'ULT3580-TD8', 'ULT3580-TD6'])
+        self.assertEqual(filled['media_count'], 3)
+
+
+class MixedRenderingTests(TestCase):
+    """What the two files look like for a mixed library."""
+
+    def _filled(self):
+        return spec.apply_defaults(MixedSpecTests.MIXED)
+
+    def test_device_conf_writes_each_slot_its_own_model(self):
+        """It took the model from outside the loop until 4 October 2026, so a
+        mixed library was written as four of whatever the first slot had."""
+        from apps.libraries.services.config import device_conf
+
+        text = device_conf.render_library_and_drives(
+            '', self._filled() | {'target': 0}, [1, 2, 3, 4])
+        models = [line.split(':', 1)[1].strip() for line in text.splitlines()
+                  if line.startswith(' Product identification:')]
+        self.assertEqual(models, ['03584L32', 'ULT3580-TD8', 'ULT3580-TD8',
+                                  'ULT3580-TD6', 'ULT3580-TD6'])
+
+    def test_each_drive_slot_reads_back_with_the_model_asked_for(self):
+        """Through the parser, because the slot number is how MHVTL and the
+        database tie a drive to its position - and position is what a backup
+        application addresses a drive by."""
+        from apps.libraries.services.config import device_conf
+
+        text = device_conf.render_library_and_drives(
+            '', self._filled() | {'target': 0}, [1, 2, 3, 4])
+        parsed = device_conf.parse(text)
+        self.assertEqual([(drive['slot'], drive['product'])
+                          for drive in parsed.drives.values()],
+                         [(1, 'ULT3580-TD8'), (2, 'ULT3580-TD8'),
+                          (3, 'ULT3580-TD6'), (4, 'ULT3580-TD6')])
+
+    def test_the_barcodes_change_suffix_without_restarting_the_numbers(self):
+        """MHVTL reads the density out of the suffix and nothing else, and two
+        cartridges with one barcode is a library that cannot be inventoried."""
+        filled = self._filled()
+        text = contents_format.render_new(
+            40, filled['num_drives'], barcode_prefix=filled['barcode_prefix'],
+            media_count=filled['media_count'], empty_slots=2,
+            media_runs=filled['media_runs'])
+        self.assertEqual(contents_format.parse(text).barcodes,
+                         ['I40001L8', 'I40002L8', 'I40003L8',
+                          'I40004L6', 'I40005L6'])
+
+    def test_the_empty_slots_follow_the_last_run(self):
+        filled = self._filled()
+        text = contents_format.render_new(
+            40, filled['num_drives'], barcode_prefix=filled['barcode_prefix'],
+            media_count=filled['media_count'], empty_slots=2,
+            media_runs=filled['media_runs'])
+        parsed = contents_format.parse(text)
+        self.assertEqual([slot.number for slot in parsed.slots],
+                         [1, 2, 3, 4, 5, 6, 7])
+        self.assertEqual(len(parsed.occupied), 5)
+
 
 def as_live(test, directory):
     """Make a scratch directory look like the live one.
@@ -201,6 +368,26 @@ class CreateTests(TestCase):
     def test_a_backup_is_taken_before_anything_is_written(self):
         result = self._create()
         self.assertTrue(Path(result.data['backup_path'], 'device.conf').exists())
+
+    def test_a_mixed_library_is_created_as_asked_in_both_files(self):
+        """The whole of mixed drives and media, through the operation: two
+        LTO-8 drives, two LTO-6 drives, and cartridges for both."""
+        result = lifecycle.create(MixedSpecTests.MIXED, self.config)
+        self.assertTrue(result.success, result.errors)
+
+        conf = lifecycle.device_conf_format.parse(
+            (self.config / 'device.conf').read_text())
+        drives = [conf.drives[did] for did in sorted(conf.drives_of(40))]
+        self.assertEqual([drive['product'] for drive in drives],
+                         ['ULT3580-TD8', 'ULT3580-TD8',
+                          'ULT3580-TD6', 'ULT3580-TD6'])
+
+        contents = contents_format.parse(
+            (self.config / 'library_contents.40').read_text())
+        self.assertEqual(contents.drive_count, 4)
+        self.assertEqual(contents.barcodes,
+                         ['I40001L8', 'I40002L8', 'I40003L8',
+                          'I40004L6', 'I40005L6'])
 
     def test_an_id_already_in_use_is_refused(self):
         result = self._create(library_id=10)

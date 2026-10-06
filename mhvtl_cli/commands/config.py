@@ -178,14 +178,19 @@ def do_regenerate(args) -> int:
 
 
 def do_sync(args) -> int:
+    """device.conf into the database, and what it changed.
+
+    One call, rendered like every other service result. It used to print the
+    counts with no message and catch nothing, so an unreadable device.conf -
+    an ordinary condition, and one the web reports in a sentence - came out
+    as a Python traceback under "this is a bug".
+    """
     from apps.libraries.services.sync.service import sync_mhvtl_to_django
 
-    summary = sync_mhvtl_to_django()
-    if args.json:
-        output.emit_json(summary)
-    elif not args.quiet:
-        output.pairs(summary)
-    return output.EXIT_OK
+    result = sync_mhvtl_to_django(args.config_dir)
+    if not args.json and result.success and not args.quiet:
+        output.pairs(result.data)
+    return output.result(result, as_json=args.json, quiet=args.quiet)
 
 
 def do_backups(args) -> int:

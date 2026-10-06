@@ -8,10 +8,10 @@
        literal colours, so the outstanding theme pass has nothing new to fix. */
     .ltfs-row.capable   { border-left: 4px solid var(--ok); }
     .ltfs-row.incapable { border-left: 4px solid var(--border); opacity: 0.75; }
-    .ltfs-why  { font-size: 12px; color: var(--text-dim); }
-    .ltfs-path { font-family: 'Consolas', monospace; font-size: 12px; }
+    .ltfs-why  { font-size: 14px; color: var(--text-dim); }
+    .ltfs-path { font-family: 'Consolas', monospace; font-size: 14px; }
     .ltfs-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-    .ltfs-note { color: var(--text-dim); font-size: 13px; margin-top: 12px; }
+    .ltfs-note { color: var(--text-dim); font-size: 14px; margin-top: 12px; }
 </style>
 {% endblock %}
 
@@ -63,7 +63,7 @@
         {% endif %}
     </div>
 
-    <p class="form-help" style="font-size: 13px; margin-bottom: 15px;">
+    <p class="form-help" style="font-size: 14px; margin-bottom: 15px;">
         Drive slots {{ provisioning.drive_slots.used }}{% if provisioning.drive_slots.max %} of {{ provisioning.drive_slots.max }}{% endif %}
         &middot; storage slots {{ provisioning.storage_slots.full }} full,
         {{ provisioning.storage_slots.empty }} empty

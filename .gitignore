@@ -43,3 +43,10 @@ generated_configs/
 .claude/
 *.egg-info/
 
+
+# Leftovers from a patch or a merge. test_models.py.orig and
+# test_smoke.py.orig were committed and then shipped inside the RPM for
+# several releases: the test runner never discovered them, so nothing failed
+# and nobody noticed. test_packaging.py now fails if one is tracked.
+*.orig
+*.rej

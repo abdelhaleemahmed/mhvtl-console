@@ -1,7 +1,7 @@
 """Who made this, which version it is, and what it is running on.
 
 Modules:
-    service.py    facts(), one_line()
+    service.py    facts(), one_line(), project(), running_from()
 
 A leaf, the shape dashboard/ uses: one module, in its own package because it
 is its own role. It imports core and console; nothing imports it but its two
@@ -13,6 +13,6 @@ why they are a constant and not distribution metadata. This package composes
 and formats them, so the page and the terminal cannot disagree about what
 version is running, the way the footer and the packages once did.
 """
-from .service import facts, one_line, project
+from .service import facts, one_line, project, running_from
 
-__all__ = ['facts', 'one_line', 'project']
+__all__ = ['facts', 'one_line', 'project', 'running_from']

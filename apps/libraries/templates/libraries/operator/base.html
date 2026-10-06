@@ -1,43 +1,34 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ title }} - MHVTL{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
-    <script src="{% static 'js/theme.js' %}"></script>
-    {% block extra_css %}{% endblock %}
-</head>
-<body class="mhvtl-console">
-    <div class="header">
-        <div class="header-content">
-            <div class="header-title">{% block header_title %}{{ title }}{% endblock %}</div>
-            <nav>
-                <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
-                <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Operator</a>
-                <a href="{% url 'libraries:config_files' %}" class="nav-link">Config Files</a>
-                <a href="{% url 'libraries:about' %}" class="nav-link">About</a>
-                <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
-                <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
-            </nav>
-        </div>
+{% extends 'base.html' %}
+{% comment %}
+The tape-operations pages - twenty-seven of them, counting iSCSI.
+
+A frame of its own until 6 October 2026. What it had that the console header
+does not is this section's own links, and those are what it keeps: a second
+row under the shared header, so an operator moving between drives, tapes and
+iSCSI never leaves the section, and a page in it can still be left for the
+libraries or the console in one click.
+{% endcomment %}
+
+{% block section_nav %}
+<nav class="section-nav">
+    <div class="section-nav-content">
+        <a href="{% url 'libraries:operator_dashboard' %}"
+           class="section-link {% if request.resolver_match.url_name == 'operator_dashboard' %}active{% endif %}">Overview</a>
+        <a href="{% url 'libraries:drive_list' %}"
+           class="section-link {% if 'drive' in request.resolver_match.url_name %}active{% endif %}">Drives</a>
+        <a href="{% url 'libraries:tape_list' %}"
+           class="section-link {% if 'tape' in request.resolver_match.url_name %}active{% endif %}">Tapes</a>
+        <a href="{% url 'libraries:mount_tape' %}"
+           class="section-link {% if request.resolver_match.url_name == 'mount_tape' %}active{% endif %}">Mount</a>
+        <a href="{% url 'libraries:move_tape' %}"
+           class="section-link {% if request.resolver_match.url_name == 'move_tape' %}active{% endif %}">Move</a>
+        <a href="{% url 'libraries:ltfs' %}"
+           class="section-link {% if request.resolver_match.url_name == 'ltfs' %}active{% endif %}">LTFS</a>
+        <a href="{% url 'libraries:library_status' %}"
+           class="section-link {% if 'library_' in request.resolver_match.url_name %}active{% endif %}">Library status</a>
+        <a href="{% url 'libraries:iscsi_dashboard' %}"
+           class="section-link {% if '/iscsi/' in request.path %}active{% endif %}">iSCSI</a>
+        <a href="{% url 'libraries:config_files' %}" class="section-link">Config files</a>
     </div>
-
-    <div class="content">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        {% include 'includes/_default_password_warning.html' %}
-
-        {% block content %}{% endblock %}
-    </div>
-
-<script src="{% static 'js/csrf.js' %}"></script>
-    {% block extra_js %}{% endblock %}
-{% include 'includes/_version_line.html' %}
-</body>
-</html>
+</nav>
+{% endblock %}

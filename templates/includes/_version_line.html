@@ -1,7 +1,0 @@
-{% comment %} One line, for the application shells. They have their own header and their
-   own layout, and the three-column footer in _footer.html does not suit them -
-   but a console that cannot tell you which version it is was the whole reason
-   for this. gui_version comes from apps.libraries.context_processors. {% endcomment %}
-<footer class="version-line">
-    <a href="{% url 'libraries:about' %}">mhvtl-gui {{ gui_version }}</a>
-</footer>

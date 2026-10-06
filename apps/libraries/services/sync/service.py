@@ -25,15 +25,12 @@ from django.utils import timezone
 from apps.libraries.models import Library, LibraryBrand, LibraryModel, Drive
 
 from ..config.service import ConfigService
+from ..core import ServiceResult, failure_result, success_result
 
 logger = logging.getLogger(__name__)
 
 
-class ConfigUnreadable(RuntimeError):
-    """device.conf could not be read; nothing was changed."""
-
-
-def sync_mhvtl_to_django(config_directory=None):
+def sync_mhvtl_to_django(config_directory=None) -> ServiceResult:
     """
     Sync MHVTL device.conf into the Django database.
 
@@ -50,18 +47,31 @@ def sync_mhvtl_to_django(config_directory=None):
       the library, so a library deleted and recreated kept its drives inactive
       and the drive pages showed none.
 
-    Returns:
-        dict with keys: libraries_found, created, updated, drives_imported,
-        drives_activated, drives_deactivated, activated, deactivated,
-        total_db, total_drives
+    Returns a ServiceResult whose data holds the counts: libraries_found,
+    created, updated, drives_imported, drives_activated, drives_deactivated,
+    activated, deactivated, total_db, total_drives. The message is the
+    finished sentence; every caller used to compose its own from the counts,
+    and the two AJAX endpoints composed nearly the same one.
 
-    Raises ConfigUnreadable, and changes nothing, when device.conf cannot be
-    read.
+    IT REPORTS, IT DOES NOT RAISE
+    -----------------------------
+    An unreadable device.conf is an ordinary condition - a host that has not
+    been configured yet, a --config-dir that does not exist - and it comes
+    back as a failed result with nothing changed. It used to raise
+    ConfigUnreadable, against this layer's own rule, and so each of the nine
+    callers had to invent the handling: the web caught it and said "The
+    database was not updated", the AJAX endpoints caught it and returned a
+    JSON error, and `mhvtl config sync` caught nothing at all - it printed a
+    Python traceback and told the operator they had found a bug.
     """
-    conf = ConfigService(config_directory).device_conf()
+    config = ConfigService(config_directory)
+    conf = config.device_conf()
     if conf is None:
-        raise ConfigUnreadable('device.conf could not be read; the database '
-                               'was left as it is')
+        return failure_result(
+            'device.conf could not be read; the database was left as it is',
+            ['reading it is the only way to know which libraries exist, and '
+             'an empty answer would deactivate every row',
+             f'looked in {config.config_dir}'])
     mhvtl_ids = set(conf.libraries)
     db_ids = set(Library.objects.values_list('library_id', flat=True))
 
@@ -81,7 +91,6 @@ def sync_mhvtl_to_django(config_directory=None):
     # The slot counts come from library_contents, not device.conf, and they
     # matter most when an id is reused: the row for a deleted library 40 kept
     # the old one's slots and sync time, and the detail page showed them.
-    config = ConfigService(config_directory)
     updated = 0
     for db_lib in Library.objects.filter(library_id__in=mhvtl_ids):
         contents = config.library_contents(db_lib.library_id)
@@ -110,7 +119,7 @@ def sync_mhvtl_to_django(config_directory=None):
     drives_deactivated += Drive.objects.filter(is_active=True).exclude(
         library__library_id__in=mhvtl_ids).update(is_active=False)
 
-    return {
+    counts = {
         'libraries_found': len(mhvtl_ids),
         'created': created_count,
         'updated': updated,
@@ -122,6 +131,33 @@ def sync_mhvtl_to_django(config_directory=None):
         'total_db': Library.objects.filter(is_active=True).count(),
         'total_drives': Drive.objects.filter(is_active=True).count(),
     }
+    return success_result(_summarise(counts), counts)
+
+
+def _summarise(counts: Dict) -> str:
+    """One sentence for what the sync did, composed here rather than by each
+    caller.
+
+    Three callers composed their own from the same counts and two of them
+    said almost the same thing in different words. What changed is named and
+    what did not is left out, so a sync that changed nothing says so in four
+    words instead of listing eight zeros.
+    """
+    found = counts['libraries_found']
+    said = [f"{found} librar{'y' if found == 1 else 'ies'} in device.conf"]
+    for count, what in ((counts['created'], 'new'),
+                        (counts['updated'], 'corrected'),
+                        (counts['activated'], 'reactivated'),
+                        (counts['deactivated'], 'deactivated'),
+                        (counts['drives_imported'], 'drive(s) imported'),
+                        (counts['drives_activated'], 'drive(s) reactivated'),
+                        (counts['drives_deactivated'],
+                         'drive(s) deactivated')):
+        if count:
+            said.append(f'{count} {what}')
+    if len(said) == 1:
+        said.append('nothing to change')
+    return ', '.join(said)
 
 
 def record_library(library_id: int, config_directory=None) -> Dict:

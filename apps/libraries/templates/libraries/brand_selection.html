@@ -44,7 +44,7 @@
                 margin: 0 0 20px; font-size: 14px;
             }
     .media-filter select { max-width: 280px; }
-    .media-filter-count { color: var(--text-dim); font-size: 13px; }
+    .media-filter-count { color: var(--text-dim); font-size: 14px; }
     .brands-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -102,7 +102,7 @@
     .brand-features {
                 list-style: none;
                 text-align: left;
-                font-size: 13px;
+                font-size: 14px;
             }
     .brand-features li {
                 padding: 4px 0;
@@ -350,10 +350,14 @@
                     card.style.display = matches ? '' : 'none';
                     if (matches) shown += 1;
                     // Carry the tape into the form, which then offers only the
-                    // models and drives that take it.
+                    // models and drives that take it. `wanted_media` over
+                    // there, because the form's cartridge rows are
+                    // `media=LTO8:20` and one name cannot answer two
+                    // questions; this page has no rows, so its own filter
+                    // below stays `media`.
                     const link = new URL(card.href, window.location.origin);
-                    if (wanted) link.searchParams.set('media', wanted);
-                    else link.searchParams.delete('media');
+                    if (wanted) link.searchParams.set('wanted_media', wanted);
+                    else link.searchParams.delete('wanted_media');
                     card.href = link.pathname + link.search;
                 });
                 empty.style.display = shown ? 'none' : 'block';

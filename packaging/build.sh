@@ -57,6 +57,10 @@ build_tarball() {
     cp -r "$PROJECT_DIR/mhvtl_cli" "$TARBALL_DIR/"        # the mhvtl command
     mkdir -p "$TARBALL_DIR/packaging/bin"
     cp "$SCRIPT_DIR/bin/mhvtl" "$TARBALL_DIR/packaging/bin/"
+    # The commented example of presets.toml. Both packagings install it:
+    # install.sh from here, and the spec from the source tarball that
+    # build_rpm_source makes out of this same directory.
+    cp "$SCRIPT_DIR/presets.toml.example" "$TARBALL_DIR/packaging/"
     cp -r "$PROJECT_DIR/templates" "$TARBALL_DIR/"
     cp -r "$PROJECT_DIR/static" "$TARBALL_DIR/"
     cp "$PROJECT_DIR/manage.py" "$TARBALL_DIR/"

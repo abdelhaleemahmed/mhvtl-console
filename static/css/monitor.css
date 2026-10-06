@@ -37,7 +37,7 @@
 }
 
 .status-label {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -94,7 +94,7 @@
 
 /* Refresh Indicator */
 .refresh-indicator {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-dim);
     display: flex;
     align-items: center;
@@ -148,7 +148,7 @@
 }
 
 .metric-label {
-    font-size: 11px;
+    font-size: 14px;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -192,7 +192,7 @@
 .drive-status {
     padding: 4px 10px;
     border-radius: 12px;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
 }
@@ -213,7 +213,7 @@
 }
 
 .drive-details {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-dim);
     line-height: 1.6;
 }
@@ -265,12 +265,12 @@
 }
 
 .operation-description {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-dim);
 }
 
 .operation-time {
-    font-size: 11px;
+    font-size: 14px;
     color: var(--text-dim);
     min-width: 80px;
     text-align: right;

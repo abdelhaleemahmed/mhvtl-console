@@ -949,6 +949,16 @@ def get_profile_options(profile_key: str) -> Dict:
         "default_drive_by_library": {
             model: get_default_drive_for_library(profile_key, model)
             for model in profile.library_models},
+        # The density a drive gets when none is chosen: its native one. Here
+        # because two front ends need it and both had worked it out for
+        # themselves - the setup form's script took the first entry of the
+        # drive's media list, which is the same rule
+        # get_default_media_for_drive applies, written out a second time. The
+        # interactive create would have been a third.
+        "default_media_by_drive": {
+            drive: get_default_media_for_drive(profile_key, drive)
+            for drive in profile.drive_models
+            if get_valid_media_for_drive(profile_key, drive)},
         "library_limits": {
             model: _limits(profile.library_vendor, model, profile)
             for model in profile.library_models},

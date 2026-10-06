@@ -123,7 +123,12 @@ def create(library_spec: Dict[str, Any], config_directory=None,
                                   [str(exc)], operation_id)
 
         library_id = int(filled['library_id'])
-        num_drives = int(filled['num_drives'])
+        # The slots are the count. ids.plan_library allocates an id and a
+        # target per drive and device_conf writes one block per slot, so the
+        # two must agree by construction rather than by both reading
+        # num_drives and hoping - a spec that said four and listed two would
+        # plan four targets and write two drives.
+        num_drives = len(filled['drive_slots'])
 
         # 2. validate the finished specification, profile rules and all
         checked = validation.validate(filled, directory)
@@ -173,7 +178,8 @@ def create(library_spec: Dict[str, Any], config_directory=None,
                 media_suffix=filled.get('media_suffix'),
                 media_count=int(filled.get('media_count', 39)),
                 empty_slots=int(filled.get('empty_slots', 0)),
-                map_count=int(filled.get('map_count', 4)))
+                map_count=int(filled.get('map_count', 4)),
+                media_runs=filled.get('media_runs'))
 
             contents_written = config.write_library_contents(library_id, contents,
                                                              backup=False)
@@ -246,7 +252,7 @@ def preview(library_spec: Dict[str, Any], config_directory=None) -> ServiceResul
     try:
         library_target, drive_ids, drive_targets = ids.plan_library(
             device_conf_format.parse(existing), int(filled['library_id']),
-            int(filled['num_drives']))
+            len(filled['drive_slots']))      # the slots are the count
     except ids.OutOfIds as exc:
         return failure_result(f'Cannot preview: {exc}', [str(exc)], operation_id)
 
@@ -258,7 +264,12 @@ def preview(library_spec: Dict[str, Any], config_directory=None) -> ServiceResul
         f'Preview of library {filled["library_id"]}',
         {'text': text, 'library_id': int(filled['library_id']),
          'drive_ids': list(drive_ids), 'errors': list(checked.errors),
-         'warnings': list(checked.warnings)}, operation_id)
+         'warnings': list(checked.warnings),
+         # The fixes are the half of the answer worth having: validation works
+         # out the valid values whenever it rejects one, and a preview that
+         # reported "not valid for IBM" without them left the reader to go and
+         # look it up. The same omission was in LibraryService.validate.
+         'fixes': list(checked.suggested_fixes)}, operation_id)
 
 
 def _roll_back(config: ConfigService, backup_path, library_id: int,

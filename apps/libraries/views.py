@@ -1,9 +1,10 @@
 # apps/libraries/views.py - library pages, on apps/libraries/services
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.utils.http import urlencode
 from django.views import View
 from django.contrib import messages
-from django.http import Http404, HttpResponse
-import json
+from django.http import Http404, HttpResponse, JsonResponse
 import logging
 import os
 from dataclasses import dataclass
@@ -29,9 +30,13 @@ from apps.libraries.post_only import RedirectOnGet
 from apps.libraries.services.drives import DriveService
 from apps.libraries.services.tapes import TapeService
 from apps.libraries.services.libraries import LibraryService, lifecycle, orphans
+from apps.libraries.services.libraries import presets as library_presets
 from apps.libraries.services.libraries import validation as library_validation
 from apps.libraries.services.profiles import personalities
-from apps.libraries.services.profiles.data import get_profile, get_profile_options, MEDIA_SUFFIX
+# get_profile_options and MEDIA_SUFFIX were imported here to compose the setup
+# form's embedded JSON. libraries/setup_form composes the form now, and the
+# page renders it, so neither reaches this module any more.
+from apps.libraries.services.profiles.data import get_profile
 
 # Kept for the templates and branches that still test them; the services are
 # part of this app and always importable.
@@ -179,13 +184,13 @@ class LibraryDashboardView(View):
         if not MHVTL_SERVICE_AVAILABLE:
             return 0, None
 
-        try:
-            from apps.libraries.services.sync.service import sync_mhvtl_to_django
-            stats = sync_mhvtl_to_django()
-            synced = stats['created'] + stats['activated'] + stats['deactivated']
-            return synced, None
-        except Exception as e:
-            return 0, str(e)
+        from apps.libraries.services.sync.service import sync_mhvtl_to_django
+
+        result = sync_mhvtl_to_django()
+        if not result.success:
+            return 0, result.message
+        stats = result.data
+        return stats['created'] + stats['activated'] + stats['deactivated'], None
 
     def get(self, request):
         if not request.session.get('mhvtl_logged_in'):
@@ -329,40 +334,77 @@ class LibraryDashboardView(View):
             'discovered_libraries': len(libraries),
             'created_libraries': len(libraries),
             'total_media': _tape_count(),
+            # And the strip, from the service, in the words the terminal uses.
+            'summary': _host_summary(),
         })
 
         return render(request, self.template_name, context)
 
 
 class SetupChoiceView(View):
-    """Setup workflow - choose between standard and custom setup"""
+    """Setup workflow - choose between standard, custom, and a saved preset."""
     template_name = 'libraries/setup_choice.html'
-    
+
     def get(self, request):
         if not request.session.get('mhvtl_logged_in'):
             return redirect('authentication:login')
-        
+
+        # The same presets `mhvtl preset list` shows, because it is
+        # the same service call. Offered as a third way in only when there
+        # are some: a card listing nothing teaches nothing.
+        saved = library_presets.names()
         context = {
-            'title': 'Choose Setup Method'
+            'title': 'Choose Setup Method',
+            'presets': ([row for row in saved.data['presets'] if row['complete']]
+                        if saved.success else []),
+            'presets_path': saved.data['path'] if saved.success else '',
         }
+        if not saved.success:
+            messages.warning(request, saved.message)
         return render(request, self.template_name, context)
-    
+
     def post(self, request):
         """Handle setup choice form submission"""
         if not request.session.get('mhvtl_logged_in'):
             return redirect('authentication:login')
-        
+
         setup_type = request.POST.get('setup_type')
-        
+
         if setup_type == 'standard':
             # Redirect to brand selection for standard setup
             return redirect('libraries:brand_selection')
         elif setup_type == 'custom':
             # Redirect to custom setup
             return redirect('libraries:custom_setup')
+        elif setup_type == 'preset':
+            return self._from_preset(request)
         else:
             messages.error(request, 'Please select a setup method.')
             return self.get(request)
+
+    def _from_preset(self, request):
+        """A saved configuration names its own vendor, so the catalogue step
+        is skipped: this opens that vendor's form with the preset applied.
+
+        The refusal is the service's, fixes included - the same words the
+        command line prints for the same preset.
+        """
+        name = request.POST.get('preset', '').strip()
+        if not name:
+            messages.error(request, 'Please choose a saved configuration.')
+            return self.get(request)
+
+        resolved = library_presets.resolve(name)
+        if not resolved.success:
+            messages.error(request, resolved.message)
+            for fix in resolved.errors:
+                messages.info(request, fix)
+            return self.get(request)
+
+        profile = resolved.data['spec']['profile']
+        url = reverse('libraries:brand_config',
+                      kwargs={'brand_name': profile})
+        return redirect(f'{url}?{urlencode({"preset": name})}')
 
 
 def _brand_catalogue():
@@ -373,43 +415,45 @@ def _brand_catalogue():
     that table had grown case-duplicated pairs (Dell and DELL, Spectra and
     SPECTRA, ...) and a TestVendor left by a test run, while a profile with no
     row would not have appeared at all.
-    """
-    from apps.libraries.services.profiles import PROFILES, personalities
-    from apps.libraries.services.profiles.data import get_valid_drives_for_library
 
-    catalogue = []
-    for key, profile in sorted(PROFILES.items()):
-        media, drives = set(), set()
-        for model in profile.library_models:
-            for drive in get_valid_drives_for_library(key, model):
-                drives.add(drive)
-                media.update(profile.drive_media_by_model.get(drive, ()))
-        catalogue.append({
-            'key': key,
-            'display': profile.library_vendor,
-            'models': list(profile.library_models),
-            'model_count': len(profile.library_models),
-            'drive_count': len(drives),
-            'media': sorted(media, key=lambda m: (_media_family(m), m)),
-            'families': sorted({_media_family(m) for m in media}),
-            'newest_lto': _newest_lto(media),
-            'default_model': profile.library_product_default,
-            'layouts': sorted({personalities.library_layout(profile.library_vendor,
-                                                            model).title
-                               for model in profile.library_models}),
+    Composed by services/profiles/catalogue, which is what `mhvtl profile
+    list` reads as well. This function walked the profile tables itself until
+    4 October 2026 - the same composition DriveService.models_for_profile was
+    doing for the terminal - and now adds only what these cards need on top:
+    the family grouping, the newest LTO generation, and the layout titles.
+    """
+    from apps.libraries.services.profiles import catalogue as profiles_catalogue
+
+    cards = []
+    for row in profiles_catalogue.summaries():
+        described = profiles_catalogue.describe(row['profile'])
+        densities = row['densities']
+        cards.append({
+            'key': row['profile'],
+            'display': row['vendor'],
+            'models': row['library_models'],
+            'model_count': row['model_count'],
+            'drive_count': row['drive_count'],
+            'media': densities,
+            'families': sorted({_media_family(m) for m in densities}),
+            'newest_lto': _newest_lto(densities),
+            'default_model': row['default_model'],
+            'layouts': sorted({model['layout'] for model in described['models']
+                               if model['layout']}),
         })
-    return catalogue
+    return cards
 
 
 def _media_family(density: str) -> str:
-    """LTO, T10000, 9840, 9940, 3592, AIT, SDLT or DLT, for grouping."""
-    for prefix, family in (('LTO', 'LTO'), ('T10K', 'T10000'), ('9840', '9840'),
-                           ('9940', '9940'), ('AIT', 'AIT'), ('SDLT', 'SDLT'),
-                           ('DLT', 'DLT')):
-        if density.startswith(prefix):
-            return family
-    return {'J1A': '3592', 'E05': '3592', 'E06': '3592', 'E07': '3592'}.get(
-        density, density)
+    """Which family a density belongs to, for grouping the cards.
+
+    The rule is the service's - this page had its own copy until the terminal
+    needed the same grouping for `profile show`. Kept as a one-line wrapper
+    because the templates and the two views below read better for it.
+    """
+    from apps.libraries.services.profiles import catalogue
+
+    return catalogue.media_family(density)
 
 
 def _newest_lto(media):
@@ -457,15 +501,62 @@ class BrandSelectionView(View):
         return self.get(request)
 
 
-def _wanted_media(request, profile_options):
-    """The tape the operator asked for, when this vendor can take it.
+def _asked(source):
+    """The choices a form state is composed from, out of GET or POST.
 
-    Comes from ?media= - the vendor page's filter links carry it - and is
-    ignored rather than refused when it is not one this vendor's drives load,
-    so a stale link opens the page instead of failing.
+    Each one is a dropdown the operator changed, except `wanted_media`, which
+    the vendor page's filter links also carry. setup_form.state ignores
+    anything this vendor cannot do rather than refusing it, so a stale link
+    opens the page.
+
+    One name per question, and ``wanted_media`` is the name worth explaining:
+    the filter was called ``media`` too, and a cartridge row is
+    ``media=LTO8:20``. QueryDict.get returns the LAST value, so the row
+    answered the filter - the wanted tape arrived as 'LTO8:20', no vendor
+    takes a density by that name, and choosing a tape at the top of the form
+    quietly stopped narrowing the drives below it. The vendor list keeps
+    ``?media=`` for its own filtering; it has no rows to collide with.
     """
-    wanted = (request.GET.get('media') or '').upper()
-    return wanted if wanted in profile_options['media_types'] else ''
+    asked = {
+        'wanted_media': (source.get('wanted_media') or '').strip().upper(),
+        'library_model': (source.get('library_model') or '').strip(),
+        # One row per kind, in the order the page has them, as MODEL:COUNT -
+        # the same spelling `--drive` takes, parsed by the same service
+        # (libraries.spec.parse_runs). getlist, because the rows repeat.
+        'drive_runs': [run for run in source.getlist('drive') if run.strip()],
+        'media_runs': [run for run in source.getlist('media') if run.strip()],
+    }
+    # The empty slots are a single number and stay one. The drive and
+    # cartridge counts live in their rows now: they used to be sent on their
+    # own, which is why a preset holding two kinds lost its counts to the
+    # profile's defaults.
+    if (source.get('empty_slots') or '').strip():
+        asked['empty_slots'] = source['empty_slots'].strip()
+    # "Add another kind": a word, because what a new row may hold is the
+    # catalogue's answer - whatever the rows above have not taken.
+    if source.get('add') in ('drive', 'media'):
+        asked['add'] = source['add']
+    return asked
+
+
+def setup_form_ajax(request, brand_name):
+    """The form after a change, rendered - the page swaps the parts in.
+
+    The same view and the same template as a fresh page, so a changed
+    dropdown, an added row and a freshly opened page are all answered by one
+    piece of code. It returned JSON until the rows arrived: with one choice
+    per question the script could map values onto fields, but a row carries
+    its own options, its own marks and its own sentence, and a script that
+    built those from JSON would be composing the page again - which is the
+    thing this form was rebuilt to stop.
+
+    It costs a whole page per change on a console served over a LAN, and
+    buys one template with nothing to keep in sync with a second one.
+    """
+    if not request.session.get('mhvtl_logged_in'):
+        return JsonResponse({'success': False, 'error': 'Not authenticated'},
+                            status=401)
+    return BrandConfigView.as_view()(request, brand_name=brand_name)
 
 
 def _tape_count():
@@ -484,31 +575,65 @@ def _tape_count():
     return total
 
 
-def _sync_database(request):
-    """Bring the database back in line with device.conf, and say so."""
-    from apps.libraries.services.sync.service import sync_mhvtl_to_django
+def _host_summary():
+    """What this host holds, for the strip above a page's libraries.
+
+    ``LibraryService.summary`` reads device.conf and the contents files, and
+    ``mhvtl library list`` ends with the same sentence. None of it is
+    composed here: a view that did its own counting is what the panel this
+    replaces was - five numbers from context keys nobody set.
+
+    None when it cannot be read, because the partial shows nothing rather
+    than zeros. Zeros were the bug.
+
+    Whether MHVTL is running travels with the counts. It was a badge beside a
+    "System Overview" heading on the landing page, over three tiles that
+    said what this strip says - and it was on that one page only, while the
+    counts are on both.
+    """
+    from apps.libraries.services.libraries import LibraryService
 
     try:
-        stats = sync_mhvtl_to_django()
-    except Exception as exc:  # noqa: BLE001 - shown to the operator
-        logger.warning('syncing the database with device.conf: %s', exc)
-        messages.warning(request, f'The database was not updated: {exc}')
+        result = LibraryService().summary()
+    except Exception:                       # noqa: BLE001 - the page stands
+        logger.warning('reading the host summary', exc_info=True)
         return None
-    messages.info(request, 'Database updated from device.conf')
-    return stats
+    if not result.success:
+        return None
+
+    status = _mhvtl_service_status()
+    return {**result.data,
+            'mhvtl_running': bool(status.get('running')),
+            'mhvtl_known': bool(status.get('available'))}
 
 
-def _free_targets():
-    """SCSI targets left on this host, or None when device.conf is unreadable.
+def _sync_database(request):
+    """Bring the database back in line with device.conf, and say so.
 
-    Each drive of a new library takes one, as does the library, so this -
-    not the model's element layout - is usually what limits the drive count.
+    A rendering of the service's answer, not a second copy of it: the sync
+    reports its own refusal now, where it used to raise and leave each of
+    nine callers to invent the handling.
     """
-    from apps.libraries.services.config import ids
-    from apps.libraries.services.config.service import ConfigService
+    from apps.libraries.services.sync.service import sync_mhvtl_to_django
 
-    conf = ConfigService().device_conf()
-    return ids.free_targets(conf) if conf is not None else None
+    result = sync_mhvtl_to_django()
+    if not result.success:
+        logger.warning('syncing the database with device.conf: %s',
+                       result.message)
+        messages.warning(request, f'The database was not updated: '
+                                  f'{result.message}')
+        return None
+    messages.info(request, f'Database updated from device.conf: '
+                           f'{result.message}')
+    return result.data
+
+
+#: _free_targets() was here until 4 October 2026: it read device.conf and
+#: asked config/ids how many SCSI targets were left, so that the form could
+#: cap its drive count by the host rather than by the model's element layout.
+#: It was the best thing on the page and the terminal never had it, because a
+#: helper in views.py is reachable only from the web. It is
+#: libraries/setup_form._limits now, where `--interactive` asks it too.
 
 
 class BrandConfigView(View):
@@ -532,59 +657,57 @@ class BrandConfigView(View):
         models = (LibraryModel.objects.filter(brand=brand, is_active=True)
                   if brand.pk else [])
 
-        # Get next available library ID using the actual service method
-        # Default to 10 (first standard MHVTL library ID) if service unavailable
-        next_id = 10
-        if MHVTL_SERVICE_AVAILABLE:
-            try:
-                next_id = _next_library_id()
-            except Exception as e:
-                messages.warning(request, f"Could not determine next library ID: {str(e)}")
-
-        # Get profile for barcode prefix and cascading dropdown data
-        default_barcode_prefix = "L" + f"{next_id:02d}"  # Fallback
         profile_key = brand.name.upper()
-        profile_json = '{}'  # Fallback empty JSON
-        default_media_count = default_empty_slots = 0
-        try:
-            profile = get_profile(profile_key)
-            default_barcode_prefix = profile.barcode_leading + f"{next_id:02d}"
-            # Get full profile options for cascading dropdowns
-            profile_options = get_profile_options(profile_key)
-            profile_options['media_suffixes'] = MEDIA_SUFFIX
-            profile_options['free_targets'] = _free_targets()
-            # "I want an LTO-10 library": the tape carries over from the vendor
-            # page's filter, and can be changed on this page. Choosing one
-            # leaves only the models and drives that take it.
-            profile_options['media_labels'] = {
-                density: personalities.media_label(density)
-                for density in profile_options['media_types']}
-            profile_options['wanted_media'] = _wanted_media(request, profile_options)
-            profile_json = json.dumps(profile_options)
-            # The form's starting counts come from the profile, so the command
-            # line, the service and this page cannot disagree about them.
-            default_media_count = profile_options['defaults']['media_count']
-            default_empty_slots = profile_options['defaults']['empty_slots']
-        except Exception as e:
-            messages.warning(request, f"Could not load profile data: {str(e)}")
 
-        # SCSI addressing - Channel is always 0, Target/LUN are auto-calculated during creation
-        next_channel = 0
-        next_target = 0  # Will be auto-calculated by service based on available targets
-        next_lun = 0     # Always 0 for MHVTL
+        # ?preset=NAME applies a saved configuration to this form. Resolved
+        # here, by the same call `mhvtl library create --preset NAME` makes,
+        # so the two cannot offer different things; the operator can still
+        # change every field before creating.
+        chosen, chosen_name = {}, request.GET.get('preset', '').strip()
+        if chosen_name:
+            resolved = library_presets.resolve(chosen_name)
+            if resolved.success:
+                chosen = resolved.data['spec']
+                messages.info(request,
+                              f"Starting from the saved configuration "
+                              f"'{chosen_name}'.")
+            else:
+                messages.warning(request, resolved.message)
+                for fix in resolved.errors:
+                    messages.info(request, fix)
+
+        # The presets this vendor has, which is what makes them findable
+        # without reading the file.
+        offered = library_presets.for_profile(profile_key)
+
+        # The whole form, decided by the service: every dropdown's options
+        # with the selected one marked, the counts, the limits this host can
+        # actually give it, the serial and barcode creation will write, and
+        # the sentences. This block used to compose a JSON profile for the
+        # page's script to narrow for itself - which is how the page came to
+        # filter on what a drive loads where the services mean what it writes,
+        # and to choose a half-height HH9 for LTO-9 where the services choose
+        # a TD9. See services/libraries/setup_form.
+        from apps.libraries.services.libraries import setup_form
+
+        state = setup_form.state(profile_key, preset=chosen,
+                                 **_asked(request.GET))
+        if not state.success:
+            messages.warning(request, state.message)
+        form = state.data or {}
 
         context = {
             'brand': brand,
             'models': models,
             'profile_key': profile_key,
-            'profile_json': profile_json,
-            'next_library_id': next_id,
-            'next_channel': next_channel,
-            'next_target': next_target,
-            'next_lun': next_lun,
-            'default_barcode_prefix': default_barcode_prefix,
-            'default_media_count': default_media_count,
-            'default_empty_slots': default_empty_slots,
+            'form': form,
+            'next_library_id': form.get('library_id'),
+            # Channel is always 0 and the target is allocated at write time
+            # against device.conf as it stands, so neither is asked for.
+            'next_channel': 0,
+            'next_lun': 0,
+            'presets': offered.data['presets'] if offered.success else [],
+            'preset_name': chosen_name if chosen else '',
             'title': f'Configure {brand.display_name} Library'
         }
         return render(request, self.template_name, context)
@@ -605,43 +728,49 @@ class BrandConfigView(View):
             # Get next available library ID using the actual service method
             library_id = _next_library_id()
 
-            # Get form data - now using profile-based library_model instead of database model_id
-            library_model = request.POST.get('library_model', '')
-            drive_model = request.POST.get('drive_model', '')
-            media_type = request.POST.get('media_type', '')
-            num_drives = int(request.POST.get('num_drives', 4))
-            media_count = int(request.POST.get('media_count', 0))
             barcode_prefix = request.POST.get('barcode_prefix', 'E01').upper()
-            empty_slots = int(request.POST.get('empty_slots', 0))
             map_count = request.POST.get('map_count', '')
 
-            # Validate required fields
-            if not library_model:
+            # The specification is the one the form was SHOWING, built by the
+            # same service call that rendered it. The alternative - reading
+            # the posted fields a second time here - is a second reading of
+            # the same inputs, free to differ from what the operator saw;
+            # that is how four drives and fifty cartridges came out of a
+            # preset asking for four and thirty.
+            from apps.libraries.services.libraries import setup_form
+
+            shown = setup_form.state(profile_key, library_id=library_id,
+                                     **_asked(request.POST))
+            if not shown.success:
+                messages.error(request, shown.message)
+                return redirect('libraries:brand_config', brand_name=brand_name)
+            form = shown.data
+
+            if not form['library_model']['selected']:
                 messages.error(request, "❌ Please select a library model")
                 return redirect('libraries:brand_config', brand_name=brand_name)
-            if not drive_model:
+            if not any(row['selected'] for row in form['drives']['rows']):
                 messages.error(request, "❌ Please select a drive model")
                 return redirect('libraries:brand_config', brand_name=brand_name)
-            if not media_type:
+            if not any(row['selected'] for row in form['media']['rows']):
                 messages.error(request, "❌ Please select a media type")
                 return redirect('libraries:brand_config', brand_name=brand_name)
 
-            # Prepare library data exactly as the service expects
-            # Now using library_model directly from profile instead of database
             library_data = {
-                'library_id': library_id,
-                'profile': profile_key,  # Profile key for vendor lookup
-                'library_model': library_model,  # For cascading validation
-                'product': library_model,  # Product identification (same as library_model)
-                'serial': request.POST.get('unit_serial_number', f'XYZZY_{library_id}'),
-                'num_drives': num_drives,
-                'drive_model': drive_model,  # For cascading validation
-                'drive_product': drive_model,  # Service expects drive_product
-                # Media configuration for library_contents generation
-                'media_type': media_type,
-                'media_count': media_count,
+                **setup_form.as_spec(profile_key, library_id,
+                                     form['library_model']['selected'],
+                                     form['drives'], form['media'],
+                                     form['counts']),
+                # Only when the form sends one. An absent or empty field is a
+                # question for the service, which answers it the same way for
+                # the terminal (profiles.personalities.device_serial); the
+                # default here was `XYZZY_{library_id}` while the page's own
+                # script posted `library_id + 80000000`, so one form had two
+                # answers and neither was the service's.
+                **({'serial': request.POST['unit_serial_number'].strip()}
+                   if request.POST.get('unit_serial_number', '').strip()
+                   else {}),
                 'barcode_prefix': barcode_prefix,
-                'empty_slots': empty_slots,
             }
             # The form used to send num_maps: 4, a key nothing reads; with no
             # map_count the spec fits the profile default to the model.
@@ -674,11 +803,41 @@ class BrandConfigView(View):
             # be here, which is why a library created from the CLI was
             # configured, running, and invisible in every dropdown.
 
+            self._keep_preset(request, library_data)
+
             return redirect('libraries:dashboard')
 
         except Exception as e:
             messages.error(request, f'❌ Unexpected error creating library: {str(e)}')
             return redirect('libraries:brand_config', brand_name=brand_name)
+
+
+    @staticmethod
+    def _keep_preset(request, library_data):
+        """Save this configuration under a name, if one was asked for.
+
+        `--save-preset NAME` on the command line, a field on this form, one
+        service call either way: config.presets.savable decides what is kept
+        and libraries.presets.save writes it. Only reached after a successful
+        create, for the same reason the CLI only saves then - a preset that
+        recreates a failure is worse than no preset.
+        """
+        name = request.POST.get('save_preset', '').strip()
+        if not name:
+            return
+
+        from apps.libraries.services.config.presets import savable
+
+        kept = library_presets.save(name, savable(library_data))
+        if kept.success:
+            messages.success(request, kept.message)
+            for warning in kept.data.get('warnings', []):
+                messages.warning(request, warning)
+        else:
+            messages.warning(request, f'The library was created, but the '
+                                      f'preset was not saved: {kept.message}')
+            for fix in kept.errors:
+                messages.info(request, fix)
 
 
 class CustomSetupView(View):
@@ -717,7 +876,10 @@ class CustomSetupView(View):
                 'library_id': library_id,
                 'vendor': request.POST.get('vendor', '').upper(),
                 'product': request.POST.get('product', ''),
-                'serial': request.POST.get('serial', f'XYZZY_{library_id}'),
+                # As on the brand form: only what was given. The service
+                # answers an empty one, and the same way for both front ends.
+                **({'serial': request.POST['serial'].strip()}
+                   if request.POST.get('serial', '').strip() else {}),
                 'num_drives': int(request.POST.get('num_drives', 4)),
             }
 
@@ -831,6 +993,9 @@ class LibraryListView(View):
 
         context = {
             'libraries': libraries,
+            # What the host holds, from the service that reads device.conf.
+            # The panel this replaces read the database and showed zeros.
+            'summary': _host_summary(),
             'title': 'Library List'
         }
         return render(request, self.template_name, context)
@@ -849,11 +1014,15 @@ def _library_row(library_id: int) -> Library:
     except Library.DoesNotExist:
         pass
 
-    try:
-        from apps.libraries.services.sync.service import sync_mhvtl_to_django
-        sync_mhvtl_to_django()
-    except Exception:                                  # noqa: BLE001 - falls through to 404
-        logger.warning('sync while opening library %s', library_id, exc_info=True)
+    from apps.libraries.services.sync.service import sync_mhvtl_to_django
+
+    synced = sync_mhvtl_to_django()
+    if not synced.success:
+        # Falls through to the 404, which is the honest answer: the page was
+        # asked for a library the database does not have, and the one file
+        # that could say otherwise could not be read.
+        logger.warning('sync while opening library %s: %s', library_id,
+                       synced.message)
     return get_object_or_404(Library, library_id=library_id, is_active=True)
 
 
@@ -1557,30 +1726,29 @@ class CleanupOrphanedView(View):
         guides/architecture.rst. Deactivating rows device.conf does not declare
         is what it is for, not a side effect to be guarded against.
         """
-        from apps.libraries.services.sync.service import (ConfigUnreadable,
-                                                          sync_mhvtl_to_django)
+        from apps.libraries.services.sync.service import sync_mhvtl_to_django
 
         try:
-            stats = sync_mhvtl_to_django()
-        except ConfigUnreadable as exc:
-            # device.conf could not be READ - which is not the same as saying
-            # there are no libraries, and the sync refuses rather than emptying
-            # the database.
-            messages.error(request, f'Full scan refused: {exc}')
-            return
+            result = sync_mhvtl_to_django()
         except Exception as exc:                       # noqa: BLE001 - shown
             logger.exception('running a full scan')
             messages.error(request, f'Full scan failed: {exc}')
             return
+        if not result.success:
+            # device.conf could not be READ - which is not the same as saying
+            # there are no libraries, and the sync refuses rather than
+            # emptying the database. A refusal, not a failure: it is reported
+            # rather than raised, so this is a branch and not an except.
+            messages.error(request, f'Full scan refused: {result.message}')
+            for detail in result.errors:
+                messages.info(request, detail)
+            return
+        stats = result.data
 
-        messages.success(
-            request,
-            f'Full scan complete: {stats["libraries_found"]} library/libraries '
-            f'in device.conf, {stats["created"]} new, {stats["updated"]} '
-            f'corrected, {stats["activated"]} reactivated, '
-            f'{stats["deactivated"]} deactivated; {stats["drives_imported"]} '
-            f'drive(s) imported, {stats["drives_activated"]} reactivated, '
-            f'{stats["drives_deactivated"]} deactivated')
+        # The sentence is the service's: this page, two AJAX endpoints and
+        # the command line each composed one from the same counts, and two of
+        # them said nearly the same thing in different words.
+        messages.success(request, f'Full scan complete: {result.message}')
         messages.info(request,
                       f'The database now holds {stats["total_db"]} active '
                       f'library/libraries and {stats["total_drives"]} drive(s)')

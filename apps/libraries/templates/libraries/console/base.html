@@ -1,64 +1,39 @@
-{% load static %}
+{% extends 'base.html' %}
 {% comment %}
-The frame every console page uses.
+The system-console pages.
 
-Each page used to carry its own <head>, header and navigation, and no two
-navigations agreed: the console dashboard offered Logs, Service and Devices,
-the service page offered Console and Logs, and nothing anywhere linked to the
-kernel modules or the disk usage - both reachable only by typing the address.
-One nav here, and every console page can be left from every other.
+A frame of its own until 6 October 2026, and before that each page carried
+its own header and no two navigations agreed: the console dashboard offered
+Logs, Service and Devices, the service page offered Console and Logs, and
+nothing anywhere linked to the kernel modules or the disk usage - both
+reachable only by typing the address. That is why this section's links are
+kept, as a second row under the shared header.
 
-    {% block header_title %}   the title beside the navigation
-    {% block extra_css %}      rules the shared stylesheet has no equivalent for
-    {% block content %}        the page
-    {% block extra_js %}       the page's own script
-{% endcomment %}<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ title }} - MHVTL{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
-    <script src="{% static 'js/theme.js' %}"></script>
-    {% block extra_css %}{% endblock %}
-</head>
-<body class="mhvtl-console">
-    <div class="header">
-        <div class="header-content">
-            <div class="header-title">{% block header_title %}{{ title }}{% endblock %}</div>
-            <nav>
-                <a href="{% url 'libraries:console_dashboard' %}" class="nav-link">Console</a>
-                <a href="{% url 'libraries:console_logs' %}" class="nav-link">Logs</a>
-                <a href="{% url 'libraries:console_service_status' %}" class="nav-link">Services</a>
-                <a href="{% url 'libraries:console_scsi_devices' %}" class="nav-link">Devices</a>
-                <a href="{% url 'libraries:console_kernel_modules' %}" class="nav-link">Modules</a>
-                <a href="{% url 'libraries:console_disk_usage' %}" class="nav-link">Disk</a>
-                <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
-                <a href="{% url 'libraries:about' %}" class="nav-link">About</a>
-                <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
-                <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
-            </nav>
-        </div>
+`error_message` is a context key several of these views set; it rendered
+above the content in the old frame and still does, through before_content.
+{% endcomment %}
+
+{% block section_nav %}
+<nav class="section-nav">
+    <div class="section-nav-content">
+        <a href="{% url 'libraries:console_dashboard' %}"
+           class="section-link {% if request.resolver_match.url_name == 'console_dashboard' %}active{% endif %}">Overview</a>
+        <a href="{% url 'libraries:console_logs' %}"
+           class="section-link {% if request.resolver_match.url_name == 'console_logs' %}active{% endif %}">Logs</a>
+        <a href="{% url 'libraries:console_service_status' %}"
+           class="section-link {% if request.resolver_match.url_name == 'console_service_status' %}active{% endif %}">Services</a>
+        <a href="{% url 'libraries:console_scsi_devices' %}"
+           class="section-link {% if request.resolver_match.url_name == 'console_scsi_devices' %}active{% endif %}">Devices</a>
+        <a href="{% url 'libraries:console_kernel_modules' %}"
+           class="section-link {% if request.resolver_match.url_name == 'console_kernel_modules' %}active{% endif %}">Modules</a>
+        <a href="{% url 'libraries:console_disk_usage' %}"
+           class="section-link {% if request.resolver_match.url_name == 'console_disk_usage' %}active{% endif %}">Disk</a>
     </div>
+</nav>
+{% endblock %}
 
-    <div class="content">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        {% if error_message %}
-            <div class="alert alert-danger">{{ error_message }}</div>
-        {% endif %}
-
-        {% include 'includes/_default_password_warning.html' %}
-
-        {% block content %}{% endblock %}
-    </div>
-
-    <script src="{% static 'js/csrf.js' %}"></script>
-    {% block extra_js %}{% endblock %}
-{% include 'includes/_version_line.html' %}
-</body>
-</html>
+{% block before_content %}
+    {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+    {% endif %}
+{% endblock %}

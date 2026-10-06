@@ -1,63 +1,44 @@
-{% load static %}
+{% extends 'base.html' %}
 {% comment %}
-The page frame every libraries page uses: the stylesheet, the theme picker,
-the header with its breadcrumb and actions, the messages and the content.
+The libraries pages. A frame of its own until 6 October 2026, when the five
+frames became one - this is the name its pages already extend, pointing at
+that one, so none of them had to change.
 
-Before this, each page carried its own copy - and its own <style> restating
-what css/mhvtl-console.css defines, including a `.card { background: white }`
-that no theme could override, because the shared rules are scoped to
-body.mhvtl-console and only a base template sets that class.
+What it adds is this section's own links, the way tape operations and the
+system console have theirs: a second row under the shared header. The
+libraries pages used breadcrumbs instead, six of them, each listing the way
+back to a page the header already offers - and the breadcrumb told you where
+you were, not where else you could go.
 
-    {% block header_title %}   the title beside the icon
-    {% block breadcrumb %}     where the page sits
-    {% block header_actions %} buttons at the right of the header
-    {% block extra_css %}      rules the shared stylesheet has no equivalent for
-    {% block content %}        the page
-    {% block extra_js %}       the page's own script
-{% endcomment %}<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ title }} - MHVTL{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
-    <script src="{% static 'js/theme.js' %}"></script>
-    {% block extra_css %}{% endblock %}
-</head>
-<body class="mhvtl-console">
-    <header class="header">
-        <div class="header-content">
-            <div>
-                <h1 class="header-title">{% block header_title %}{{ title }}{% endblock %}</h1>
-                {% block breadcrumb %}{% endblock %}
-            </div>
-            <nav class="header-actions">
-                {% block header_actions %}{% endblock %}
-                <a href="{% url 'authentication:dashboard' %}" class="nav-link">Dashboard</a>
-                <a href="{% url 'libraries:list' %}" class="nav-link">Libraries</a>
-                <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Operator</a>
-                <a href="{% url 'libraries:console_dashboard' %}" class="nav-link">Console</a>
-                <a href="{% url 'libraries:about' %}" class="nav-link">About</a>
-                <a href="{% url 'authentication:logout' %}" class="nav-link">Logout</a>
-                <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
-            </nav>
-        </div>
-    </header>
+Reset to MHVTL defaults is deliberately not here. It deletes every library
+on the host; it is on the landing page, named for what it does, and a thing
+like that should be somewhere you went to rather than one click from
+everywhere.
+{% endcomment %}
 
-    <div class="content">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        {% include 'includes/_default_password_warning.html' %}
-
-        {% block content %}{% endblock %}
+{% block section_nav %}
+<nav class="section-nav">
+    <div class="section-nav-content">
+        <a href="{% url 'libraries:dashboard' %}"
+           class="section-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Overview</a>
+        {% comment %}
+            A library's own pages - its detail and its monitor - are where
+            this link leads, so it stays lit while you are on one. Spelled
+            out rather than `url_name in 'list,library_detail'`, which is a
+            substring test wearing the clothes of a list: 'is' would match it.
+        {% endcomment %}
+        <a href="{% url 'libraries:list' %}"
+           class="section-link {% if request.resolver_match.url_name == 'list' or request.resolver_match.url_name == 'library_detail' or request.resolver_match.url_name == 'library_monitor' %}active{% endif %}">All libraries</a>
+        <a href="{% url 'libraries:setup_choice' %}"
+           class="section-link {% if 'setup' in request.path %}active{% endif %}">New library</a>
+        <a href="{% url 'libraries:config_files' %}"
+           class="section-link {% if request.resolver_match.url_name == 'config_files' %}active{% endif %}">Config files</a>
+        <a href="{% url 'libraries:mhvtl_status' %}"
+           class="section-link {% if request.resolver_match.url_name == 'mhvtl_status' %}active{% endif %}">MHVTL status</a>
+        <a href="{% url 'libraries:cleanup_orphaned' %}"
+           class="section-link {% if request.resolver_match.url_name == 'cleanup_orphaned' %}active{% endif %}">Clean up orphans</a>
+        <a href="{% url 'libraries:remove' %}"
+           class="section-link {% if request.resolver_match.url_name == 'remove' %}active{% endif %}">Remove a library</a>
     </div>
-
-    <script src="{% static 'js/csrf.js' %}"></script>
-    {% block extra_js %}{% endblock %}
-{% include 'includes/_version_line.html' %}
-</body>
-</html>
+</nav>
+{% endblock %}

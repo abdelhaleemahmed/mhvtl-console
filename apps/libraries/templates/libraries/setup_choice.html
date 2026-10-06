@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'libraries/base.html' %}
 {% load static %}
 
 {% block title %}Library Setup - MHVTL Console{% endblock %}
@@ -7,19 +7,20 @@
     <link rel="stylesheet" href="{% static 'css/setup-choice.css' %}">
 {% endblock %}
 
-{% block breadcrumb %}
-    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
-{% endblock %}
-
 {% block content %}
 <div class="main-container">
     <div class="setup-card">
+        {% comment %}
+            A 64px target, an <h1> reading "Select Configuration Type" and
+            three lines under it stood here - below the frame's own page
+            title, which says "Choose Setup Method". Two headings for one
+            page, in different words. The frame titles the page; this says
+            the one thing a title cannot.
+        {% endcomment %}
         <div class="setup-header">
-            <div class="setup-icon">🎯</div>
-            <h1 class="setup-title">Select Configuration Type</h1>
             <p class="setup-description">
-                Choose how you want to configure your virtual tape library.
-                You can use a standard configuration for quick setup or create a custom configuration for specific requirements.
+                Three ways to the same form. Whichever you pick, every value
+                is still yours to change before the library is created.
             </p>
         </div>
 
@@ -36,11 +37,9 @@
                         Quick setup with pre-configured library brands and models
                     </div>
                     <ul class="option-features">
-                        <li>Pre-configured brand templates</li>
-                        <li>Automatic parameter setup</li>
-                        <li>Tested configurations</li>
-                        <li>Quick deployment</li>
-                        <li>Recommended for most users</li>
+                        <li>Every vendor's models and drives</li>
+                        <li>Counts the vendor is tested with</li>
+                        <li>Recommended for most libraries</li>
                     </ul>
                 </label>
 
@@ -53,13 +52,46 @@
                         Advanced setup with full control over all parameters
                     </div>
                     <ul class="option-features">
-                        <li>Full parameter control</li>
-                        <li>Custom library specifications</li>
-                        <li>Advanced drive configuration</li>
-                        <li>Flexible media setup</li>
-                        <li>For experienced users</li>
+                        <li>Every field, nothing filled in</li>
+                        <li>SCSI addresses and slot counts by hand</li>
+                        <li>For a library no vendor describes</li>
                     </ul>
                 </label>
+
+                {% comment %}
+                    A third way in, shown only when there is something to
+                    offer: the configurations saved from this page or from
+                    `mhvtl library create --save-preset`. A preset names its
+                    own vendor, so choosing one skips the brand catalogue and
+                    opens that vendor's form already filled in.
+                {% endcomment %}
+                {% if presets %}
+                <!-- A saved configuration -->
+                <label for="preset" class="option-card" onclick="selectOption('preset')">
+                    <input type="radio" name="setup_type" value="preset" id="preset" class="radio-input">
+                    <div class="option-icon">💾</div>
+                    <div class="option-title">A Saved Configuration</div>
+                    <div class="option-description">
+                        One you built earlier, here or on the command line
+                    </div>
+                    <ul class="option-features">
+                        <li>The model, drives and counts you chose</li>
+                        <li>Its vendor's form, filled in</li>
+                        <li>The same ones `mhvtl preset list` shows</li>
+                    </ul>
+                    {% comment %}
+                        The names only. What each one holds is shown on the
+                        vendor's form, one click away, rather than restated
+                        here - and a count written into this page would be a
+                        profile default copied out of the service.
+                    {% endcomment %}
+                    <select name="preset" class="form-select" aria-label="Saved configuration">
+                        {% for preset in presets %}
+                        <option value="{{ preset.name }}">{{ preset.name }} ({{ preset.profile }})</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                {% endif %}
             </div>
 
             <div class="form-actions">
@@ -72,17 +104,12 @@
             </div>
         </form>
 
-        <div class="info-section">
-            <div class="info-title">💡 Configuration Guide</div>
-            <div class="info-content">
-                <strong>Standard Configuration:</strong> Choose from popular library brands like IBM, HP, STK, Quantum, etc.
-                Each brand comes with tested default settings that work out of the box.
-                <br><br>
-                <strong>Custom Configuration:</strong> Manually configure all library parameters including
-                SCSI settings, slot counts, drive specifications, and media types. Recommended for users
-                with specific requirements or testing scenarios.
-            </div>
-        </div>
+        {% comment %}
+            A "Configuration Guide" stood here and said, in two paragraphs,
+            what the two cards above it say in their own descriptions - and
+            said nothing at all about the third. A page that explains its own
+            choices twice is a page whose choices did not explain themselves.
+        {% endcomment %}
     </div>
 </div>
 {% endblock %}

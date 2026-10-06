@@ -25,7 +25,11 @@ ALLOWED = {
     'core': set(),
     'profiles': set(),
     'config': {'core', 'profiles'},
-    'sync': {'config'},
+    # core since 5 October 2026: sync is a service like any other and returns
+    # a ServiceResult, which lives there. It was the one package that did
+    # not, and that is why `mhvtl config sync` printed a traceback for an
+    # unreadable device.conf - the function raised instead of reporting.
+    'sync': {'config', 'core'},
     'console': {'config', 'core'},
     'scsi': {'config', 'core'},
     'tapes': {'config', 'core', 'profiles'},

@@ -144,31 +144,52 @@
                                     <td>{% if tape.used_mb is not None %}{{ tape.used_mb }} MB{% else %}-{% endif %}</td>
                                     <td><code>{{ tape.path }}</code></td>
                                     <td>
+                                        {% comment %}
+                                            Only the libraries whose drives can load THIS
+                                            tape.
+
+                                            Every library on the host used to be offered for
+                                            every tape, while TapeService.adopt refused the
+                                            ones that cannot load the density - so the form
+                                            offered a choice it knew would fail, and said so
+                                            only after the operator had made it. The list is
+                                            TapeService.libraries_for, which draws the line
+                                            where adopt draws it.
+
+                                            Loads, not writes: an LTO-5 tape belongs in a
+                                            library whose newest drive is an LTO-7, because
+                                            that drive reads LTO-5 and adopting recovers what
+                                            is on a tape rather than writing to it.
+                                        {% endcomment %}
+                                        {% if tape.nowhere %}
+                                            <span class="form-help">{{ tape.nowhere }}</span>
+                                        {% else %}
                                         <form method="post" action="{% url 'libraries:adopt_tape' %}"
                                               style="display: flex; gap: 6px; align-items: center;">
                                             {% csrf_token %}
                                             <input type="hidden" name="barcode" value="{{ tape.barcode }}">
                                             <select name="library_id" class="form-control" style="width: auto;">
-                                                {% for library in libraries %}
+                                                {% for library in tape.can_go_to %}
                                                     <option value="{{ library.library_id }}"
                                                         {% if selected_library and library.library_id == selected_library.library_id %}selected{% endif %}>
-                                                        Library {{ library.library_id }}
+                                                        Library {{ library.library_id }} ({{ library.vendor }} {{ library.product }})
                                                     </option>
                                                 {% endfor %}
                                             </select>
                                             <input type="number" name="slot" min="1" placeholder="slot"
                                                    class="form-control" style="width: 90px;">
-                                            <label style="font-size: 13px; white-space: nowrap;">
+                                            <label style="font-size: 14px; white-space: nowrap;">
                                                 <input type="checkbox" name="restart" checked> restart
                                             </label>
                                             <button type="submit" class="btn btn-success">Adopt</button>
                                         </form>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    <p style="color: var(--text-dim); margin-top: 12px; font-size: 13px;">
+                    <p style="color: var(--text-dim); margin-top: 12px; font-size: 14px;">
                         The slot is optional - the first free one is used. The library
                         must be restarted before its robot reports the tape; leave
                         <em>restart</em> ticked to do it now.

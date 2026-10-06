@@ -9,4 +9,25 @@
 # MHVTL_APP overrides where the application lives - a working tree, for
 # instance. The default is where the package installs it.
 APP="${MHVTL_APP:-/opt/mhvtl-gui}"
+
+# An installed host runs the CLI's own settings. main.py defaults to the
+# development ones, which are right in a checkout and wrong here: they pull in
+# debug_toolbar, which `pip install .` does not install, so the CLI died with
+# "No module named 'debug_toolbar'" the moment the virtualenv held only what the
+# package depends on. It had worked until then purely because a stale
+# virtualenv from an earlier release still carried the development extras.
+#
+# Not the production settings either: those log to files under /var/log/mhvtl,
+# which belongs to the service account, so `mhvtl library list` run by an
+# administrator failed with "Unable to configure handler 'error_file'". See
+# mhvtl_system/settings/cli.py.
+#
+# Assigned rather than forced, so a developer who exports it keeps their choice.
+: "${DJANGO_SETTINGS_MODULE:=mhvtl_system.settings.cli}"
+export DJANGO_SETTINGS_MODULE
+
+# venv/bin/python, not python3: a virtualenv built over an older one keeps the
+# older bin/python3 symlink, and this wrapper then ran a different interpreter
+# from the one the service uses. The spec removes the directory before building
+# it, so there is only ever one.
 PYTHONPATH="$APP${PYTHONPATH:+:$PYTHONPATH}" exec "$APP/venv/bin/python" -m mhvtl_cli.main "$@"

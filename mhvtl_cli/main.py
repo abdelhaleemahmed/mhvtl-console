@@ -37,8 +37,11 @@ DEFAULT_SETTINGS = 'mhvtl_system.settings.development'
 SYSTEM_CONFIG_DIR = '/etc/mhvtl'
 SYSTEM_HOME_DIR = '/opt/mhvtl'
 
-COMMAND_MODULES = ('library', 'drive', 'tape', 'ltfs', 'operations', 'status',
-                   'service', 'config', 'scsi', 'iscsi', 'console')
+#: `profile` and `preset` come first because they are what a library is built
+#: from, and `--help` lists them in this order.
+COMMAND_MODULES = ('profile', 'preset', 'library', 'drive', 'tape', 'ltfs',
+                   'operations', 'status', 'service', 'config', 'scsi',
+                   'iscsi', 'console')
 
 
 class _Version(argparse.Action):
@@ -150,11 +153,41 @@ def main(argv: List[str] = None) -> int:
                            'is this being run from the installed location?')
 
     try:
-        return args.handler(args)
+        code = args.handler(args)
+        # Flushed INSIDE the guard, which is the half the first version of
+        # this missed. stdout is block-buffered when it is a pipe, so a short
+        # answer never fails at print() time - it fails when the interpreter
+        # flushes at exit, after this function has returned and where nothing
+        # can catch it. `mhvtl preset list | head -1` still ended with
+        # "Exception ignored in ... BrokenPipeError" for exactly that reason,
+        # while a long answer - one that filled the buffer mid-command - was
+        # caught below and handled.
+        sys.stdout.flush()
+        return code
     except privileges.PermissionDenied as exc:
         return output.fail(str(exc), code=output.EXIT_DENIED)
     except KeyboardInterrupt:
         return output.fail('interrupted', code=output.EXIT_FAILED)
+    except BrokenPipeError:
+        # `mhvtl preset list | head -1` closes the pipe while there is still
+        # output to write, and Python then reports it - both as an exception
+        # here and again when it flushes stdout at exit, which is why stdout
+        # is pointed at /dev/null before returning. The recipe is the one in
+        # the Python docs (library/signal, "Note on SIGPIPE").
+        #
+        # 141 is 128 + SIGPIPE, the shell's convention for a command that
+        # died of one. Nobody sees it in a pipeline - the shell reports the
+        # last command's status - but a caller checking this one gets the
+        # truthful answer rather than 0.
+        try:
+            devnull = os.open(os.devnull, os.O_WRONLY)
+            os.dup2(devnull, sys.stdout.fileno())
+        except (AttributeError, OSError, ValueError):
+            # Captured output has no file descriptor to replace - a test, or
+            # anything that swapped sys.stdout for a buffer. There is then no
+            # flush at exit to fail either.
+            pass
+        return 141
     except Exception as exc:                           # noqa: BLE001 - reported
         # A traceback is the right thing for a bug and the wrong thing for a
         # missing library, so services return failures rather than raising.

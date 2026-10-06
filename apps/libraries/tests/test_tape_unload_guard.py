@@ -499,9 +499,19 @@ class LtfsIsItsOwnGroupTests(TestCase):
         session.save()
 
     def dashboard(self):
+        """The page, without the frame around it.
+
+        These tests read the document in order - Tape Operations before LTFS
+        Operations, the LTFS link after its heading - and since 6 October 2026
+        the frame says "Tape Operations" too, in the console's navigation, and
+        offers an LTFS link in the section's own row. Both are above the page
+        and both are *right*; what is being checked is how the page groups its
+        own tiles, so the page is what is read.
+        """
         response = self.client.get('/libraries/operator/')
         self.assertEqual(response.status_code, 200)
-        return response.content.decode('utf-8', 'replace')
+        whole = response.content.decode('utf-8', 'replace')
+        return whole.split('<main class="content">', 1)[-1]
 
     def test_it_has_a_group_of_its_own(self):
         page = self.dashboard()

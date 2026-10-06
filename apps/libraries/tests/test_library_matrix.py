@@ -435,13 +435,21 @@ class CreateFormDataTests(TestCase):
                          'ULT3580-TDA')
 
     def test_the_form_carries_no_fixed_limits(self):
+        """No number of its own: every limit on the page is the model's.
+
+        This used to check that the page embedded ``library_limits`` and
+        ``default_drive_by_library`` for its script to narrow itself with. The
+        page narrows nothing now - setup_form.state() marks the selected
+        option and sends the limits with it - so what is checked is that the
+        limits reach the inputs, and that no literal cap came back.
+        """
         from django.template.loader import get_template
         source = get_template('libraries/brand_config.html').template.source
         for token in ('max="64"', '15000', '15,000'):
             self.assertNotIn(token, source)
         self.assertIn('name="map_count"', source)
-        self.assertIn('default_drive_by_library', source)
-        self.assertIn('library_limits', source)
+        for limit in ('max_maps', 'max_drives', 'max_slots'):
+            self.assertIn(f'max="{{{{ form.limits.{limit} }}}}"', source)
 
     def test_the_view_sends_map_count_not_num_maps(self):
         import inspect

@@ -95,7 +95,17 @@ class AboutServiceTests(SimpleTestCase):
         self.assertEqual(it['version'], mhvtl_system.__version__)
         self.assertEqual(it['author'], 'Ahmed Abdelhaleem Ahmed')
         self.assertEqual(it['email'], 'ahmedhal@gmail.com')
-        self.assertEqual(it['name'], 'mhvtl-gui')
+        self.assertEqual(it['name'], 'mhvtl-console')
+
+    def test_the_product_is_not_named_after_the_older_php_interface(self):
+        """`mhvtl-gui` is also an unrelated PHP interface to MHVTL.
+
+        The two were indistinguishable in a bug report quoting
+        `mhvtl --version`. The packaging identity keeps the old name on
+        purpose - see project() - so this checks the displayed one only.
+        """
+        self.assertNotIn('gui', about.project()['name'])
+        self.assertNotIn('mhvtl-gui', about.one_line())
 
     def test_facts_returns_a_service_result(self):
         result = about.facts()
@@ -116,6 +126,36 @@ class AboutServiceTests(SimpleTestCase):
         self.assertIn('Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com>', text)
         self.assertIn(mhvtl_system.__licence__, text)
         self.assertIn('github.com/abdelhaleemahmed/mhvtl-console', text)
+
+    def test_it_says_which_copy_of_the_code_answered(self):
+        """A host can carry two: the installed tree and a checkout.
+
+        They print the same version string, so until this existed `mhvtl` and
+        `sudo mhvtl` could be different programs both claiming to be this
+        one - sudoers sets secure_path, so sudo always resolves
+        /usr/bin/mhvtl and therefore the installed tree. A whole terminal
+        recording was made against the wrong copy before anybody noticed.
+        """
+        from pathlib import Path
+
+        here = Path(mhvtl_system.__file__).resolve().parent.parent
+        self.assertEqual(about.running_from(), str(here))
+        self.assertTrue((here / 'manage.py').is_file(),
+                        'running_from should name the tree, not a package '
+                        'directory inside it')
+
+    def test_every_caller_says_it(self):
+        """One fact, three renderings - the rule this package exists for."""
+        where = about.running_from()
+        self.assertIn(where, about.one_line())
+        self.assertEqual(about.facts().data['runtime']['running_from'], where)
+
+    def test_the_status_command_reports_it_too(self):
+        """`status system` is the command a bug report quotes, so it has to
+        say which copy did the reporting."""
+        source = (Path(__file__).resolve().parents[3]
+                  / 'mhvtl_cli' / 'commands' / 'status.py').read_text()
+        self.assertIn('about.running_from()', source)
 
     def test_a_failing_collector_costs_its_own_line_only(self):
         """A wedged systemctl must not cost the version above it."""
@@ -183,16 +223,18 @@ class AboutPageTests(SimpleTestCase):
 
 
 #: Every complete ``<html>`` document in this project, and whether it is
-#: reached before a login. There are six, not the four the plan said: the
-#: authentication dashboard and the login page are whole documents of their
-#: own too, neither extending anything. That is why the version reached 8
-#: pages of 46 - the footer lives in one shell out of six.
+#: reached before a login.
+#:
+#: There were six: this list was written when the version line reached 8
+#: pages out of 46, because a footer lives in a shell and there were six
+#: shells to put it in. Four of them - libraries, operator, console, and the
+#: authentication dashboard's own - became ``{% extends 'base.html' %}`` on
+#: 6 October 2026, each having carried a different navigation. See
+#: guides/plan-one-console.
+#:
+#: Two left: the frame, and the login page, which is deliberately not in it.
 SHELLS = {
     'templates/base.html': True,
-    'apps/libraries/templates/libraries/base.html': True,
-    'apps/libraries/templates/libraries/operator/base.html': True,
-    'apps/libraries/templates/libraries/console/base.html': True,
-    'apps/authentication/templates/authentication/dashboard.html': True,
     #: The only page reached without a login. The version is not a secret, but
     #: there is no reason to tell an unauthenticated visitor which release to
     #: look up - the same decision the About page makes by requiring a login.

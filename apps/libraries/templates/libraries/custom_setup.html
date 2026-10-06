@@ -1,14 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'libraries/base.html' %}
 {% load static %}
 
 {% block title %}Custom Library Setup - MHVTL Console{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/library-config.css' %}">
-{% endblock %}
-
-{% block breadcrumb %}
-    {% include 'includes/_breadcrumb.html' with items=breadcrumb %}
 {% endblock %}
 
 {% block content %}

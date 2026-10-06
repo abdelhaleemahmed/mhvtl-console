@@ -9,7 +9,9 @@ picker_count mtx never had.
 
 mtx, mt and lsscsi are faked; nothing here touches a device.
 """
+import ast
 import json
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -21,6 +23,7 @@ from django.test import RequestFactory
 from .base import TestCase
 
 from apps.libraries import tape_operations_views as views
+from apps.libraries.services.core import success_result
 from apps.libraries.services.core.shell import CommandResult
 from apps.libraries.services.operations import mt, mtx
 from apps.libraries.services.scsi import lsscsi, mapping
@@ -265,6 +268,41 @@ class AdoptTapeViewTests(FixtureConfigMixin, TestCase):
             body = views.TapeListView().get(_request()).content.decode()
         table = body.split('Tapes on disk with no library')[-1]
         self.assertNotIn('E01001L8', table)
+
+    def _adopt_row(self, barcode):
+        """The row offering one loose tape a home, and the libraries in it."""
+        import re
+
+        with mock.patch.object(views, 'get_live_libraries', return_value=[]), \
+             mock.patch.object(media, 'usage_for_all', return_value={}):
+            body = views.TapeListView().get(_request()).content.decode()
+        table = body.split('Tapes on disk with no library')[-1]
+        rows = [chunk for chunk in table.split('<tr>') if barcode in chunk]
+        self.assertEqual(len(rows), 1, f'{barcode} is not in the table once')
+        return rows[0], re.findall(r'<option value="(\d+)"', rows[0])
+
+    def test_only_the_libraries_that_could_take_it_are_offered(self):
+        """Every library on the host was offered for every tape, and the
+        service then refused the ones whose drives cannot load the density -
+        a choice the form knew would fail. In this fixture library 10 takes
+        LTO8, 20 is AIT and 30 is T10000."""
+        _row, offered = self._adopt_row('E01099L8')
+        self.assertEqual(offered, ['10'])
+
+    def test_a_tape_nothing_can_load_is_told_so_instead(self):
+        """An empty dropdown is not an answer: nothing here reads LTO-9, so
+        the row says what would have to change."""
+        (self.media / 'E01099L9').mkdir()
+        row, offered = self._adopt_row('E01099L9')
+        self.assertEqual(offered, [])
+        self.assertIn('No library on this host has a drive that loads LTO9', row)
+        self.assertIn('mhvtl drive add', row)
+        self.assertNotIn('<form', row)
+
+    def test_each_choice_names_its_library(self):
+        """Two libraries of one model are told apart by what they are."""
+        row, _offered = self._adopt_row('E01099L8')
+        self.assertIn('Library 10 (STK L700)', row)
 
     def test_adopting_passes_the_library_and_slot_through(self):
         request = _request('post', {'barcode': 'E01099L8', 'library_id': '10',
@@ -517,7 +555,9 @@ class AddDrivePageTests(FixtureConfigMixin, TestCase):
         body = self._page('30')
         for label in ('Where it will go', 'Drive slot', 'Drive id', 'SCSI target'):
             self.assertIn(label, body)
-        self.assertIn('XYZZY_BD5', body)        # the serial it would be given
+        # The serial it would be given: library 30's fifth drive is id 35,
+        # and a serial comes from the device's own id.
+        self.assertIn('80000035', body)
 
     def test_it_no_longer_asks_for_what_it_ignores(self):
         body = self._page('30')
@@ -542,6 +582,179 @@ class AddDrivePageTests(FixtureConfigMixin, TestCase):
         request = RequestFactory().get('/')
         request.session = {}
         self.assertEqual(views.drive_placement_ajax(request, 30).status_code, 401)
+
+
+#: A drive model, as the catalogue spells them. Used by the guard below.
+DRIVE_MODEL = re.compile(r'ULT3580-|T10000|SDX-900|Ultrium')
+
+#: A template or a script setting a value, rather than printing prose.
+SETS_A_VALUE = re.compile(r'value\s*=|\|\s*default:|=\s*[\'"]|:\s*[\'"]')
+
+
+def python_values(source):
+    """Every string literal in Python source that is not a docstring.
+
+    Which is exactly "a value this code chose": comments are not in the AST
+    at all, and a docstring is text about the code rather than a value in it.
+
+    Read through ast rather than with a regex because the first version of the
+    guard below used one - stripping ``\"\"\"...\"\"\"`` pairs - and its
+    pairing ran away, swallowing whole files. It passed while
+    ``DEFAULT_PRODUCT = 'ULT3580-TD8'`` sat in plain sight.
+    """
+    tree = ast.parse(source)
+    docstrings = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef,
+                             ast.AsyncFunctionDef)):
+            if ast.get_docstring(node, clean=False) is not None:
+                docstrings.add(id(node.body[0].value))
+    return [node.value for node in ast.walk(tree)
+            if isinstance(node, ast.Constant) and isinstance(node.value, str)
+            and id(node) not in docstrings]
+
+
+class AddDriveChoiceTests(FixtureConfigMixin, TestCase):
+    """What the web sends the service, and what it must not decide itself.
+
+    Library 30 in the fixture is an STK L80 holding four T10000Bs, and both
+    handlers answered an absent vendor and model with ``'IBM'`` and
+    ``'ULT3580-TD8'`` - so a drive added to it became an IBM LTO-8 drive in a
+    StorageTek library. The service had the rule right all along: match the
+    drives that are already there.
+    """
+
+    def _added(self, request):
+        """The drive_data the service was handed, and the result it returned."""
+        seen = {}
+
+        def remember(library_id, drive_data=None, **kwargs):
+            seen['library_id'] = library_id
+            seen['drive_data'] = dict(drive_data or {})
+            return success_result('Drive 35 added', {'drive_id': 35})
+
+        service = mock.Mock()
+        service.add.side_effect = remember
+        with mock.patch.object(views, 'get_drive_service',
+                               return_value=service):
+            response = (views.AddDriveView().post(request)
+                        if request.method == 'POST'
+                        and request.content_type != 'application/json'
+                        else views.add_drive_ajax(request))
+        return seen, response
+
+    def test_the_form_sends_only_what_was_chosen(self):
+        seen, _response = self._added(
+            _request('post', {'library_id': '30', 'vendor': '', 'product': ''}))
+        self.assertEqual(seen['library_id'], 30)
+        self.assertEqual(seen['drive_data'], {},
+                         'an empty field is a question for the service, '
+                         'not an IBM ULT3580-TD8')
+
+    def test_the_form_passes_a_real_choice_through(self):
+        seen, _response = self._added(
+            _request('post', {'library_id': '30', 'vendor': 'STK',
+                              'product': 'T10000C', 'serial': 'ABC123'}))
+        self.assertEqual(seen['drive_data'], {'vendor': 'STK',
+                                              'product': 'T10000C',
+                                              'serial': 'ABC123'})
+
+    def test_the_endpoint_sends_only_what_was_chosen(self):
+        seen, _response = self._added(_request(body={'library_id': 30}))
+        self.assertEqual(seen['drive_data'], {},
+                         'a scripted call that names no model used to get an '
+                         'IBM ULT3580-TD8 whatever the library was')
+
+    def test_the_endpoint_passes_a_real_choice_through(self):
+        seen, _response = self._added(
+            _request(body={'library_id': 30, 'product': 'T10000C'}))
+        self.assertEqual(seen['drive_data'], {'product': 'T10000C'})
+
+    def test_whitespace_is_not_a_choice(self):
+        seen, _response = self._added(
+            _request('post', {'library_id': '30', 'vendor': '  ',
+                              'product': ' T10000C '}))
+        self.assertEqual(seen['drive_data'], {'product': 'T10000C'})
+
+    def test_an_stk_library_really_gets_an_stk_drive(self):
+        """Through the service, not a mock of it: the page posts what the
+        operator left alone, and what lands in device.conf is the model the
+        library's own drives are."""
+        request = _request('post', {'library_id': '30'})
+        views.AddDriveView().post(request)
+        stanza = (self.config / 'device.conf').read_text().split(
+            'Drive: 35 ')[1].split('Drive:')[0]
+        self.assertIn(' Vendor identification: STK\n', stanza)
+        self.assertIn(' Product identification: T10000B\n', stanza)
+
+    def test_no_front_end_chooses_a_drive_model_of_its_own(self):
+        """The guard, and the reason this unit exists.
+
+        Which model and vendor a new drive gets is the service's answer:
+        DriveService._which_drive takes what was asked for, else the model the
+        library's other drives are, else the first one its model takes. A
+        front end that names a model is a second answer that nothing checks -
+        and the second answer was 'IBM' and 'ULT3580-TD8', in two handlers and
+        a template.
+
+        The services are not searched. The rule lives there, and
+        DEFAULT_PRODUCT is its documented last resort for a library no profile
+        knows - tested, rather than hidden in a view.
+
+        Named is not the same as chosen: the iSCSI guide prints a worked
+        `lsscsi` listing with an IBM ULT3580-TD8 in it, which is a drive an
+        operator reads about. So Python is read through the AST - every string
+        literal that is not a docstring, which is exactly "a value in the
+        code", and comments are not in the tree at all - and a template or a
+        script only where a value is being set.
+        """
+        STRIPPED = (r'\{%\s*comment\s*%\}.*?\{%\s*endcomment\s*%\}',
+                    r'\{#.*?#\}', r'<!--.*?-->', r'^[ \t]*//.*$', r'/\*.*?\*/')
+        MODEL, ASSIGNED = DRIVE_MODEL, SETS_A_VALUE
+
+        app = Path(views.__file__).resolve().parent
+        looked_at, chosen = 0, []
+        for path in sorted(app.rglob('*')):
+            if path.suffix not in ('.py', '.html', '.js') or not path.is_file():
+                continue
+            parts = path.relative_to(app).parts
+            if {'tests', 'services', 'migrations'} & set(parts):
+                continue
+            looked_at += 1
+            if path.suffix == '.py':
+                guilty = any(MODEL.search(value)
+                             for value in python_values(path.read_text()))
+            else:
+                text = path.read_text()
+                for pattern in STRIPPED:
+                    text = re.sub(pattern, '', text, flags=re.S | re.M)
+                guilty = any(MODEL.search(line) and ASSIGNED.search(line)
+                             for line in text.splitlines())
+            if guilty:
+                chosen.append(str(path.relative_to(app)))
+
+        self.assertGreater(looked_at, 20, 'nothing was examined')
+        self.assertEqual(chosen, [], 'a drive model is chosen outside the '
+                                     'services: ' + ', '.join(chosen))
+
+    def test_the_guard_can_see_a_literal_in_a_view(self):
+        """The guard above passed while a regex swallowed whole files, so it
+        is checked against the bug it exists to catch - the line that was in
+        tape_operations_views.py, and the one that was in the template."""
+        values = python_values(
+            '"""A docstring naming ULT3580-TD8 is fine."""\n'
+            '# so is a comment about ULT3580-TD8\n'
+            "vendor = request.POST.get('product', 'ULT3580-TD8')\n")
+        self.assertEqual([v for v in values if DRIVE_MODEL.search(v)],
+                         ['ULT3580-TD8'],
+                         'the docstring and the comment should be ignored and '
+                         'the argument should not')
+
+        line = """value="{{ plan.vendor|default:'ULT3580-TD8' }}" """
+        self.assertTrue(DRIVE_MODEL.search(line) and SETS_A_VALUE.search(line))
+        self.assertFalse(SETS_A_VALUE.search(
+            '[0:0:1:0]  tape  IBM  ULT3580-TD8  0104  /dev/st0'),
+            'a quoted lsscsi listing is prose, not a choice')
 
 
 class LibraryActivityEndpointTests(FixtureConfigMixin, TestCase):

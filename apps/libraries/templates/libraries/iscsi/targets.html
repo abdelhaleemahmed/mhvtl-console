@@ -29,7 +29,7 @@
         <tbody>
             {% for target in targets %}
             <tr>
-                <td><code style="font-size: 13px;">{{ target.iqn }}</code></td>
+                <td><code style="font-size: 14px;">{{ target.iqn }}</code></td>
                 <td>{{ target.tpgs|length }}</td>
                 <td>
                     {% with tpg=target.tpgs.0 %}
@@ -55,11 +55,11 @@
                     {% endwith %}
                 </td>
                 <td>
-                    <a href="{% url 'libraries:iscsi_target_detail' iqn=target.iqn %}" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">Manage</a>
+                    <a href="{% url 'libraries:iscsi_target_detail' iqn=target.iqn %}" class="btn btn-primary" style="padding: 5px 10px; font-size: 14px;">Manage</a>
                     <button type="button" class="btn btn-danger delete-target-btn"
                             data-iqn="{{ target.iqn }}"
                             data-library="{{ target.library_id|default_if_none:'' }}"
-                            style="padding: 5px 10px; font-size: 12px;">Delete</button>
+                            style="padding: 5px 10px; font-size: 14px;">Delete</button>
                 </td>
             </tr>
             {% endfor %}

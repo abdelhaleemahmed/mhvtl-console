@@ -10,6 +10,7 @@ that made manual_mhvtl_service.py dangerous.
 """
 import io
 import json
+import re
 from contextlib import redirect_stderr, redirect_stdout
 from unittest import mock
 
@@ -49,6 +50,107 @@ class ParserTests(TestCase):
         with self.assertRaises(SystemExit) as exit_code:
             run(['nonsense'])
         self.assertEqual(exit_code.exception.code, 2)
+
+    def test_every_command_the_help_text_offers_can_be_run(self):
+        """A `help=` string that names a command has to name a real one.
+
+        `--profile`'s help said "'mhvtl library models' lists them" for a
+        week. That verb was planned and never built, so the suggestion was
+        unrunnable - and no test looked at help text, which is why it sat
+        there while three other tests watched the refusal strings and the
+        documentation.
+
+        Walks the whole tree, so this covers every noun rather than the one
+        being worked on.
+        """
+        import argparse
+        import re
+
+        offered = re.compile(r'mhvtl ([a-z][a-z-]*)(?:\s+([a-z][a-z-]*))?')
+        root = main.build_parser()
+
+        def verbs(of):
+            for action in of._actions:
+                if isinstance(action, argparse._SubParsersAction):
+                    return action.choices
+            return {}
+
+        def every_help(of, path=''):
+            """(where it is written, the text) for every parser in the tree."""
+            for action in of._actions:
+                if isinstance(action, argparse._SubParsersAction):
+                    for name, below in action.choices.items():
+                        yield from every_help(below, f'{path} {name}'.strip())
+                elif action.help:
+                    yield path or 'mhvtl', action.help
+
+        nouns = verbs(root)
+        checked = 0
+        for where, text in every_help(root):
+            for named_noun, named_verb in offered.findall(text):
+                checked += 1
+                self.assertIn(named_noun, nouns,
+                              f'`mhvtl {where}` help offers `mhvtl '
+                              f'{named_noun}`, which is not a noun')
+                known = verbs(nouns[named_noun])
+                if named_verb and known:
+                    self.assertIn(named_verb, known,
+                                  f'`mhvtl {where}` help offers `mhvtl '
+                                  f'{named_noun} {named_verb}`, and '
+                                  f'{named_noun} has no such verb')
+        # Five, on 4 October 2026: `library create` names `profile list`,
+        # `preset list`, `preset set` and `ltfs support`, and `drive add`
+        # names `ltfs support` as well. Help text rarely cites a command,
+        # which is exactly why the one wrong citation went unnoticed.
+        self.assertGreaterEqual(checked, 5,
+                                'the walk found fewer than it should; help '
+                                'text that cites commands has moved or gone')
+
+    def test_a_closed_pipe_is_not_a_python_error(self):
+        """`mhvtl preset list | head -1` printed a BrokenPipeError.
+
+        Python reports a pipe the reader closed, both where it happens and
+        again when it flushes stdout at exit. 141 is 128 + SIGPIPE, the
+        shell's convention for a command that died of one; nobody sees it in
+        a pipeline, because the shell reports the last command's status.
+        """
+        from mhvtl_cli.commands import library as command
+
+        with mock.patch.object(command, 'do_list',
+                               side_effect=BrokenPipeError):
+            code, out, err = run(['library', 'list'])
+        self.assertEqual(code, 141)
+        self.assertNotIn('Traceback', err)
+        self.assertNotIn('BrokenPipeError', err)
+
+    def test_a_pipe_closed_after_a_short_answer_is_not_one_either(self):
+        """The half the first fix missed, found on 5 October 2026.
+
+        stdout is block-buffered when it is a pipe, so a short answer never
+        fails at print() time: it fails when the interpreter flushes at exit,
+        which is after main() has returned and where nothing can catch it. So
+        `mhvtl preset list | head -1` still ended with
+
+            Exception ignored in: <_io.TextIOWrapper name='<stdout>' ...>
+            BrokenPipeError: [Errno 32] Broken pipe
+
+        while a long answer - one that filled the buffer mid-command - was
+        caught and handled. main() flushes inside its own guard now.
+        """
+        from mhvtl_cli.commands import library as command
+
+        class ClosedPipe(io.StringIO):
+            """Writes fine and fails on flush, as a pipe `head` closed does."""
+
+            def flush(self):
+                raise BrokenPipeError
+
+        out, err = ClosedPipe(), io.StringIO()
+        with mock.patch.object(command, 'do_list', return_value=0):
+            with redirect_stdout(out), redirect_stderr(err):
+                code = main.main(['library', 'list'])
+        self.assertEqual(code, 141)
+        self.assertNotIn('BrokenPipeError', err.getvalue())
 
 
 class VersionTests(TestCase):
@@ -334,7 +436,12 @@ class StatusCommandTests(TestCase):
             code, out, err = run(['status', 'system'])
             jcode, jout, jerr = run(['--json', 'status', 'system'])
 
-        self.assertIn(f'mhvtl-gui     {mhvtl_system.__version__}', out)
+        # The label is the product name, read from about.project() rather
+        # than written out here, so the two cannot drift apart. Matched with
+        # a pattern because output.pairs aligns on the widest label, and the
+        # gap changes when any other label grows.
+        self.assertRegex(out, rf'mhvtl-console\s+'
+                              rf'{re.escape(mhvtl_system.__version__)}')
         self.assertEqual(json.loads(jout)['console']['version'],
                          mhvtl_system.__version__)
         self.assertEqual(json.loads(jout)['console']['email'],
@@ -563,15 +670,21 @@ class TapeCommandTests(TestCase):
                          {'slot': 7, 'size_mb': 1000, 'density': 'LTO8',
                           'kind': 'WORM'})
 
-    def test_creating_defaults_the_capacity_and_reads_the_rest_from_the_barcode(self):
-        """Omitted density and kind stay None: the service reads them from the
-        barcode, which is the one place that mapping lives."""
+    def test_creating_leaves_every_default_to_the_service(self):
+        """Omitted density, kind and size all stay None.
+
+        The density and the kind are read from the barcode, and the capacity
+        from the density once it is known - which is why the size cannot be
+        defaulted here. This command carried `default=500000` while the
+        service said 500, so a tape added to a library was a thousand times
+        the size of the ones the library was created with.
+        """
         from apps.libraries.services.tapes import TapeService
         with mock.patch.object(privileges, 'can_write', return_value=True), \
              mock.patch.object(TapeService, 'create',
                                return_value=success_result('created')) as create:
             run(['tape', 'create', '10', 'E01040L8'])
-        self.assertEqual(create.call_args[1]['size_mb'], 500000)
+        self.assertIsNone(create.call_args[1]['size_mb'])
         self.assertIsNone(create.call_args[1]['density'])
         self.assertIsNone(create.call_args[1]['kind'])
 
@@ -1054,6 +1167,120 @@ class LibraryPreviewCommandTests(TestCase):
         payload = json.loads(out)['data']
         self.assertEqual(payload['errors'], ['bad'])
         self.assertEqual(payload['warnings'], ['odd'])
+
+
+class MixedRunFlagTests(TestCase):
+    """`--drive MODEL[:COUNT]` and `--media DENSITY[:COUNT]`, repeated.
+
+    What the command composes is checked through the specification it hands
+    the service, because that is the whole of the CLI's job here: the flags
+    become the same lists a preset's arrays parse to, and the services decide
+    everything after that.
+    """
+
+    def composed(self, *argv):
+        """(exit code, stderr, the specification the service was given)."""
+        from apps.libraries.services.libraries import lifecycle
+
+        seen = {}
+
+        def remember(spec, config_dir=None):
+            seen.update(spec)
+            return success_result('Preview of library 40', {
+                'text': 'Library: 40\n', 'library_id': 40, 'drive_ids': [41],
+                'errors': [], 'warnings': []})
+
+        with mock.patch.object(lifecycle, 'preview', side_effect=remember), \
+             mock.patch.object(privileges, 'can_write', return_value=False):
+            code, out, err = run(['library', 'create', '--profile', 'IBM',
+                                  '--dry-run', *argv])
+        return code, err, seen
+
+    def test_the_flags_become_the_lists_the_services_take(self):
+        code, err, spec = self.composed(
+            '--drive', 'ULT3580-TD8:2', '--drive', 'ULT3580-TD6:2',
+            '--media', 'LTO8:3', '--media', 'LTO6:2')
+        self.assertEqual(code, output.EXIT_OK, err)
+        self.assertEqual(spec['drive'], [{'model': 'ULT3580-TD8', 'count': 2},
+                                         {'model': 'ULT3580-TD6', 'count': 2}])
+        self.assertEqual(spec['media'], [{'density': 'LTO8', 'count': 3},
+                                         {'density': 'LTO6', 'count': 2}])
+
+    def test_the_order_given_is_the_order_kept(self):
+        """Slot order is SCSI target order, so the first --drive fills slot
+        1 and a backup application notices when that changes."""
+        code, err, spec = self.composed('--drive', 'ULT3580-TD6:1',
+                                        '--drive', 'ULT3580-TD8:1')
+        self.assertEqual([run['model'] for run in spec['drive']],
+                         ['ULT3580-TD6', 'ULT3580-TD8'])
+
+    def test_no_count_means_one(self):
+        code, err, spec = self.composed('--drive', 'ULT3580-TD8',
+                                        '--drive', 'ULT3580-TD6')
+        self.assertEqual([run['count'] for run in spec['drive']], [1, 1])
+
+    def test_a_count_that_is_not_a_number_is_refused_with_the_form(self):
+        code, err, spec = self.composed('--drive', 'ULT3580-TD8:x')
+        self.assertEqual(code, output.EXIT_FAILED)
+        self.assertIn('not a whole number', err)
+        self.assertIn('--drive MODEL:COUNT', err)
+        self.assertEqual(spec, {}, 'nothing should have been written')
+
+    def test_a_count_of_zero_is_refused(self):
+        code, err, spec = self.composed('--drive', 'ULT3580-TD8:0')
+        self.assertEqual(code, output.EXIT_FAILED)
+        self.assertIn('creates nothing', err)
+
+    def test_a_list_and_a_count_are_two_answers_to_one_question(self):
+        for argv, named in ((('--drives', '4', '--drive', 'ULT3580-TD8:2'),
+                             '--drives'),
+                            (('--drive-model', 'ULT3580-TD6',
+                              '--drive', 'ULT3580-TD8:2'), '--drive-model'),
+                            (('--tapes', '5', '--media', 'LTO8:3'),
+                             '--tapes'),
+                            (('--media-type', 'LTO6',
+                              '--media', 'LTO8:3'), '--media-type')):
+            with self.subTest(argv=argv):
+                code, err, spec = self.composed(*argv)
+                self.assertEqual(code, output.EXIT_FAILED)
+                self.assertIn(named, err)
+                self.assertIn('cannot be combined', err)
+                self.assertEqual(spec, {})
+
+    def test_a_list_takes_out_what_a_preset_said_in_the_single_form(self):
+        """`--preset small --drive ULT3580-TD6:2` has to leave the preset's
+        own `drives = 4` behind: a count beside a list is the pair the file
+        format and this command both refuse, and composing it here would make
+        validation refuse a command nobody typed wrongly."""
+        from apps.libraries.services.libraries import presets
+
+        resolved = success_result("preset 'small'", {
+            'name': 'small',
+            'spec': {'profile': 'IBM', 'num_drives': 4,
+                     'drive_model': 'ULT3580-TD8', 'media_count': 30,
+                     'media_type': 'LTO8'}})
+        from apps.libraries.services.libraries import lifecycle
+
+        seen = {}
+
+        def remember(spec, config_dir=None):
+            seen.update(spec)
+            return success_result('Preview', {'text': '', 'library_id': 40,
+                                              'drive_ids': [41], 'errors': [],
+                                              'warnings': []})
+
+        with mock.patch.object(presets, 'resolve', return_value=resolved), \
+             mock.patch.object(lifecycle, 'preview', side_effect=remember), \
+             mock.patch.object(privileges, 'can_write', return_value=False):
+            code, out, err = run(['library', 'create', '--preset', 'small',
+                                  '--dry-run', '--drive', 'ULT3580-TD6:2',
+                                  '--media', 'LTO6:5'])
+
+        self.assertEqual(code, output.EXIT_OK, err)
+        self.assertEqual(seen['drive'], [{'model': 'ULT3580-TD6', 'count': 2}])
+        for implied in ('num_drives', 'drive_model',
+                        'media_count', 'media_type'):
+            self.assertNotIn(implied, seen)
 
 
 class LibrarySlotsCommandTests(TestCase):

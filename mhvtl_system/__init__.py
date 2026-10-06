@@ -19,8 +19,17 @@ docs/sphinx/guides/plan-about.rst.
 
 pyproject.toml carries the same four facts, because packaging metadata has to
 be declarative. test_about.py holds the two files to each other.
+
+THE NAME IS NOT HERE
+--------------------
+The product is called `mhvtl-console` as of 3.3.0, and the string lives in
+services/about/project() rather than beside these, because the *packaging*
+name is still `mhvtl-gui` - the RPM, /opt, the service unit and the system
+account - and two constants a line apart saying different things invites
+whoever reads them to make them agree. about.project() explains which is
+which.
 """
-__version__ = '3.1.0'
+__version__ = '3.3.0'
 __author__ = 'Ahmed Abdelhaleem Ahmed'
 __email__ = 'ahmedhal@gmail.com'
 __licence__ = 'GPL-2.0-only'

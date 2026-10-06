@@ -86,10 +86,11 @@ class LibraryDetailPageTests(TestCase):
 
     def test_a_library_missing_from_the_database_is_synced_not_refused(self):
         from apps.libraries import views
+        from apps.libraries.services.core import success_result
 
         def create_it():
             self._row()
-            return {}
+            return success_result('1 library in device.conf, 1 new', {})
 
         with self.mock.patch('apps.libraries.services.sync.service.'
                              'sync_mhvtl_to_django',
@@ -110,8 +111,11 @@ class LibraryDetailPageTests(TestCase):
         from django.http import Http404
 
         from apps.libraries import views
-        with self.mock.patch('apps.libraries.services.sync.service.'
-                             'sync_mhvtl_to_django', return_value={}):
+        from apps.libraries.services.core import success_result
+
+        with self.mock.patch(
+                'apps.libraries.services.sync.service.sync_mhvtl_to_django',
+                return_value=success_result('nothing to change', {})):
             with self.assertRaises(Http404):
                 views._library_row(99)
 
@@ -219,7 +223,12 @@ class CreateWizardDefaultTests(TestCase):
         request.user = AnonymousUser()
         body = views.BrandConfigView().get(request, 'ADIC').content.decode()
         self.assertIn(f'id="emptySlots" value="{defaults["empty_slots"]}"', body)
-        self.assertIn(f'id="mediaCount" value="{defaults["media_count"]}"', body)
+        # The cartridge count lives in its row since the form grew one per
+        # kind, so there is no single `mediaCount` input to read.
+        from .test_setup_pages import rows
+
+        self.assertEqual(rows(body, 'media')[0][2], defaults['media_count'])
+        self.assertEqual(rows(body, 'drive')[0][2], defaults['num_drives'])
 
     def test_the_catalogue_carries_the_empty_slot_default(self):
         from apps.libraries.services.profiles import data

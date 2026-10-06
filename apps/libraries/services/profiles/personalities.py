@@ -131,6 +131,82 @@ MAX_NAA_FIELD = 99
 VENDOR_ID_LEN = 8
 PRODUCT_ID_LEN = 16
 
+#: How long a unit serial number may be, which is NOT the sixteen MHVTL's own
+#: buffer holds. Investigated in the MHVTL source on 4 October 2026 and
+#: written down here so that nobody has to do it again::
+#:
+#:     SCSI_SN_LEN 16, char lu_serial_no[SCSI_SN_LEN]
+#:         include/vtllib.h:72,604      the field holds 15 characters and a NUL
+#:
+#:     conf_clamp_string(v, SCSI_SN_LEN, linecount)
+#:         usr/cmd/vtltape.c:2141, usr/cmd/vtllibrary.c:1243
+#:                                     device.conf takes up to 16; longer is
+#:                                     cut, with a line in the log
+#:
+#:     snprintf(lu->lu_serial_no, ..., "%-10s", v)   for a drive
+#:     snprintf(lu->lu_serial_no, SCSI_SN_LEN, "%-14s", v)   for a library
+#:         usr/cmd/vtltape.c:2142, usr/cmd/vtllibrary.c:1244
+#:                                     a short serial is PADDED, not shortened
+#:
+#:     alloc_vpd(strlen(lu->lu_serial_no)); memcpy(vpd_pg->data, p, strlen(p))
+#:         usr/cmd/vtltape.c:2237, usr/vtllib.c:2292
+#:                                     VPD page 0x80 - the unit serial number
+#:                                     a backup application reads - carries
+#:                                     the WHOLE string
+#:
+#:     memcpy(&d[28], &lu->lu_serial_no, 10)
+#:         usr/vtllib.c:2314           standard INQUIRY and VPD page 0x83
+#:                                     carry exactly TEN bytes
+#:
+#:
+#: So eleven characters give one device two identities, and two devices whose
+#: first ten characters match report the same serial to lsscsi and different
+#: serials to a backup application - which is worse than a plain duplicate,
+#: because two tools then disagree about whether they are the same device.
+#: Ten or fewer is therefore the rule. docs/sphinx/guides/plan-setup-form.rst
+#: has the table.
+MAX_SERIAL_LENGTH = 10
+
+
+def truncate_serial(serial: str) -> str:
+    """A serial longer than MAX_SERIAL_LENGTH is cut, not rejected.
+
+    Cutting keeps the one identity; rejecting would be a worse answer than
+    reporting what will really be used. Nothing this project composes is
+    longer - device_serial() is eight characters - so this only ever applies
+    to a serial given by hand.
+    """
+    return (serial or '').strip()[:MAX_SERIAL_LENGTH]
+
+
+def device_serial(device_id: int) -> str:
+    """The serial a library or a drive gets: '80000085' for device 85.
+
+    ``8000`` and the id, four digits wide, so a library's devices read as one
+    family: library 85 is 80000085 and its drives 86 to 89 are 80000086 to
+    80000089. Eight characters, so every path above reports the same string.
+    Unique by construction, because libraries and drives share ONE id
+    namespace (MAX_DEVICE_ID, config/ids) - four digits always fit, and no two
+    devices can collide however many drives a library has.
+
+    THIS IS THE SETUP FORM'S OWN CONVENTION
+    ---------------------------------------
+    The page computed it in JavaScript - ``parseInt(libraryIdInput.value) +
+    80000000`` - and posted it as unit_serial_number; libraries 20 and 40 on
+    the development host carry 80000020 and 80000040 from it. The services
+    answered ``XYZZY_{id}``, MHVTL's sample placeholder, so the browser and
+    the terminal gave the same library different serials - and a library
+    created in the browser reported a serial its own drives did not share,
+    because device_conf gave them ``XYZZY_{drive_id}`` and a drive added later
+    got ``{library_serial}D{slot}``, which breaks at slot 10.
+
+    The page was right: this is the field a backup application identifies a
+    device by, and XYZZY_50 is not a serial number. So the rule lives here,
+    where both config/ and libraries/ can reach it, and the four other
+    conventions are gone.
+    """
+    return f'8000{int(device_id):04d}'
+
 
 @dataclass(frozen=True)
 class LibraryLayout:

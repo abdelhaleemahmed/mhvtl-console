@@ -93,6 +93,61 @@ class LibraryService:
             {'libraries': [item.to_dict() for item in libraries],
              'count': len(libraries)}, operation_id)
 
+    def summary(self) -> ServiceResult:
+        """What this host holds: libraries, drives, cartridges, slots.
+
+        One answer, from ``list()``, which reads ``device.conf`` and the
+        contents files - so these are the numbers the host has rather than
+        the numbers the database remembers. That distinction is the reason
+        this exists. The web console's panel counted rows in the database
+        instead, through ``discovery_status`` buckets that nothing sets and a
+        ``media_found`` that was the literal 0, and answered 7 libraries, 21
+        drives and 0 cartridges for a host with 156 of them.
+
+        ``says`` is the sentence, composed here because both front ends print
+        it: ``mhvtl library list`` ends with it and the console shows it above
+        its libraries.
+        """
+        operation_id = str(uuid.uuid4())[:8]
+        listed = self.list()
+        if not listed.success:
+            return listed
+
+        rows = listed.data['libraries']
+
+        def total(key):
+            """The ones that are known. A library whose contents file cannot
+            be read has None here, not 0 - and the two are different
+            answers."""
+            return sum(int(row[key]) for row in rows if row[key] is not None)
+
+        counts = {
+            'libraries': len(rows),
+            'drives': total('drives'),
+            'cartridges': total('tape_count'),
+            'slots': total('slot_count'),
+            #: Libraries whose contents could not be read. Their cartridges
+            #: are not counted above, so the sentence says so rather than
+            #: letting a missing file look like an empty library.
+            'unreadable': sum(1 for row in rows if row['tape_count'] is None),
+        }
+        counts['free_slots'] = max(counts['slots'] - counts['cartridges'], 0)
+
+        if not rows:
+            says = 'No libraries on this host yet.'
+        else:
+            says = (f"{counts['libraries']} librar"
+                    f"{'ies' if counts['libraries'] != 1 else 'y'}, "
+                    f"{counts['drives']} drive(s), "
+                    f"{counts['cartridges']} cartridge(s) "
+                    f"in {counts['slots']} slot(s) - "
+                    f"{counts['free_slots']} free")
+            if counts['unreadable']:
+                says += (f" ({counts['unreadable']} librar"
+                         f"{'ies' if counts['unreadable'] != 1 else 'y'} "
+                         f"could not be read)")
+        return success_result(says, {**counts, 'says': says}, operation_id)
+
     def get(self, library_id: int) -> ServiceResult:
         """One library, with its slot and tape counts."""
         operation_id = str(uuid.uuid4())[:8]
@@ -219,8 +274,22 @@ class LibraryService:
             return success_result('Specification is valid',
                                   {'warnings': list(getattr(validation, 'warnings', []))},
                                   operation_id)
-        return failure_result('Specification is not valid',
-                              list(getattr(validation, 'errors', [])), operation_id)
+
+        # The suggested fixes travel with the errors. validation.validate works
+        # out the valid values whenever it rejects one - "Valid drive models for
+        # IBM: ..." beside "Drive model 'T10000C' is not valid for IBM" - and
+        # this method used to take the errors and leave the fixes behind, so an
+        # operator was shown the problem and denied the answer the service had
+        # already computed. lifecycle.create next door has always sent both.
+        #
+        # Appended rather than interleaved: errors say what is wrong, fixes say
+        # what would be right, and a caller printing them in order reads
+        # correctly either way.
+        return failure_result(
+            'Specification is not valid',
+            list(getattr(validation, 'errors', []))
+            + list(getattr(validation, 'suggested_fixes', [])),
+            operation_id)
 
     def restart_services(self, library_id: int = None) -> ServiceResult:
         """Restart the daemons, so a configuration change takes effect."""

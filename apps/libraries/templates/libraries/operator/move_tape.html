@@ -27,19 +27,19 @@
     /* Sized like the mount page's grid, so the same library looks the same on
        both: a slot is a slot. */
     .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; max-height: 300px; overflow-y: auto; }
-    .slot-box { padding: 8px; text-align: center; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .slot-box { padding: 8px; text-align: center; border-radius: 4px; font-size: 14px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
     /* `full` is a state, not a colour - the generation's own class provides
        the fill, exactly as on the mount page. It used to be one blue for every
        tape, whatever generation it was. */
     .slot-box.full { cursor: pointer; }
-    .slot-lto { font-size: 9px; display: block; opacity: .85; margin-top: 2px; }
+    .slot-lto { font-size: 14px; display: block; opacity: .85; margin-top: 2px; }
     .slot-box.empty { background: var(--surface-deep); border-color: var(--border); color: var(--text-dim); }
     .slot-box.empty:hover { background: var(--surface-deep); border-color: var(--border); }
     .slot-box.selected-source { background: var(--warn-bg); border-color: var(--warn); box-shadow: 0 0 0 2px var(--warn); }
     .slot-box.selected-dest { background: var(--ok-bg); border-color: var(--ok); box-shadow: 0 0 0 2px var(--ok); }
     .slot-num { font-weight: 600; font-size: 14px; }
-    .slot-barcode { font-family: 'Consolas', monospace; font-size: 10px; display: block; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .slot-status { font-size: 9px; text-transform: uppercase; margin-top: 2px; }
+    .slot-barcode { font-family: 'Consolas', monospace; font-size: 14px; display: block; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .slot-status { font-size: 14px; text-transform: uppercase; margin-top: 2px; }
     .no-library { text-align: center; padding: 40px 20px; color: var(--text-dim); }
     .no-library-icon { font-size: 48px; margin-bottom: 10px; }
     .move-preview { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 8px; padding: 15px; margin-top: 15px; display: none; }
@@ -48,7 +48,7 @@
     .move-preview-arrow { text-align: center; font-size: 24px; color: var(--warn); margin: 10px 0; }
     .move-preview-slot { display: flex; justify-content: center; align-items: center; gap: 10px; }
     .move-preview-slot .slot-info { background: var(--surface); padding: 10px 15px; border-radius: 5px; text-align: center; }
-    .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
+    .legend { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 14px; color: var(--text-dim); }
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-color { width: 16px; height: 16px; border-radius: 3px; }
     .legend-color.empty { background: var(--surface-deep); border: 1px solid var(--border); }

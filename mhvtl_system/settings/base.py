@@ -127,6 +127,14 @@ AUTH_USER_MODEL = 'authentication.User'
 # password 'mhvtl'; change it in the UI or with `manage.py changepassword`.
 MHVTL_GUI_USERNAME = env('MHVTL_GUI_USERNAME', default='admin')
 
+# Where the console keeps its own configuration, as opposed to MHVTL's.
+# /etc/mhvtl belongs to MHVTL and this project writes nothing there it does not
+# own; a named library configuration (presets.toml) is ours. Declared here
+# rather than in production.py so the development server, the CLI and a test
+# all read the same name - core.paths.presets_dir() asks the settings, not the
+# environment, so a setting nothing declares could never be overridden at all.
+MHVTL_GUI_CONFIG_DIR = env('MHVTL_GUI_CONFIG_DIR', default='/etc/mhvtl-gui')
+
 # Which node drives a library's changer: 'generic' (/dev/sgN, the default) or
 # 'ch' (/dev/schN, the kernel ch driver). The ch driver leaks a reference on
 # every drive a changer reports by SCSI id, so it is blacklisted on the hosts

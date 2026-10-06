@@ -204,9 +204,14 @@ class PageColourTests(TestCase):
     """
 
     STYLESHEETS = ('static/css/base.css',)
-    TEMPLATES = ('templates/includes/_default_password_warning.html',
+    #: ``_header.html`` was in this list until 6 October 2026, when the five
+    #: page frames became one and it was replaced by ``_console_header.html``.
+    #: The frame itself is read now too: it is one file for fifty pages, so a
+    #: fixed colour in it would be a fixed colour everywhere.
+    TEMPLATES = ('templates/base.html',
+                 'templates/includes/_default_password_warning.html',
                  'templates/includes/_footer.html',
-                 'templates/includes/_header.html',
+                 'templates/includes/_console_header.html',
                  'apps/authentication/templates/authentication/change_password.html')
 
     def _root(self):
@@ -222,6 +227,44 @@ class PageColourTests(TestCase):
                 text = re.sub(r'{% comment %}.*?{% endcomment %}', '', text, flags=re.S)
                 self.assertEqual(re.findall(r'(?<!&)#[0-9a-fA-F]{3,6}\b', text), [])
                 self.assertNotIn('background:#fff', text.replace(' ', ''))
+
+    #: Every stylesheet this project ships. The brace check below reads them
+    #: all, because the fault it catches is silent in any of them.
+    ALL_STYLESHEETS = ('static/css/base.css', 'static/css/mhvtl-console.css',
+                       'static/css/setup-choice.css',
+                       'static/css/library-config.css',
+                       'static/css/library-remove.css', 'static/css/about.css',
+                       'static/css/dashboard.css', 'static/css/monitor.css',
+                       'static/css/reset-default.css')
+
+    def test_every_stylesheet_closes_what_it_opens(self):
+        """A stray brace ends a media query early, and the rules after it
+        then apply at every width.
+
+        That happened: removing the rules for a deleted header left their
+        closing brace behind, which closed `@media (max-width: 768px)` four
+        rules early - so a phone's one-column footer, its tighter card
+        padding and its narrower container were what a 1280-wide window got
+        too. Nothing errors; the page simply renders as though it were small.
+        """
+        for name in self.ALL_STYLESHEETS:
+            path = self._root() / name
+            if not path.exists():
+                continue
+            with self.subTest(stylesheet=name):
+                depth, line = 0, 1
+                for character in path.read_text():
+                    if character == '\n':
+                        line += 1
+                    elif character == '{':
+                        depth += 1
+                    elif character == '}':
+                        depth -= 1
+                        self.assertGreaterEqual(
+                            depth, 0, f'{name} closes a brace it never '
+                                      f'opened, at line {line}')
+                self.assertEqual(depth, 0,
+                                 f'{name} leaves {depth} brace(s) open')
 
     def test_the_footer_does_not_use_the_text_colour_as_its_background(self):
         """--text is the page's text colour: nearly white on a dark theme,

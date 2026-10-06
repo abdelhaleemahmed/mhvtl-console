@@ -90,9 +90,15 @@
 
                 <div class="form-group">
                     <label for="size_mb">Tape Size (MB)</label>
+                    {% comment %}
+                        Empty, not 500000: the script fills it from the
+                        density, and left empty the service uses the same
+                        capacity. See the note in create_tapes_bulk.html.
+                    {% endcomment %}
                     <input type="number" name="size_mb" id="size_mb" class="form-control"
-                           value="500000" min="1000" max="50000000">
-                    <p class="form-help" id="size-help">Size in megabytes; set to the density's native capacity when you pick one</p>
+                           value="" min="1000" max="50000000"
+                           placeholder="the density's native capacity">
+                    <p class="form-help" id="size-help">Size in megabytes; left empty, it gets the density's native capacity</p>
                 </div>
 
                 <div class="btn-group">
@@ -277,7 +283,7 @@
 
             card.style.display = 'block';
             container.innerHTML = existingBarcodes.map(bc =>
-                `<span class="barcode-chip" style="padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 12px;">${bc}</span>`
+                `<span class="barcode-chip" style="padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 14px;">${bc}</span>`
             ).join('');
         }
 

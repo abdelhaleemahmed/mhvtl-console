@@ -18,6 +18,11 @@ html {
     scroll-behavior: smooth;
 }
 
+/* The 14px floor for the elements a browser sizes itself - small, h6, code,
+ * kbd, samp, pre - is in css/mhvtl-console.css, which every page loads and
+ * some pages load alone. Not repeated here: two copies of a floor is two
+ * places for it to drift. */
+
 body {
     font-family: 'Segoe UI', Tahoma, Arial, 'Trebuchet MS', Helvetica, sans-serif;
     background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
@@ -29,159 +34,6 @@ body {
 /* ============================================
    HEADER STYLES
    ============================================ */
-
-.site-header {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
-    color: var(--accent-ink);
-    padding: 15px 0;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    gap: 20px;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.logo-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: var(--accent-ink);
-    transition: opacity 0.3s ease;
-}
-
-.logo-link:hover {
-    opacity: 0.9;
-}
-
-.system-logo-small {
-    width: 45px;
-    height: 45px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-}
-
-.logo-icon {
-    font-size: 24px;
-}
-
-.site-title {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-/* Navigation */
-.main-nav {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 18px;
-    color: var(--accent-ink);
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.nav-link:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: var(--accent-ink);
-}
-
-.nav-link.active {
-    background: rgba(255, 255, 255, 0.25);
-    color: var(--accent-ink);
-    font-weight: 600;
-}
-
-.nav-icon {
-    font-size: 16px;
-}
-
-/* User Menu */
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    font-size: 13px;
-}
-
-.user-icon {
-    font-size: 18px;
-}
-
-.user-name {
-    font-weight: 600;
-}
-
-.user-role {
-    font-size: 11px;
-    opacity: 0.8;
-}
-
-.logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--surface);
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-}
-
-.logout-icon {
-    font-size: 16px;
-}
 
 /* ============================================
    MAIN CONTAINER
@@ -297,52 +149,6 @@ body {
     font-weight: 500;
 }
 
-.alert-close {
-    background: transparent;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.alert-close:hover {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.1);
-}
-
-/* Alert Types */
-.alert-success {
-    background: linear-gradient(135deg, var(--ok-bg), var(--ok-bg));
-    color: var(--alert-ok-text);
-    border-color: var(--ok-bg);
-}
-
-.alert-error, .alert-danger {
-    background: linear-gradient(135deg, var(--bad-bg), var(--bad-bg));
-    color: var(--alert-bad-text);
-    border-color: var(--bad-bg);
-}
-
-.alert-warning {
-    background: linear-gradient(135deg, var(--warn-bg), var(--warn-bg));
-    color: var(--alert-warn-text);
-    border-color: var(--warn-bg);
-}
-
-.alert-info {
-    background: linear-gradient(135deg, var(--info-bg), var(--info-bg));
-    color: var(--info);
-    border-color: var(--info-bg);
-}
-
 /* ============================================
    BUTTONS
    ============================================ */
@@ -361,67 +167,6 @@ body {
     transition: all 0.3s ease;
     text-align: center;
     white-space: nowrap;
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-    color: var(--surface);
-}
-
-.btn-primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--accent-strong), var(--accent-strong));
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-}
-
-.btn-secondary {
-    background: var(--surface-deep);
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    background: var(--border);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.btn-success {
-    background: linear-gradient(135deg, var(--ok), var(--ok));
-    color: var(--surface);
-}
-
-.btn-success:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--ok), var(--ok));
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, var(--bad), var(--bad));
-    color: var(--surface);
-}
-
-.btn-danger:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--bad), var(--bad));
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4);
-}
-
-.btn-warning {
-    background: linear-gradient(135deg, var(--warn), var(--warn));
-    color: var(--text);
-}
-
-.btn-warning:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--warn), var(--warn));
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(255, 193, 7, 0.4);
 }
 
 /* ============================================
@@ -472,12 +217,20 @@ body {
     margin-bottom: 20px;
 }
 
+/* 15px through the form - the label, what is typed into it, and the line
+ * under it that explains it. 14px is the floor for anything, not the size
+ * for a sentence somebody is meant to read, and the help lines here are
+ * sentences: "Choosing one leaves only the models and drives that take it,
+ * and picks the newest drive that writes it." Weight and colour carry the
+ * hierarchy instead of size - the label is 600 at 11.9:1, the help is 400 at
+ * 5.8 - so raising all three together keeps the label from being outweighed
+ * by its own footnote. */
 .form-label {
     display: block;
     margin-bottom: 8px;
     color: var(--text);
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .form-input,
@@ -487,7 +240,7 @@ body {
     padding: 12px 16px;
     border: 2px solid var(--border);
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 15px;
     font-family: inherit;
     background: var(--surface);
     /* Without this the browser's own black is used, and what is typed into
@@ -513,7 +266,7 @@ body {
 }
 
 .form-help {
-    font-size: 12px;
+    font-size: 15px;
     color: var(--text-dim);
     margin-top: 5px;
 }
@@ -557,7 +310,7 @@ body {
 }
 
 .footer-text {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.6;
     color: var(--text-dim);
 }
@@ -573,7 +326,7 @@ body {
 .footer-links a {
     color: var(--text-dim);
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
     transition: color 0.3s ease;
 }
 
@@ -583,7 +336,7 @@ body {
 }
 
 .footer-version {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-faint);
     margin-top: 10px;
 }
@@ -597,7 +350,7 @@ body {
 }
 
 .footer-credits {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-dim);
 }
 
@@ -653,28 +406,22 @@ body {
         gap: 15px;
     }
 
-    .main-nav {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+    /* .main-nav, .user-menu, .user-info and .logout-btn were arranged
+       here too; they belonged to includes/_header.html, which the one-frame
+       work deleted. .header-content stays: the console's header is the one
+       that wears that class now, and stacking it on a phone suits it.
 
-    .user-menu {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .user-info,
-    .logout-btn {
-        width: 100%;
-        justify-content: center;
-    }
+       Removing them left their closing brace behind, which ended this media
+       query four rules early - so .main-container, .breadcrumb, .card and
+       .footer-content applied at every width, and the footer's three columns
+       became one at 1280 as well as at 390. */
 
     .main-container {
         padding: 0 15px;
     }
 
     .breadcrumb {
-        font-size: 13px;
+        font-size: 14px;
         padding: 10px 15px;
     }
 
@@ -695,12 +442,12 @@ body {
 
     .nav-link {
         padding: 8px 12px;
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .btn {
         padding: 10px 18px;
-        font-size: 13px;
+        font-size: 14px;
     }
 }
 
@@ -757,22 +504,6 @@ body {
     pointer-events: none;
 }
 
-.alert .alert-action {
-    color: inherit;
-    font-weight: 600;
-}
-
-/* The x that puts the default-password warning away. It inherits the alert's
- * own text colour, the only one sure to read against that alert. */
-.alert-dismiss {
-    background: transparent; border: none; cursor: pointer;
-    color: inherit; opacity: .55; font-size: 22px; line-height: 1;
-    padding: 0 4px; margin-left: 16px; align-self: flex-start;
-    transition: opacity .2s ease;
-}
-.alert-dismiss:hover { opacity: 1; }
-
-
 /* What each drive is doing, live: the panel on the library page and on the
  * monitor page. Both are rendered by the server and swapped in by
  * js/auto-refresh.js, so these rules are all either page needs. */
@@ -780,18 +511,6 @@ body {
     background: var(--surface-deep); border: 1px solid var(--border);
     border-radius: 8px; padding: 12px 15px; margin-bottom: 15px;
 }
-.drive-live {
-    display: flex; gap: 12px; align-items: baseline; font-size: 13px;
-    padding: 4px 0; color: var(--text-dim);
-}
-.drive-live .live-drive { min-width: 70px; color: var(--text); }
-.drive-live .live-state { min-width: 190px; }
-.drive-live .live-state.writing { color: var(--warn); font-weight: 600; }
-.drive-live .live-state.reading { color: var(--info); font-weight: 600; }
-.drive-live .live-state.holding { color: var(--ok); }
-.drive-live .live-state.silent { color: var(--bad); }
-.drive-live .live-bytes { font-family: monospace; }
-
 /* The bar that says how full a tape is. The monitor page shows it inside the
  * live drive panel; the console's own stylesheet has the same rules for the
  * library page and the tape tiles. The state class sits on the bar, so one
@@ -799,15 +518,4 @@ body {
 .tape-bar {
     height: 10px; border-radius: 5px; overflow: hidden;
     background: var(--border); border: 1px solid var(--border-soft);
-}
-.tape-bar-fill {
-    display: block; height: 100%; background: var(--info);
-    transition: width .4s ease;
-}
-.tape-bar.filling .tape-bar-fill { background: var(--warn); }
-.tape-bar.full .tape-bar-fill { background: var(--bad); }
-.tape-bar.unknown .tape-bar-fill { background: var(--text-faint); }
-.live-bar {
-    display: inline-block; width: 90px; height: 8px; flex: none;
-    vertical-align: middle;
 }

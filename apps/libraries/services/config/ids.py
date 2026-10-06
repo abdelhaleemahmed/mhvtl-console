@@ -116,6 +116,24 @@ def free_targets(conf) -> int:
                if target not in used)
 
 
+def free_drive_ids(conf, *, reserved: Iterable[int] = ()) -> int:
+    """How many drive ids are left in the namespace.
+
+    The third budget beside free_targets and a model's element layout, and the
+    one that is never the binding limit in practice - 921 ids are usable on an
+    empty host against 100 SCSI targets. It is counted rather than assumed
+    because the honest answer to "how many drives may this library have" is
+    the smallest of the three, and a limit nobody counted is a limit nobody
+    can report.
+
+    Counting, not allocating: drive_ids() is what hands them out, and it
+    raises OutOfIds when they run out mid-operation.
+    """
+    taken = used_ids(conf) | set(reserved)
+    return sum(1 for candidate in range(1, MAX_DEVICE_ID + 1)
+               if _usable_drive_id(candidate, taken))
+
+
 def targets(conf, count: int) -> Tuple[int, ...]:
     """`count` free SCSI targets, contiguous if possible.
 

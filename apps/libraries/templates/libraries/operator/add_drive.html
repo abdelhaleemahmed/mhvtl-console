@@ -58,8 +58,15 @@
 
                     <div class="form-group">
                         <label for="vendor">Vendor</label>
+                        {% comment %}
+                        No fallback value. The vendor is the library's, and the
+                        service answers it - placement() returns the one its
+                        drives already report, and the script below fills this
+                        in when the library changes. A default here was a
+                        literal 'IBM' offered for an STK library.
+                        {% endcomment %}
                         <input type="text" name="vendor" id="vendor" class="form-control"
-                               value="{{ plan.vendor|default:'IBM' }}" maxlength="8" required>
+                               value="{{ plan.vendor }}" maxlength="8" required>
                         <p class="form-help">As the drive reports itself.</p>
                     </div>
                 </div>

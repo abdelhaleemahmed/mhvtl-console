@@ -156,7 +156,7 @@
     background: var(--surface);
     padding: 10px;
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .preview-label {
@@ -167,6 +167,224 @@
 .preview-value {
     color: var(--accent);
     font-family: monospace;
+    font-size: 14px;
+}
+
+/* Saved configurations: one folded line each.
+ *
+ * A list and not a grid of cards. Each card is a <details> carrying the
+ * breakdown and two long commands, and four of them unfolded filled 1.2
+ * screens of a phone before the form's first field; closed, each is one line,
+ * so a single column reads as the list of presets it is. Side by side they
+ * would also stretch to the tallest in the row the moment one was opened.
+ *
+ * The native disclosure triangle is removed. It is the browser's own glyph,
+ * it sits at a different size and colour in every one of them, and a row
+ * carrying nothing else read as plain text with a marker in front. What says
+ * the row opens is the row itself: a bordered card that lights up under the
+ * pointer, with Show / Hide where an eye ends up. Both words are in the
+ * markup rather than in `content:`, so they can be translated.
+ */
+.preset-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    /* Declared once, for the breakdown and the commands below. The bare
+     * `monospace` keyword they had is whatever the operating system picked -
+     * DejaVu Sans Mono on this host - which renders wider and taller than the
+     * interface font at the same size, so a command looked like a different
+     * size from the sentence above it. Scoped here rather than on
+     * .preview-value, which other pages use. */
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas,
+            "Liberation Mono", monospace;
+}
+
+.preset-list .preview-value,
+.preset-list code {
+    font-family: var(--mono);
+}
+
+.preset-list .preview-item {
+    padding: 0;
+    border: 1px solid var(--border);
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+/* The name is the heading of the row and was the same 12px as the command
+ * string three lines below it. 14px/600 is what the form beside this uses
+ * for a label, so the section borrows the page's own scale rather than
+ * inventing a second one. */
+.preset-list .preview-label {
+    font-size: 14px;
+    color: var(--text);
+}
+
+/* The one in use, marked so it can be found without reading.
+ *
+ * It was told apart by three small things - it was open, its name was not a
+ * link, and it said "(in use)" in grey - none of which is visible at a
+ * glance down a list. The card carries the mark now: the green edge and the
+ * badge are .status-ok from css/mhvtl-console.css, which is how every other
+ * page in this console says "this is the one in effect".
+ *
+ * Repeated here rather than used from there because those component rules
+ * are scoped to `body.mhvtl-console` and the setup pages do not set it; only
+ * the theme variables reach this page, which is why the colours - and not
+ * the values - are what is shared.
+ */
+.preset-list .preview-item.in-use-card {
+    /* The whole card, not an edge of it, and the mark is mostly carried by
+     * the row rather than by the wash behind it.
+     *
+     * A tint strong enough to be unmistakable is a tint the text has to be
+     * read through. Swept against contrast in all four themes: the dark ones
+     * reach .26 only if the muted text is brightened with it, and the light
+     * ones are already at 4.3:1 by .10 - there the limit is not the muted
+     * text at all but the accent-coloured breakdown, which brightening makes
+     * worse. So the wash stays at the weight that is safe everywhere, and
+     * the line you always see - the summary - is filled instead. Folded,
+     * that line IS the card.
+     */
+    background: var(--ok-soft);
+    border-color: var(--ok);
+    border-width: 2px;
+    border-left-width: 6px;
+}
+
+.preset-list .in-use-card > summary {
+    background: var(--ok-bg);
+}
+
+/* The dim greys are chosen to be read on the card, not on a green fill:
+ * --text-dim on --ok-bg measures 3.0:1 in navy and 4.4 in sepia. On this one
+ * row the muted text takes the plain text colour, which is 6.2 to 12.9
+ * across the four. Nothing is muted on the row that marks itself anyway. */
+.preset-list .preview-item.in-use-card > summary .form-help,
+.preset-list .preview-item.in-use-card > summary .fold-hint {
+    color: var(--text);
+}
+
+/* The hover that lights a card up is for the ones you might choose. This one
+ * is already chosen, and repainting its border would unmark it. */
+.preset-list .preview-item.in-use-card:hover {
+    border-color: var(--ok);
+}
+
+/* No pill: the row it sits in is already the colour a pill would have been.
+ * The words stay because the colour is not the whole message - it has to
+ * survive a screen reader, a printout and a themer who changes the green. */
+.preset-list .in-use {
+    /* --alert-ok-text and not --ok, which is what .status-ok pairs with
+     * --ok-bg: measured, that pair is 3.0:1 in navy and 4.1 in sepia. The
+     * alert text colours are the ones chosen to be read on these
+     * backgrounds. */
+    color: var(--alert-ok-text);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.preset-list .preview-item:hover {
+    border-color: var(--accent);
+}
+
+.preset-list .preview-item > summary {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    list-style: none;
+}
+
+/* Both halves of removing the triangle: the second is Chromium's own. */
+.preset-list .preview-item > summary::-webkit-details-marker {
+    display: none;
+}
+
+.preset-list .preview-item > summary .form-help {
+    margin: 0;
+}
+
+/* Pushed to the far end of the row, where the eye lands last. The selector
+ * carries `summary` because the rule above zeroes every margin on a
+ * .form-help in here, and `margin: 0` beats `margin-left: auto` at equal
+ * weight - which left Show sitting against the text it follows. */
+.preset-list .preview-item > summary .fold-hint {
+    margin-left: auto;
+    white-space: nowrap;
+    font-size: 14px;
+    /* Not --text-faint, which it was: measured against the card it gives
+     * 3.0:1 in navy and sepia, 3.2 in daylight and 3.6 in graphite, where
+     * 4.5:1 is the minimum for text this size - and this is the only word
+     * telling you the row opens. --text-dim is 4.9 to 6.9 across the four. */
+    color: var(--text-dim);
+}
+
+.preset-list .preview-item:not([open]) .fold-hint .when-open,
+.preset-list .preview-item[open] .fold-hint .when-closed {
+    display: none;
+}
+
+.preset-list .preview-item[open] > summary {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+}
+
+/* The summary brings its own padding; everything under it needs its own. */
+.preset-list .preview-item > :not(summary) {
+    padding: 0 12px;
+}
+
+.preset-list .preview-item[open] {
+    padding-bottom: 10px;
+}
+
+/* Every link on this page, not only the ones in the preset list.
+ *
+ * There is no global rule for `a` anywhere in the console, so a link with no
+ * rule of its own is the browser's #0000EE on a dark card: 1.6:1, which is
+ * not a colour so much as a rumour. "+ Add another kind of drive", "Remove
+ * this kind" and the two vendor links at the foot were all in that state.
+ * The console styles links per context; this is the pair .info-table uses.
+ *
+ * --accent and not --info: measured on the card, --info is 4.0:1 in navy,
+ * under the 4.5 this text has to clear. --accent is 7.3 there, and passes in
+ * all four themes (8.3 graphite, 4.8 daylight, 5.1 sepia).
+ *
+ * Not .btn, which carries its own colour and would be overruled by these.
+ */
+.config-card a:not(.btn) {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.config-card a:not(.btn):hover {
+    text-decoration: underline;
+}
+
+/* Adding and removing a kind change the form, so they read as controls
+ * rather than as part of the sentence they sit in. */
+#addDrive,
+#addMedia,
+.kind-remove {
+    font-weight: 600;
+}
+
+/* Leaving a preset is an action, so it looks like one. The standard button
+ * at standard size would outweigh the Create Library button at the foot of
+ * the form, which is the one that writes something. */
+.config-card .btn-compact {
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    /* .btn-secondary's own --text-dim measures 4.4:1 in sepia, just under. */
+    color: var(--text);
+}
+
+.config-card .leave-preset {
+    margin-top: 12px;
 }
 
 /* Form Actions */

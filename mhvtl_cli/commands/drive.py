@@ -3,6 +3,11 @@
 Argument handling and printing only; every verb is one call into
 services/drives.
 
+`drive` is the noun for the drives on THIS HOST. What a vendor makes is a
+catalogue question, so it is `mhvtl profile show IBM --drives` - this module
+had a `models` verb for it until 4 October 2026, which also put the
+nine-profile summary under `drive`.
+
 Worth knowing about add and remove: a drive is a device.conf record *and* a
 `Drive N:` line in the library's contents file, and the daemons read both. The
 service writes both together; these verbs would be a good place to get that

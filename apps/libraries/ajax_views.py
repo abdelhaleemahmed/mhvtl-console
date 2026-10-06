@@ -26,14 +26,19 @@ logger = logging.getLogger(__name__)
 
 
 def _sync_database():
-    """Bring the database in line with device.conf: (synced, error)."""
+    """Bring the database in line with device.conf: (synced, error).
+
+    A rendering of the service's answer. It used to be the try/except the
+    service should have been doing itself - it raised, so every caller wrote
+    one, and they did not agree.
+    """
     from .services.sync.service import sync_mhvtl_to_django
 
-    try:
-        sync_mhvtl_to_django()
-    except Exception as exc:                           # noqa: BLE001 - reported
-        logger.warning('syncing the database with device.conf: %s', exc)
-        return False, str(exc)
+    result = sync_mhvtl_to_django()
+    if not result.success:
+        logger.warning('syncing the database with device.conf: %s',
+                       result.message)
+        return False, result.message
     return True, None
 
 
@@ -62,9 +67,14 @@ def _spec_for(library):
     """
     model = library.model.name if library.model else None
     spec = {'library_id': library.library_id,
-            'profile': library.brand.name.upper() if library.brand else 'STK',
-            'serial': getattr(library, 'unit_serial_number', None)
-            or f'XYZZY_{library.library_id}'}
+            'profile': library.brand.name.upper() if library.brand else 'STK'}
+    # Only a serial the database really has. The fallback here was
+    # `XYZZY_{library_id}`, MHVTL's sample placeholder, where the service
+    # answers an absent one with the convention every caller now gets
+    # (profiles.personalities.device_serial).
+    serial = (getattr(library, 'unit_serial_number', None) or '').strip()
+    if serial:
+        spec['serial'] = serial
     if model:
         spec.update(library_model=model, product=model)
     return spec
@@ -901,50 +911,20 @@ def refresh_discovery_ajax(request):
     if not request.session.get('mhvtl_logged_in'):
         return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
 
-    try:
-        stats = sync_mhvtl_to_django()
+    result = sync_mhvtl_to_django()
+    if not result.success:
+        logger.warning('refreshing discovery: %s', result.message)
+        return JsonResponse({'success': False, 'error': result.message})
 
-        return JsonResponse({
-            'success': True,
-            'message': f'Sync complete: {stats["libraries_found"]} libraries found, '
-                       f'{stats["created"]} new, {stats["drives_imported"]} drives imported',
-            'libraries': stats['total_db'],
-            'drives': stats['total_drives'],
-            'media': 0,
-        })
-
-    except Exception as e:
-        logger.error(f"Error refreshing discovery: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        })
-
-
-@require_POST
-def run_discovery_ajax(request):
-    """AJAX endpoint to run full discovery scan (sync with device.conf)"""
-    if not request.session.get('mhvtl_logged_in'):
-        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
-
-    try:
-        stats = sync_mhvtl_to_django()
-
-        return JsonResponse({
-            'success': True,
-            'message': f'Full scan complete: {stats["libraries_found"]} libraries, '
-                       f'{stats["created"]} new, {stats["drives_imported"]} drives',
-            'libraries': stats['total_db'],
-            'drives': stats['total_drives'],
-            'media': 0,
-        })
-
-    except Exception as e:
-        logger.error(f"Error running full discovery: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        })
+    # The sentence is the service's. This endpoint and the one below composed
+    # nearly the same one from the same counts, in different words.
+    return JsonResponse({
+        'success': True,
+        'message': f'Sync complete: {result.message}',
+        'libraries': result.data['total_db'],
+        'drives': result.data['total_drives'],
+        'media': 0,
+    })
 
 
 @require_POST
@@ -954,8 +934,14 @@ def sync_library_ajax(request, library_id):
         return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
 
     try:
-        # Run full sync first to ensure this library exists in DB
-        sync_mhvtl_to_django()
+        # Run full sync first to ensure this library exists in DB. A refusal
+        # is left to fall through to the 404 below: the database is then
+        # whatever it was, and asking for a library it does not have is the
+        # same answer either way.
+        synced = sync_mhvtl_to_django()
+        if not synced.success:
+            logger.warning('sync while opening library %s: %s', library_id,
+                           synced.message)
 
         library = get_object_or_404(Library, library_id=library_id, is_active=True)
 
@@ -1048,46 +1034,6 @@ def cleanup_orphaned_ajax(request):
             'success': False,
             'error': str(e)
         })
-
-
-def discovery_stats_ajax(request):
-    """Get discovery statistics for dashboard display"""
-    if not request.session.get('mhvtl_logged_in'):
-        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
-
-    try:
-        active_libs = Library.objects.filter(is_active=True)
-        active_drives = Drive.objects.filter(is_active=True)
-
-        return JsonResponse({
-            'success': True,
-            'discovery_available': True,
-            'latest_session': None,
-            'current_status': {
-                'status': 'available',
-                'last_scan': None,
-                'libraries_found': active_libs.count(),
-                'drives_found': active_drives.count(),
-                'media_found': 0,
-            },
-            'database_counts': {
-                'libraries': active_libs.count(),
-                'drives': active_drives.count(),
-                'discovered_libraries': active_libs.filter(
-                    discovery_status='discovered'
-                ).count(),
-                'created_libraries': active_libs.filter(
-                    discovery_status='created'
-                ).count(),
-            }
-        })
-
-    except Exception as e:
-        logger.error(f"Error getting discovery stats: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
 
 
 # =============================================================================

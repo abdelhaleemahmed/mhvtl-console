@@ -21,6 +21,11 @@ urlpatterns = [
     path('setup/brand-selection/', views.BrandSelectionView.as_view(), name='brand_selection'),
     path('setup/brand/<str:brand_name>/', views.BrandConfigView.as_view(), name='brand_config'),
     path('setup/custom/', views.CustomSetupView.as_view(), name='custom_setup'),
+    # The brand form's state after a dropdown changes: the same
+    # setup_form.state() the first render uses, so the page narrows nothing
+    # and selects nothing for itself.
+    path('setup/brand/<str:brand_name>/state/', views.setup_form_ajax,
+         name='setup_form_ajax'),
     
     # Library management pages
     path('list/', views.LibraryListView.as_view(), name='list'),
@@ -78,12 +83,10 @@ urlpatterns += [
     path('ajax/validate-config/', ajax_views.validate_mhvtl_config_ajax, name='validate_config_ajax'),
     path('ajax/regenerate-configs/', ajax_views.regenerate_configs_ajax, name='regenerate_configs_ajax'),
     path('ajax/library-status-mhvtl/<int:library_id>/', ajax_views.get_library_status_mhvtl_ajax, name='library_status_mhvtl_ajax'),
-    path('ajax/discovery-stats/', ajax_views.discovery_stats_ajax, name='discovery_stats_ajax'),
     path('ajax/preview-file/', ajax_views.preview_config_file_ajax, name='preview_config_file_ajax'),
 
     # Discovery Integration AJAX
     path('ajax/refresh-discovery/', ajax_views.refresh_discovery_ajax, name='refresh_discovery_ajax'),
-    path('ajax/run-discovery/', ajax_views.run_discovery_ajax, name='run_discovery_ajax'),
     path('ajax/sync-library/<int:library_id>/', ajax_views.sync_library_ajax, name='sync_library_ajax'),
     path('ajax/cleanup-orphaned/', ajax_views.cleanup_orphaned_ajax, name='cleanup_orphaned_ajax'),
 

@@ -1,38 +1,15 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title|default:"Dashboard" }} - MHVTL</title>
-    <link rel="stylesheet" href="{% static 'css/mhvtl-console.css' %}">
-    <script src="{% static 'js/theme.js' %}"></script>
-</head>
-<body class="mhvtl-console">
+{% extends 'base.html' %}
+{% comment %}
+The console's front page. Its header was the one the whole console now
+uses - it lived here, written out in full, which is why no other page
+could have it. It is includes/_console_header.html now and this page is
+an ordinary page in the ordinary frame.
+{% endcomment %}
 
-<div class="header">
-    <div class="header-content">
-        <div>
-            <div class="header-title">MHVTL Console</div>
-            <div class="header-subtitle">{{ system_name }}</div>
-        </div>
-        <nav>
-            <a href="{% url 'libraries:list' %}" class="nav-link">Libraries</a>
-            <a href="{% url 'libraries:operator_dashboard' %}" class="nav-link">Tape Operations</a>
-            <a href="{% url 'libraries:console_dashboard' %}" class="nav-link">System Console</a>
-            <a href="{% url 'authentication:change_password' %}" class="nav-link">Password</a>
-            <a href="{% url 'libraries:about' %}" class="nav-link">About</a>
-            <a href="{% url 'authentication:logout' %}" class="nav-link">Log out</a>
-            <select id="theme-picker" class="theme-picker" aria-label="Theme"></select>
-        </nav>
-    </div>
-</div>
+{% block header_title %}{% endblock %}
 
-<div class="content">
-
-    {% include 'includes/_default_password_warning.html' %}
-
-    <div id="alerts"></div>
+{% block content %}
+<div id="alerts"></div>
 
     <!-- Tiles start as placeholders and are filled in by fetchSummary(), so a
          slow systemctl or lsmod call delays one tile, not the page. -->
@@ -92,14 +69,13 @@
         </div>
     </div>
 
-    <p style="color:#6b7280;font-size:12px;text-align:center;margin-top:24px;">
+    <p style="color:#6b7280;font-size:14px;text-align:center;margin-top:24px;">
         <strong>MHVTL UI System</strong> by Ahmed Abdelhaleem Ahmed &lt;ahmedhal@gmail.com&gt; ·
         MHVTL by <a href="http://sites.google.com/site/linuxvtl2/" style="color:#9ca3af;">Mark Harvey &amp; Community</a>
     </p>
+{% endblock %}
 
-</div>
-
-<script src="{% static 'js/csrf.js' %}"></script>
+{% block extra_js %}
 <script>
 (function () {
     'use strict';
@@ -262,6 +238,4 @@
     setInterval(fetchSummary, REFRESH_MS);
 })();
 </script>
-{% include 'includes/_version_line.html' %}
-</body>
-</html>
+{% endblock %}

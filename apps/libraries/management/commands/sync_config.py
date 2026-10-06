@@ -26,15 +26,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         quiet = options['quiet']
 
-        try:
-            stats = sync_mhvtl_to_django()
-        except Exception as e:
-            self.stderr.write(self.style.ERROR(f'Sync failed: {e}'))
+        result = sync_mhvtl_to_django()
+        if not result.success:
+            self.stderr.write(self.style.ERROR(f'Sync refused: {result.message}'))
+            for detail in result.errors:
+                self.stderr.write(f'  {detail}')
             return
 
         if quiet:
             return
 
+        stats = result.data
         self.stdout.write(f"Libraries found in MHVTL: {stats['libraries_found']}")
         self.stdout.write(f"  New libraries created:  {stats['created']}")
         self.stdout.write(f"  Drives imported:        {stats['drives_imported']}")

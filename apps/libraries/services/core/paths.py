@@ -45,6 +45,10 @@ DAEMON_CONFIG_DIR_SETTING = 'MHVTL_DAEMON_CONFIG_DIR'
 #: directory: a library change touches device.conf and library_contents together.
 LOCK_NAME = '.mhvtl-config.lock'
 
+#: Where the console keeps its own configuration, beside the env file the RPM
+#: installs. Distinct from DEFAULT_CONFIG_DIR, which is MHVTL's.
+DEFAULT_GUI_CONFIG_DIR = '/etc/mhvtl-gui'
+
 
 def _setting(name: str, default: str) -> str:
     """Read a Django setting if Django is configured, else fall back."""
@@ -96,3 +100,30 @@ def media_dir(barcode: str, base=None) -> Path:
 
 def lock_path(base=None) -> Path:
     return _as_dir(base, config_dir) / LOCK_NAME
+
+
+def presets_dir() -> Path:
+    """Where the console's own files live, as opposed to MHVTL's.
+
+    Not config_dir(). /etc/mhvtl belongs to MHVTL and this project writes
+    nothing there it does not own; a named library configuration is ours.
+    Settable so a host that keeps it elsewhere - or a test - can say so.
+    """
+    return Path(_setting('MHVTL_GUI_CONFIG_DIR', DEFAULT_GUI_CONFIG_DIR))
+
+
+def presets_path(base=None) -> Path:
+    """The file holding named library configurations."""
+    return _as_dir(base, presets_dir) / 'presets.toml'
+
+
+def presets_example_path(base=None) -> Path:
+    """The commented example of that file, shipped with the package.
+
+    Never read by anything and never written to: an upgrade replaces it, so a
+    preset kept here would be lost. It exists so that someone who has opened
+    presets.toml and read no documentation can still see what every key does.
+    Refusals name it, which is the only reason the path is worth a function
+    instead of a literal in one caller.
+    """
+    return _as_dir(base, presets_dir) / 'presets.toml.example'

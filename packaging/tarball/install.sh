@@ -15,6 +15,11 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Where this script and the files beside it are. Set here rather than inside
+# install_app(), which is where it used to live: create_config() needs it as
+# well, and a global set by whichever function ran first is a trap.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Configuration
 INSTALL_DIR="/opt/mhvtl-gui"
 CONFIG_DIR="/etc/mhvtl-gui"
@@ -172,9 +177,6 @@ create_directories() {
 install_app() {
     print_step "Installing application files..."
 
-    # Get script directory
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
     # Copy application files
     cp -r "$SCRIPT_DIR/apps" $INSTALL_DIR/
     cp -r "$SCRIPT_DIR/mhvtl_system" $INSTALL_DIR/
@@ -254,6 +256,15 @@ EOF
 
     chmod 640 $CONFIG_DIR/env
     chown root:$SERVICE_GROUP $CONFIG_DIR/env
+
+    # The commented example of presets.toml, which `mhvtl preset set`
+    # writes. Installed as .example, never as presets.toml: the live file is
+    # the operator's and a reinstall must not replace it.
+    if [ -f "$SCRIPT_DIR/packaging/presets.toml.example" ]; then
+        install -m 644 "$SCRIPT_DIR/packaging/presets.toml.example" \
+            "$CONFIG_DIR/presets.toml.example"
+        print_step "Preset example at $CONFIG_DIR/presets.toml.example"
+    fi
 
     print_step "Configuration created at $CONFIG_DIR/env"
 }

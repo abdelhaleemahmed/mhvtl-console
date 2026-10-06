@@ -169,7 +169,7 @@
                 margin-bottom: 5px;
             }
     .spec-label {
-                font-size: 12px;
+                font-size: 14px;
                 color: var(--text-dim);
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -183,7 +183,7 @@
             }
     .slots-form label {
                 color: var(--text-dim);
-                font-size: 13px;
+                font-size: 14px;
             }
     .slots-form input[type="number"] {
                 width: 90px;
@@ -200,14 +200,14 @@
             }
     .slots-help {
                 margin-top: 8px;
-                font-size: 12px;
+                font-size: 14px;
                 color: var(--text-dim);
             }
     .manage-grid {
         display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px;
     }
     .manage-group h4 {
-        font-size: 12px; text-transform: uppercase; letter-spacing: .05em;
+        font-size: 14px; text-transform: uppercase; letter-spacing: .05em;
         color: var(--text-dim); margin-bottom: 8px;
     }
     .manage-group a {
@@ -224,7 +224,7 @@
     .tape-table th {
                 text-align: left;
                 padding: 8px 12px 8px 0;
-                font-size: 12px;
+                font-size: 14px;
                 text-transform: uppercase;
                 letter-spacing: .04em;
                 color: var(--text-dim);
@@ -237,6 +237,7 @@
             }
     .tape-table td.barcode {
                 font-family: monospace;
+                font-size: 14px;
                 font-weight: 600;
             }
     /* Discovery Integration Info Table */
@@ -300,7 +301,7 @@
                 color: var(--text);
             }
     .drive-status {
-                font-size: 12px;
+                font-size: 14px;
                 padding: 4px 8px;
                 border-radius: 12px;
                 font-weight: 600;
@@ -314,7 +315,7 @@
                 color: var(--ok);
             }
     .drive-details {
-                font-size: 12px;
+                font-size: 14px;
                 color: var(--text-dim);
             }
     .operations-list {
@@ -344,7 +345,7 @@
                 margin-bottom: 3px;
             }
     .operation-time {
-                font-size: 11px;
+                font-size: 14px;
                 color: var(--text-dim);
             }
     .action-buttons {
@@ -467,41 +468,24 @@
 {% endblock %}
 
 {% block content %}
-<div class="discovery-header {% if library.discovery_status != 'discovered' %}created{% endif %}">
-            <div class="discovery-status-info">
-                <div class="discovery-main-info">
-                    {% if library.discovery_status == 'discovered' %}
-                    <h2>🔍 MHVTL Discovered Library</h2>
-                    <p>This library was discovered from existing MHVTL configuration files and is synchronized with the system.</p>
-                    {% elif library.discovery_status == 'pending' %}
-                    <h2>⏳ Synchronization Pending</h2>
-                    <p>This library is pending synchronization with the MHVTL system.</p>
-                    {% else %}
-                    <h2>➕ Django Created Library</h2>
-                    <p>This library was created through the Django interface and can be exported to MHVTL.</p>
-                    {% endif %}
-                    
-                    {% if library.last_synced %}
-                    <p style="margin-top: 5px; font-size: 12px;">Last synchronized: {{ library.last_synced|timesince }} ago</p>
-                    {% endif %}
-                </div>
-                
-                <div class="discovery-actions">
-                    {% if library.discovery_status == 'discovered' %}
-                    <button class="discovery-btn" onclick="syncLibrary({{ library.library_id }})">
-                        🔄 Sync Now
-                    </button>
-                    {% else %}
-                    <button class="discovery-btn" onclick="exportToMHVTL()">
-                        📤 Export to MHVTL
-                    </button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+{% comment %}
+    A blue slab stood here reading "🔍 MHVTL Discovered Library - this
+    library was discovered from existing MHVTL configuration files", with a
+    Sync Now button, and an alternative branch for a library "created through
+    the Django interface" that "can be exported to MHVTL".
+
+    There is no such library. Creating one writes device.conf first and the
+    database is a view of that file (guides/architecture), so every library
+    on every host takes the "discovered" branch - the word is a distinction
+    with nothing on its other side. The counts bear it out: seven libraries
+    here, seven "discovered", none "created".
+
+    Sync Now was the same sync as the libraries pages' Re-read device.conf,
+    and this page's own Overview card still carries a Sync button.
+{% endcomment %}
 
         <div class="detail-grid">
-            <div class="detail-card {% if library.discovery_status == 'discovered' %}discovery-integration{% else %}django-created{% endif %}">
+            <div class="detail-card">
                 <div class="card-header">
                     <span class="card-icon">🏛️</span>
                     <h3 class="card-title">Library Overview</h3>
@@ -533,15 +517,6 @@
                             {% if library.is_active %}✅ Active{% else %}❌ Inactive{% endif %}
                         </div>
                         
-                        <div class="discovery-status-badge discovery-{{ library.discovery_status|default:'created'|lower }}">
-                            {% if library.discovery_status == 'discovered' %}
-                                🔍 Discovered from MHVTL
-                            {% elif library.discovery_status == 'pending' %}
-                                ⏳ Sync Pending
-                            {% else %}
-                                ➕ Created in Django
-                            {% endif %}
-                        </div>
                     </div>
                 </div>
 
@@ -556,18 +531,16 @@
                         <span>📊</span> Monitor
                     </a>
 
-                    {% if library.discovery_status == 'discovered' %}
+                    {% comment %}
+                        Sync re-reads device.conf into the database for this
+                        library; it is the one of the three that existed.
+                        "Refresh" called refreshFromMHVTL() and "Export"
+                        called exportToMHVTL(), and no script in this project
+                        defines either - both threw on click.
+                    {% endcomment %}
                     <button class="action-btn discovery" onclick="syncLibrary({{ library.library_id }})">
                         <span class="action-icon">🔄</span> Sync
                     </button>
-                    <button class="action-btn discovery" onclick="refreshFromMHVTL()">
-                        <span>🔍</span> Refresh
-                    </button>
-                    {% else %}
-                    <button class="action-btn discovery" onclick="exportToMHVTL()">
-                        <span>📤</span> Export
-                    </button>
-                    {% endif %}
                     
                     <form method="post" action="/libraries/control/{{ library.library_id }}/" 
                           style="display: inline;" onsubmit="return confirm('Are you sure you want to stop this library?');">
@@ -609,16 +582,10 @@
                         <div class="spec-value">{{ drives_count }}</div>
                         <div class="spec-label">Drives</div>
                     </div>
-                    {% if library.discovery_status == 'discovered' and library.last_synced %}
+                    {% if library.last_synced %}
                     <div class="spec-item">
                         <div class="spec-value">{{ library.last_synced|timesince }}</div>
                         <div class="spec-label">Last Sync</div>
-                    </div>
-                    {% endif %}
-                    {% if library.discovery_status == 'created' %}
-                    <div class="spec-item">
-                        <div class="spec-value">{{ library.created_at|timesince }}</div>
-                        <div class="spec-label">Created</div>
                     </div>
                     {% endif %}
                 </div>
@@ -692,9 +659,8 @@
                     <h3 class="card-title">Technical Specifications</h3>
                 </div>
 
-                {% if library.discovery_status == 'discovered' %}
                 <div class="discovery-info-section">
-                    <h6>🔍 MHVTL Integration Details</h6>
+                    <h6>What device.conf says</h6>
                     <table class="info-table">
                         {% if library.mhvtl_id %}
                         <tr>
@@ -714,10 +680,6 @@
                             <td>{{ library.sync_hash|truncatechars:16 }}...</td>
                         </tr>
                         {% endif %}
-                        <tr>
-                            <td>Discovery Status:</td>
-                            <td>Synchronized with MHVTL</td>
-                        </tr>
                         {% if library.last_synced %}
                         <tr>
                             <td>Last Synchronized:</td>
@@ -726,29 +688,6 @@
                         {% endif %}
                     </table>
                 </div>
-                {% else %}
-                <div class="discovery-info-section django-created">
-                    <h6>➕ Django Management Details</h6>
-                    <table class="info-table">
-                        <tr>
-                            <td>Creation Method:</td>
-                            <td>Django Interface</td>
-                        </tr>
-                        <tr>
-                            <td>Created Date:</td>
-                            <td>{{ library.created_at|date:"M d, Y H:i" }}</td>
-                        </tr>
-                        <tr>
-                            <td>Last Modified:</td>
-                            <td>{{ library.updated_at|date:"M d, Y H:i" }}</td>
-                        </tr>
-                        <tr>
-                            <td>MHVTL Export:</td>
-                            <td>{% if library.config_generated %}Generated{% else %}Pending{% endif %}</td>
-                        </tr>
-                    </table>
-                </div>
-                {% endif %}
 
                 <table class="info-table">
                     <tr>

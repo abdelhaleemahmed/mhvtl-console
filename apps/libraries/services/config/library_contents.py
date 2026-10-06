@@ -256,7 +256,8 @@ BARCODE_LEGEND = """\
 
 def render_new(library_id: int, drive_count: int, *, barcode_prefix: str = None,
                media_suffix: str = 'L8', media_count: int = 39,
-               empty_slots: int = 0, map_count: int = 4) -> str:
+               empty_slots: int = 0, map_count: int = 4,
+               media_runs=None) -> str:
     """The library_contents file for a library that does not exist yet.
 
     Moved from mhvtl_library_service.py:_generate_library_contents_rpm_text.
@@ -269,9 +270,28 @@ def render_new(library_id: int, drive_count: int, *, barcode_prefix: str = None,
 
     Slots are numbered from 1 with no gaps - MHVTL stops reading at the first
     missing slot number, so a gap silently shortens the library.
+
+    MIXED DENSITIES
+    ---------------
+    ``media_runs`` is ``[{'suffix', 'count'}, ...]`` in slot order, which is
+    what spec.apply_defaults builds for a library holding more than one kind
+    of tape. **The numbering runs straight through the runs** and only the
+    suffix changes - E01001L8, E01002L8, E01003L6 - because MHVTL reads the
+    density out of the suffix and nothing else, and because restarting the
+    numbers per run would give two cartridges one barcode.
+
+    The ``media_suffix``/``media_count`` pair stays for the one caller that
+    has no runs to pass: ``config regenerate`` rebuilds library_contents from
+    device.conf, which records no media at all.
     """
     prefix = (barcode_prefix or f'M{int(library_id):02d}').upper()[:3]
-    suffix = (media_suffix or 'L8').upper()
+    runs = [{'suffix': (run.get('suffix') or 'L8').upper(),
+             'count': int(run.get('count', 0))}
+            for run in (media_runs or [])
+            if int(run.get('count', 0)) > 0]
+    if not runs:
+        runs = [{'suffix': (media_suffix or 'L8').upper(),
+                 'count': int(media_count)}]
 
     lines = ['VERSION: 2', '']
     lines += [f'Drive {index}:' for index in range(1, int(drive_count) + 1)]
@@ -279,10 +299,12 @@ def render_new(library_id: int, drive_count: int, *, barcode_prefix: str = None,
     lines += [f'MAP {index}:' for index in range(1, int(map_count) + 1)]
     lines += ['', BARCODE_LEGEND.rstrip('\n')]
 
-    slot = 1
-    for number in range(1, int(media_count) + 1):
-        lines.append(f'Slot {slot}: {prefix}{number:03d}{suffix}')
-        slot += 1
+    slot, number = 1, 1
+    for run in runs:
+        for _ in range(run['count']):
+            lines.append(f"Slot {slot}: {prefix}{number:03d}{run['suffix']}")
+            slot += 1
+            number += 1
     for _ in range(int(empty_slots)):
         lines.append(f'Slot {slot}:')
         slot += 1

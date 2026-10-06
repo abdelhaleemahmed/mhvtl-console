@@ -6,77 +6,10 @@
 {% block extra_css %}
 <style>
     /* Only what css/mhvtl-console.css has no rule for. */
-    /* Discovery Integration Header Button */
-            .header-btn.discovery {
-                background: rgba(23, 162, 184, 0.3);
-                border: 1px solid rgba(23, 162, 184, 0.5);
-            }
     .main-container {
                 max-width: 1200px;
                 margin: 30px auto;
                 padding: 0 20px;
-            }
-    /* Discovery Status Panel */
-            .discovery-panel {
-                background: linear-gradient(135deg, var(--info) 0%, var(--info) 100%);
-                color: white;
-                border-radius: 15px;
-                padding: 20px;
-                margin-bottom: 20px;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            }
-    .discovery-controls {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 15px;
-            }
-    .discovery-info h3 {
-                margin: 0 0 5px 0;
-                font-size: 18px;
-            }
-    .discovery-info p {
-                margin: 0;
-                font-size: 14px;
-                opacity: 0.9;
-            }
-    .discovery-actions {
-                display: flex;
-                gap: 10px;
-            }
-    .discovery-btn {
-                padding: 8px 16px;
-                background: rgba(255,255,255,0.2);
-                border: 1px solid rgba(255,255,255,0.3);
-                color: white;
-                border-radius: 6px;
-                text-decoration: none;
-                font-size: 14px;
-                transition: all 0.3s ease;
-                cursor: pointer;
-            }
-    .discovery-btn:hover {
-                background: rgba(255,255,255,0.3);
-                color: white;
-            }
-    .discovery-stats {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-                gap: 15px;
-            }
-    .discovery-stat {
-                text-align: center;
-                padding: 10px;
-                background: rgba(255,255,255,0.1);
-                border-radius: 8px;
-            }
-    .discovery-stat-number {
-                font-size: 20px;
-                font-weight: bold;
-            }
-    .discovery-stat-label {
-                font-size: 11px;
-                opacity: 0.9;
             }
     .list-card {
                 background: var(--surface);
@@ -200,7 +133,7 @@
     .library-status {
                 padding: 4px 8px;
                 border-radius: 12px;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 600;
             }
     /* Discovery Status Badge */
@@ -210,7 +143,7 @@
                 right: 10px;
                 padding: 4px 8px;
                 border-radius: 12px;
-                font-size: 10px;
+                font-size: 14px;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -253,7 +186,7 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
                 margin-bottom: 15px;
-                font-size: 13px;
+                font-size: 14px;
             }
     .spec-item {
                 display: flex;
@@ -271,6 +204,7 @@
                 color: var(--text);
                 font-weight: 600;
                 font-family: monospace;
+                font-size: 14px;
             }
     /* Discovery metadata section */
             .discovery-metadata {
@@ -279,7 +213,7 @@
                 border-radius: 6px;
                 padding: 8px;
                 margin-bottom: 15px;
-                font-size: 11px;
+                font-size: 14px;
                 color: var(--text-dim);
             }
     .discovery-metadata.created {
@@ -302,7 +236,7 @@
                 text-decoration: none;
                 border: none;
                 border-radius: 6px;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 500;
                 text-align: center;
                 transition: all 0.3s ease;
@@ -397,19 +331,8 @@
                     flex-wrap: wrap;
                 }
     
-                .discovery-stats {
-                    grid-template-columns: repeat(2, 1fr);
-                }
     
-                .discovery-controls {
-                    flex-direction: column;
-                    gap: 15px;
-                    align-items: stretch;
-                }
     
-                .discovery-actions {
-                    justify-content: center;
-                }
             }
     .pagination {
                 display: flex;
@@ -448,54 +371,7 @@
 <!-- Display messages -->
         
 
-        <!-- Discovery Status Panel -->
-        <div class="discovery-panel">
-            <div class="discovery-controls">
-                <div class="discovery-info">
-                    <h3>🔍 MHVTL Discovery Integration</h3>
-                    <p>
-                        Real-time synchronization: {{ discovered_libraries|default:0 }} discovered, {{ created_libraries|default:0 }} created
-                        {% if last_discovery %}| Last scan: {{ last_discovery|timesince }} ago{% endif %}
-                    </p>
-                </div>
-                <div class="discovery-actions">
-                    <button class="discovery-btn" onclick="refreshDiscovery()">
-                        Refresh
-                    </button>
-                    <button class="discovery-btn" onclick="runFullDiscovery()">
-                        Full Scan
-                    </button>
-                    <a href="{% url 'libraries:cleanup_orphaned' %}" class="discovery-btn" style="text-decoration: none; display: inline-block;">
-                        Cleanup
-                    </a>
-                </div>
-            </div>
-            
-            <div class="discovery-stats">
-                <div class="discovery-stat">
-                    <div class="discovery-stat-number">{{ discovered_libraries|default:0 }}</div>
-                    <div class="discovery-stat-label">Discovered</div>
-                </div>
-                <div class="discovery-stat">
-                    <div class="discovery-stat-number">{{ created_libraries|default:0 }}</div>
-                    <div class="discovery-stat-label">Created</div>
-                </div>
-                <div class="discovery-stat">
-                    <div class="discovery-stat-number">{{ total_drives|default:0 }}</div>
-                    <div class="discovery-stat-label">Drives</div>
-                </div>
-                <div class="discovery-stat">
-                    <div class="discovery-stat-number">{{ total_media|default:0 }}</div>
-                    <div class="discovery-stat-label">Media</div>
-                </div>
-                {% if recent_operations %}
-                <div class="discovery-stat">
-                    <div class="discovery-stat-number">{{ recent_operations }}</div>
-                    <div class="discovery-stat-label">Recent Ops</div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
+        {% include 'includes/_host_summary.html' %}
 
         <div class="list-card">
             <div class="list-header">
@@ -655,19 +531,24 @@
                 <div class="empty-state">
                     <div class="empty-icon">📚</div>
                     <div class="empty-title">No Libraries Configured</div>
+                    {% comment %}
+                        "Discover Existing Libraries" offered to find
+                        libraries that device.conf does not have, which is not
+                        a thing that can happen - device.conf is where a
+                        library exists. It called the same sync as the
+                        panel's Refresh did, and the summary above does that
+                        now, under its own name.
+                    {% endcomment %}
                     <div class="empty-description">
-                        You haven't configured any virtual tape libraries yet.<br>
-                        Get started by adding your first library or discovering existing MHVTL libraries.
+                        No libraries are configured on this host yet.<br>
+                        One is made from a vendor's defaults, from a saved
+                        configuration, or by hand.
                     </div>
                     <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                        <a href="/libraries/setup/" class="btn-primary">
+                        <a href="{% url 'libraries:setup_choice' %}" class="btn-primary">
                             <span>🏗️</span>
                             Add Your First Library
                         </a>
-                        <button class="btn-discovery" onclick="runFullDiscovery()">
-                            <span>🔍</span>
-                            Discover Existing Libraries
-                        </button>
                     </div>
                 </div>
             {% endif %}
@@ -767,58 +648,6 @@
         });
 
         // Discovery integration functions
-        function refreshDiscovery() {
-            showNotification('Refreshing MHVTL discovery...', 'info');
-            const btn = event.target;
-            btn.classList.add('loading');
-            
-            fetch('/libraries/ajax/refresh-discovery/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification('Discovery refreshed successfully!', 'success');
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    showNotification('Discovery refresh failed: ' + data.error, 'error');
-                }
-            })
-            .catch(error => {
-                showNotification('Network error during discovery', 'error');
-            })
-            .finally(() => {
-                btn.classList.remove('loading');
-            });
-        }
-
-        function runFullDiscovery() {
-            showNotification('Running full MHVTL discovery scan...', 'info');
-            
-            fetch('/libraries/ajax/run-discovery/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification(`Discovery completed! Found ${data.libraries} libraries, ${data.drives} drives, ${data.media} media items`, 'success');
-                    setTimeout(() => location.reload(), 2000);
-                } else {
-                    showNotification('Discovery failed: ' + data.error, 'error');
-                }
-            })
-            .catch(error => {
-                showNotification('Network error during discovery', 'error');
-            });
-        }
 
         function syncLibrary(libraryId) {
             showNotification(`Syncing library ${libraryId}...`, 'info');
@@ -979,27 +808,5 @@
         `;
         document.head.appendChild(style);
 
-        // Auto-refresh discovery stats every 60 seconds
-        setInterval(() => {
-            fetch('/libraries/ajax/discovery-stats/')
-            .then(response => response.json())
-            .then(data => {
-                // Update discovery stats in the panel
-                updateDiscoveryStats(data);
-            })
-            .catch(error => {
-                console.log('Stats update failed:', error);
-            });
-        }, 60000);
-
-        function updateDiscoveryStats(data) {
-            const stats = document.querySelectorAll('.discovery-stat-number');
-            if (stats.length >= 4) {
-                stats[0].textContent = data.discovered_count || 0;
-                stats[1].textContent = data.created_count || 0;
-                stats[2].textContent = data.total_drives || 0;
-                stats[3].textContent = data.total_media || 0;
-            }
-        }
     </script>
 {% endblock %}

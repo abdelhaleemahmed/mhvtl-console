@@ -157,8 +157,18 @@ def do_system(args) -> int:
     # The version of the thing doing the reporting belongs with what it
     # reports: an upgrade that did not restart gunicorn is invisible
     # otherwise, and this is the command a bug report quotes.
+    #
+    # With it, WHICH COPY reported. A host can carry two - the installed tree
+    # and a checkout - and they print the same version, so `sudo mhvtl` and
+    # `mhvtl` can be different programs while both claim to be this one.
+    # The label is the product's name, which is a fact about the project and
+    # so comes from the same call as the version. Written out by hand it was a
+    # second copy to forget: it still read `mhvtl-gui` when the name became
+    # `mhvtl-console`, so one command printed both names at once.
+    it = about.project()
     output.pairs({
-        'console': about.project()['version'],
+        'console': it['version'],
+        'running_from': about.running_from(),
         'config': str(getattr(settings, 'MHVTL_CONFIG_DIR', '?')),
         'target': 'running' if state.target_active else 'stopped',
         'enabled': state.target_enabled,
@@ -167,7 +177,7 @@ def do_system(args) -> int:
         'drives': f'{state.drives_active}/{len(state.drives)} running',
         'healthy': state.healthy,
     }, labels={'target': 'mhvtl.target', 'config': 'reading',
-               'console': 'mhvtl-gui'})
+               'console': it['name']})
 
     if state.stale:
         print(f'\n{len(state.stale)} unit(s) systemd still knows about that '

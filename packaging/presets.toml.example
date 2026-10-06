@@ -1,0 +1,248 @@
+# ===========================================================================
+# THIS FILE IS AN EXAMPLE. NOTHING READS IT.
+#
+# The commands read presets.toml, beside this file, and write it for you:
+#
+#   mhvtl preset set small --profile IBM --drives 2 --tapes 20
+#   mhvtl library create --profile IBM --id 90 --save-preset small
+#   mhvtl library create --preset small --id 91
+#
+# Upgrading mhvtl-console replaces this file, so a preset written here would
+# be lost. Copy a table into presets.toml to edit one by hand instead -
+# `mhvtl preset list` then shows it like any other.
+# ===========================================================================
+
+# Named library configurations for `mhvtl library create --preset NAME`.
+#
+# Each table is one configuration, built from a vendor profile's supported
+# options. The keys are the ones you would type on the command line, so a
+# preset reads as the command it replaces.
+#
+#   mhvtl profile list                the vendor catalogues to build from
+#   mhvtl profile show IBM            one of them: models, drives, densities
+#   mhvtl preset list                 what is defined here
+#   mhvtl preset show NAME            what one fixes, and what it leaves open
+#   mhvtl preset set NAME             add to or change one, key by key
+#   mhvtl preset rename OLD NEW       give one another name
+#
+# A preset may not take a profile's name (IBM, STK, ...): a profile is a
+# catalogue of what a vendor makes, and a preset is one configuration built
+# from it. Both are templates; neither is ever created.
+#
+# Mixed drives and media are arrays, in slot order - which is also the order
+# of the SCSI targets, so the first table is the first drive:
+#
+#   [[lib-ten.drive]]
+#   model = "ULT3580-TDA"
+#   count = 2
+#
+#   [[lib-ten.drive]]
+#   model = "ULT3580-TD9"
+#   count = 2
+#
+# A list says both which models and how many, so it replaces `drives` (and
+# `media` replaces `tapes`): naming both is refused, because a count and a
+# list are two answers to one question and nothing can choose between them.
+#
+# presets.toml.example, installed in this directory, carries a worked example
+# of every key: one library per vendor at the newest tape its drives write.
+
+
+# ===========================================================================
+# ONE LIBRARY PER VENDOR, AT THE NEWEST TAPE ITS DRIVES WRITE
+# ===========================================================================
+#
+# Nine profiles, a table for each, and every one a complete configuration:
+#
+#   mhvtl library create --preset ibm-latest --id 90
+#
+# WHY THE DRIVE AND THE TAPE ARE SPELLED OUT
+#
+# A profile carries a default for everything a library needs, so `--profile
+# IBM` on its own already builds a working library. But a vendor's default is
+# not its newest: IBM's default drive is the ULT3580-TD8 and its catalogue
+# reaches the ULT3580-TDA, and Quantum's default is an SDLT600, which is not
+# even LTO. Naming the drive and the density is what pins a preset to the
+# newest generation, which is why every table below carries three keys
+# rather than one.
+#
+#   mhvtl profile show IBM            every drive, and what each WRITES
+#
+# `media_type` is what the drive WRITES, not merely what it reads. An LTO-10
+# drive reads an LTO-9 cartridge, so an LTO-9 tape may live in an LTO-10
+# library; but a preset that makes new cartridges should name what the drive
+# writes. A model or a drive the vendor does not make is refused when the
+# preset is saved, and the refusal lists the ones it does.
+
+
+# --- IBM --------------------------------------------------------------------
+# The ULT3580-TDA writes LTO10 and LTO10P. The library model decides which
+# drives are allowed: an 03584L32 takes the LTO line, an 03584L22 takes the
+# 3592 line and an 03584L42 takes DLT, so a drive that is right for one is
+# refused for another.
+[ibm-latest]
+profile = "IBM"
+model = "03584L32"
+drive_model = "ULT3580-TDA"
+media_type = "LTO10"
+drives = 2
+tapes = 20
+empty_slots = 4             # slots left free for cartridges added later
+
+# drive_revision = "HB81"   # four characters; the profile's default (D.02)
+                            # when unset. Only LTO5, LTO7 and LTO8 have a
+                            # minimum - LTFS will not open an IBM LTO-8 drive
+                            # below HB81. LTO9 and LTO10 open at any
+                            # revision: mhvtl ltfs support
+
+
+# --- IBM, two generations in one library ------------------------------------
+# The arrays, as a preset that works rather than syntax in a comment: two
+# LTO-10 drives and two LTO-9 drives, with cartridges for both.
+#
+#   mhvtl library create --preset ibm-mixed --id 90
+#
+# The same library typed out, where the flag repeats instead of the table:
+#
+#   mhvtl library create --profile IBM --model 03584L32 --drive ULT3580-TDA:2 --drive ULT3580-TD9:2 --media LTO10:20 --media LTO9:10 --id 90
+#
+# The order of the tables is slot order, which is also SCSI target order: a
+# backup application that addresses a drive by its position notices when that
+# position changes, so the file keeps the order it was written in.
+#
+# Barcodes follow the runs in order: the first twenty cartridges end LA, the
+# next ten end L9, and the numbering runs straight through the two.
+#
+# A list says how many of each, so this preset holds no `drives` and no
+# `tapes` - they would be a second answer to a question the tables have
+# already answered, and the file refuses the pair.
+[ibm-mixed]
+profile = "IBM"
+model = "03584L32"
+
+[[ibm-mixed.drive]]
+model = "ULT3580-TDA"
+count = 2
+
+[[ibm-mixed.drive]]
+model = "ULT3580-TD9"
+count = 2
+
+[[ibm-mixed.media]]
+density = "LTO10"
+count = 20
+
+[[ibm-mixed.media]]
+density = "LTO9"
+count = 10
+
+
+# --- HP ---------------------------------------------------------------------
+# HP's own catalogue stops at the Ultrium 8-SCSI, so LTO8 is its newest
+# rather than an omission. No HP drive has a firmware minimum for LTFS.
+[hp-latest]
+profile = "HP"
+model = "MSL G3 Series"
+drive_model = "Ultrium 8-SCSI"
+media_type = "LTO8"
+drives = 2
+tapes = 20
+
+
+# --- Quantum ----------------------------------------------------------------
+# The one vendor whose default is nowhere near its newest: `--profile
+# QUANTUM` on its own builds an SDLT600 library, because that is what the
+# profile defaults to. The ULTRIUM-TDA is the newest drive Quantum makes.
+[quantum-latest]
+profile = "QUANTUM"
+model = "Scalar i500"
+drive_model = "ULTRIUM-TDA"
+media_type = "LTO10"
+drives = 2
+tapes = 20
+
+
+# --- Sony -------------------------------------------------------------------
+# AIT, not LTO. The SDX-900V writes AIT4 and reads back to AIT2, and AIT4 is
+# both Sony's default and its newest - the only profile here where the
+# default drive is already the latest one.
+[sony-latest]
+profile = "SONY"
+model = "LIB-302"
+drive_model = "SDX-900V"
+media_type = "AIT4"
+drives = 2
+tapes = 20
+
+
+# --- StorageTek, its own drives ---------------------------------------------
+# An SL500 takes a T10000C, which writes T10KC: StorageTek's own newest
+# drive, and the profile's default media.
+[stk-latest]
+profile = "STK"
+model = "SL500"
+drive_model = "T10000C"
+media_type = "T10KC"
+drives = 2
+tapes = 20
+
+
+# --- StorageTek, carrying LTO ----------------------------------------------
+# The same library model also takes an IBM LTO drive, which is the newest
+# tape anywhere in StorageTek's supported list. Nothing here is
+# special-cased for StorageTek: the options come from the catalogue, not from
+# a list of ours, which is why a preset can only hold what the vendor
+# actually makes.
+#
+#   mhvtl profile show STK            both drive lines, and the models
+[stk-lto]
+profile = "STK"
+model = "SL500"
+drive_model = "ULT3580-TDA"
+media_type = "LTO10"
+drives = 2
+tapes = 20
+
+
+# --- ADIC -------------------------------------------------------------------
+# ADIC libraries carry IBM drives: a vendor may legitimately ship another
+# vendor's drive, and the profile is what says which ones it allows.
+[adic-latest]
+profile = "ADIC"
+model = "Scalar i2000"
+drive_model = "ULT3580-TDA"
+media_type = "LTO10"
+drives = 2
+tapes = 20
+
+
+# --- Dell -------------------------------------------------------------------
+[dell-latest]
+profile = "DELL"
+model = "PV-136T"
+drive_model = "ULT3580-TDA"
+media_type = "LTO10"
+drives = 2
+tapes = 20
+
+
+# --- Overland ---------------------------------------------------------------
+[overland-latest]
+profile = "OVERLAND"
+model = "NEO Series"
+drive_model = "ULT3580-TDA"
+media_type = "LTO10"
+drives = 2
+tapes = 20
+
+
+# --- Spectra Logic ----------------------------------------------------------
+# A PYTHON takes the IBM LTO line and the Quantum SDLT drives both, so its
+# catalogue is wider than the LTO list alone.
+[spectra-latest]
+profile = "SPECTRA"
+model = "PYTHON"
+drive_model = "ULT3580-TDA"
+media_type = "LTO10"
+drives = 2
+tapes = 20

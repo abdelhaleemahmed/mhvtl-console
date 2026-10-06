@@ -3,6 +3,9 @@
 Modules:
     device_conf.py        parse and render device.conf
     library_contents.py   parse and render library_contents.N
+    presets.py            parse and render presets.toml - named library
+                          configurations, which are the console's own file and
+                          not MHVTL's
     inventory.py          listing, allowlisting, reading and zipping the directory
     service.py            ConfigService: read, back up, write, restore, validate
 
@@ -11,8 +14,9 @@ testable against captured fixtures and can be reused by the CLI without Django.
 Reading and writing live in service.py and inventory.py, which own the sudo
 fallbacks and the locking.
 """
+from . import presets
 from .device_conf import DeviceConf
 from .library_contents import LibraryContents, Slot
 from .service import ConfigService
 
-__all__ = ['ConfigService', 'DeviceConf', 'LibraryContents', 'Slot']
+__all__ = ['ConfigService', 'DeviceConf', 'LibraryContents', 'Slot', 'presets']

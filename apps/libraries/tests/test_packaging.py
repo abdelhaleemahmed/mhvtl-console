@@ -86,6 +86,42 @@ class ScriptletTests(SimpleTestCase):
         self.assertNotRegex(post, r'systemctl restart ')
 
 
+class SpecSourceTests(SimpleTestCase):
+    """What the spec installs has to be in the checkout.
+
+    build.sh assembles the source tarball the spec is built from, and until
+    3 October 2026 it copied the files out of packaging/rpm one named line at
+    a time. A file the spec installs and build.sh had not been told about
+    fails at rpmbuild time, on whichever machine builds the release, with
+    "cannot stat" - a long way from the edit that caused it.
+    """
+
+    def test_every_packaging_file_the_spec_installs_exists(self):
+        for line in SPEC.read_text().splitlines():
+            if not line.lstrip().startswith(('install ', 'cp ')):
+                continue
+            for token in line.split():
+                if token.startswith('packaging/'):
+                    self.assertTrue((GUI / token).is_file(),
+                                    f'the spec installs {token}, which is '
+                                    f'not in the repository')
+
+    def test_the_source_tarball_carries_the_packaging_directory(self):
+        """Every path the spec reads out of packaging/ has to be put into the
+        tarball by build.sh, under the same name."""
+        build = BUILD.read_text()
+        for line in SPEC.read_text().splitlines():
+            if not line.lstrip().startswith(('install ', 'cp ')):
+                continue
+            for token in line.split():
+                if not token.startswith('packaging/'):
+                    continue
+                name = Path(token).name
+                self.assertIn(name, build,
+                              f'the spec installs {token} and build.sh never '
+                              f'copies it into the source tarball')
+
+
 class DocumentationTreeTests(SimpleTestCase):
     """The documentation trees agree about the version, and are built.
 
@@ -170,3 +206,21 @@ class CleanCheckoutTests(SimpleTestCase):
         tracked = {line.split('/')[-1] for line in listed.stdout.splitlines()}
         for needed in ('device.conf', 'library_contents.10'):
             self.assertIn(needed, tracked, f'{needed} is not tracked')
+
+    def test_no_patch_leftover_is_tracked(self):
+        """A .orig or .rej in the repository ships inside the package.
+
+        test_models.py.orig and test_smoke.py.orig were committed and then
+        packaged for several releases. Nothing failed: the test runner
+        discovers test*.py, so neither was ever run, and the rewritten files
+        beside them were the ones doing the work. They were found by reading
+        `rpm -qlp` for a different reason entirely.
+        """
+        import subprocess
+
+        listed = subprocess.run(['git', 'ls-files'], cwd=GUI,
+                                capture_output=True, text=True)
+        leftovers = [name for name in listed.stdout.splitlines()
+                     if name.endswith(('.orig', '.rej'))]
+        self.assertEqual(leftovers, [],
+                         'patch leftovers are tracked and would be packaged')

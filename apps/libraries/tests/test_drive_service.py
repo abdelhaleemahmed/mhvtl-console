@@ -162,6 +162,66 @@ class AddDriveTests(DriveServiceTestCase):
         self.assertIn('it takes:', ' '.join(result.errors))
         self.assertEqual(self.device_conf(), before)
 
+    def test_an_empty_library_gets_a_drive_its_own_model_takes(self):
+        """With no sibling to copy, the fallback was DEFAULT_PRODUCT - an IBM
+        ULT3580-TD8 - and the cascade check then refused it: "STK L80 does not
+        take a ULT3580-TD8". So a library whose drives had all been removed
+        could not have one added back without naming the model, while the page
+        beside it was offering T10000B. The library model's own first drive is
+        the answer, which is what placement() always said."""
+        for drive_id in (31, 32, 33, 34):
+            self.assertTrue(self.service.remove(drive_id).success)
+
+        result = self.service.add(30)
+        self.assertTrue(result.success, f'{result.message} {result.errors}')
+        self.assertEqual(result.data['vendor'], 'STK')
+        self.assertIn(result.data['product'],
+                      self.service._supported_drives('STK', 'L80'),
+                      'the fallback must be a drive this library model takes')
+        stanza = self.device_conf().split('Drive: 31 ')[1].split('Drive:')[0]
+        self.assertIn(' Vendor identification: STK\n', stanza)
+
+    def test_the_placement_and_add_agree_about_an_empty_library(self):
+        """The page shows what add() will do, and these two chose differently
+        the moment there was no sibling to copy."""
+        for drive_id in (31, 32, 33, 34):
+            self.service.remove(drive_id)
+
+        plan = self.service.placement(30).data
+        added = self.service.add(30).data
+        self.assertEqual((plan['vendor'], plan['product']),
+                         (added['vendor'], added['product']))
+
+    def test_the_vendor_of_an_empty_library_comes_from_its_profile(self):
+        """Not DEFAULT_VENDOR. An STK library's drives are STK unless its own
+        drives say otherwise - library 10 is an STK L700 full of IBM LTO-8
+        drives, and that is read from the drives, not guessed."""
+        self.assertEqual(
+            self.service._which_vendor({'vendor': 'STK', 'product': 'L80'},
+                                       {}), 'STK')
+        self.assertEqual(
+            self.service._which_vendor({'vendor': 'STK', 'product': 'L700'},
+                                       {'vendor': 'IBM'}), 'IBM')
+
+    def test_a_library_no_profile_knows_falls_back_to_the_default(self):
+        """The last resort, and the only thing DEFAULT_VENDOR is for: a
+        library made by hand, or one MHVTL knows and the profiles do not."""
+        from apps.libraries.services.drives import service as drives
+
+        self.assertEqual(
+            self.service._which_vendor({'vendor': 'ACME', 'product': 'X'}, {}),
+            drives.DEFAULT_VENDOR)
+        self.assertEqual(self.service._which_drive([], {}),
+                         drives.DEFAULT_PRODUCT)
+
+    def test_what_was_asked_for_still_wins(self):
+        self.assertEqual(
+            self.service._which_drive(['T10000B'], {'product': 'T10000C'},
+                                      'T10000D'), 'T10000D')
+        self.assertEqual(
+            self.service._which_vendor({'vendor': 'STK'}, {'vendor': 'IBM'},
+                                       'HP'), 'HP')
+
     def test_allows_the_model_the_library_already_holds(self):
         """Libraries on real hosts do not always match their profile; refusing
         a drive identical to the ones already in it would help nobody."""
@@ -174,7 +234,9 @@ class AddDriveTests(DriveServiceTestCase):
         what add() then does."""
         plan = self.service.placement(10).data
         self.assertEqual(plan['slot'], 5)          # four drives in the fixture
-        self.assertEqual(plan['serial'], 'XYZZY_AD5')
+        # Its own id, not the library's serial with the slot after it: see
+        # personalities.device_serial. Library 10's fifth drive is id 15.
+        self.assertEqual(plan['serial'], '80000015')
         self.assertIn('ULT3580-TD8', plan['supported'])
         self.assertIsNotNone(plan['drive_id'])
         self.assertIsNotNone(plan['target'])

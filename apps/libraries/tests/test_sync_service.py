@@ -10,8 +10,8 @@ from pathlib import Path
 from .base import TestCase
 
 from apps.libraries.models import Drive, Library, LibraryBrand, LibraryModel
-from apps.libraries.services.sync.service import (ConfigUnreadable, forget_library,
-                                                  record_library, sync_mhvtl_to_django)
+from apps.libraries.services.sync.service import (forget_library, record_library,
+                                                  sync_mhvtl_to_django)
 
 
 def library(library_id, vendor='STK', product='L700', target=0):
@@ -37,8 +37,16 @@ class SyncServiceTest(TestCase):
         self.config = self.tmpdir()
 
     def sync(self, text):
+        """The counts, for the assertions below.
+
+        The service returns a ServiceResult; its message and its refusal are
+        checked in WhatItReportsTests, and this unwraps the data so that the
+        tests about *what it changed* stay about that.
+        """
         (self.config / 'device.conf').write_text('VERSION: 5\n\n' + text)
-        return sync_mhvtl_to_django(self.config)
+        result = sync_mhvtl_to_django(self.config)
+        self.assertTrue(result.success, result.message)
+        return result.data
 
     def existing(self, library_id, active=True):
         brand, _ = LibraryBrand.objects.get_or_create(name='STK',
@@ -88,8 +96,8 @@ class SyncServiceTest(TestCase):
     def test_an_unreadable_device_conf_changes_nothing(self):
         """It used to read as "no libraries" and deactivate every one."""
         self.existing(10)
-        with self.assertRaises(ConfigUnreadable):
-            sync_mhvtl_to_django(self.config)            # no device.conf at all
+        refused = sync_mhvtl_to_django(self.config)      # no device.conf at all
+        self.assertFalse(refused.success)
         self.assertTrue(Library.objects.get(library_id=10).is_active)
 
     def test_no_changes_when_in_sync(self):
@@ -110,6 +118,41 @@ class SyncServiceTest(TestCase):
                                       'drives_activated', 'drives_deactivated',
                                       'activated', 'deactivated', 'total_db',
                                       'total_drives'})
+
+    def test_what_it_reports(self):
+        """It returns a ServiceResult, which is this layer's rule and was
+        the one thing this module did not do.
+
+        It raised ConfigUnreadable and returned a bare dict, so each of the
+        nine callers invented its own handling: the web caught it and said
+        "The database was not updated", the AJAX endpoints returned a JSON
+        error, and `mhvtl config sync` caught nothing at all - an unreadable
+        device.conf came out as a Python traceback under "this is a bug".
+        """
+        done = sync_mhvtl_to_django(self.config)        # no device.conf
+        self.assertFalse(done.success)
+        self.assertIn('could not be read', done.message)
+        self.assertIn('the database was left as it is', done.message)
+        self.assertTrue(any(str(self.config) in detail
+                            for detail in done.errors),
+                        f'the refusal should name where it looked: {done.errors}')
+
+    def test_the_sentence_names_what_changed(self):
+        """Composed once here. Three callers composed their own from the
+        counts and two of them said nearly the same thing in different
+        words."""
+        (self.config / 'device.conf').write_text(
+            'VERSION: 5\n\n' + library(10) + drive(11, 10, 1, 1))
+        said = sync_mhvtl_to_django(self.config).message
+        self.assertIn('1 library in device.conf', said)
+        self.assertIn('1 new', said)
+        self.assertIn('1 drive(s) imported', said)
+
+    def test_the_sentence_says_so_when_nothing_changed(self):
+        """Rather than listing eight zeros, which is what the page did."""
+        self.sync(library(10))
+        said = sync_mhvtl_to_django(self.config).message
+        self.assertEqual(said, '1 library in device.conf, nothing to change')
 
     def test_a_row_that_no_longer_matches_device_conf_is_corrected(self):
         """A library deleted and recreated keeps its id: the row described the
