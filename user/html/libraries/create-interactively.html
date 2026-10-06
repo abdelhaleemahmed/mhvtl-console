@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating a library by being asked &mdash; MHVTL Console User Guide 3.3.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/lang-switch.css?v=16e3750c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=9ac01507"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/lang-switch.js?v=8f8661c5"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Profiles and presets" href="profiles-and-presets.html" />
+    <link rel="prev" title="Creating a library" href="create.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MHVTL Console User Guide
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/what-it-is.html">What this is</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#what-you-can-do-with-it">What you can do with it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#what-it-is-not">What it is not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#why-a-virtual-library">Why a virtual library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/what-it-is.html#the-words-used-here">The words used here</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../start/first-look.html">A first look</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#log-in">Log in</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#is-mhvtl-running">Is MHVTL running?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#what-you-see-first">What you see first</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#the-same-thing-from-the-terminal">The same thing from the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/first-look.html#if-there-are-no-libraries-yet">If there are no libraries yet</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../start/the-console.html">Finding your way around</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#the-header">The header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#dashboard">Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#libraries">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#operator">Operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#console">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#themes">Themes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../start/the-console.html#the-command-line">The command line</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Libraries</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="create.html">Creating a library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="create.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create.html#which-combinations-exist">Which combinations exist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create.html#what-it-wrote">What it wrote</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create.html#afterwards">Afterwards</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating a library by being asked</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-whole-thing">The whole thing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#each-list-is-only-what-is-still-possible">Each list is only what is still possible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#two-limits-it-tells-you-about">Two limits it tells you about</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#more-than-one-kind-of-drive">More than one kind of drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-four-ways-out">The four ways out</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-same-thing-without-the-questions">The same thing without the questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#in-a-script-give-the-values">In a script, give the values</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="profiles-and-presets.html">Profiles and presets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#the-nine-profiles">The nine profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#what-a-preset-is-for">What a preset is for</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#eleven-are-installed-with-the-console">Eleven are installed with the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#reading-one">Reading one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#building-one-up">Building one up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#the-other-verbs">The other verbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#keeping-one-from-a-create-that-worked">Keeping one from a create that worked</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#an-argument-still-beats-the-file">An argument still beats the file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#what-a-preset-will-not-let-you-do">What a preset will not let you do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiles-and-presets.html#where-they-live">Where they live</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="the-library-page.html">The library page</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="the-library-page.html#what-is-on-it">What is on it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the-library-page.html#the-same-thing-from-the-terminal">The same thing from the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the-library-page.html#the-buttons-and-what-they-run">The buttons, and what they run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the-library-page.html#if-the-page-says-404">If the page says 404</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="drives.html">Adding and removing drives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="drives.html#adding-a-drive">Adding a drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drives.html#removing-a-drive">Removing a drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drives.html#what-it-does-to-the-running-library">What it does to the running library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drives.html#seeing-the-drives">Seeing the drives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drives.html#two-generations-in-one-library">Two generations in one library</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="drives.html#in-the-console">In the console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drives.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drives.html#what-a-mixed-library-can-load">What a mixed library can load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drives.html#adding-a-generation-later">Adding a generation later</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remove.html">Removing a library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remove.html#before-you-do">Before you do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remove.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remove.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remove.html#what-is-left-behind">What is left behind</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tapes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/create.html">Creating tapes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#the-barcode-decides-the-generation">The barcode decides the generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#one-tape">One tape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#a-run-of-tapes">A run of tapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#size-and-why-it-matters">Size, and why it matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#room-for-more-tapes">Room for more tapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/create.html#deleting-a-tape">Deleting a tape</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/inventory.html">The tape inventory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#in-the-console">In the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#from-the-terminal">From the terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#where-the-numbers-come-from">Where the numbers come from</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#compression">Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/inventory.html#tapes-that-are-not-in-a-library">Tapes that are not in a library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/move.html">Moving a tape: mount, unmount, move</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#one-page-does-the-first-two">One page does the first two</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#mount-slot-into-drive">Mount: slot into drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#unmount-drive-back-to-a-slot">Unmount: drive back to a slot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#move-slot-to-slot">Move: slot to slot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#online-and-offline">Online and offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#the-map">The MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#seeing-the-whole-library-at-once">Seeing the whole library at once</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/move.html#what-the-robot-says-is-where">What the robot says is where</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tapes/adopt.html">Adopting a tape that is already on disk</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#when-this-comes-up">When this comes up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#finding-them">Finding them</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#adopting-one">Adopting one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#only-the-libraries-that-could-load-it">Only the libraries that could load it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#what-it-does-and-what-it-does-not">What it does, and what it does not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#restart-the-library-afterwards">Restart the library afterwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tapes/adopt.html#checking-the-data-survived">Checking the data survived</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using a library</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../using/backup.html">Writing a backup to a tape</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/backup.html#find-the-drive-s-device">1. Find the drive’s device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/backup.html#put-a-cartridge-in-the-drive">2. Put a cartridge in the drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/backup.html#write">3. Write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/backup.html#read-it-back">4. Read it back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/backup.html#put-the-cartridge-away">5. Put the cartridge away</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/backup.html#several-backups-on-one-tape">Several backups on one tape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/backup.html#why-the-tape-says-it-used-no-megabytes">Why the tape says it used no megabytes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../using/watching.html">Watching a drive while it works</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/watching.html#on-the-library-page">On the library page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/watching.html#on-the-command-line">On the command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/watching.html#what-the-states-mean">What the states mean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/watching.html#where-the-numbers-come-from">Where the numbers come from</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/watching.html#two-readings-not-one">Two readings, not one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/watching.html#if-it-says-holding-while-a-backup-is-running">If it says <code class="docutils literal notranslate"><span class="pre">holding</span></code> while a backup is running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/watching.html#if-mt-and-the-panel-disagree">If <code class="docutils literal notranslate"><span class="pre">mt</span></code> and the panel disagree</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../using/ltfs.html">A tape as a filesystem: LTFS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#two-different-things-are-called-mount">Two different things are called “mount”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#can-this-library-do-ltfs-at-all">1. Can this library do LTFS at all?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#give-it-a-drive-ltfs-will-open">2. Give it a drive LTFS will open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#a-cartridge-it-can-write">3. A cartridge it can write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#put-it-in-the-drive">4. Put it in the drive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#format-it-which-the-console-will-not-do-for-you">5. Format it — which the console will not do for you</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#mount-it-write-to-it-read-it-back">6. Mount it, write to it, read it back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#taking-it-out-again-in-the-right-order">7. Taking it out again, in the right order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/ltfs.html#which-cartridges-are-volumes">Which cartridges are volumes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../using/iscsi.html">Exporting a library over iSCSI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/iscsi.html#what-gets-exported">What gets exported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/iscsi.html#what-it-made">What it made</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/iscsi.html#connecting-from-another-machine">Connecting from another machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/iscsi.html#after-a-reboot-or-after-recreating-a-library">After a reboot, or after recreating a library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/iscsi.html#removing-an-export">Removing an export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/iscsi.html#is-the-service-even-running">Is the service even running?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keeping it running</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../running/console.html">The system console</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#console">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#devices">Devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#modules">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#logs">Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/console.html#disk">Disk</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../running/password.html">The password, and who can reach this</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#the-warning">The warning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#changing-it">Changing it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#if-you-lose-it">If you lose it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#who-can-reach-the-console">Who can reach the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/password.html#what-the-password-does-not-cover">What the password does not cover</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../running/when-something-is-wrong.html">When something is wrong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#three-answers-that-disagree">Three answers that disagree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#restart-the-library-for-its-robot-to-see-this">“Restart the library for its robot to see this”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-drive-says-silent">A drive says <code class="docutils literal notranslate"><span class="pre">silent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-library-page-that-answers-404">A library page that answers 404</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#an-export-that-points-at-the-wrong-device">An export that points at the wrong device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#tapes-that-belong-to-no-library">Tapes that belong to no library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#a-drive-that-will-not-take-a-cartridge">A drive that will not take a cartridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#the-disk-is-full">The disk is full</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#removing-a-library-and-rebooting">Removing a library and rebooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#which-version-am-i-running">Which version am I running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../running/when-something-is-wrong.html#nothing-here-helped">Nothing here helped</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MHVTL Console User Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Creating a library by being asked</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/libraries/create-interactively.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-a-library-by-being-asked">
+<h1>Creating a library by being asked<a class="headerlink" href="#creating-a-library-by-being-asked" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">mhvtl</span> <span class="pre">library</span> <span class="pre">create</span> <span class="pre">--interactive</span></code> walks through the same choices the form
+does, one question at a time, offering only what the vendor’s catalogue allows
+for the answers so far.</p>
+<p>It is the terminal equivalent of the form rather than a shortcut: use it when
+you do not already know which model takes which drive, or when you want to see
+what the options <em>are</em> before committing to any of them.</p>
+<p><strong>Nothing is written until the last answer.</strong> Ctrl-C at any point, or <code class="docutils literal notranslate"><span class="pre">q</span></code> at
+the end, leaves the host exactly as it was.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#the-whole-thing" id="id1">The whole thing</a></p></li>
+<li><p><a class="reference internal" href="#each-list-is-only-what-is-still-possible" id="id2">Each list is only what is still possible</a></p></li>
+<li><p><a class="reference internal" href="#two-limits-it-tells-you-about" id="id3">Two limits it tells you about</a></p></li>
+<li><p><a class="reference internal" href="#more-than-one-kind-of-drive" id="id4">More than one kind of drive</a></p></li>
+<li><p><a class="reference internal" href="#the-four-ways-out" id="id5">The four ways out</a></p></li>
+<li><p><a class="reference internal" href="#the-same-thing-without-the-questions" id="id6">The same thing without the questions</a></p></li>
+<li><p><a class="reference internal" href="#in-a-script-give-the-values" id="id7">In a script, give the values</a></p></li>
+</ul>
+</nav>
+<section id="the-whole-thing">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">The whole thing</a><a class="headerlink" href="#the-whole-thing" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>mhvtl<span class="w"> </span>library<span class="w"> </span>create<span class="w"> </span>--interactive
+<span class="go">Creating a library. An empty answer takes the [default];</span>
+<span class="go">Ctrl-C quits and writes nothing.</span>
+
+<span class="go">  1. ADIC</span>
+<span class="go">  2. DELL</span>
+<span class="go">  3. HP</span>
+<span class="go">  4. IBM</span>
+<span class="go">  5. OVERLAND</span>
+<span class="go">  6. QUANTUM</span>
+<span class="go">  7. SONY</span>
+<span class="go">  8. SPECTRA</span>
+<span class="go">  9. STK</span>
+<span class="go">Vendor profile: IBM</span>
+<span class="go">   1. 03584L32 &lt;- default</span>
+<span class="go">   2. 03584D32</span>
+<span class="go">   3. 03584L52</span>
+<span class="go">  ...</span>
+<span class="go">  12. 3573-TL</span>
+<span class="go">  13. ULT3582-TL</span>
+<span class="go">Library model [03584L32]:</span>
+<span class="go">  71 drive(s) at most here, limited by SCSI targets.</span>
+<span class="go">   1. ULT3580-TD1</span>
+<span class="go">   ...</span>
+<span class="go">   8. ULT3580-TD8 &lt;- default</span>
+<span class="go">   9. ULT3580-TD9</span>
+<span class="go">  10. ULT3580-TDA</span>
+<span class="go">  11. ULT3580-HH7</span>
+<span class="go">  12. ULT3580-HH8</span>
+<span class="go">  13. ULT3580-HH9</span>
+<span class="go">  14. ULT3580-HHA</span>
+<span class="go">Drive model [ULT3580-TD8]:</span>
+<span class="go">How many drives [4]:</span>
+<span class="go">Add another drive type? [y/N]:</span>
+<span class="go">  1. LTO8 &lt;- default</span>
+<span class="go">  2. LTO7</span>
+<span class="go">Cartridge density [LTO8]:</span>
+<span class="go">How many cartridges [50]:</span>
+<span class="go">Add another density? [y/N]:</span>
+<span class="go">Empty slots [4]:</span>
+<span class="go">Library id [80]:</span>
+
+<span class="go">IBM 03584L32, id 80</span>
+<span class="go">  drives      4 x ULT3580-TD8</span>
+<span class="go">  cartridges  50 x LTO8</span>
+<span class="go">  slots       54 (50 full, 4 empty)</span>
+<span class="go">  checked: valid</span>
+
+<span class="go">4 slot(s) are left empty for cartridges added later: mhvtl tape bulk 80 &lt;count&gt;</span>
+
+<span class="go">  c  create it</span>
+<span class="go">  s  create it and keep this configuration as a preset</span>
+<span class="go">  p  print the device.conf it would write</span>
+<span class="go">  q  quit, writing nothing</span>
+<span class="go">Now what:</span>
+</pre></div>
+</div>
+<p>Every answer above was left empty except the first, so the whole library is
+IBM’s defaults.</p>
+</section>
+<section id="each-list-is-only-what-is-still-possible">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Each list is only what is still possible</a><a class="headerlink" href="#each-list-is-only-what-is-still-possible" title="Link to this heading"></a></h2>
+<p>The questions narrow as they go, and that is the point of asking them in this
+order.</p>
+<p>Answer <code class="docutils literal notranslate"><span class="pre">IBM</span></code> and the <strong>library model</strong> list is IBM’s thirteen models. Answer
+<code class="docutils literal notranslate"><span class="pre">03584L32</span></code> and the <strong>drive model</strong> list is the fourteen drives <em>that model</em>
+takes - the LTO line. Had you chosen <code class="docutils literal notranslate"><span class="pre">03584L22</span></code> instead, the same question
+would have offered four 3592 drives and no LTO drive at all, because that is
+a 3592 library. Choose <code class="docutils literal notranslate"><span class="pre">03584L42</span></code> and it offers two DLT drives.</p>
+<p>Then the <strong>cartridge density</strong> list is only what the drive you picked can
+write. An ULT3580-TD8 offers LTO8 and LTO7; an ULT3580-TDA offers LTO10 and
+LTO10P.</p>
+<p>So a combination the vendor does not make is not refused at the end - it is
+never offered. There is no way to answer these questions wrongly.</p>
+</section>
+<section id="two-limits-it-tells-you-about">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Two limits it tells you about</a><a class="headerlink" href="#two-limits-it-tells-you-about" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">71</span> <span class="pre">drive(s)</span> <span class="pre">at</span> <span class="pre">most</span> <span class="pre">here,</span> <span class="pre">limited</span> <span class="pre">by</span> <span class="pre">SCSI</span> <span class="pre">targets</span></code> is not the model’s
+limit, which is 511 for an 03584L32. It is how many drives will still fit on
+this host beside the libraries already configured. The number changes as you
+add libraries, which is why it is printed rather than documented.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Empty</span> <span class="pre">slots</span> <span class="pre">[4]</span></code> defaults to four, and the summary spells out what that
+means - <code class="docutils literal notranslate"><span class="pre">slots</span> <span class="pre">54</span> <span class="pre">(50</span> <span class="pre">full,</span> <span class="pre">4</span> <span class="pre">empty)</span></code> - because a library with no empty
+slots cannot take a new cartridge without being reconfigured.</p>
+</section>
+<section id="more-than-one-kind-of-drive">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">More than one kind of drive</a><a class="headerlink" href="#more-than-one-kind-of-drive" title="Link to this heading"></a></h2>
+<p><strong>Add another drive type?</strong> and <strong>Add another density?</strong> are where a mixed
+library comes from. Answer <code class="docutils literal notranslate"><span class="pre">y</span></code> and it asks the same two questions again, and
+keeps asking until you say no. The order you answer in is the order the drives
+are given slots, which is also their SCSI target order.</p>
+<p>See <a class="reference internal" href="drives.html"><span class="doc">Adding and removing drives</span></a> for what a mixed library is for.</p>
+</section>
+<section id="the-four-ways-out">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">The four ways out</a><a class="headerlink" href="#the-four-ways-out" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Answer</p></th>
+<th class="head"><p>What happens</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">c</span></code></p></td>
+<td><p>Creates it. The same steps the one-shot command reports:
+validate, create, restart, verify, media.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td><p>Creates it, then asks for a name and writes the
+configuration to <code class="docutils literal notranslate"><span class="pre">presets.toml</span></code> - the same as
+<code class="docutils literal notranslate"><span class="pre">--save-preset</span> <span class="pre">NAME</span></code>. See
+<a class="reference internal" href="profiles-and-presets.html"><span class="doc">Profiles and presets</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+<td><p>Prints the <code class="docutils literal notranslate"><span class="pre">device.conf</span></code> text it <em>would</em> write, and comes
+back to this menu. Nothing is written.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q</span></code>, or Ctrl-C</p></td>
+<td><p>Quits. <code class="docutils literal notranslate"><span class="pre">Nothing</span> <span class="pre">was</span> <span class="pre">written.</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">p</span></code> is worth using the first time. It shows the library stanza and one
+stanza per drive, with the serial numbers, the SCSI targets and the revision
+levels the profile chose - which is the detail a backup application will
+identify the hardware by.</p>
+</section>
+<section id="the-same-thing-without-the-questions">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">The same thing without the questions</a><a class="headerlink" href="#the-same-thing-without-the-questions" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> on an ordinary create prints that same <code class="docutils literal notranslate"><span class="pre">device.conf</span></code> and stops,
+so you can see the outcome of a command you already know how to type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mhvtl<span class="w"> </span>library<span class="w"> </span>create<span class="w"> </span>--preset<span class="w"> </span>ibm-mixed<span class="w"> </span>--dry-run
+<span class="go">Library: 80 CHANNEL: 00 TARGET: 31 LUN: 00</span>
+<span class="go"> Vendor identification: IBM</span>
+<span class="go"> Product identification: 03584L32</span>
+<span class="go"> Product revision level: D.02</span>
+<span class="go"> Unit serial number: 80000080</span>
+<span class="go"> NAA: 80:22:33:44:ab:00:31:00</span>
+<span class="go"> Home directory: /opt/mhvtl</span>
+<span class="go"> PERSIST: False</span>
+<span class="go"> Backoff: 400</span>
+<span class="gp"># </span>fifo:<span class="w"> </span>/var/tmp/mhvtl
+
+<span class="go">Drive: 81 CHANNEL: 00 TARGET: 32 LUN: 00</span>
+<span class="go"> Library ID: 80 Slot: 01</span>
+<span class="go"> Vendor identification: IBM</span>
+<span class="go"> Product identification: ULT3580-TDA</span>
+<span class="go"> ...</span>
+</pre></div>
+</div>
+<p>It reads the configuration but writes nothing, so it needs no privileges.</p>
+</section>
+<section id="in-a-script-give-the-values">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">In a script, give the values</a><a class="headerlink" href="#in-a-script-give-the-values" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">--interactive</span></code> needs a terminal, and says so rather than hanging or
+reading nothing:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span>IBM<span class="w"> </span><span class="p">|</span><span class="w"> </span>mhvtl<span class="w"> </span>library<span class="w"> </span>create<span class="w"> </span>--interactive
+<span class="go">mhvtl: --interactive needs a terminal</span>
+<span class="go">  stdin is not a tty, so there is nobody to answer the questions</span>
+<span class="go">  in a script, give the values instead: mhvtl library create --profile IBM --drives 2 --tapes 20</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="create.html"><span class="doc">Creating a library</span></a> for the form and the one-shot command, and
+<a class="reference internal" href="profiles-and-presets.html"><span class="doc">Profiles and presets</span></a> for keeping a configuration you have proved.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="create.html" class="btn btn-neutral float-left" title="Creating a library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="profiles-and-presets.html" class="btn btn-neutral float-right" title="Profiles and presets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ahmed Abdelhaleem Ahmed.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

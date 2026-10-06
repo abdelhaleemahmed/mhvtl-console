@@ -34,6 +34,8 @@ cannot.
    :caption: Libraries
 
    libraries/create
+   libraries/create-interactively
+   libraries/profiles-and-presets
    libraries/the-library-page
    libraries/drives
    libraries/remove

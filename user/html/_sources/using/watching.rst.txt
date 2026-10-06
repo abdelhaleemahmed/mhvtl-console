@@ -18,11 +18,17 @@ On the library page
 The **Tape Drives** card has a line per drive, refreshed every five seconds:
 
 .. image:: ../_static/shots/drive-writing.png
-   :alt: Drive 31 writing G03001TA, 173.8 MB written, 14.8% of the tape
+   :alt: Drive 31 writing G03001TA, 378.1 MB written, 75.8% of the tape, the
+         bar amber; drives 32, 33 and 34 empty
    :width: 100%
 
-That is library 30 during a real backup. The bar is how full the cartridge
-is; it turns amber past 75% and red past 90%.
+That is library 30 while a drive is actually writing. The bar is how full the
+cartridge is; it turns amber past 75% and red past 90%, which is why the one
+above is amber.
+
+An empty drive says ``empty``, a drive with a cartridge in it but nothing
+happening says ``holding``, and the counters keep the last figures until the
+tape is unloaded - so a finished backup still shows how much it wrote.
 
 The same panel is on the monitor page, at ``/libraries/monitor/<id>/``.
 

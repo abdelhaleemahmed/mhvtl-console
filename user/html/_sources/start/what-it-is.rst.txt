@@ -76,3 +76,11 @@ The words used here
    sensible default for each. It ships with the console and is never edited.
    Naming one is usually all you have to do - ``mhvtl library create
    --profile IBM`` picks the rest for you.
+
+**Preset**
+   A configuration *you* built from a profile and gave a name to, so the same
+   library can be built again without retyping it. Eleven ship as examples,
+   one for each vendor. The difference from a profile is who owns it: a
+   profile is what a vendor makes and cannot be changed, a preset is a set of
+   choices made from one and is yours to edit, rename or delete. See
+   :doc:`../libraries/profiles-and-presets`.
