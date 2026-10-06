@@ -21,6 +21,9 @@ import io
 import re
 import shlex
 from pathlib import Path
+from unittest import mock
+
+from mhvtl_cli import privileges
 
 from .base import SimpleTestCase, TestCase
 from .test_cli import run
@@ -1086,6 +1089,21 @@ class PresetCommandTests(TestCase):
         override = override_settings(MHVTL_GUI_CONFIG_DIR=str(self.base))
         override.enable()
         self.addCleanup(override.disable)
+
+        # The write verbs are gated on membership of the mhvtl group, which is
+        # a fact about the machine and not about the verb. Granted for the
+        # whole class, the way test_cli.py grants it for every other mutating
+        # command, because the alternative is eight tests that pass only where
+        # the developer happens to be in that group - which is how they passed
+        # here and failed on a GitHub runner, whose user is in adm, docker,
+        # runner, systemd-journal and users.
+        #
+        # Nothing is skipped to achieve it. The gate itself is tested in
+        # test_cli.py: can_write for root, for a group member and for neither,
+        # and the refusal naming the group and the usermod command.
+        granted = mock.patch.object(privileges, 'can_write', return_value=True)
+        granted.start()
+        self.addCleanup(granted.stop)
 
     def save(self, name, values):
         saved = self.operations.save(name, values)
