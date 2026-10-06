@@ -3,7 +3,7 @@
 # mhvtl-gui.service below. The product is called mhvtl-console from 3.3.0,
 # which is a displayed name and lives in services/about/service.py.
 %define name mhvtl-gui
-%define version 3.3.0
+%define version 3.3.1
 %define release 1%{?dist}
 %define installdir /opt/mhvtl-gui
 %define servicename mhvtl-gui
@@ -256,6 +256,15 @@ fi
 %dir /var/lib/mhvtl-gui/targetcli
 
 %changelog
+* Tue Oct 06 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.3.1-1
+- Test setup only; the application is byte for byte 3.3.0. Eight tests of the
+  `mhvtl preset` write verbs passed on a developer's host and failed on a
+  build runner, because they are gated on membership of the mhvtl group - a
+  fact about the machine, not about the verb - and the test class never
+  granted it. `mhvtl preset` arrived in 3.2.0 and 3.2.0 was never published,
+  so they reached a runner for the first time with 3.3.0. They now grant it
+  the way every other mutating command's tests do, and the gate itself is
+  still tested: can_write for root, for a group member and for neither.
 * Tue Oct 06 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.3.0-1
 - The product is now called mhvtl-console. `mhvtl --version`, `mhvtl status
   system` and the About page say it; `mhvtl-gui` was also the name of an
