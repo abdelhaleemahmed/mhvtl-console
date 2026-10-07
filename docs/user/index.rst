@@ -1,5 +1,5 @@
-MHVTL GUI — User Guide
-======================
+MHVTL Console — User Guide
+==========================
 
 A web console for MHVTL, the Linux virtual tape library. It creates
 libraries, fills them with tapes, drives the robot, exports them over iSCSI,
@@ -34,6 +34,8 @@ cannot.
    :caption: Libraries
 
    libraries/create
+   libraries/create-interactively
+   libraries/profiles-and-presets
    libraries/the-library-page
    libraries/drives
    libraries/remove
@@ -61,6 +63,7 @@ cannot.
    :caption: Keeping it running
 
    running/console
+   running/settings
    running/password
    running/when-something-is-wrong
 

@@ -150,6 +150,19 @@ profile is a catalogue; a preset is a configuration made from one.
    :undoc-members:
    :show-inheritance:
 
+``settings``
+~~~~~~~~~~~~
+
+The console's own preferences - today, how big a new cartridge is. Four levels
+decide that, each narrower than the last: the shipped default, the file's
+default, the file's entry for one density, and the size given to a single
+create.
+
+.. automodule:: apps.libraries.services.config.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``service``
 ~~~~~~~~~~~
 
@@ -808,6 +821,24 @@ Configuration files to database - the only package here that touches the ORM.
 Configuration files to database.
 
 .. automodule:: apps.libraries.services.sync.service
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``services.settings``
+---------------------
+
+The console's own preferences - as opposed to MHVTL's configuration, which is
+``services.config``. One verb set, read by the Settings page and by
+``mhvtl settings`` alike.
+
+``service``
+~~~~~~~~~~~
+
+list, get, set, reset - with the provenance of every value, because "why is
+this cartridge 1 GB" is the question both front ends exist to answer.
+
+.. automodule:: apps.libraries.services.settings.service
    :members:
    :undoc-members:
    :show-inheritance:

@@ -67,9 +67,19 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="density">Tape Density</label>
+                        {% comment %}
+                            Grouped by family, as on the single-tape form:
+                            thirty-two generations in one list is a wall, and
+                            which family a cartridge belongs to is the
+                            service's answer, not this page's.
+                        {% endcomment %}
                         <select name="density" id="density" class="form-control" required>
-                            {% for value, label in densities %}
+                            {% for family, members in density_families %}
+                            <optgroup label="{{ family }}">
+                                {% for value, label in members %}
                                 <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </optgroup>
                             {% endfor %}
                         </select>
                         <p class="form-help" id="density-help">Select a library to see the media its drives load.</p>
@@ -78,19 +88,24 @@
                     <div class="form-group">
                         <label for="size_mb">Tape Size (MB)</label>
                         {% comment %}
-                            Empty, not 500000. The script fills it with the
-                            density's native capacity as soon as one is
-                            chosen, and left empty the service uses that same
-                            capacity - so the number lives in
-                            personalities.NATIVE_CAPACITY_GB and nowhere
-                            else. This field, the single-tape form, three
-                            handlers and the CLI's two verbs each carried
-                            500000 of their own, while the service said 500.
+                            The script fills this as soon as a density is
+                            chosen, with what the service would use for it -
+                            tapes.size_for, which is the Settings file and
+                            then the shipped 1,000 MB. Left empty the service
+                            uses that same number, so the field and the result
+                            cannot differ.
+
+                            This field, the single-tape form, three handlers
+                            and the CLI's two verbs each carried 500000 of
+                            their own while the service said 500, which is why
+                            none of them holds a number now. It said "the
+                            density's native capacity" until the sizes moved
+                            into Settings; a new cartridge is 1 GB, not 12 TB.
                         {% endcomment %}
                         <input type="number" name="size_mb" id="size_mb" class="form-control"
-                               value="" min="1000" max="50000000"
-                               placeholder="the density's native capacity">
-                        <p class="form-help" id="size-help">Size per tape in megabytes; left empty, each tape gets its density's native capacity</p>
+                               value="" min="1" max="50000000"
+                               placeholder="the size set for this density">
+                        <p class="form-help" id="size-help">Size per tape in megabytes; left empty, each gets the size set for its density</p>
                     </div>
                 </div>
 

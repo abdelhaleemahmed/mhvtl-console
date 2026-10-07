@@ -53,6 +53,35 @@ drives can read that generation.
 
    $ sudo mhvtl tape adopt 50 K50005L8 --slot 4
 
+Only the libraries that could load it
+-------------------------------------
+
+The dropdown beside each tape lists **only the libraries whose drives can load
+that cartridge**, not every library on the host. A Sony library with AIT
+drives is not offered for an LTO-7 tape, because it could never read it.
+
+The command line draws the same line, and when it refuses it says where the
+tape *could* go rather than leaving you to try the libraries one at a time:
+
+.. code-block:: console
+
+   $ sudo mhvtl tape adopt 20 I60006L7
+   mhvtl: Not adopting I60006L7: No drive in library 20 loads LTO7 tapes; its drives take AIT4, AIT3, AIT2
+     No drive in library 20 loads LTO7 tapes; its drives take AIT4, AIT3, AIT2
+   LTO7 can go in: library 10 (STK L700), library 50 (STK SL500), library 60 (IBM 03584L32), library 70 (IBM 03584L32)
+
+**Loads, not writes.** The test is whether a drive can *read* the cartridge,
+which is looser than whether it can write one. An LTO-7 drive reads LTO-5, so
+a library whose newest drive is an LTO-7 is offered for an LTO-5 tape - and it
+should be, because adopting recovers what is already on a tape rather than
+writing to it. A library offered here may still refuse to *create* a new
+cartridge of that generation; see :ref:`mixed-libraries`.
+
+If a tape is offered nowhere, the row says so instead of showing an empty
+dropdown, and the reason is the same one the command prints. Adding a drive
+that can read it changes the answer immediately - no library has to be
+rebuilt.
+
 What it does, and what it does not
 ----------------------------------
 

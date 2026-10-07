@@ -571,12 +571,47 @@ NATIVE_CAPACITY_GB: Dict[str, int] = {
 }
 
 
-def media_label(density: str) -> str:
-    """'LTO8 (12 TB)', for a drop-down."""
-    size = NATIVE_CAPACITY_GB.get(density)
-    if not size:
-        return density
-    return f'{density} ({size / 1000:g} TB)' if size >= 1000 else f'{density} ({size} GB)'
+# There was a media_label here, which built 'LTO8 (12 TB)' out of the table
+# above for the creation drop-downs. It was right while a cartridge was made
+# at its native capacity and wrong the moment that became a setting: the
+# option said 12 TB about a tape that would be made at 1 GB. The label moved
+# to tapes.service.media_label, which can read the settings file, and this
+# module went back to holding only what the hardware is.
+#
+# The capacities themselves have not moved and are not going to. They are what
+# native_mb answers, what the Settings page and `mhvtl settings list` show in
+# their own column, and what settings.toml.example quotes beside each density
+# as the figure to put back.
+
+
+#: The family each cartridge belongs to. Longest prefix first, so SDLT is not
+#: read as DLT and T10K is matched before anything shorter.
+_FAMILIES = (('SDLT', 'SDLT'), ('LTO', 'LTO'), ('AIT', 'AIT'), ('DLT', 'DLT'),
+             ('9840', '9840'), ('9940', '9940'), ('T10K', 'T10000'))
+
+#: The 3592 cartridges, which share no prefix with each other: they are named
+#: for the drive generation that writes them (03592J1A writes J1A, and so on).
+_3592 = ('J1A', 'E05', 'E06', 'E07')
+
+
+def media_family(density: str) -> str:
+    """Which kind of tape this is: 'LTO', 'AIT', 'DLT', 'T10000', '3592'.
+
+    A drop-down of thirty-two generations is a wall to read. Grouped by family
+    it is eight choices with the generations under them, and somebody looking
+    for an LTO cartridge does not have to read past the AIT ones.
+
+    The grouping is a fact about the hardware, so it lives here beside the
+    capacities rather than in a template - the page and the command line
+    should not each have their own idea of what an SDLT600 is.
+    """
+    name = (density or '').upper()
+    for prefix, family in _FAMILIES:
+        if name.startswith(prefix):
+            return family
+    if name in _3592:
+        return '3592'
+    return name or 'other'
 
 
 #: LTO density -> the suffix of its WORM cartridge (generate_library_contents.in:69-74).

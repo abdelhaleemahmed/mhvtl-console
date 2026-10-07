@@ -1,5 +1,10 @@
 {% extends 'libraries/base.html' %}
-{% load static %}
+{% comment %}
+|unlocalize on the cartridge size: Django prints numbers in the reader's
+language, and in Arabic 12000000 arrives with separators the field would
+reject. The disk-usage page carries the same note for the same reason.
+{% endcomment %}
+{% load static l10n %}
 
 {% block title %}Configure {{ brand.display_name }} Library - MHVTL{% endblock %}
 
@@ -455,6 +460,25 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% comment %}
+                    A size per kind, because a library holding LTO-8 and DLT-4
+                    is holding two different capacities and one field for the
+                    library would give the second kind the first kind's size.
+
+                    Empty means "whatever the setting says for this kind",
+                    which is what the service does with an absent value - so
+                    the placeholder shows what that is and the field reads as
+                    a default rather than a blank to fill in.
+                    {% endcomment %}
+                    <div class="form-group">
+                        <label class="form-label">Size of each</label>
+                        <input type="text" class="form-input kind-size"
+                               value="" placeholder="{{ row.size_mb|unlocalize }}">
+                        <div class="form-help">
+                            MB, or 2000GB or 12TB. Empty uses
+                            {{ row.size_shown }}.
+                        </div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -488,6 +512,13 @@
                            min="0" max="{{ form.limits.max_slots }}" required>
                     <div class="form-help">Additional empty slots for future tapes</div>
                 </div>
+
+                {% comment %}
+                The cartridge size is not here. It is on each tape-type row
+                above, because a library can hold more than one kind and they
+                are not the same size - one field here would give a DLT-4 the
+                LTO-8's capacity. The default for each comes from Settings.
+                {% endcomment %}
 
                 <div class="form-group full-width">
                     <div class="slots-calculator">
@@ -651,6 +682,19 @@
         return rows;
     }
 
+    /* DENSITY:SIZE for every row where a size was typed, in row order. */
+    function sizesOf(kind) {
+        const pairs = [];
+        sections[kind]().querySelectorAll('.kind-row').forEach(function (row) {
+            const name = row.querySelector('.kind-name');
+            const size = row.querySelector('.kind-size');
+            if (name && name.value && size && size.value.trim()) {
+                pairs.push(name.value + ':' + size.value.trim());
+            }
+        });
+        return pairs;
+    }
+
     /* The choices as they stand, which is what the server needs to answer the
      * next question: all of them, not only what changed, because the answer
      * depends on them together. */
@@ -750,6 +794,15 @@
             });
             rowsOf('media').forEach(function (run) {
                 configForm.appendChild(hidden('media', run));
+            });
+            /* The size asked for each kind, as DENSITY:SIZE, only where one
+             * was typed. Its own field rather than a third part of the media
+             * run: the run is what the cascade re-renders from and what the
+             * --media flag takes, and a capacity is not part of naming a
+             * kind of tape. An untyped row sends nothing and the service
+             * answers from the settings file. */
+            sizesOf('media').forEach(function (pair) {
+                configForm.appendChild(hidden('media_size', pair));
             });
             if (submitBtn) { submitBtn.disabled = true; }
             if (submitText) { submitText.style.display = 'none'; }

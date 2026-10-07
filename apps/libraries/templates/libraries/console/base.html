@@ -28,6 +28,8 @@ above the content in the old frame and still does, through before_content.
            class="section-link {% if request.resolver_match.url_name == 'console_kernel_modules' %}active{% endif %}">Modules</a>
         <a href="{% url 'libraries:console_disk_usage' %}"
            class="section-link {% if request.resolver_match.url_name == 'console_disk_usage' %}active{% endif %}">Disk</a>
+        <a href="{% url 'libraries:console_settings' %}"
+           class="section-link {% if request.resolver_match.url_name == 'console_settings' %}active{% endif %}">Settings</a>
     </div>
 </nav>
 {% endblock %}

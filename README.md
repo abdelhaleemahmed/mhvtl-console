@@ -45,14 +45,14 @@ Download the files from the
 installed first, and Python 3.12 from the distribution:
 
 ```bash
-sudo dnf install ./mhvtl-gui-3.3.1-1.el9.noarch.rpm
+sudo dnf install ./mhvtl-gui-3.4.0-1.el9.noarch.rpm
 ```
 
 **Other distributions** - the tarball and its installer:
 
 ```bash
-tar -xzf mhvtl-gui-3.3.1.tar.gz
-cd mhvtl-gui-3.3.1
+tar -xzf mhvtl-gui-3.4.0.tar.gz
+cd mhvtl-gui-3.4.0
 sudo ./install.sh
 ```
 

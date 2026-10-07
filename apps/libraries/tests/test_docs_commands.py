@@ -42,7 +42,8 @@ PLANS = {'sphinx/guides/plan-cli-hardware.rst', 'sphinx/guides/phase-two.rst',
          'sphinx/guides/plan-mount-unmount.rst',
          'sphinx/guides/plan-iqn-dates.rst',
          'sphinx/guides/plan-about.rst',
-         'sphinx/guides/plan-cli-catalogue.rst'}
+         'sphinx/guides/plan-cli-catalogue.rst',
+         'sphinx/guides/plan-tape-size.rst'}
 
 
 def commands_in_the_docs():

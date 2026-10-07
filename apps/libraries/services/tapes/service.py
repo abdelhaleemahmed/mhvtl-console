@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from ..config import library_contents as contents_format
+from ..config import settings
 from ..config.service import ConfigService
 from ..profiles import catalogue
 from ..profiles import data as profiles_data
@@ -42,39 +43,96 @@ CONTENTS_RE = re.compile(r'^library_contents\.(\d+)$')
 
 logger = logging.getLogger(__name__)
 
-#: What MHVTL gives a medium it has no native capacity for - 9840 and 9940 -
-#: and what the create forms already suggest for one. It lived in
-#: static/js/tape-media.js as UNKNOWN_SIZE_MB, which is where the whole rule
-#: used to live.
+#: What a density MHVTL gives no native capacity - 9840, 9940 - holds as far
+#: as anything here can tell. Kept because `native_mb` still has to answer for
+#: those densities; it is no longer the size anything is created at, which is
+#: settings.DEFAULT_TAPE_SIZE_MB and happens to be the same number.
 UNKNOWN_SIZE_MB = 1000
 
 DEFAULT_DENSITY = 'LTO8'
 
 
-def native_size_mb(density: str) -> int:
-    """How big a new cartridge of this density should claim to be.
+def native_mb(density: str) -> int:
+    """What a cartridge of this density really holds.
 
     Its native capacity, from ``personalities.NATIVE_CAPACITY_GB`` - which is
     transcribed from MHVTL and checked against it. An LTO-8 holds 12 TB and a
-    T10KC 5 TB, and a cartridge that claims otherwise is one whose fullness
-    means nothing.
+    T10KC 5 TB.
 
-    Two arbitrary numbers stood in for this until 4 October 2026, and they
-    disagreed. This module said 500 MB; every front end said 500000 - both
-    create forms, three web handlers and the CLI's two verbs. So a library's
-    own tapes were 500 MB and any tape added to it afterwards was 500 GB,
-    which `mhvtl tape list` then showed side by side. Neither number was ever
-    a cartridge.
+    **This is not the size a new cartridge is made at.** It answers a question
+    about the hardware, and ``size_for`` answers a question about this host.
+    They were the same function until 6 October 2026, which is why the console
+    made 12 TB cartridges on a system whose purpose is testing - see
+    ``size_for`` and docs/sphinx/guides/plan-tape-size.rst.
 
-    The forms were already suggesting the native capacity, through
-    ``native_mb`` in tape_operations_views: this is that rule, applied by
-    default rather than only when somebody picks a density by hand.
-
-    The files are sparse, so a 12 TB cartridge costs what a 500 MB one costs
-    until something writes to it.
+    It is what the creation forms offer as *native*, beside the size they are
+    pre-filled with, so an operator can see both and pick.
     """
     capacity = personalities.NATIVE_CAPACITY_GB.get((density or '').upper())
     return capacity * 1000 if capacity else UNKNOWN_SIZE_MB
+
+
+#: The old name. `native_size_mb` read as "the size", and it was the size, and
+#: that was the bug: a cartridge nobody can fill in less than 63 hours on a
+#: system that exists to be filled. Kept as an alias so nothing breaks while
+#: the callers move; it answers what the hardware holds, like native_mb.
+native_size_mb = native_mb
+
+
+def size_for(density: str, base=None, data=None) -> int:
+    """How big a new cartridge of this density is made.
+
+    The chain, each level narrower than the last:
+
+        1. ``settings.DEFAULT_TAPE_SIZE_MB``   1,000 MB, in the code
+        2. ``tape.size.default``               the settings file, every density
+        3. ``tape.size.<density>``             the settings file, one density
+
+    A fourth level - ``--size-mb``, or the number in the form - is applied by
+    the callers, which pass it instead of asking here.
+
+    **Not the native capacity.** An LTO-8 holds 12 TB and is created at 1 GB,
+    because the files are sparse so the size costs no disk, but it costs time:
+    at the 55 MB/s this host writes, filling a native LTO-8 takes 63 hours. End
+    of tape, multi-volume spanning and the fullness bar are the things a
+    virtual library exists to exercise, and none of them is reachable at 12 TB.
+    Anyone who wants a realistic cartridge says so in the settings file, where
+    the native capacity is written beside each density as the reference.
+
+    ``data`` is an already-read settings file, for a caller answering this for
+    every density at once; without it the file is read here.
+    """
+    return settings.tape_size_mb(density, base, data=data)
+
+
+def media_label(density: str, base=None, data=None) -> str:
+    """A cartridge as a drop-down option: ``'LTO8 (1 GB)'``.
+
+    The size is what one will be made at - ``size_for``, the same call the
+    creation does - so what is chosen and what arrives cannot differ. Set
+    ``tape.size.LTO8`` to 12TB and this option reads ``LTO8 (12 TB)``.
+
+    IT USED TO READ THE NATIVE CAPACITY
+    -----------------------------------
+    ``personalities.media_label`` built this string from
+    ``NATIVE_CAPACITY_GB``, and that was right while a cartridge was created
+    at its native capacity: the option named what you would get. Once the two
+    became separate questions the option went on saying ``LTO8 (12 TB)`` about
+    a tape that would be made at 1 GB - wrong by a factor of twelve thousand,
+    in the one place the operator is choosing.
+
+    So the label lives here and not in ``profiles``, which cannot see the
+    settings file: ``profiles`` holds facts about hardware, and how big this
+    host makes a cartridge is not one. The native capacity has not gone
+    anywhere - ``native_mb`` answers for it, the Settings page and
+    ``mhvtl settings list`` show it in their own column, and the help line
+    under the size field names it as the figure to type for a full-size tape.
+    """
+    density = (density or '').upper()
+    if not density:
+        return ''
+    size = size_for(density, base, data=data)
+    return f'{density} ({settings.as_short_size(size)})'
 
 
 class TapeService:
@@ -354,6 +412,74 @@ class TapeService:
                 'known': bool(media_list), 'media': media_list,
                 'default': catalogue.default_density_for(drives)}
 
+    def media_context(self, libraries) -> Dict:
+        """Everything a creation form needs to offer only usable media.
+
+        Per library, the densities its drives load and which are read-only;
+        plus, for every density that can be created, its barcode suffixes, its
+        label, **how big one will be made** and **what one really holds**.
+
+        WHY THOSE LAST TWO ARE SEPARATE KEYS
+        ------------------------------------
+        ``default_mb`` is what the field is pre-filled with - the answer
+        ``size_for`` gives, which is the answer a create with no size actually
+        produces. ``native_mb`` is what the cartridge holds, offered beside it
+        so an operator can choose a realistic capacity knowingly.
+
+        They were one number until 6 October 2026, derived in the view as
+        ``gb * 1000``: the form suggested the native capacity and the service
+        created the native capacity, so they agreed by coincidence. The moment
+        the two stopped being the same question, a page that computed its own
+        suggestion would have gone on filling in 12 TB while ``mhvtl`` made
+        1 GB - a tape's size depending on which front end you used, which is
+        the bug 3.2.0 was written to end.
+
+        So the view asks for this and renders it. It derives nothing, and the
+        command line can ask the same question.
+        """
+        library_media = {}
+        for lib in libraries:
+            library_id = lib['library_id'] if isinstance(lib, dict) else lib
+            try:
+                library_media[library_id] = self.media_for_library(library_id)
+            except Exception:                 # noqa: BLE001 - then offer all
+                logger.exception('reading the drives of library %s', library_id)
+
+        densities = list(personalities.SUFFIX_BY_DENSITY)
+
+        # Grouped by family, in the order the catalogue lists them, so the
+        # drop-down reads LTO / AIT / DLT with the generations under each
+        # rather than thirty-two flat entries. The page renders these as
+        # optgroups and decides nothing: which family a cartridge belongs to
+        # is profiles.personalities.media_family.
+        # The settings file read once for the whole context, not once per
+        # density per key: the labels and the sizes are the same question
+        # asked twice about thirty-three cartridges, and a page assembled
+        # from sixty-six readings is a page that can be built half from
+        # before somebody's edit and half from after it.
+        saved = settings.read()
+        labels = {d: media_label(d, data=saved) for d in densities}
+        sizes = {d: size_for(d, data=saved) for d in densities}
+
+        families: Dict[str, List] = {}
+        for density in densities:
+            families.setdefault(personalities.media_family(density), []).append(
+                (density, labels[density]))
+
+        return {
+            'densities': [(d, labels[d]) for d in densities],
+            'density_families': list(families.items()),
+            'media_info': {
+                'libraries': library_media,
+                'suffix': personalities.SUFFIX_BY_DENSITY,
+                'worm_suffix': personalities.WORM_SUFFIX_BY_DENSITY,
+                'labels': labels,
+                'default_mb': sizes,
+                'native_mb': {d: native_mb(d) for d in densities},
+                'unknown_size_mb': UNKNOWN_SIZE_MB,
+            },
+        }
+
     def check_media(self, library_id: int, density: str,
                     barcode: str = None) -> Optional[str]:
         """Why a tape of this density cannot be made here, or None if it can.
@@ -404,7 +530,7 @@ class TapeService:
             or self.media_for_library(library_id)['default'] or DEFAULT_DENSITY
         kind = kind or barcodes.kind(barcode)
         if size_mb is None:
-            size_mb = native_size_mb(density)
+            size_mb = size_for(density)
 
         if check_media:
             problem = self.check_media(library_id, density, barcode)
@@ -653,7 +779,8 @@ class TapeService:
         return None
 
     def create_missing(self, library_id: int, *, size_mb: int = None,
-                       density: str = None) -> ServiceResult:
+                       density: str = None,
+                       sizes: Dict[str, int] = None) -> ServiceResult:
         """Make the media files for barcodes library_contents lists but that
         have none on disk.
 
@@ -666,6 +793,19 @@ class TapeService:
         Moved from the adapter's create_tapes_from_library_contents, which
         took no density; the create-library workflow passed one, so the call
         raised TypeError and no new library got its tapes.
+
+        HOW BIG EACH ONE IS
+        -------------------
+        A library can hold more than one kind of cartridge, so one number for
+        the run is the wrong shape: an LTO-8 and a DLT-4 made by the same
+        create are different sizes. ``sizes`` is ``{density: mb}`` - what the
+        creation wizard asked for, per kind - and a density it does not name
+        falls through to ``size_for``, which is the settings file and then the
+        shipped default.
+
+        ``size_mb`` is the older, blunter answer: one size for every cartridge
+        in the run, whatever its density. It still wins where it is given,
+        because `tape bulk --size-mb` means exactly that.
         """
         operation_id = str(uuid.uuid4())[:8]
         contents = self._contents(library_id)
@@ -688,12 +828,18 @@ class TapeService:
                 failed.append(slot.barcode)
                 continue
             # Per tape, not per run: the density comes from each barcode, so
-            # the capacity has to as well. A library holding LTO-8 and LTO-6
-            # gets 12 TB cartridges and 2.5 TB ones, which is what it would
-            # hold in a rack.
+            # the capacity has to as well. A library holding LTO-8 and DLT-4
+            # is two sizes, and asking once for the run would give the second
+            # kind the first kind's capacity.
+            #
+            # One size for everything, then the size asked for this kind, then
+            # the chain - settings file, then the shipped default.
             for_tape = barcodes.density_for(barcode) or fallback
+            this_one = (size_mb
+                        or (sizes or {}).get((for_tape or '').upper())
+                        or size_for(for_tape))
             made = media.create(barcode, library_id=library_id,
-                                size_mb=size_mb or native_size_mb(for_tape),
+                                size_mb=this_one,
                                 density=for_tape,
                                 kind=barcodes.kind(barcode), base=self.media_dir)
             (created if made.ok else failed).append(barcode)

@@ -76,6 +76,16 @@ KEY_TO_SPEC = {
 #: Keys inside a [[name.drive]] or [[name.media]] table.
 LIST_KEYS = {'drive': ('model', 'count'), 'media': ('density', 'count')}
 
+#: Keys a list entry *may* carry beyond the two above. A media run can say how
+#: big its cartridges are, because a library holding LTO-8 and DLT-4 holds two
+#: capacities and one number for the preset would give the second kind the
+#: first kind's size.
+#:
+#: Optional, not required: a run with no size takes the setting for its
+#: density, which is what an empty field on the form means and what
+#: `library create` does with a kind `--media-size` does not name.
+OPTIONAL_LIST_KEYS = {'media': {'size_mb'}}
+
 #: What a list settles, so that nothing stores it twice or reports it as
 #: still open. `[[x.drive]]` tables say both which models and how many, so a
 #: preset carrying them has no business also carrying `drives` or a single
@@ -163,18 +173,33 @@ def _list(name: str, key: str, value: Any) -> List[Dict[str, Any]]:
     for index, entry in enumerate(value, start=1):
         if not isinstance(entry, dict):
             raise PresetError(f"preset '{name}': {key} {index} must be a table")
-        unknown = set(entry) - {what, count_key}
+        optional = OPTIONAL_LIST_KEYS.get(key, set())
+        unknown = set(entry) - {what, count_key} - optional
         if unknown:
+            known = ', '.join([what, count_key] + sorted(optional))
             raise PresetError(
                 f"preset '{name}': {key} {index} has unknown key(s) "
-                f"{', '.join(sorted(unknown))}; known keys: {what}, {count_key}")
+                f"{', '.join(sorted(unknown))}; known keys: {known}")
         if what not in entry:
             raise PresetError(f"preset '{name}': {key} {index} needs a {what}")
         count = entry.get(count_key, 1)
         if not isinstance(count, int) or count < 1:
             raise PresetError(f"preset '{name}': {key} {index} count must be "
                               f'a positive whole number, not {count!r}')
-        entries.append({what: entry[what], count_key: count})
+        made = {what: entry[what], count_key: count}
+
+        # How big this kind's cartridges are, when the preset says. Checked
+        # here rather than taken on trust: a hand-edited size of 0 would
+        # otherwise reach mktape, and a preset is read far from where it was
+        # written.
+        if 'size_mb' in optional and 'size_mb' in entry:
+            size = entry['size_mb']
+            if not isinstance(size, int) or size < 1:
+                raise PresetError(
+                    f"preset '{name}': {key} {index} size_mb must be a "
+                    f'positive whole number of megabytes, not {size!r}')
+            made['size_mb'] = size
+        entries.append(made)
     return entries
 
 
@@ -208,6 +233,21 @@ def savable(spec: Dict[str, Any]) -> Dict[str, Any]:
             kept[list_key] = [dict(entry) for entry in spec[list_key]]
             for key in implied:
                 kept.pop(key, None)
+
+    # The cartridge sizes travel as part of the media runs they belong to, not
+    # as a dict of their own: a preset describes a library kind by kind, and a
+    # size belongs to the kind it sizes.
+    #
+    # Written back rather than dropped, because a `--save-preset` that quietly
+    # lost the sizes would be the trap this file already documents for
+    # `size_mb` - a value accepted, stored and then ignored.
+    sizes = {str(density).upper(): mb
+             for density, mb in (spec.get('tape_sizes') or {}).items()}
+    if sizes and kept.get('media'):
+        for entry in kept['media']:
+            size = sizes.get(str(entry.get('density', '')).upper())
+            if size:
+                entry['size_mb'] = size
     return kept
 
 
@@ -360,6 +400,9 @@ def render(presets: Dict[str, Dict[str, Any]]) -> str:
                 lines.append(f'[[{name}.{key}]]')
                 lines.append(f'{what} = {_value(entry[what])}')
                 lines.append(f'{count_key} = {entry[count_key]}')
+                for extra in sorted(OPTIONAL_LIST_KEYS.get(key, ())):
+                    if entry.get(extra) is not None:
+                        lines.append(f'{extra} = {_value(entry[extra])}')
         lines.append('')
     return '\n'.join(lines)
 

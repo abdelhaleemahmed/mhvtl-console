@@ -1,0 +1,155 @@
+{% extends 'libraries/console/base.html' %}
+{% comment %}
+The console's own preferences.
+
+Every value, its provenance and what the cartridge really holds come from
+SettingsService.list(); `mhvtl settings list` prints the same rows from the
+same call. Nothing is decided here - this renders and posts back.
+
+One form for the whole page rather than one per row. A row is saved by what
+is in its field: a number sets it, an empty field means "not set", and the
+row then takes the default and the file stops mentioning it. That is exactly
+what `mhvtl settings reset` does, which is why there is no reset button.
+{% endcomment %}{% load l10n %}
+
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Only what css/mhvtl-console.css has no rule for. */
+    table.settings { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    table.settings th, table.settings td {
+        padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    table.settings th { background: var(--surface-deep); font-weight: 600; color: var(--text); }
+    table.settings tr:hover { background: var(--surface-deep); }
+    table.settings input { width: 11em; }
+    .settings-native { white-space: nowrap; }
+    .settings-native button {
+        background: none; border: none; padding: 0; cursor: pointer;
+        color: var(--link); font: inherit; text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'libraries:console_settings' %}">
+    {% csrf_token %}
+
+    <div class="card">
+        <div class="section-title">How big a new cartridge is</div>
+
+        <p class="form-help">
+            A cartridge costs no disk until something writes to it - the files
+            grow - so the size is about how long it takes to fill one, not how
+            much room it takes. A real LTO-8 holds 12 TB, which is about 63
+            hours of writing: too long to reach the end of a tape, which is
+            usually the thing worth testing. So a new cartridge is
+            <strong>1 GB</strong> unless you say otherwise here.
+        </p>
+
+        {% if tape_default %}
+        <div class="form-group">
+            <label class="form-label" for="tape-default">
+                Default for every density
+            </label>
+            <input type="text" class="form-control" id="tape-default"
+                   name="{{ tape_default.key }}" style="width: 11em;"
+                   value="{% if tape_default.set_here %}{{ tape_default.value|unlocalize }}{% endif %}"
+                   placeholder="1000">
+            <div class="form-help">
+                In MB, or write 2000GB or 12TB. Leave it empty for the shipped
+                default of 1,000 MB. Currently {{ tape_default.shown }}
+                ({{ tape_default.source }}).
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="section-title">Per cartridge type</div>
+        <p class="form-help">
+            Anything left empty takes the default above. The capacity beside
+            each is what that cartridge really holds - click it to use it.
+        </p>
+
+        <table class="settings">
+            <thead>
+                <tr>
+                    <th>Cartridge</th>
+                    <th>Size when created</th>
+                    <th>From</th>
+                    <th>It really holds</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in settings %}
+                <tr>
+                    <td><strong>{{ row.key|cut:"tape.size." }}</strong></td>
+                    <td>
+                        <input type="text" class="form-control"
+                               name="{{ row.key }}"
+                               id="field-{{ row.key|cut:"tape.size." }}"
+                               value="{% if row.set_here %}{{ row.value|unlocalize }}{% endif %}"
+                               placeholder="{{ row.value|unlocalize }}">
+                    </td>
+                    <td><span class="form-help">{{ row.source }}</span></td>
+                    <td class="settings-native">
+                        {% if row.native_shown %}
+                            {% comment %}
+                            A button rather than a link: it fills the field
+                            beside it, which is presentation, and leaves the
+                            operator to press Save. Nothing is decided here -
+                            the number it copies came from the service.
+                            {% endcomment %}
+                            <button type="button"
+                                    data-fills="field-{{ row.key|cut:"tape.size." }}"
+                                    data-size="{{ row.native_mb|unlocalize }}"
+                                    class="use-native">{{ row.native_shown }}</button>
+                        {% else %}
+                            <span class="form-help">no native capacity</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <span class="form-help">
+            Tapes created from now on use these; the ones you already have keep
+            the size they were made with.
+        </span>
+    </div>
+</form>
+
+<div class="card" style="margin-top: 20px;">
+    <div class="section-title">Where this is kept</div>
+    <p class="form-help">
+        <code>{{ settings_file }}</code>
+        {% if file_exists %}
+            - safe to edit by hand. Each cartridge type's real capacity is
+            written beside it as a comment, so a value can be put back without
+            looking it up.
+        {% else %}
+            - not written yet. It appears the first time you save something,
+            and deleting it puts every cartridge back to the shipped default.
+        {% endif %}
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Copy the capacity beside a row into its field. The number is the
+    // service's, rendered into the button; this moves it and decides nothing.
+    document.querySelectorAll('.use-native').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var field = document.getElementById(button.dataset.fills);
+            if (field) { field.value = button.dataset.size; field.focus(); }
+        });
+    });
+</script>
+{% endblock %}

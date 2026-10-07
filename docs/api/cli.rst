@@ -87,6 +87,20 @@ beside a list, which is two answers to one question.
    :undoc-members:
    :show-inheritance:
 
+``sizes``
+---------
+
+``--size-mb 12TB``: the argparse type behind every flag that takes a
+cartridge's capacity, so ``tape create``, ``tape bulk`` and
+``library create`` accept what ``mhvtl settings set`` accepts. It wraps the
+service's parser and re-raises its complaint as an ``ArgumentTypeError``,
+which argparse prints as written.
+
+.. automodule:: mhvtl_cli.sizes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``config``
 ----------
 
@@ -198,6 +212,17 @@ devices, map.
 start, stop, restart, status.
 
 .. automodule:: mhvtl_cli.commands.service
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``settings``
+------------
+
+list, get, set, reset - the console's own preferences, by dotted keys that are
+the path through ``/etc/mhvtl-gui/settings.toml``.
+
+.. automodule:: mhvtl_cli.commands.settings
    :members:
    :undoc-members:
    :show-inheritance:

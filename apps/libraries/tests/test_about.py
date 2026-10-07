@@ -63,12 +63,22 @@ class ProjectIdentityTests(SimpleTestCase):
         release that is not the latest. The same rot had reached five other
         documents, each frozen at whichever version was current when it was
         written: 1.0.0, 1.1.1, 1.2.0, 2.1.0, 2.1.1.
+
+        packaging/site/index.html was added to this list on 6 October 2026,
+        and it was the worst of them: the published front page's install
+        command, which said v2.1.1 while 3.3.1 was current - four releases.
+        It survived because it was not named here, and because the page asks
+        the GitHub API for the latest release and rewrites the command, so
+        the stale line only shows to a visitor who is offline or whom GitHub
+        has rate-limited. A fallback nobody can see failing is exactly the
+        kind of thing that needs a test rather than a reader.
         """
         import re
 
         filename = re.compile(r'mhvtl-gui-(\d+\.\d+\.\d+)')
         wrong = []
         for name in ('README.md', 'docs/INSTALL.md', 'docs/index.html',
+                     'packaging/site/index.html',
                      'docs/sphinx/guides/installation.rst',
                      'docs/sphinx/guides/packaging.rst',
                      'docs/sphinx/guides/releasing.rst',

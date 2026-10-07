@@ -1,0 +1,95 @@
+# ===========================================================================
+# THIS FILE IS AN EXAMPLE. NOTHING READS IT.
+#
+# The console reads settings.toml, beside this file, and writes it for you:
+#
+#   mhvtl settings list
+#   mhvtl settings set tape.size.LTO8 12TB
+#   mhvtl settings reset tape.size.LTO8
+#
+# or System Console -> Settings in the browser. Upgrading mhvtl-console
+# replaces this file, so a setting written here would be lost. Copy a line
+# into settings.toml to set one by hand instead.
+# ===========================================================================
+
+# The console's own settings - as opposed to MHVTL's, which are in
+# /etc/mhvtl. There is no settings.toml until something is saved; without one
+# every value below is the shipped default.
+
+
+# ---------------------------------------------------------------------------
+# How big a new cartridge is
+# ---------------------------------------------------------------------------
+# A cartridge costs no disk until something writes to it: the media files are
+# sparse and grow. So its size is not about room, it is about time.
+#
+# A real LTO-8 holds 12 TB. Writing 12 TB takes about 63 hours, so a library
+# whose cartridges are their true size is one where you cannot reach the end
+# of a tape - and end of tape, multi-volume spanning and the fullness bar are
+# usually the reason for having a virtual library at all.
+#
+# So a new cartridge is 1,000 MB unless you say otherwise. What each cartridge
+# really holds is in the comments below, as the reference for putting one back.
+#
+# Sizes are decimal, as tape capacity is quoted: MB, GB and TB. `mhvtl
+# settings set` accepts any of the three and stores MB. MiB and GiB are not
+# accepted - 12 TB and 12 TiB differ by ten per cent.
+
+[tape.size]
+
+# Any density not named below gets this.
+default = 1000
+
+# And one density at a time. Uncomment a line to change it; `mhvtl settings
+# list` shows what every one is and where the value came from.
+
+# LTO1    = 1000          # native 100,000 MB
+# LTO2    = 1000          # native 200,000 MB
+# LTO3    = 1000          # native 400,000 MB
+# LTO4    = 1000          # native 800,000 MB
+# LTO5    = 1000          # native 1,500,000 MB
+# LTO6    = 1000          # native 2,500,000 MB
+# LTO7    = 1000          # native 6,000,000 MB
+# LTO8    = 1000          # native 12,000,000 MB
+# LTO9    = 1000          # native 18,000,000 MB
+# LTO10   = 1000          # native 30,000,000 MB
+# LTO10P  = 1000          # native 40,000,000 MB
+# AIT1    = 1000          # native 35,000 MB
+# AIT2    = 1000          # native 50,000 MB
+# AIT3    = 1000          # native 100,000 MB
+# AIT4    = 1000          # native 200,000 MB
+# DLT4    = 1000          # native 20,000 MB
+# SDLT220 = 1000          # native 110,000 MB
+# SDLT320 = 1000          # native 160,000 MB
+# SDLT600 = 1000          # native 300,000 MB
+# 9840A   = 1000          # no native capacity
+# 9840B   = 1000          # no native capacity
+# 9840C   = 1000          # no native capacity
+# 9840D   = 1000          # no native capacity
+# 9940A   = 1000          # no native capacity
+# 9940B   = 1000          # no native capacity
+# T10KA   = 1000          # native 500,000 MB
+# T10KB   = 1000          # native 1,000,000 MB
+# T10KC   = 1000          # native 5,000,000 MB
+# J1A     = 1000          # native 300,000 MB
+# E05     = 1000          # native 700,000 MB
+# E06     = 1000          # native 1,000,000 MB
+# E07     = 1000          # native 4,000,000 MB
+
+
+# ---------------------------------------------------------------------------
+# What this does not change
+# ---------------------------------------------------------------------------
+# The capacities in the comments are what the hardware holds, from MHVTL's own
+# tables. Nothing here edits them: `mhvtl profile show IBM` still says an
+# LTO-8 holds 12 TB, because it does. This file decides how big the console
+# makes one, which is a different question.
+#
+# It applies to cartridges created from now on. The ones you already have keep
+# the size they were made with - `mhvtl tape list <library>` shows it.
+#
+# A single cartridge can always be sized when it is made, whatever is here:
+#
+#   mhvtl tape create 50 K50001L8 --size-mb 12TB
+#   mhvtl tape bulk 50 10 --size-mb 2000GB
+#   mhvtl library create --profile IBM --size-mb 12TB

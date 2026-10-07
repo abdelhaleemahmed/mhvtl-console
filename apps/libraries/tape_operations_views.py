@@ -328,37 +328,13 @@ def _drives_of(library_id: int) -> list:
 def tape_media_context(libraries) -> dict:
     """What the two tape-creation pages need to offer only usable media.
 
-    For each library, the densities its drives load (and which only read-
-    only), from TapeService.media_for_library; plus every density that can be
-    created, with its barcode suffixes and native capacity, for a library whose
-    drives are unknown. The pages filter the density list by library with
-    this, and the service refuses anything else anyway.
+    One service call. This used to assemble the answer here - labels, barcode
+    suffixes, WORM suffixes, and a capacity map built by multiplying the
+    catalogue's gigabytes out. The last of those was a decision wearing a
+    dictionary comprehension: how big a cartridge is, computed in a view. See
+    ``TapeService.media_context``, which answers it for both front ends.
     """
-    tapes = _tapes()
-    library_media = {}
-    for lib in libraries:
-        try:
-            library_media[lib['library_id']] = tapes.media_for_library(lib['library_id'])
-        except Exception:                               # noqa: BLE001 - offer all
-            logger.exception('reading the drives of library %s', lib['library_id'])
-    return {
-        'densities': [(d, personalities.media_label(d))
-                      for d in personalities.SUFFIX_BY_DENSITY],
-        'media_info': {
-            'libraries': library_media,
-            'suffix': personalities.SUFFIX_BY_DENSITY,
-            'worm_suffix': personalities.WORM_SUFFIX_BY_DENSITY,
-            'labels': {d: personalities.media_label(d)
-                       for d in personalities.SUFFIX_BY_DENSITY},
-            'native_mb': {d: gb * 1000 for d, gb
-                          in personalities.NATIVE_CAPACITY_GB.items()},
-            # What a medium with no native capacity gets - 9840, 9940. The
-            # script had this number too; now it has the service's, so the
-            # size the form suggests and the size the service would use
-            # cannot differ.
-            'unknown_size_mb': tape_service.UNKNOWN_SIZE_MB,
-        },
-    }
+    return _tapes().media_context(libraries)
 
 
 # ============================================================================
@@ -407,6 +383,32 @@ def _picked(request, from_path, field: str):
         return int(request.GET.get(field, ''))
     except (TypeError, ValueError):
         return None
+
+
+def _showing(page: str, library_id=None):
+    """A redirect to ``page`` carrying the library it should open on.
+
+    Both inventories load nothing without one - ``TapeListView`` and
+    ``DriveListView`` read ``?library_id=`` and fall through to the picker
+    when it is absent - so a view that redirected to the bare route name sent
+    the operator back to choosing the library they had just created a tape
+    in. Every form's error path had the same hole, where it cost more: the
+    page came back with the library cleared and the typing gone.
+
+    ``AdoptTapeView`` wrote this out correctly and the eleven redirects around
+    it did not, which is the reason it is a function. Two redirects a line
+    apart, one with the query string and one without, do not read as a bug.
+
+    An id that is not a number is dropped rather than put in the URL: it
+    reaches here only from a tampered or stale POST, and the list page would
+    answer it with a second "Invalid library" on top of the real complaint.
+    Same coercion as ``_picked``, in the same direction.
+    """
+    target = reverse(page)
+    try:
+        return redirect(f'{target}?library_id={int(library_id)}')
+    except (TypeError, ValueError):
+        return redirect(target)
 
 
 class LibraryStatusView(View):
@@ -549,7 +551,7 @@ class LtfsView(View):
 
         if action not in self.ACTIONS or not library_id or drive in (None, ''):
             messages.error(request, 'Choose a library, a drive and an action')
-            return redirect('libraries:ltfs')
+            return _showing('libraries:ltfs', library_id)
 
         library_id, drive = int(library_id), int(drive)
         request.session['last_library_id'] = library_id
@@ -561,7 +563,7 @@ class LtfsView(View):
             messages.error(request, result.message)
             for error in result.errors:
                 messages.error(request, f'  {error}')
-        return redirect(f"{reverse('libraries:ltfs')}?library_id={library_id}")
+        return _showing('libraries:ltfs', library_id)
 
     @staticmethod
     def _provisioning(library_id: int) -> dict:
@@ -643,7 +645,7 @@ class LtfsView(View):
             tapes = int(request.POST.get('tapes') or 0)
         except ValueError:
             messages.error(request, 'Cartridges must be a number')
-            return redirect(f"{reverse('libraries:ltfs')}?library_id={library_id}")
+            return _showing('libraries:ltfs', library_id)
 
         # The select posts one field, "VENDOR|MODEL", and it is checked against
         # what was offered rather than trusted - the same discipline as ACTIONS.
@@ -658,8 +660,7 @@ class LtfsView(View):
             if pair not in offered:
                 messages.error(request, 'That is not a drive this library can '
                                         'be given')
-                return redirect(
-                    f"{reverse('libraries:ltfs')}?library_id={library_id}")
+                return _showing('libraries:ltfs', library_id)
             vendor, model = pair.split('|', 1)
 
         result = add_ltfs_drive_workflow(
@@ -671,7 +672,7 @@ class LtfsView(View):
             expand_slots=bool(request.POST.get('expand_slots')))
 
         self._render_steps(request, result)
-        return redirect(f"{reverse('libraries:ltfs')}?library_id={library_id}")
+        return _showing('libraries:ltfs', library_id)
 
 
 # ============================================================================
@@ -720,7 +721,7 @@ class MountTapeView(View):
         library_id = request.POST.get('library_id')
         if not library_id:
             messages.error(request, "Please select a library")
-            return redirect('libraries:mount_tape')
+            return _showing('libraries:mount_tape', library_id)
 
         operation = request.POST.get('operation') or 'mount'
         try:
@@ -743,8 +744,7 @@ class MountTapeView(View):
                 for error in result.errors:
                     messages.error(request, f"  {error}")
 
-        # Redirect back with library_id to preserve selection
-        return redirect(f'/libraries/operator/mount/?library_id={library_id}')
+        return _showing('libraries:mount_tape', library_id)
 
     def _mount(self, request, library_id):
         slot = request.POST.get('slot')
@@ -802,9 +802,7 @@ class UnmountTapeView(View):
         library_id = (request.GET.get('library_id')
                       or request.POST.get('library_id')
                       or request.session.get('last_library_id'))
-        target = reverse('libraries:mount_tape')
-        return redirect(f'{target}?library_id={library_id}' if library_id
-                        else target)
+        return _showing('libraries:mount_tape', library_id)
 
 
 class MoveTapeView(View):
@@ -841,7 +839,7 @@ class MoveTapeView(View):
 
         if not all([library_id, from_slot, to_slot]):
             messages.error(request, "Please select library and both slots")
-            return redirect('libraries:move_tape')
+            return _showing('libraries:move_tape', library_id)
 
         try:
             library_id = int(library_id)
@@ -853,7 +851,7 @@ class MoveTapeView(View):
 
             if from_slot == to_slot:
                 messages.error(request, "Source and destination slots must be different")
-                return redirect(f'/libraries/operator/move/?library_id={library_id}')
+                return _showing('libraries:move_tape', library_id)
 
 
             result = _operations().move(library_id, from_slot, to_slot)
@@ -870,8 +868,7 @@ class MoveTapeView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        # Redirect back with library_id to preserve selection
-        return redirect(f'/libraries/operator/move/?library_id={library_id}')
+        return _showing('libraries:move_tape', library_id)
 
 
 # ============================================================================
@@ -912,7 +909,7 @@ class LibraryOnlineView(View):
 
         if not library_id:
             messages.error(request, "Please select a library")
-            return redirect('libraries:library_online')
+            return _showing('libraries:library_online', library_id)
 
         try:
             library_id = int(library_id)
@@ -930,7 +927,7 @@ class LibraryOnlineView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        return redirect('libraries:library_online')
+        return _showing('libraries:library_online', library_id)
 
 
 class LibraryOfflineView(View):
@@ -967,7 +964,7 @@ class LibraryOfflineView(View):
 
         if not library_id:
             messages.error(request, "Please select a library")
-            return redirect('libraries:library_offline')
+            return _showing('libraries:library_offline', library_id)
 
         try:
             library_id = int(library_id)
@@ -985,7 +982,7 @@ class LibraryOfflineView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        return redirect('libraries:library_offline')
+        return _showing('libraries:library_offline', library_id)
 
 
 # ============================================================================
@@ -1295,7 +1292,7 @@ class CreateTapeView(View):
 
         if not all([library_id, barcode, slot]):
             messages.error(request, "Please fill in all required fields")
-            return redirect('libraries:create_tape')
+            return _showing('libraries:create_tape', library_id)
 
         try:
             library_id = int(library_id)
@@ -1308,7 +1305,9 @@ class CreateTapeView(View):
 
             if result.success:
                 messages.success(request, result.message)
-                return redirect('libraries:tape_list')
+                # The inventory of the library the tape went into, not the
+                # picker: the operator is here to see the tape they just made.
+                return _showing('libraries:tape_list', library_id)
             else:
                 messages.error(request, result.message)
 
@@ -1317,7 +1316,7 @@ class CreateTapeView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        return redirect('libraries:create_tape')
+        return _showing('libraries:create_tape', library_id)
 
 
 class CreateTapesBulkView(View):
@@ -1378,7 +1377,7 @@ class CreateTapesBulkView(View):
 
         if not all([library_id, count]):
             messages.error(request, "Please fill in all required fields")
-            return redirect('libraries:create_tapes_bulk')
+            return _showing('libraries:create_tapes_bulk', library_id)
 
         try:
             library_id = int(library_id)
@@ -1390,7 +1389,7 @@ class CreateTapesBulkView(View):
             max_count = max_counts.get(tape_type, 100)
             if count < 1 or count > max_count:
                 messages.error(request, f"Count must be between 1 and {max_count} for {tape_type} tapes")
-                return redirect('libraries:create_tapes_bulk')
+                return _showing('libraries:create_tapes_bulk', library_id)
 
 
             result = _tapes().create_bulk(library_id, count, prefix=barcode_prefix,
@@ -1400,7 +1399,7 @@ class CreateTapesBulkView(View):
             if result.success:
                 created_count = len(result.data.get('created', []))
                 messages.success(request, f"Created {created_count} tapes successfully")
-                return redirect('libraries:tape_list')
+                return _showing('libraries:tape_list', library_id)
             else:
                 messages.error(request, result.message)
                 if result.data and result.data.get('created'):
@@ -1411,7 +1410,7 @@ class CreateTapesBulkView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        return redirect('libraries:create_tapes_bulk')
+        return _showing('libraries:create_tapes_bulk', library_id)
 
 
 class DeleteTapeView(View):
@@ -1450,7 +1449,7 @@ class DeleteTapeView(View):
 
         if not library_id or (not barcode and not slot):
             messages.error(request, "Please select a library and provide barcode or slot")
-            return redirect('libraries:delete_tape')
+            return _showing('libraries:delete_tape', library_id)
 
         try:
             library_id = int(library_id)
@@ -1461,7 +1460,7 @@ class DeleteTapeView(View):
 
             if result.success:
                 messages.success(request, result.message)
-                return redirect('libraries:tape_list')
+                return _showing('libraries:tape_list', library_id)
             else:
                 messages.error(request, result.message)
 
@@ -1470,7 +1469,7 @@ class DeleteTapeView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        return redirect('libraries:delete_tape')
+        return _showing('libraries:delete_tape', library_id)
 
 
 class AdoptTapeView(RedirectOnGet, View):
@@ -1496,19 +1495,19 @@ class AdoptTapeView(RedirectOnGet, View):
 
         if not barcode or not library_id:
             messages.error(request, 'Choose a tape and the library to put it in')
-            return redirect('libraries:tape_list')
+            return _showing('libraries:tape_list', library_id)
 
         try:
             library_id = int(library_id)
             slot = int(slot) if slot else None
         except ValueError:
             messages.error(request, 'Invalid library or slot')
-            return redirect('libraries:tape_list')
+            return _showing('libraries:tape_list')
 
         result = _tapes().adopt(library_id, barcode, slot=slot)
         if not result.success:
             messages.error(request, result.message)
-            return redirect(f'{reverse("libraries:tape_list")}?library_id={library_id}')
+            return _showing('libraries:tape_list', library_id)
 
         messages.success(request, result.message)
         if restart:
@@ -1526,7 +1525,7 @@ class AdoptTapeView(RedirectOnGet, View):
                 'Restart the library for its robot to see it: '
                 f'Library Status > Library {library_id}, or '
                 f'`mhvtl service restart --library {library_id}`')
-        return redirect(f'{reverse("libraries:tape_list")}?library_id={library_id}')
+        return _showing('libraries:tape_list', library_id)
 
 
 # ============================================================================
@@ -1698,7 +1697,7 @@ class AddDriveView(View):
 
         if not library_id:
             messages.error(request, "Please select a library")
-            return redirect('libraries:add_drive')
+            return _showing('libraries:add_drive')
 
         try:
             library_id = int(library_id)
@@ -1708,7 +1707,7 @@ class AddDriveView(View):
             if result.success:
                 messages.success(request, result.message)
                 messages.warning(request, "Restart MHVTL services for changes to take effect")
-                return redirect('libraries:drive_list')
+                return _showing('libraries:drive_list', library_id)
             else:
                 messages.error(request, result.message)
 
@@ -1717,7 +1716,7 @@ class AddDriveView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        return redirect('libraries:add_drive')
+        return _showing('libraries:add_drive', library_id)
 
 
 class RemoveDriveView(View):
@@ -1755,10 +1754,15 @@ class RemoveDriveView(View):
             return redirect('authentication:login')
 
         drive_id = request.POST.get('drive_id')
+        # The form has a library picker above the drive picker, and the drive
+        # list it offers is that library's. Read here only so the page the
+        # operator lands on afterwards is still the library they were working
+        # in; the removal itself needs nothing but the drive.
+        library_id = request.POST.get('library_id')
 
         if not drive_id:
             messages.error(request, "Please select a drive")
-            return redirect('libraries:remove_drive')
+            return _showing('libraries:remove_drive', library_id)
 
         try:
             drive_id = int(drive_id)
@@ -1769,7 +1773,11 @@ class RemoveDriveView(View):
             if result.success:
                 messages.success(request, result.message)
                 messages.warning(request, "Restart MHVTL services for changes to take effect")
-                return redirect('libraries:drive_list')
+                # The service knows which library the drive was in; prefer it
+                # over the form, which can be a stale tab.
+                return _showing('libraries:drive_list',
+                                (result.data or {}).get('library_id')
+                                or library_id)
             else:
                 messages.error(request, result.message)
 
@@ -1778,7 +1786,7 @@ class RemoveDriveView(View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
 
-        return redirect('libraries:remove_drive')
+        return _showing('libraries:remove_drive', library_id)
 
 
 # ============================================================================

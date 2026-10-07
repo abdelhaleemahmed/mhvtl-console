@@ -475,15 +475,21 @@ class BrandSelectionView(View):
         if not request.session.get('mhvtl_logged_in'):
             return redirect('authentication:login')
 
-        from apps.libraries.services.profiles import personalities
+        from apps.libraries.services.config import settings as tape_sizes
+        from apps.libraries.services.tapes import service as tapes
 
         brands = _brand_catalogue()
         offered = sorted({m for brand in brands for m in brand['media']},
                          key=lambda m: (_media_family(m), m))
+        # The settings file once for the whole filter, not once per tape.
+        saved = tape_sizes.read()
         context = {
             'brands': brands,
-            # "which vendors take this tape?", the filter on the page
-            'media_choices': [{'density': m, 'label': personalities.media_label(m),
+            # "which vendors take this tape?", the filter on the page. The
+            # label is the service's - the size a cartridge of this kind is
+            # made at, not what the hardware holds.
+            'media_choices': [{'density': m,
+                               'label': tapes.media_label(m, data=saved),
                                'family': _media_family(m)} for m in offered],
             'selected_media': request.GET.get('media', ''),
             'title': 'Select Library Brand',
@@ -772,6 +778,28 @@ class BrandConfigView(View):
                    else {}),
                 'barcode_prefix': barcode_prefix,
             }
+
+            # A size per kind of cartridge, as DENSITY:SIZE, from the rows
+            # that had one typed. A library holding LTO-8 and DLT-4 is two
+            # capacities; a kind with no size falls through to the settings
+            # file, which is what an empty field means everywhere else here.
+            #
+            # Parsed by the parser the Settings page and `mhvtl settings set`
+            # use, so "12TB" means the same in all three.
+            from apps.libraries.services.config import settings as sizes
+            asked_sizes = {}
+            for pair in request.POST.getlist('media_size'):
+                density, _, typed = pair.partition(':')
+                if not density.strip() or not typed.strip():
+                    continue
+                try:
+                    asked_sizes[density.strip().upper()] = sizes.parse_size_mb(typed)
+                except ValueError as problem:
+                    messages.error(request, f'❌ {density.strip()}: {problem}')
+                    return redirect('libraries:brand_config',
+                                    brand_name=brand_name)
+            if asked_sizes:
+                library_data['tape_sizes'] = asked_sizes
             # The form used to send num_maps: 4, a key nothing reads; with no
             # map_count the spec fits the profile default to the model.
             if map_count.strip():

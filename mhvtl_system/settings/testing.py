@@ -56,6 +56,16 @@ MHVTL_ISCSI_REBIND = False
 import tempfile as _tempfile
 MHVTL_GUI_STATE_DIR = _tempfile.mkdtemp(prefix='mhvtl-test-state-')
 
+# The console's own files - presets.toml and settings.toml - for the same
+# reason, and it was missing: MHVTL_CONFIG_DIR and MHVTL_GUI_STATE_DIR were
+# both pointed somewhere safe and this one was left reading /etc/mhvtl-gui.
+#
+# So the capacity tests passed on a host with no settings file and failed on
+# one where somebody had set a tape size - which is the same shape as the bug
+# CleanCheckoutTests exists to catch, found the same way: the suite went red
+# after a setting was changed by hand on the machine running it.
+MHVTL_GUI_CONFIG_DIR = _tempfile.mkdtemp(prefix='mhvtl-test-gui-config-')
+
 # Whitenoise needs STATIC_ROOT to exist; use a temp path for tests
 import tempfile
 STATIC_ROOT = os.path.join(tempfile.gettempdir(), 'mhvtl_test_static')

@@ -1451,3 +1451,104 @@ class OrphanMediaPrintingTests(TestCase):
                                return_value=success_result('0', empty)):
             code, out, err = run(['library', 'orphans'])
         self.assertIn('Nothing is orphaned', out)
+
+
+class EverySizeIsSpelledTheSameWayTests(TestCase):
+    """`12TB` means the same thing wherever a size is given.
+
+    Four places take one: `settings set`, `--media-size DENSITY:SIZE`,
+    `tape create --size-mb` and `library create --size-mb`. The last two were
+    `type=int`, so `12TB` was a setting, a media size, and an argparse error
+    depending on which flag it sat next to - while the comment beside
+    --media-size said all three agreed.
+    """
+
+    SPELLINGS = (('1000', 1000), ('2000GB', 2_000_000), ('12TB', 12_000_000))
+
+    def _created(self, args):
+        from apps.libraries.services.tapes import TapeService
+        with mock.patch.object(privileges, 'can_write', return_value=True), \
+             mock.patch.object(TapeService, 'create',
+                               return_value=success_result('created')) as made:
+            run(args)
+        return made.call_args[1]['size_mb']
+
+    def test_tape_create_takes_all_three(self):
+        for typed, want in self.SPELLINGS:
+            with self.subTest(typed=typed):
+                self.assertEqual(
+                    self._created(['tape', 'create', '10', 'E01040L8',
+                                   '--size-mb', typed]), want)
+
+    def test_tape_bulk_takes_all_three(self):
+        from apps.libraries.services.tapes import TapeService
+        for typed, want in self.SPELLINGS:
+            with self.subTest(typed=typed):
+                with mock.patch.object(privileges, 'can_write',
+                                       return_value=True), \
+                     mock.patch.object(
+                         TapeService, 'create_bulk',
+                         return_value=success_result('created',
+                                                     {'created': []})) as made:
+                    run(['tape', 'bulk', '10', '4', '--size-mb', typed])
+                self.assertEqual(made.call_args[1]['size_mb'], want)
+
+    def test_library_create_takes_all_three(self):
+        from mhvtl_cli.commands import library as command
+        parser = main.build_parser()
+        for typed, want in self.SPELLINGS:
+            with self.subTest(typed=typed):
+                args = parser.parse_args(['library', 'create', '--profile',
+                                          'IBM', '--size-mb', typed])
+                self.assertEqual(args.tape_size_mb, want)
+        self.assertTrue(hasattr(command, 'sizes'))
+
+    def test_the_settings_verb_agrees_with_the_flags(self):
+        """The same parser, so this is a check that it is the same parser."""
+        from apps.libraries.services.config import settings
+        for typed, want in self.SPELLINGS:
+            with self.subTest(typed=typed):
+                self.assertEqual(settings.parse_size_mb(typed), want)
+
+    def _refused(self, typed):
+        """What argparse prints when it will not take the size."""
+        err = io.StringIO()
+        with redirect_stderr(err), self.assertRaises(SystemExit):
+            main.main(['tape', 'create', '10', 'E01040L8',
+                       '--size-mb', typed])
+        return err.getvalue()
+
+    def test_a_binary_unit_is_refused_with_the_service_s_own_sentence(self):
+        """ArgumentTypeError and not ValueError: argparse prints the first as
+        written and replaces the second with "invalid size_mb value", which
+        throws away the explanation of why 12 TiB is not 12 TB."""
+        said = self._refused('12TiB')
+        self.assertIn('decimal', said)
+        self.assertIn('12 TiB', said)
+        self.assertNotIn('invalid', said)
+
+    def test_nonsense_is_refused_the_same_way(self):
+        self.assertIn('not a size', self._refused('fish'))
+
+    def test_no_flag_still_leaves_the_chain_to_decide(self):
+        self.assertIsNone(
+            self._created(['tape', 'create', '10', 'E01040L8']))
+
+    def test_no_flag_holds_a_number_of_its_own(self):
+        """The bug this family of flags already had once: `default=500000`
+        here while the service said 500."""
+        from pathlib import Path
+        import mhvtl_cli
+        for name in ('commands/tape.py', 'commands/library.py'):
+            with self.subTest(file=name):
+                text = (Path(mhvtl_cli.__file__).parent / name).read_text()
+                # Comments are allowed to name what it used to be: the one
+                # beside --media-size does, because being wrong about it is
+                # how this was found.
+                flags = [line for line in text.splitlines()
+                         if '--size-mb' in line
+                         and not line.lstrip().startswith('#')]
+                self.assertTrue(flags)
+                for line in flags:
+                    self.assertNotIn('default=', line)
+                    self.assertNotIn('type=int', line)

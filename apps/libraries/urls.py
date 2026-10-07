@@ -60,6 +60,7 @@ urlpatterns = [
     path('console/modules/', console_views.KernelModulesView.as_view(), name='console_kernel_modules'),
     path('console/disk/', console_views.DiskUsageView.as_view(), name='console_disk_usage'),
     path('console/devices/', console_views.ScsiDevicesView.as_view(), name='console_scsi_devices'),
+    path('console/settings/', console_views.SettingsView.as_view(), name='console_settings'),
 ]
 
 # =============================================================================

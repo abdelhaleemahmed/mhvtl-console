@@ -1,5 +1,9 @@
 """
-Sphinx configuration for the MHVTL GUI API Reference.
+Sphinx configuration for the MHVTL Console API Reference.
+
+The product is `mhvtl-console` from 3.3.0; the package it installs from is
+still `mhvtl-gui`. The title below is the product. See
+services/about/project() for the split.
 
 One of four independent documentation trees:
 
@@ -40,7 +44,7 @@ django.setup()
 
 _build_lang = os.environ.get('SPHINX_LANG', 'en')
 
-project   = 'MHVTL GUI API Reference'
+project   = 'MHVTL Console API Reference'
 copyright = '2026, Ahmed Abdelhaleem Ahmed'
 author    = 'Ahmed Abdelhaleem Ahmed'
 
@@ -133,7 +137,7 @@ html_theme_options = {
     'titles_only': False,
 }
 html_static_path = ['_static']
-html_title = f'MHVTL GUI API Reference {release}'
+html_title = f'MHVTL Console API Reference {release}'
 
 html_css_files = ['lang-switch.css']
 html_js_files = ['lang-switch.js']
@@ -141,4 +145,4 @@ html_js_files = ['lang-switch.js']
 if _build_lang == 'ar':
     html_css_files = ['lang-switch.css', 'rtl.css']
     html_js_files = ['lang-switch.js', 'fix-rtl.js']
-    html_title = f'MHVTL GUI API Reference {release} \u2014 \u0627\u0644\u062a\u0648\u062b\u064a\u0642 \u0627\u0644\u0639\u0631\u0628\u064a'
+    html_title = f'MHVTL Console API Reference {release} \u2014 \u0627\u0644\u062a\u0648\u062b\u064a\u0642 \u0627\u0644\u0639\u0631\u0628\u064a'

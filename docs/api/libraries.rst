@@ -1,7 +1,7 @@
 Libraries App
 =============
 
-The ``libraries`` app is the core of MHVTL GUI. It manages tape libraries,
+The ``libraries`` app is the core of MHVTL Console. It manages tape libraries,
 drives, and media through Django models, views, and a service layer.
 
 Models

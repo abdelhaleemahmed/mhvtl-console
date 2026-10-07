@@ -41,7 +41,7 @@ SYSTEM_HOME_DIR = '/opt/mhvtl'
 #: from, and `--help` lists them in this order.
 COMMAND_MODULES = ('profile', 'preset', 'library', 'drive', 'tape', 'ltfs',
                    'operations', 'status', 'service', 'config', 'scsi',
-                   'iscsi', 'console')
+                   'iscsi', 'console', 'settings')
 
 
 class _Version(argparse.Action):

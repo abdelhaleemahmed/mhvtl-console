@@ -29,7 +29,7 @@ account - and two constants a line apart saying different things invites
 whoever reads them to make them agree. about.project() explains which is
 which.
 """
-__version__ = '3.3.1'
+__version__ = '3.4.0'
 __author__ = 'Ahmed Abdelhaleem Ahmed'
 __email__ = 'ahmedhal@gmail.com'
 __licence__ = 'GPL-2.0-only'

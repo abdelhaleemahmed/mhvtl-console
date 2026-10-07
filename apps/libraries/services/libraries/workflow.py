@@ -245,6 +245,11 @@ def _create_media(library_id: int, spec: Dict, config_directory=None):
         result = TapeService(config_directory).create_missing(
             library_id,
             size_mb=spec.get('tape_size_mb'),
+            # One size per kind of cartridge, from the wizard's rows. A
+            # library can hold LTO-8 and DLT-4 and those are not the same
+            # size; a density the wizard did not name falls through to the
+            # settings file.
+            sizes=spec.get('tape_sizes'),
             density=spec.get('media_type') or spec.get('density'))
     except Exception as exc:                           # noqa: BLE001 - reported
         logger.exception('creating media for library %s', library_id)

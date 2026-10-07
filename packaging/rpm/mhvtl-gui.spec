@@ -3,7 +3,7 @@
 # mhvtl-gui.service below. The product is called mhvtl-console from 3.3.0,
 # which is a displayed name and lives in services/about/service.py.
 %define name mhvtl-gui
-%define version 3.3.1
+%define version 3.4.0
 %define release 1%{?dist}
 %define installdir /opt/mhvtl-gui
 %define servicename mhvtl-gui
@@ -82,6 +82,12 @@ install -m 640 packaging/rpm/env.template %{buildroot}/etc/mhvtl-gui/env
 # preset list` names this path in its output and anyone may run that.
 install -m 644 packaging/presets.toml.example \
     %{buildroot}/etc/mhvtl-gui/presets.toml.example
+
+# The commented example of settings.toml, on exactly the same terms: the live
+# file is the operator's, written by `mhvtl settings set` and by the Settings
+# page, and there is none until something is saved.
+install -m 644 packaging/settings.toml.example \
+    %{buildroot}/etc/mhvtl-gui/settings.toml.example
 
 # Install sudoers file for passwordless sudo on MHVTL commands
 install -m 440 packaging/rpm/mhvtl-gui.sudoers %{buildroot}/etc/sudoers.d/mhvtl-gui
@@ -244,10 +250,12 @@ fi
 %{_unitdir}/mhvtl-gui.service
 %dir /etc/mhvtl-gui
 %config(noreplace) /etc/mhvtl-gui/env
-# Not %config: it is documentation, so an upgrade should replace it. The live
-# presets.toml is not packaged at all - it only exists once somebody saves a
-# preset, which is why nothing here would ever overwrite one.
+# Not %config: they are documentation, so an upgrade should replace them. The
+# live presets.toml and settings.toml are not packaged at all - each exists
+# only once somebody saves something, which is why nothing here could ever
+# overwrite one.
 /etc/mhvtl-gui/presets.toml.example
+/etc/mhvtl-gui/settings.toml.example
 %attr(440,root,root) /etc/sudoers.d/mhvtl-gui
 %dir /var/www/mhvtl/static
 %dir /var/www/mhvtl/media
@@ -256,6 +264,41 @@ fi
 %dir /var/lib/mhvtl-gui/targetcli
 
 %changelog
+* Wed Oct 07 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.4.0-1
+- A new cartridge is 1 GB, not its native capacity. An LTO-8 holds 12 TB and
+  this made one that big, on a system whose purpose is testing: the media
+  files are sparse so the size costs no disk, but at the 55 MB/s a typical
+  host writes, filling one takes 63 hours - which put end of tape, multi-
+  volume spanning and the fullness bar out of reach at the default. Tapes you
+  already have keep the size they were made with.
+- Anyone who wants a realistic cartridge says so, in /etc/mhvtl-gui/
+  settings.toml. Four levels, each narrower than the last: the shipped 1 GB,
+  then `tape.size.default` for every density, then `tape.size.<density>` for
+  one, then the size given to a single create. Nothing else holds a capacity.
+- A Settings page in the System Console, and `mhvtl settings` with list, get,
+  set and reset. Both show where each value came from, and what the cartridge
+  really holds beside it, so choosing a full-size tape needs no lookup. Sizes
+  are written 1000, 2000GB or 12TB; decimal, as tape capacity is quoted, and
+  MiB/GiB are refused because 12 TB and 12 TiB differ by ten per cent.
+- `mhvtl settings list` narrows by section, family or key, and case never
+  matters: `tape.size`, `tape.size.lto`, `tape.size.3592`, `tape.size.LTO8`.
+  Thirty-three rows is not a list anybody reads.
+- A size per kind of cartridge, not one per library. A library holding LTO-8
+  and DLT-4 holds two capacities, so the size travels on the media run - a
+  field on each row of the creation wizard, `--media-size DENSITY:SIZE` on
+  the command line, and `size_mb` in a preset.
+- /etc/mhvtl-gui/settings.toml.example lists every density commented out with
+  what that cartridge really holds beside it. It is never installed as the
+  live file, so an upgrade cannot overwrite a setting.
+- Fixed: the creation drop-downs said "LTO8 (12 TB)" about a tape that would
+  be made at 1 GB - out by a factor of twelve thousand, in the one place an
+  operator is choosing. They now name the size the create will produce, and
+  follow the setting.
+- Fixed: creating a tape sent you to the tape inventory with no library
+  chosen, asking you to pick the one you had just put a tape in. Every form's
+  error path had the same hole, where it cost more - the library was cleared
+  along with the typing. Nine views: create, bulk create, delete, library
+  online and offline, add and remove drive, adopt, and LTFS, mount and move.
 * Tue Oct 06 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.3.1-1
 - Test setup only; the application is byte for byte 3.3.0. Eight tests of the
   `mhvtl preset` write verbs passed on a developer's host and failed on a

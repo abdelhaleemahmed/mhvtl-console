@@ -9,7 +9,7 @@ out rather than defaulted, and the confirmation says how many tapes went, becaus
 different outcomes and an operator should not discover which they chose
 afterwards.
 """
-from .. import output, privileges
+from .. import output, privileges, sizes
 
 
 def register(subparsers) -> None:
@@ -42,10 +42,7 @@ def register(subparsers) -> None:
     create.add_argument('library_id', type=int)
     create.add_argument('barcode')
     create.add_argument('--slot', type=int, help='slot to put it in')
-    create.add_argument('--size-mb', type=int,
-                        help="capacity in MB; the density's native capacity "
-                             'if omitted - 12 TB for an LTO-8, which is what '
-                             'the cartridge holds')
+    create.add_argument('--size-mb', type=sizes.size_mb, help=sizes.HELP)
     create.add_argument('--density',
                         help='e.g. LTO8; read from the barcode if omitted. '
                              "Must be one the library's drives load "
@@ -61,9 +58,7 @@ def register(subparsers) -> None:
     bulk.add_argument('--suffix', help='override the detected suffix')
     bulk.add_argument('--start', type=int, dest='start_number',
                       help='first number; the next free one if omitted')
-    bulk.add_argument('--size-mb', type=int,
-                      help="capacity in MB; each tape gets its own density's "
-                           'native capacity if omitted')
+    bulk.add_argument('--size-mb', type=sizes.size_mb, help=sizes.HELP)
     bulk.add_argument('--density',
                       help="e.g. LTO8; picks the suffix when --suffix is not "
                            "given. Must be one the library's drives load")

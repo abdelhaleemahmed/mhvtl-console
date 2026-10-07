@@ -266,6 +266,15 @@ EOF
         print_step "Preset example at $CONFIG_DIR/presets.toml.example"
     fi
 
+    # The commented example of settings.toml, on the same terms: written by
+    # `mhvtl settings set` and the Settings page, and absent until something
+    # is saved.
+    if [ -f "$SCRIPT_DIR/packaging/settings.toml.example" ]; then
+        install -m 644 "$SCRIPT_DIR/packaging/settings.toml.example" \
+            "$CONFIG_DIR/settings.toml.example"
+        print_step "Settings example at $CONFIG_DIR/settings.toml.example"
+    fi
+
     print_step "Configuration created at $CONFIG_DIR/env"
 }
 

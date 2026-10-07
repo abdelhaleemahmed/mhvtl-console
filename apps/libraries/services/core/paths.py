@@ -127,3 +127,26 @@ def presets_example_path(base=None) -> Path:
     instead of a literal in one caller.
     """
     return _as_dir(base, presets_dir) / 'presets.toml.example'
+
+
+def settings_path(base=None) -> Path:
+    """The console's own preferences - today, how big a new cartridge is.
+
+    Beside presets.toml and for the same reason: it is the operator's file, in
+    the console's directory rather than MHVTL's. presets_dir() is named for
+    its first occupant and means "where our files live"; this is the second.
+
+    Absent until something is saved. Nothing fails when it is not there - the
+    defaults are in the code, and a missing file simply means none of them has
+    been overridden.
+    """
+    return _as_dir(base, presets_dir) / 'settings.toml'
+
+
+def settings_example_path(base=None) -> Path:
+    """The commented example of that file, shipped with the package.
+
+    Installed as .example and never as settings.toml, exactly as presets is:
+    an upgrade replaces it, so a setting kept here would be lost.
+    """
+    return _as_dir(base, presets_dir) / 'settings.toml.example'

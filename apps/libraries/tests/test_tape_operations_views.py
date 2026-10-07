@@ -833,3 +833,165 @@ class LibraryActivityEndpointTests(FixtureConfigMixin, TestCase):
                 self._patched({11: self._stats()}):
             views.library_activity(_request('get'), 10)
         slept.assert_not_called()
+
+
+class EveryFormComesBackToItsLibraryTests(TestCase):
+    """A POST that redirects must say which library the next page is about.
+
+    Both inventories load nothing without one - TapeListView and
+    DriveListView read `?library_id=` and otherwise fall through to the
+    picker - so creating a tape sent the operator back to choosing the
+    library they had just put a tape in. Every error path had the same hole,
+    where it cost more: the page came back with the library cleared and the
+    typing gone.
+
+    One view had it right, AdoptTapeView, which is how it was found.
+    """
+
+    def _redirect(self, view, data, patch=None, result=None):
+        """POST `data` to `view` with its service faked, and return the URL."""
+        answer = result if result is not None else mock.Mock(
+            success=True, message='done', data={}, errors=[])
+        request = _request('post', data)
+        if patch:
+            where, what = patch
+            with mock.patch.object(where, what, return_value=answer):
+                response = view().post(request)
+        else:
+            response = view().post(request)
+        self.assertEqual(response.status_code, 302)
+        return response.url
+
+    # -- the one that was reported -----------------------------------------
+
+    def test_creating_a_tape_lands_on_that_library_s_inventory(self):
+        url = self._redirect(
+            views.CreateTapeView,
+            {'library_id': '10', 'barcode': 'E01050L8', 'slot': '5'},
+            patch=(TapeService, 'create'))
+        self.assertIn('library_id=10', url)
+        self.assertIn('/tapes/', url)
+
+    def test_a_refused_tape_comes_back_to_the_form_still_on_that_library(self):
+        url = self._redirect(
+            views.CreateTapeView,
+            {'library_id': '10', 'barcode': 'E01050L8', 'slot': '5'},
+            patch=(TapeService, 'create'),
+            result=mock.Mock(success=False, message='no', data={}, errors=[]))
+        self.assertIn('library_id=10', url)
+        self.assertIn('create', url)
+
+    def test_a_half_filled_form_keeps_the_library_too(self):
+        """The library is chosen first and the barcode typed after it, so
+        this is the path an operator hits most and the one that cost the
+        most: it used to clear the picker as well as the field."""
+        url = self._redirect(views.CreateTapeView, {'library_id': '10'})
+        self.assertIn('library_id=10', url)
+
+    # -- and the rest of them ----------------------------------------------
+
+    def test_a_bulk_create_does_the_same(self):
+        url = self._redirect(
+            views.CreateTapesBulkView,
+            {'library_id': '20', 'count': '4'},
+            patch=(TapeService, 'create_bulk'),
+            result=mock.Mock(success=True, message='done',
+                             data={'created': ['a', 'b', 'c', 'd']},
+                             errors=[]))
+        self.assertIn('library_id=20', url)
+
+    def test_a_count_out_of_range_keeps_the_library(self):
+        url = self._redirect(views.CreateTapesBulkView,
+                             {'library_id': '20', 'count': '9999'})
+        self.assertIn('library_id=20', url)
+
+    def test_deleting_a_tape_lands_on_that_library_s_inventory(self):
+        url = self._redirect(views.DeleteTapeView,
+                             {'library_id': '10', 'barcode': 'E01001L8'},
+                             patch=(views, '_delete_tape'))
+        self.assertIn('library_id=10', url)
+
+    def test_setting_a_library_online_comes_back_to_it(self):
+        from apps.libraries.services.operations import OperationsService
+        url = self._redirect(views.LibraryOnlineView, {'library_id': '30'},
+                             patch=(OperationsService, 'online'))
+        self.assertIn('library_id=30', url)
+
+    def test_setting_a_library_offline_comes_back_to_it(self):
+        from apps.libraries.services.operations import OperationsService
+        url = self._redirect(views.LibraryOfflineView, {'library_id': '30'},
+                             patch=(OperationsService, 'offline'))
+        self.assertIn('library_id=30', url)
+
+    def test_adding_a_drive_lands_on_that_library_s_drives(self):
+        url = self._redirect(views.AddDriveView, {'library_id': '10'},
+                             patch=(views.DriveService, 'add'))
+        self.assertIn('library_id=10', url)
+        self.assertIn('drives', url)
+
+    def test_removing_a_drive_follows_the_service_not_the_form(self):
+        """The drive's own library, because the form can be a stale tab and
+        the service has just read device.conf."""
+        url = self._redirect(
+            views.RemoveDriveView, {'drive_id': '11', 'library_id': '20'},
+            patch=(views.DriveService, 'remove'),
+            result=mock.Mock(success=True, message='done',
+                             data={'library_id': 10}, errors=[]))
+        self.assertIn('library_id=10', url)
+
+    def test_removing_a_drive_falls_back_to_the_form(self):
+        url = self._redirect(
+            views.RemoveDriveView, {'drive_id': '11', 'library_id': '20'},
+            patch=(views.DriveService, 'remove'),
+            result=mock.Mock(success=True, message='done', data={},
+                             errors=[]))
+        self.assertIn('library_id=20', url)
+
+    # -- what is not put in a URL ------------------------------------------
+
+    def test_a_library_that_is_not_a_number_is_dropped(self):
+        """It arrives only from a tampered or stale POST, and the list page
+        would answer `?library_id=nonsense` with a second "Invalid library"
+        on top of the real complaint."""
+        url = self._redirect(views.CreateTapeView, {'library_id': 'nonsense'})
+        self.assertNotIn('library_id', url)
+
+    def test_no_library_at_all_is_dropped(self):
+        url = self._redirect(views.CreateTapeView, {'barcode': 'E01050L8'})
+        self.assertNotIn('library_id', url)
+
+    # -- the guard ---------------------------------------------------------
+
+    def test_no_post_redirects_to_a_bare_route_name(self):
+        """The regression this class exists for, checked across the module
+        rather than view by view: a `redirect('libraries:...')` with nothing
+        after it is a page that will open on the picker.
+
+        The login redirect is exempt - there is no library to carry into it -
+        and so is `redirect(back)`, a named URL built with the id in it.
+        """
+        source = (Path(views.__file__)).read_text()
+        offenders = [line.strip() for line in source.splitlines()
+                     if re.search(r"redirect\(\s*'libraries:", line)]
+        self.assertEqual(offenders, [], 'these lose the library: '
+                                        + '; '.join(offenders))
+
+    def test_the_helper_is_what_they_all_use(self):
+        """No view builds the URL itself any more.
+
+        Two of them hardcoded the path - `/libraries/operator/move/?...` -
+        which survives a renamed route silently, and four more reversed it
+        and appended the query string by hand. `_showing` is where that
+        expression lives now, and `redirect(back)` in the LTFS helpers is the
+        one remaining variable, named because it is used three times.
+        """
+        source = Path(views.__file__).read_text()
+        self.assertGreater(len(re.findall(r'_showing\(', source)), 20)
+
+        built_by_hand = [
+            line.strip() for line in source.splitlines()
+            if re.search(r'redirect\(\s*f[\'"]', line)
+            or re.search(r"redirect\(\s*['\"]/libraries", line)]
+        # The one left is inside _showing itself, which is the implementation.
+        self.assertEqual(len(built_by_hand), 1, built_by_hand)
+        self.assertIn('{target}?library_id=', built_by_hand[0])

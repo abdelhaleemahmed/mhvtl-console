@@ -137,12 +137,16 @@ class WhatIsOfferedTests(SetupFormTestCase):
         self.assertEqual(answer['wanted_media']['selected'], '')
         self.assertTrue(answer['wanted_media']['options'][0]['selected'])
 
-    def test_the_tape_filter_is_labelled_with_the_capacity(self):
+    def test_the_tape_filter_is_labelled_with_the_size_it_will_be_made_at(self):
+        """Not with the native capacity, which is what it said until the size
+        became a setting - see test_tape_capacity."""
+        from apps.libraries.services.tapes import service as tapes
+
         answer = self.state()
         label = next(option['label']
                      for option in answer['wanted_media']['options']
                      if option['value'] == 'LTO8')
-        self.assertEqual(label, personalities.media_label('LTO8'))
+        self.assertEqual(label, tapes.media_label('LTO8'))
 
 
 class WhatIsSelectedTests(SetupFormTestCase):

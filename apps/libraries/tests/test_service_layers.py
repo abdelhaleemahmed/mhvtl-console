@@ -43,6 +43,10 @@ ALLOWED = {
                   'profiles', 'sync', 'tapes'},
     'about': {'console', 'core'},
     'dashboard': {'config', 'console', 'libraries'},
+    # The console's own preferences. config owns the file, because tapes has
+    # to read a cartridge size and may not import this package; this one adds
+    # the result shape and the provenance a front end needs.
+    'settings': {'config', 'core', 'profiles'},
 }
 
 RELATIVE = re.compile(r'^\s*from \.\.(\w+)', re.M)

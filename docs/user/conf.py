@@ -1,5 +1,9 @@
 """
-Sphinx configuration for the MHVTL GUI User Guide.
+Sphinx configuration for the MHVTL Console User Guide.
+
+The product is `mhvtl-console` from 3.3.0; the package it installs from is
+still `mhvtl-gui`. The title below is the product, because that is what a
+reader is looking for. See services/about/project() for the split.
 
 One of four independent documentation trees:
 
@@ -33,7 +37,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 _build_lang = os.environ.get('SPHINX_LANG', 'en')
 
-project   = 'MHVTL GUI User Guide'
+project   = 'MHVTL Console User Guide'
 copyright = '2026, Ahmed Abdelhaleem Ahmed'
 author    = 'Ahmed Abdelhaleem Ahmed'
 
@@ -87,7 +91,7 @@ html_theme_options = {
     'titles_only': False,
 }
 html_static_path = ['_static']
-html_title = f'MHVTL GUI User Guide {release}'
+html_title = f'MHVTL Console User Guide {release}'
 
 html_css_files = ['lang-switch.css']
 html_js_files = ['lang-switch.js']
@@ -95,4 +99,4 @@ html_js_files = ['lang-switch.js']
 if _build_lang == 'ar':
     html_css_files = ['lang-switch.css', 'rtl.css']
     html_js_files = ['lang-switch.js', 'fix-rtl.js']
-    html_title = f'MHVTL GUI User Guide {release} \u2014 \u0627\u0644\u062a\u0648\u062b\u064a\u0642 \u0627\u0644\u0639\u0631\u0628\u064a'
+    html_title = f'MHVTL Console User Guide {release} \u2014 \u0627\u0644\u062a\u0648\u062b\u064a\u0642 \u0627\u0644\u0639\u0631\u0628\u064a'

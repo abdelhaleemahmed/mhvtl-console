@@ -82,11 +82,15 @@ class OneFrameTests(TestCase):
                          'a route this sweep cannot reach was added')
         return found
 
-    def test_there_are_fifty_of_them(self):
+    def test_there_are_fifty_one_of_them(self):
         """A reminder that this is a sweep and not a sample. Update it when
         a page is added or removed - and when one is, the rest of this class
-        has already held it to the same rules."""
-        self.assertEqual(len(self.pages()), 50)
+        has already held it to the same rules.
+
+        Fifty until 6 October 2026, when Settings arrived - the first page
+        that stores a choice of the console's rather than reading MHVTL's.
+        """
+        self.assertEqual(len(self.pages()), 51)
 
     def test_every_page_renders(self):
         for name, path in self.pages():

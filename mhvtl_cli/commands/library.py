@@ -4,7 +4,7 @@ Argument handling and printing only; every verb is one call into
 services/libraries. Where a verb changes something it asks privileges first, so
 the refusal names the group rather than arriving as a sudo error eight steps in.
 """
-from .. import output, privileges, runs
+from .. import output, privileges, runs, sizes
 
 
 def register(subparsers) -> None:
@@ -73,6 +73,25 @@ def register(subparsers) -> None:
     create.add_argument('--empty-slots', type=int, dest='empty_slots',
                         help='slots to leave empty, for tapes added later '
                              "(the profile's default if omitted)")
+    # `tape create` and `tape bulk` have had this from the beginning, and a
+    # library's own cartridges could not be sized at the moment they were
+    # made - the last place the two creation paths disagreed. The
+    # specification already carried the value: libraries/workflow reads
+    # spec['tape_size_mb']. This is the flag that was missing, not new
+    # plumbing.
+    create.add_argument('--size-mb', type=sizes.size_mb, dest='tape_size_mb',
+                        help=f'every cartridge, whatever its density. '
+                             f'{sizes.HELP}')
+    # One size per kind, because a library holding LTO-8 and DLT-4 holds two
+    # capacities and --size-mb would give the second kind the first kind's.
+    # Its own flag rather than a third part of --media: the run names a kind
+    # of tape and how many, and a capacity is not part of naming one. The
+    # setup form posts the same pairs, under the same name.
+    create.add_argument('--media-size', action='append', default=[],
+                        dest='media_sizes', metavar='DENSITY:SIZE',
+                        help='capacity for one kind of cartridge, repeatable: '
+                             '--media-size LTO8:12TB --media-size DLT4:20GB. '
+                             'A kind not named here takes its setting')
     create.add_argument('--model', dest='library_model',
                         help="library model (product string); the profile's "
                              'default if omitted')
@@ -248,6 +267,26 @@ def do_create(args) -> int:
         for implied in IMPLIED_BY_LIST[key]:
             spec.pop(implied, None)
 
+    # One size per kind of cartridge, through the parser `mhvtl settings set`
+    # and the Settings page use. This comment claimed all three agreed while
+    # --size-mb above was type=int and rejected "12TB"; they agree now because
+    # that flag goes through cli/sizes.py, which is the same parser.
+    if getattr(args, 'media_sizes', None):
+        from apps.libraries.services.config import settings as sizes
+
+        asked = {}
+        for pair in args.media_sizes:
+            density, _, typed = str(pair).partition(':')
+            if not density.strip() or not typed.strip():
+                return output.fail(
+                    f'{pair!r} is not a density and a size',
+                    'the shape is DENSITY:SIZE, as in LTO8:12TB')
+            try:
+                asked[density.strip().upper()] = sizes.parse_size_mb(typed)
+            except ValueError as problem:
+                return output.fail(f'{density.strip()}: {problem}')
+        spec['tape_sizes'] = asked
+
     # An explicit argument beats the preset, which is what this existing loop
     # already does: only values that were given are applied over what is
     # there. Nothing new was needed for the override rule.
@@ -256,6 +295,7 @@ def do_create(args) -> int:
                        ('media_type', args.media_type),
                        ('media_count', args.media_count),
                        ('empty_slots', args.empty_slots),
+                       ('tape_size_mb', args.tape_size_mb),
                        ('library_model', args.library_model),
                        ('product', args.library_model),
                        ('drive_model', args.drive_model),

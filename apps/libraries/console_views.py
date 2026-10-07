@@ -23,6 +23,7 @@ from django.contrib import messages
 from .services.console import disk, logs, modules, system, units
 from .services.core import config_dir
 from .services.scsi import lsscsi
+from .services.settings import SettingsService
 
 
 # -- shaping for the templates -------------------------------------------------
@@ -352,6 +353,56 @@ def console_refresh_ajax(request):
             'success': False,
             'error': str(e)
         })
+
+
+class SettingsView(View):
+    """The console's own preferences - today, how big a new cartridge is.
+
+    The first page here that stores a choice of ours rather than reading
+    MHVTL's configuration, which is why the file is /etc/mhvtl-gui/ and not
+    /etc/mhvtl/. It renders what SettingsService returns and posts back what
+    was typed; `mhvtl settings` calls the same service, so the two cannot
+    answer differently.
+
+    An empty field means "not set" - the row then takes the default, and the
+    file stops mentioning it. That is the same thing `mhvtl settings reset`
+    does, which is why the page needs no reset button per row.
+    """
+    template_name = 'libraries/console/settings.html'
+
+    def get(self, request):
+        if not request.session.get('mhvtl_logged_in'):
+            return redirect('authentication:login')
+        return render(request, self.template_name, self._context())
+
+    def post(self, request):
+        if not request.session.get('mhvtl_logged_in'):
+            return redirect('authentication:login')
+
+        typed = {key: value for key, value in request.POST.items()
+                 if key.startswith('tape.')}
+        saved = SettingsService().apply(typed)
+        if saved.success:
+            messages.success(request, saved.message)
+        else:
+            for problem in saved.errors or [saved.message]:
+                messages.error(request, problem)
+        return redirect('libraries:console_settings')
+
+    def _context(self):
+        listed = SettingsService().list()
+        rows = listed.data['settings'] if listed.success else []
+        return {
+            'title': 'Settings',
+            'settings': [row for row in rows
+                         if row['key'] != 'tape.size.default'],
+            'tape_default': next((row for row in rows
+                                  if row['key'] == 'tape.size.default'), None),
+            'settings_file': listed.data['file'] if listed.success else '',
+            'file_exists': listed.data['exists'] if listed.success else False,
+            'said': listed.message if listed.success else '',
+            'error_message': None if listed.success else listed.message,
+        }
 
 
 def service_status_ajax(request):

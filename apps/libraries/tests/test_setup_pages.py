@@ -135,14 +135,14 @@ class BrandSelectionPageTests(TestCase):
         self.assertNotIn('LTO9', media['hp'].split())       # MHVTL's HP stops at 8
 
     def test_the_media_filter_offers_every_creatable_density(self):
-        from apps.libraries.services.profiles import personalities
+        from apps.libraries.services.tapes import service as tapes
 
         page = self.page()
         offered = set(re.findall(r'<option value="(\w+)"', page))
         for density in ('LTO9', 'LTO10', 'T10KC', 'AIT4', 'E07', 'SDLT600'):
             with self.subTest(density=density):
                 self.assertIn(density, offered)
-                self.assertIn(personalities.media_label(density), page)
+                self.assertIn(tapes.media_label(density), page)
 
 
 class BrandConfigPageTests(TestCase):
@@ -203,10 +203,11 @@ class StartFromTheTapeTests(TestCase):
         self.assertEqual(self.chooser('SONY', '?wanted_media=LTO10')[1], '')
 
     def test_the_page_carries_the_labels_the_chooser_shows(self):
-        from apps.libraries.services.profiles import catalogue, personalities
+        from apps.libraries.services.profiles import catalogue
+        from apps.libraries.services.tapes import service as tapes
 
         offered, _chosen, labels = self.chooser('STK')
-        self.assertEqual(labels['LTO9'], personalities.media_label('LTO9'))
+        self.assertEqual(labels['LTO9'], tapes.media_label('LTO9'))
         self.assertEqual(
             offered[1:],              # the first is "any tape"
             catalogue.densities_of(

@@ -149,6 +149,19 @@ def apply_defaults(library_spec: Dict[str, Any], *, next_id=None) -> Dict[str, A
         filled['media_count'] = sum(count for _, count in asked_media)
         filled.setdefault('media_type', _nominal_density(filled['drive_slots'],
                                                          asked_media))
+        # A media run may carry how big its cartridges are - a preset with
+        # `size_mb`, or a row of the setup form. Collected into the one shape
+        # the media step reads, {density: mb}, so a preset and a flag arrive
+        # the same way and nothing downstream knows which it was.
+        #
+        # An explicit tape_sizes wins, because that is --media-size or the
+        # form, and an argument beats the preset it was given alongside.
+        from_runs = {str(entry['density']).upper(): entry['size_mb']
+                     for entry in (filled.get('media') or [])
+                     if isinstance(entry, dict) and entry.get('size_mb')}
+        if from_runs:
+            filled['tape_sizes'] = {**from_runs,
+                                    **(filled.get('tape_sizes') or {})}
     else:
         filled.setdefault('media_type', _default_media(key,
                                                        filled['drive_product'],

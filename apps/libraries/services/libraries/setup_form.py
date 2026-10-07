@@ -39,7 +39,9 @@ Every answer is composed from something that already decided it::
                                   gets - narrowed by one argument
     catalogue.densities_of        the tapes a vendor's drives take, in
                                   generation order
-    personalities.media_label     'LTO8 (12 TB)'
+    tapes.media_label             'LTO8 (1 GB)' - the size a cartridge of
+                                  this kind will be made at, so the option
+                                  names what choosing it produces
     config.ids                    the SCSI target and device-id budgets
     spec.apply_defaults           the serial, the barcode prefix, the suffix,
                                   the revision - so the form shows exactly
@@ -205,12 +207,13 @@ def state(profile_key: str, *, library_id: int = None,
             'media_type': filled.get('media_type'),
             'wanted_media': _select(
                 catalogue.densities_of(options['drive_models']), wanted,
-                label=personalities.media_label,
+                label=_tapes().media_label,
                 empty='Any tape this vendor supports'),
             'library_model': _select(models, model),
             'drives': drives,
             'media': media,
             'counts': counts,
+            'tape_size': _tape_size(media),
             'limits': limits,
             'says': _says(model, drives, media, limits, filled, counts),
         })
@@ -370,6 +373,10 @@ def _media_rows(asked, drives: List[str], described: Dict, options: Dict,
         if budget:
             count = max(min(count, budget - spent), 0)
         spent += count
+        # How big a cartridge of this kind will be, asked of the service that
+        # will make it. The row carries its own, because a library holding
+        # LTO-8 and DLT-4 is holding two capacities.
+        size_mb = _tapes().size_for(chosen or '')
         rows.append({
             'options': _select(mine, chosen,
                                label=lambda value: _media_label(
@@ -378,6 +385,8 @@ def _media_rows(asked, drives: List[str], described: Dict, options: Dict,
             'count': count,
             'read_only': chosen in read_only,
             'can_remove': len(asked) > 1,
+            'size_mb': size_mb,
+            'size_shown': _sizes().as_size(size_mb),
         })
     left = [density for density in loads if density not in taken]
     return {'rows': rows, 'can_add': bool(left),
@@ -404,6 +413,42 @@ def _totals(drives: Dict, media: Dict, empty: int, limits: Dict) -> Dict:
     return {'num_drives': num_drives, 'media_count': media_count,
             'empty_slots': max(int(empty), 0),
             'total_slots': media_count + max(int(empty), 0)}
+
+
+def _tapes():
+    """services.tapes, imported late.
+
+    This module is imported while the parser is built, and tapes pulls in the
+    whole catalogue; deferring it keeps a `--help` cheap. The same reason
+    commands/*.py import their services inside their handlers.
+    """
+    from ..tapes import service as tapes
+    return tapes
+
+
+def _sizes():
+    from ..config import settings as sizes
+    return sizes
+
+
+def _tape_size(media: Dict) -> Dict:
+    """What a cartridge of the chosen density will be made at.
+
+    So the form can show it as the field's placeholder instead of leaving a
+    blank to fill in. **Asked of the service, never worked out here**: a page
+    showing one number while a create produces another is the bug
+    plan-tape-size exists to prevent, and it hid for months the last time
+    because the view's arithmetic and the service's agreed by coincidence.
+
+    Its own key rather than another entry in `counts`, which is the three
+    numbers the form adds up and has a test pinning its shape. A capacity is
+    not a count.
+    """
+    chosen = next((row['selected'] for row in media['rows']
+                   if row.get('count') and row.get('selected')), None)
+    size_mb = _tapes().size_for(chosen or '')
+    return {'density': chosen, 'mb': size_mb,
+            'shown': _sizes().as_size(size_mb)}
 
 
 def _choose(options: List[str], *candidates) -> Optional[str]:

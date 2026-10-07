@@ -46,9 +46,24 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="density">Tape Density</label>
+                        {% comment %}
+                            Grouped by family - LTO, AIT, DLT, 3592 - because
+                            thirty-two generations in one flat list is a wall.
+                            The grouping is the service's
+                            (personalities.media_family); this renders it.
+
+                            Replaced wholesale by TapeMedia.fill once a
+                            library is chosen, with only the densities that
+                            library's drives load. This is what is offered
+                            before that.
+                        {% endcomment %}
                         <select name="density" id="density" class="form-control" required>
-                            {% for value, label in densities %}
+                            {% for family, members in density_families %}
+                            <optgroup label="{{ family }}">
+                                {% for value, label in members %}
                                 <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </optgroup>
                             {% endfor %}
                         </select>
                         <p class="form-help" id="density-help">Select a library to see the media its drives load.</p>
@@ -91,14 +106,22 @@
                 <div class="form-group">
                     <label for="size_mb">Tape Size (MB)</label>
                     {% comment %}
-                        Empty, not 500000: the script fills it from the
-                        density, and left empty the service uses the same
-                        capacity. See the note in create_tapes_bulk.html.
+                        The script fills this from the service's answer for
+                        the chosen density - tapes.size_for, which is the
+                        Settings file and then the shipped 1,000 MB. Left
+                        empty, the service uses that same number, so the
+                        field and the result cannot differ.
+
+                        It said "the density's native capacity" until the
+                        sizes moved into Settings, which stopped being true
+                        the moment a new cartridge became 1 GB and not 12 TB.
+                        The minimum was 1000 for the same reason and would
+                        now refuse a deliberately small test cartridge.
                     {% endcomment %}
                     <input type="number" name="size_mb" id="size_mb" class="form-control"
-                           value="" min="1000" max="50000000"
-                           placeholder="the density's native capacity">
-                    <p class="form-help" id="size-help">Size in megabytes; left empty, it gets the density's native capacity</p>
+                           value="" min="1" max="50000000"
+                           placeholder="the size set for this density">
+                    <p class="form-help" id="size-help">Size in megabytes; left empty, it gets the size set for this density</p>
                 </div>
 
                 <div class="btn-group">

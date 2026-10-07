@@ -97,32 +97,51 @@
         return `Drives: ${models}. ${density} reads and writes in ${entry.writable_in.join(', ')}${readOnly}.`;
     }
 
+    // What a cartridge of this density really holds - a fact about hardware.
+    // Not what one is made at: that is defaultMb. Both come from the service,
+    // which is the only thing that knows either.
     function nativeMb(density) {
         return info.native_mb[density] || null;
     }
 
-    // MHVTL has no native capacity for some media (9840, 9940) and gives
-    // them 1 GB; the forms suggest the same, and the operator can change it.
+    // How big one will be made - tapes.service.size_for, which walks the
+    // shipped default, the settings file's default, and the settings file's
+    // entry for this density. Nothing here derives it.
     //
-    // The number comes from the service with the capacities
-    // (tapes.service.UNKNOWN_SIZE_MB) rather than being written here as
-    // well. Leaving the field empty now means "whatever the service would
-    // choose", so a second copy of this could disagree with what actually
-    // gets created - which is exactly what 500 and 500000 did.
+    // These were one number until 6 October 2026, and the view computed it as
+    // `gb * 1000`: the form suggested the native capacity and the service
+    // created the native capacity, so the two agreed by coincidence. The
+    // moment they became separate questions, a page deriving its own answer
+    // would have filled in 12 TB while `mhvtl` made 1 GB - a cartridge's size
+    // depending on which front end you used, which is what 500 and 500000
+    // already were once.
+    function defaultMb(density) {
+        return info.default_mb[density] || info.unknown_size_mb;
+    }
+
     const UNKNOWN_SIZE_MB = info.unknown_size_mb;
 
-    // {mb, text}: the size to suggest for a density, and why.
+    // {mb, text}: the size to put in the field, and why - naming what the
+    // cartridge really holds, so a full-size one is a choice rather than
+    // something to go and look up.
     function suggestedSize(density) {
+        const mb = defaultMb(density);
         const native = nativeMb(density);
-        if (native) {
-            return {mb: native, text: `${native.toLocaleString()} MB is ${density}'s native capacity`};
+        if (native && native !== mb) {
+            return {mb: mb,
+                    text: `${mb.toLocaleString()} MB. A real ${density} holds `
+                          + `${native.toLocaleString()} MB - type that for a `
+                          + 'full-size cartridge, or set a default in Settings'};
         }
-        return {mb: UNKNOWN_SIZE_MB,
+        if (native) {
+            return {mb: mb, text: `${mb.toLocaleString()} MB is ${density}'s native capacity`};
+        }
+        return {mb: mb,
                 text: `MHVTL has no native capacity for ${density}; `
-                      + `${UNKNOWN_SIZE_MB.toLocaleString()} MB is suggested, `
+                      + `${mb.toLocaleString()} MB is suggested, `
                       + 'change it as needed'};
     }
 
     global.TapeMedia = {info, library, choices, suffixFor, fill, describe, nativeMb,
-                        suggestedSize, UNKNOWN_SIZE_MB};
+                        defaultMb, suggestedSize, UNKNOWN_SIZE_MB};
 })(window);
