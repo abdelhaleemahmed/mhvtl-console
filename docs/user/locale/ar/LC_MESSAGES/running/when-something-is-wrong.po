@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ar\n"
@@ -21,21 +21,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../running/when-something-is-wrong.rst:2 ff6d45aaf3944906a37e7d8e04dbee95
+#: ../../running/when-something-is-wrong.rst:2 a7a58590ad9d4c56b1ce218cc9e2e530
 msgid "When something is wrong"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:4 e10200e66c9b4cea8f65d69c2dd62b41
+#: ../../running/when-something-is-wrong.rst:4 aa58a5fdc17d44d38d5966b243b06eea
 msgid "The usual causes, what each looks like, and the command that settles it."
 msgstr ""
 
 #: ../../running/when-something-is-wrong.rst:11
-#: c86a80a4185341b3977f0b3272ad5c29
+#: f3731bdc744547fd8aa37143cd3a2078
 msgid "Three answers that disagree"
 msgstr ""
 
 #: ../../running/when-something-is-wrong.rst:13
-#: d760e6ab2cf84b63ace3a85487ec9f14
+#: 0cb134d6117642eb9ec0c430b0643573
 msgid ""
 "A drive's state can be asked three ways, and they do not always agree. "
 "This is the single most confusing thing about MHVTL, and it is worth "
@@ -43,149 +43,149 @@ msgid ""
 msgstr ""
 
 #: ../../running/when-something-is-wrong.rst:28
-#: 71f83842365a4d1a8704a6bcf5e496f3
+#: e5494074a12647f8a091743c13967de9
 msgid ""
 "That was a real drive with a real cartridge in it, which wrote and read "
 "back perfectly. ``mt`` was simply stale."
 msgstr ""
 
 #: ../../running/when-something-is-wrong.rst:31
-#: 1fa8f99e94f94ca196863e2db91e18f2
+#: 43fa0b4db8034b92b87836cafae2c572
 msgid ""
-"**Believe the robot and the daemon.** The robot moved the cartridge, the "
-"daemon is holding it, and the daemon's counters are the only ones that "
-"keep working during a backup - the kernel gives the SCSI reservation to "
-"whoever is writing, and ``mt`` and ``mtx`` answer *device busy* until it "
-"finishes."
+"**Believe the robot.** The robot moved the cartridge and knows where it "
+"is, and it keeps answering during a backup. So does the drive's own "
+"counter page. ``mt`` is the one that stops: the program writing has the "
+"tape device open, and the kernel gives that to one writer at a time, so "
+"``mt`` says *device busy* until the backup finishes."
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:37
-#: be01675653d44491b38a5d5c409bc05e
+#: ../../running/when-something-is-wrong.rst:38
+#: 2ce1a1e3e39240d5be3d74c1ca1f0de5
 msgid "\"Restart the library for its robot to see this\""
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:39
-#: 8ad2deeeb3814e728dfb1055653d3700
+#: ../../running/when-something-is-wrong.rst:40
+#: 7e43c2c47f374a3faa9ab3bf33761bb5
 msgid ""
 "MHVTL reads its configuration **once**, when a daemon starts. Adding a "
 "tape, adopting one, or changing the slot count edits the file, and the "
 "running robot knows nothing about it:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:49
-#: c774c391d90d46e582352f38d8131888
+#: ../../running/when-something-is-wrong.rst:50
+#: 41afc146971f4a059f932731a82e151b
 msgid ""
 "Until you do, ``mhvtl tape list`` shows the new cartridge and ``mhvtl "
 "status library`` does not. The console says the same on the library page."
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:57
-#: 6c71095b29a548e6ac7da9f90bd2c513
+#: ../../running/when-something-is-wrong.rst:58
+#: 91c24a6644c64a1884bae7ddd8504584
 msgid "A drive says ``silent``"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:59
-#: b22d04b7c0904173a3ade3526eaa47d6
+#: ../../running/when-something-is-wrong.rst:60
+#: 541bf579e9a54ccbb34c7bfb2afa9ecb
 msgid ""
 "Its daemon is not running. Nothing is broken about the library; that one "
 "drive is simply absent:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:75
-#: 84ec8f92c4ff4c8eb021a7e56a98d6ce
+#: ../../running/when-something-is-wrong.rst:76
+#: 76986592917a4a0f9288c554aae77f34
 msgid "A library page that answers 404"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:77
-#: 10c3762c19944526a829600634d77ef8
+#: ../../running/when-something-is-wrong.rst:78
+#: 031c532c25f94c938ee3eff61c0774f6
 msgid ""
 "A library made from the command line exists in the configuration before "
 "the console's database hears of it. Opening the page syncs it first, so "
 "this should be rare. If it persists:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:87
-#: 7f315cf0631c4f70ab4d574aca4f44fc
+#: ../../running/when-something-is-wrong.rst:88
+#: 021ad6d2f5a74b9994e0ca2b1cf493c7
 msgid "An export that points at the wrong device"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:89
-#: efca90773f31411fa2e5242c40c435d8
+#: ../../running/when-something-is-wrong.rst:90
+#: 73f974b9b76e4d058d7d5a6e73e65bc9
 msgid ""
 "``/dev/sg`` numbers change when the MHVTL module reloads and when a "
 "library is recreated. An iSCSI export remembers a node, so after either "
 "it may be pointing at something else entirely:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:101
-#: c9b04a27e50248efa41470de90e9bfa1
+#: ../../running/when-something-is-wrong.rst:102
+#: 6e17be59afb243a5943a8dddc32fc69d
 msgid ""
 "This runs at boot as well. The iSCSI page shows the same per device: "
 "**Created on**, **Device now**, and whether they agree."
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:105
-#: 50f2aeea1afb4f4f9478f42244e6f478
+#: ../../running/when-something-is-wrong.rst:106
+#: 030cbd2f0ab3432c8171c5533b7a2f6d
 msgid "Tapes that belong to no library"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:107
-#: fa8e80246bd14b84aac3cb8f1b758052
+#: ../../running/when-something-is-wrong.rst:108
+#: 75112635a8a44d3eabf6ecbc541b751c
 msgid ""
 "Removing a library leaves its cartridges on disk on purpose - they are "
 "data:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:120
-#: 1d0b90d1aef54d5a9f20692b45040b78
+#: ../../running/when-something-is-wrong.rst:121
+#: 886ebd46e27e4dcd8cd3cbea53cbab44
 msgid "See :doc:`../tapes/adopt`."
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:123
-#: aea50e03899c4220b6952ae2feb65fef
+#: ../../running/when-something-is-wrong.rst:124
+#: b111e014dae1435ea320a70028aa9ed6
 msgid "A drive that will not take a cartridge"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:125
-#: 37edfec763ae40f7bcb865a8a4c7a121
+#: ../../running/when-something-is-wrong.rst:126
+#: d0d60584515c4959a50cd3baed263d11
 msgid "Check that the drive writes that generation at all:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:131
-#: 31d01a35a5764979a876c0ee6d044ee2
+#: ../../running/when-something-is-wrong.rst:132
+#: f1bf69d18eea4806a8a35171a194fe6b
 msgid ""
 "A drive reads older cartridges and writes recent ones, as the real "
 "hardware does. Mounting an LTO-5 cartridge into an LTO-8 drive is allowed"
 " and reading it works; writing to it does not."
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:136
-#: 4ee15264e05b41c4a84ede874d18e14c
+#: ../../running/when-something-is-wrong.rst:137
+#: e8db3ef131364acea9785bc757dead72
 msgid "The disk is full"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:138
-#: c16ead1621464dbfa80cdaceea6c6c9f
+#: ../../running/when-something-is-wrong.rst:139
+#: 95ecd23ec92444609ff6e8fff3c5d795
 msgid ""
 "Tapes are files, so a full disk fails writes in ways that look like drive"
 " faults:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:145
-#: ecbbdff8703e4cb5adaf08ff1b807095
+#: ../../running/when-something-is-wrong.rst:146
+#: 70aeef2fb54840bd825fa07564defda2
 msgid ""
 "A cartridge occupies only what has been written to it, so the problem is "
 "usually one library that has had a great deal written to it, not the "
 "number of cartridges."
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:150
-#: bc8ed11f6c174f61b908e6761e6dcd5b
+#: ../../running/when-something-is-wrong.rst:151
+#: dc1908aba898411da6c43634bd61eb8b
 msgid "Removing a library and rebooting"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:152
-#: 40de04fcab42408fa377743da74079f6
+#: ../../running/when-something-is-wrong.rst:153
+#: 837b6be0184e4096bd034f8b1cb26b13
 msgid ""
 "On this host the kernel ``ch`` driver is blacklisted, because it takes a "
 "reference on every drive a changer reports and never releases it - the "
@@ -195,18 +195,82 @@ msgid ""
 "*Guides*. Only a reboot clears it."
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:160
-#: 5ce8ef74196f47c68004fe0cec9d8ce9
+#: ../../running/when-something-is-wrong.rst:161
+#: f9efebe5eb5a44a0a31a4058fbf08ede
+msgid "Which version am I running"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:163
+#: 089e40d32e2343e192ca9efb8c6b0292
+msgid ""
+"Worth settling first, because a problem that was fixed in a later release"
+" looks exactly like a problem. Three places answer it, and all three read"
+" the same value:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:176
+#: 2b80b05db5634cefb8ddd904404ba3d4
+msgid ""
+"``mhvtl status system`` prints it above the rest of the host's state, "
+"which makes it the one command to quote in a bug report:"
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:192
+#: 5706c57652a14f71854687b761df4af8
+msgid ""
+"In the console it is **About**, in the header of every page. That page "
+"adds what the command line cannot easily show - the Python and Django "
+"versions, the kernel, and the host's name - which is the rest of what a "
+"bug report needs."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:199
+#: a0999bcc16624e23ab2192a188a41ce7
+msgid ""
+"**The program is** ``mhvtl-console``; **the package is** ``mhvtl-gui``. "
+"Both names are correct and they mean different things. ``mhvtl-console`` "
+"is the product, which is what the version line and the About page say. "
+"``mhvtl-gui`` is the RPM, the directory ``/opt/mhvtl-gui``, the account "
+"the service runs as, and the unit ``mhvtl-gui.service`` - so ``rpm -q``, "
+"``systemctl`` and the paths all keep the older name. It was renamed in "
+"3.3.0 because an unrelated, older interface to MHVTL is also called "
+"mhvtl-gui, and a bug report quoting a version could not say which program"
+" it was about."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:209
+#: 3aa5144f738c46d88838d0037c57d279
+msgid ""
+"The last line, ``running from``, is which copy of the code answered. A "
+"host can carry two - the installed tree under ``/opt/mhvtl-gui`` and a "
+"developer's checkout - and they print the same version, so one typed "
+"command can be two different programs. ``sudo`` always resolves "
+"``/usr/bin/mhvtl`` and therefore the installed tree, because sudoers sets"
+" ``secure_path``; plain ``mhvtl`` can be pointed elsewhere by ``PATH``. "
+"If a command behaves unlike the documentation, read this line first."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:217
+#: 4c97c26aec0d466986402ba7b49f16a1
+msgid ""
+"If the page and the command disagree, the service was upgraded and not "
+"restarted: the workers hold the code they started with. ``systemctl "
+"restart mhvtl-gui`` settles it. The packaged RPM restarts the service on "
+"an upgrade for exactly this reason."
+msgstr ""
+
+#: ../../running/when-something-is-wrong.rst:223
+#: 22a9ba2afbed4557917fff57779d1fb3
 msgid "Nothing here helped"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:162
-#: 308396fb289f4d518360483a1e0e5382
+#: ../../running/when-something-is-wrong.rst:225
+#: bfc7ddd5d0004bfb8cb5b0036d96f8b5
 msgid "The logs say what the drive was actually asked to do:"
 msgstr ""
 
-#: ../../running/when-something-is-wrong.rst:168
-#: 8e6d24c8bd8b4a12849ce1fc84d6002d
+#: ../../running/when-something-is-wrong.rst:231
+#: 60001e83744043e6a8a2599979c6da32
 msgid "and the configuration can be checked against itself:"
 msgstr ""
 
@@ -215,5 +279,17 @@ msgstr ""
 #~ " of the User Guide and is being"
 #~ " filled in; until then, see the "
 #~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Believe the robot and the daemon.**"
+#~ " The robot moved the cartridge, the"
+#~ " daemon is holding it, and the "
+#~ "daemon's counters are the only ones "
+#~ "that keep working during a backup "
+#~ "- the kernel gives the SCSI "
+#~ "reservation to whoever is writing, and"
+#~ " ``mt`` and ``mtx`` answer *device "
+#~ "busy* until it finishes."
 #~ msgstr ""
 

@@ -1,0 +1,239 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL Console User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL Console User Guide 3.5.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../libraries/create-interactively.rst:2 90414304b2224d2abe71757a2ffda5a0
+msgid "Creating a library by being asked"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:4 1e3eb041a5a6407baf6304ec0cd1ddfe
+msgid ""
+"``mhvtl library create --interactive`` walks through the same choices the"
+" form does, one question at a time, offering only what the vendor's "
+"catalogue allows for the answers so far."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:8 96d27818a3da420b987364ea62039e3a
+msgid ""
+"It is the terminal equivalent of the form rather than a shortcut: use it "
+"when you do not already know which model takes which drive, or when you "
+"want to see what the options *are* before committing to any of them."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:12 7ebc937c78564d579edb067f23e167d4
+msgid ""
+"**Nothing is written until the last answer.** Ctrl-C at any point, or "
+"``q`` at the end, leaves the host exactly as it was."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:20 621d71af8fa04169b5e54955c4e3bd5e
+msgid "The whole thing"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:80 5a423eefde7b492fb0286501e9a3766c
+msgid ""
+"Every answer above was left empty except the first, so the whole library "
+"is IBM's defaults."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:84 0963af910c7f40059c1e064cb3716cbe
+msgid "Each list is only what is still possible"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:86 110369925d084dcbb528cbefb5edec2b
+msgid ""
+"The questions narrow as they go, and that is the point of asking them in "
+"this order."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:89 d642b9f4a6fb436392badf2910e37b68
+msgid ""
+"Answer ``IBM`` and the **library model** list is IBM's thirteen models. "
+"Answer ``03584L32`` and the **drive model** list is the fourteen drives "
+"*that model* takes - the LTO line. Had you chosen ``03584L22`` instead, "
+"the same question would have offered four 3592 drives and no LTO drive at"
+" all, because that is a 3592 library. Choose ``03584L42`` and it offers "
+"two DLT drives."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:95 075bc15aa431414994db6ab93ef644fc
+msgid ""
+"Then the **cartridge density** list is only what the drive you picked can"
+" write. An ULT3580-TD8 offers LTO8 and LTO7; an ULT3580-TDA offers LTO10 "
+"and LTO10P."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:99 587b66cdbc4d4c9eb6983eda9d050b39
+msgid ""
+"So a combination the vendor does not make is not refused at the end - it "
+"is never offered. There is no way to answer these questions wrongly."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:103
+#: 978ff4eeb8c74ca3ad72657d4d256cd2
+msgid "Two limits it tells you about"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:105
+#: 854572d18f3b459ba10f684d082f3994
+msgid ""
+"``71 drive(s) at most here, limited by SCSI targets`` is not the model's "
+"limit, which is 511 for an 03584L32. It is how many drives will still fit"
+" on this host beside the libraries already configured. The number changes"
+" as you add libraries, which is why it is printed rather than documented."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:110
+#: b567747e1d4c467880a416c94a6cd5ec
+msgid ""
+"``Empty slots [4]`` defaults to four, and the summary spells out what "
+"that means - ``slots 54 (50 full, 4 empty)`` - because a library with no "
+"empty slots cannot take a new cartridge without being reconfigured."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:115
+#: 3126bc9181c64f788e210b9de487e0fe
+msgid "More than one kind of drive"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:117
+#: a252f376150147b3b0e66393992f0f72
+msgid ""
+"**Add another drive type?** and **Add another density?** are where a "
+"mixed library comes from. Answer ``y`` and it asks the same two questions"
+" again, and keeps asking until you say no. The order you answer in is the"
+" order the drives are given slots, which is also their SCSI target order."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:122
+#: 3be92495648e44deb9bf4bd0bcafd823
+msgid "See :doc:`drives` for what a mixed library is for."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:125
+#: 1ac86f084b144a7b86aeec63542ffa6c
+msgid "The four ways out"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:128
+#: ffb9cb24ce8748948ee23320209bef50
+msgid "Answer"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:128
+#: 392de6ef0a6441edb813fa19547d3e71
+msgid "What happens"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:130
+#: 9a134e83ec4f47c2855df95a76826e7b
+msgid "``c``"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:130
+#: 81961f4d6ec04df3bfa066d54098a21b
+msgid ""
+"Creates it. The same steps the one-shot command reports: validate, "
+"create, restart, verify, media."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:132
+#: dc9cbf3863ea495cbdd355fe6888260a
+msgid "``s``"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:132
+#: 99bfb4ad2d024716ac7a72a5e109fe7b
+msgid ""
+"Creates it, then asks for a name and writes the configuration to "
+"``presets.toml`` - the same as ``--save-preset NAME``. See :doc"
+":`profiles-and-presets`."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:136
+#: 0c5ef4011fbe48aa94f53b99e55fae19
+msgid "``p``"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:136
+#: 2882f9fc35ef4429961a4e60b200a37f
+msgid ""
+"Prints the ``device.conf`` text it *would* write, and comes back to this "
+"menu. Nothing is written."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:138
+#: 9d9cce13e72e45f29600ba15f9b50dd5
+msgid "``q``, or Ctrl-C"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:138
+#: f581c6b49f8a40de98fe7dd4cd71487f
+msgid "Quits. ``Nothing was written.``"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:141
+#: fb8568c89cb64d598a353e619839ea29
+msgid ""
+"``p`` is worth using the first time. It shows the library stanza and one "
+"stanza per drive, with the serial numbers, the SCSI targets and the "
+"revision levels the profile chose - which is the detail a backup "
+"application will identify the hardware by."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:147
+#: 11fd160ea29d445e8030c79730caa722
+msgid "The same thing without the questions"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:149
+#: ccd0cfbb9b1b44cc98b5f2d94b9fe969
+msgid ""
+"``--dry-run`` on an ordinary create prints that same ``device.conf`` and "
+"stops, so you can see the outcome of a command you already know how to "
+"type:"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:172
+#: babcd23572664d258f253bcf814637b2
+msgid "It reads the configuration but writes nothing, so it needs no privileges."
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:175
+#: bf2c1c40952e464e8ac3f79f61c2199e
+msgid "In a script, give the values"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:177
+#: 4ea6b2d71dbd42738bb01d1c536866ff
+msgid ""
+"``--interactive`` needs a terminal, and says so rather than hanging or "
+"reading nothing:"
+msgstr ""
+
+#: ../../libraries/create-interactively.rst:189
+#: 4d94e2df88a9410a8d5ae70992a0dab7
+msgid ""
+":doc:`create` for the form and the one-shot command, and :doc:`profiles-"
+"and-presets` for keeping a configuration you have proved."
+msgstr ""
+

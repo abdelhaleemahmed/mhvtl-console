@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ar\n"
@@ -21,34 +21,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../libraries/drives.rst:2 08b33bda149c4ac69583afa49d75e68f
+#: ../../libraries/drives.rst:2 154bfdbdbad24aa787d48b33bf51bb97
 msgid "Adding and removing drives"
 msgstr ""
 
-#: ../../libraries/drives.rst:4 d14b90dba7264f2eb34bd703da774a53
+#: ../../libraries/drives.rst:4 3bb9993edc3f4a7aaa23ac3cb615161a
 msgid ""
 "A library's drives are part of its configuration, so adding or removing "
 "one rewrites ``device.conf`` and restarts the library."
 msgstr ""
 
-#: ../../libraries/drives.rst:12 f8ef836e80604feaaa53571973696c9e
+#: ../../libraries/drives.rst:12 1eade526c44b466ca489b599b6e345e5
 msgid "Adding a drive"
 msgstr ""
 
-#: ../../libraries/drives.rst:14 da3931210bf443498b70f7fcff9f3958
+#: ../../libraries/drives.rst:14 4c20d13339d74000add05c46c21fe964
 msgid ""
 "**Operator → Add Drive**, or **Drives → Add a drive** on the library "
 "page, which arrives with the library already chosen."
 msgstr ""
 
-#: ../../libraries/drives.rst:17 8640190ae0624540bb5b6d1861a6f0a8
+#: ../../libraries/drives.rst:17 773d438e59374e1eaadf6662052908be
 msgid ""
 "The page shows what the drive will be before you commit to it: the model,"
 " the serial it will be given, the slot it will occupy, and its SCSI "
 "address. Change the library and all of that changes with it."
 msgstr ""
 
-#: ../../libraries/drives.rst:21 4a8b7a7bb2cb4a1abf72200c12d2a158
+#: ../../libraries/drives.rst:21 37ee9389202b43cd9ddfa08df3d622fb
 msgid ""
 "Only drives this library's model takes are offered - plus any model the "
 "library already holds, because a library on a real host does not always "
@@ -56,68 +56,174 @@ msgid ""
 "it would help nobody."
 msgstr ""
 
-#: ../../libraries/drives.rst:26 a457536acd9e4f0cb44d0c8ad40d96a9
+#: ../../libraries/drives.rst:26 70c96286e9e049bc9386cc4d3c535006
 msgid "Add Drive: the models this library takes, and where the drive will go"
 msgstr ""
 
-#: ../../libraries/drives.rst:39 13d302e0384c40bb9a7f367a3d2a439a
+#: ../../libraries/drives.rst:39 23d250dc23be4f0eb934f179453a1b3d
 msgid ""
 "The slot, the drive id and the SCSI target are chosen for you: they are "
 "the next free ones. Overriding them is not offered, because a drive at an"
 " address something else already uses will not start."
 msgstr ""
 
-#: ../../libraries/drives.rst:44 2b01faaf89804acab8c4cbef7ff6f5f9
+#: ../../libraries/drives.rst:44 58ef7fd6bc7b4c418f89c6e6fdc46f48
 msgid "Removing a drive"
 msgstr ""
 
-#: ../../libraries/drives.rst:46 5467bec7b130424b9612e18ab64c503b
+#: ../../libraries/drives.rst:46 840da181b7b8444d8f846d3592e25811
 msgid ""
 "**Operator → Remove Drive**, or **Drives → Remove a drive** on the "
 "library page."
 msgstr ""
 
-#: ../../libraries/drives.rst:49 e4bb64faaf2c4ca89faace14f59dcea0
+#: ../../libraries/drives.rst:49 382fb63b2fa84283b05839b6aa077827
 msgid ""
 "The page says what is in the drive before you remove it. A drive holding "
 "a tape has that tape put back in its slot first."
 msgstr ""
 
-#: ../../libraries/drives.rst:52 36c06f4a7830417b98c1acb6dacf5d74
+#: ../../libraries/drives.rst:52 21e4f0d631c9408c8175605082b67bb4
 msgid "Remove Drive: which drive, and what it is holding"
 msgstr ""
 
-#: ../../libraries/drives.rst:63 77e149700a934d87b2aa01869b1de0f8
+#: ../../libraries/drives.rst:63 108dc6bba06340b1b491f9ec61cd50e8
 msgid ""
 "This cannot be undone, although the drive can be added again. What it "
 "removes is the drive's entry in ``device.conf``; no tape is deleted."
 msgstr ""
 
-#: ../../libraries/drives.rst:67 1e4ac8f894974a2b9caad82c1c3b2d62
+#: ../../libraries/drives.rst:67 08168b948ff14aa696b293460e6becf4
 msgid "What it does to the running library"
 msgstr ""
 
-#: ../../libraries/drives.rst:69 78f1689cc117451bb628b9560cd5ad87
+#: ../../libraries/drives.rst:69 a3ae89a1166b42389655cc3c90f7f7a0
 msgid ""
 "Both restart the library, because MHVTL reads ``device.conf`` once, when "
 "a daemon starts. Until it restarts, its robot reports the drives it had "
 "when it started."
 msgstr ""
 
-#: ../../libraries/drives.rst:73 010485bfbd6041f8803b9aeb4e322bd0
+#: ../../libraries/drives.rst:73 5828add482144e94a38fcf6641a66fcc
 msgid ""
 "``--no-restart`` writes the configuration and leaves the daemons alone, "
 "for when you are making several changes and want one restart at the end:"
 msgstr ""
 
-#: ../../libraries/drives.rst:82 2a6d8251f096423999b48fea1030f39e
+#: ../../libraries/drives.rst:82 fb3299822ae541a4aa5ed0f40f982aea
 msgid ""
 "The console says the same thing, on the page: a library whose "
 "configuration and whose robot disagree is flagged until it is restarted."
 msgstr ""
 
-#: ../../libraries/drives.rst:86 a73aea58e4e6476e97af702fce19ec65
+#: ../../libraries/drives.rst:86 db9e2c73d7b94d5db380f158a0b7468e
 msgid "Seeing the drives"
+msgstr ""
+
+#: ../../libraries/drives.rst:98 b0a2e1cad755498789cfc65cb1666cb8
+msgid "Two generations in one library"
+msgstr ""
+
+#: ../../libraries/drives.rst:100 5dde3a20cfd34d0d93aedb51a9036fd7
+msgid ""
+"A library does not have to hold one kind of drive. A real site that has "
+"just bought LTO-9 drives still has shelves of LTO-7 cartridges, and the "
+"library that can read the old tapes and write the new ones is one library"
+" with both kinds of drive in it."
+msgstr ""
+
+#: ../../libraries/drives.rst:105 3bdbbe4c06e04f3a9b5e0fc5ab022704
+msgid "The console builds that in one step, and so does the command line."
+msgstr ""
+
+#: ../../libraries/drives.rst:108 84cdcd0bbaa142aa8bdcb418f67c8534
+msgid "In the console"
+msgstr ""
+
+#: ../../libraries/drives.rst:110 cc017cfbbb0c4a62b102d037e8ae2d91
+msgid ""
+"On the library form, **Add another drive type** adds a second row: a "
+"model and a count. **Add another cartridge type** does the same for the "
+"media. The limits still come from the library model, so only drives that "
+"model takes are offered in either row."
+msgstr ""
+
+#: ../../libraries/drives.rst:115 619ccd792dce44afb172d43a3af65b57
+msgid ""
+"The rows are in slot order, which is also SCSI target order - so the "
+"first row is the first drive. A backup application that addresses a drive"
+" by its position notices if that order changes, which is why the order "
+"you enter is the order that is written."
+msgstr ""
+
+#: ../../libraries/drives.rst:121 355a3784ff09494e8291f4b6385f0edf
+msgid "From the terminal"
+msgstr ""
+
+#: ../../libraries/drives.rst:123 b0e41232c28e4d00a05903195cef401c
+msgid "``--drive`` and ``--media`` repeat, each naming a model and how many:"
+msgstr ""
+
+#: ../../libraries/drives.rst:131 e052beb2bd444fc6bb3f009a962b0ef1
+msgid ""
+"Two LTO-10 drives, two LTO-9 drives, twenty LTO-10 cartridges and ten "
+"LTO-9 ones. Barcodes follow the runs in order: the first twenty end "
+"``LA``, the next ten end ``L9``, and the numbering runs straight through "
+"the two."
+msgstr ""
+
+#: ../../libraries/drives.rst:135 ac7fe2695c8d43389ae73f774e2a5e9a
+msgid ""
+"``--drive`` replaces ``--drives`` and ``--media`` replaces ``--tapes``, "
+"and naming both of a pair is refused - a count and a list are two answers"
+" to one question, and nothing can choose between them."
+msgstr ""
+
+#: ../../libraries/drives.rst:139 cd0e6d0f945447edb97fb140b763f2ca
+msgid ""
+"``mhvtl library create --interactive`` asks the same thing as **Add "
+"another drive type?**; see :doc:`create-interactively`."
+msgstr ""
+
+#: ../../libraries/drives.rst:143 f68cd223b5ff45c38e832a393630a2ac
+msgid "What a mixed library can load"
+msgstr ""
+
+#: ../../libraries/drives.rst:145 ecd305508ae04bed8a4c4a6aa0b52934
+msgid ""
+"``mhvtl tape media`` is the one command to ask, because the answer is the"
+" union of what all the drives do, and it is not obvious by inspection:"
+msgstr ""
+
+#: ../../libraries/drives.rst:162 9067a630363d42ae82001e0857aeab90
+msgid ""
+"Five generations in a library with two kinds of drive, and the **USE** "
+"column is the part to read. LTO4 is ``read-only``: that cartridge can be "
+"loaded and read, and the library will refuse to make a new one, because "
+"an LTO-6 drive reads LTO-4 but cannot write it."
+msgstr ""
+
+#: ../../libraries/drives.rst:167 f79d64b4d9ff44aab41972cafb152b49
+msgid ""
+"The same table is what the tape form offers, so a cartridge the console "
+"lets you create is one the library can really write."
+msgstr ""
+
+#: ../../libraries/drives.rst:171 268ac9bcd9d34fb2bc98427776cd4b4b
+msgid "Adding a generation later"
+msgstr ""
+
+#: ../../libraries/drives.rst:173 a4732a815f8f4facbf9f555ac8ec647a
+msgid ""
+"A library does not have to be built mixed. ``drive add`` takes ``--drive-"
+"model``, so the second generation can arrive the way it does in real life"
+" - bought later and racked beside the first:"
+msgstr ""
+
+#: ../../libraries/drives.rst:181 0017e462fd524b29a0f4f0845ae116cf
+msgid ""
+"The new drive widens what the library can load, and ``tape media`` says "
+"so immediately. Nothing about the existing drives or cartridges changes."
 msgstr ""
 
 #~ msgid ""

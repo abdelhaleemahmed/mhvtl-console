@@ -3,7 +3,7 @@
 # mhvtl-gui.service below. The product is called mhvtl-console from 3.3.0,
 # which is a displayed name and lives in services/about/service.py.
 %define name mhvtl-gui
-%define version 3.4.0
+%define version 3.5.2
 %define release 1%{?dist}
 %define installdir /opt/mhvtl-gui
 %define servicename mhvtl-gui
@@ -264,6 +264,64 @@ fi
 %dir /var/lib/mhvtl-gui/targetcli
 
 %changelog
+* Sun Oct 18 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.5.2-1
+- A rewound tape could be reported as 231 TB on a 500 MB cartridge. 3.5.1
+  worked out which unit log page 17h counts capacity in by dividing a
+  megabyte counter by the used figure; the two describe the same bytes until
+  the tape is rewound, when the counter keeps climbing and the used figure
+  starts over.
+- The capacity decides it now, because a capacity does not move when anything
+  is written, and only one of its two readings can be a believable cartridge.
+  A fresh cartridge has a unit too, where 3.5.1 had no answer until something
+  had been written to it.
+
+* Sun Oct 18 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.5.1-1
+- The drive panel reported "401 B written" for a tape four fifths full. The
+  capacity figures on log page 17h are not in bytes, and not in the same unit
+  on every drive: an STK T10000B reports them in bytes and an IBM ULT3580 in
+  2^20, both labelled "[MB]". 3.5.0 read them as bytes on every drive, so the
+  byte count came out a million times small on LTO hardware. The percentage
+  was right either way, because both sides of the division carry the same
+  unit, which is what hid it.
+- The unit is now measured against the megabyte counters, which the
+  specification does pin at 10^6 bytes, rather than assumed. A cartridge
+  nothing has been written to offers no scale and reports none.
+- A log page that answers but says nothing recognised is now logged as
+  exactly that, with what the drive sent. It used to be indistinguishable
+  from a drive that could not be asked.
+
+* Sun Oct 18 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.5.0-1
+- The drive panel works against upstream MHVTL again. It read
+  `vtlcmd <drive> stats`, our own addition, which upstream closed without
+  merging - so on a stock build every drive reported "silent" and the live
+  counters this console is largely built around showed nothing at all.
+- The counters now come from the volume statistics log page, 17h, which is
+  our pull request 211 and is merged. It answers during a backup for the same
+  reason the old route did, though not the reason that was written down: `mt`
+  fails on open() of /dev/nst*, which the writer holds exclusively. That is
+  the st driver, not a SCSI reservation, and the generic node answers
+  throughout. `vtlcmd stats` is still tried second, so a host carrying
+  patches/0004 keeps working.
+- The capacity figures on that page are not in bytes, and not in the same
+  unit on every drive: an STK T10000B reports them in bytes and an IBM
+  ULT3580 in 2^20, both labelled "[MB]". The unit is now measured against the
+  megabyte counters, which the specification does pin, rather than assumed -
+  without it a tape four fifths full reported "401 B written".
+- Which cartridge is in which drive comes from the library, through READ
+  ELEMENT STATUS, matched by the drive's own serial number rather than by
+  position. The log page carries no barcode, and counting data transfer
+  elements into device.conf ids is how an operation reaches the wrong drive.
+- A finished backup no longer reports itself as writing. A reading was
+  accepted as a comparison for up to two minutes; a counter that grew at some
+  point in the last two minutes is not a counter that is growing now.
+- ADIC and Quantum Scalar libraries get the Scalar element layout. Upstream
+  matched them on the product string until ef7b972, so a real Scalar - vendor
+  ADIC, product "Scalar i2000" - fell through to the default personality. The
+  console's table now holds both spellings, and the limits it advertises for
+  those models are right: 3,840 drives rather than 751.
+- The IBM 3584's first import/export element moved to 0x301 upstream, so it
+  has 255 MAP slots, IBM's documented maximum, and 512 addressable drives.
+
 * Wed Oct 07 2026 Ahmed Abdelhaleem Ahmed <ahmedhal@gmail.com> - 3.4.0-1
 - A new cartridge is 1 GB, not its native capacity. An LTO-8 holds 12 TB and
   this made one that big, on a system whose purpose is testing: the media

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 05:04+0000\n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ar\n"
@@ -29,30 +29,30 @@ msgstr ""
 msgid "Libraries"
 msgstr ""
 
-#: ../../index.rst:41
+#: ../../index.rst:43
 msgid "Tapes"
 msgstr ""
 
-#: ../../index.rst:50
+#: ../../index.rst:52
 msgid "Using a library"
 msgstr ""
 
-#: ../../index.rst:58
+#: ../../index.rst:61
 msgid "Keeping it running"
 msgstr ""
 
-#: ../../index.rst:2 e67af4973e1d4479889735e893b268a2
-msgid "MHVTL GUI — User Guide"
+#: ../../index.rst:2 7b2c64cb4026401da96942359403ce50
+msgid "MHVTL Console — User Guide"
 msgstr ""
 
-#: ../../index.rst:4 77b015ad1a60469f9dfab2f42e261e8d
+#: ../../index.rst:4 3a45561417a44d91bcb33979aa96e1c9
 msgid ""
 "A web console for MHVTL, the Linux virtual tape library. It creates "
 "libraries, fills them with tapes, drives the robot, exports them over "
 "iSCSI, and shows what a drive is doing while a backup writes to it."
 msgstr ""
 
-#: ../../index.rst:8 1f4992ecfb82457e855d080bc99b7db1
+#: ../../index.rst:8 a26b4a1f19bf406f879789c752b3fd19
 msgid ""
 "Everything here can also be done from the terminal. Each task shows both,"
 " side by side, because they are the same code underneath: the console and"
@@ -60,11 +60,11 @@ msgid ""
 "other cannot."
 msgstr ""
 
-#: ../../index.rst:67 e44b531f04de4e27b7f6cca40c6a6870
+#: ../../index.rst:71 1468149a7b6844e699b667b42f71a449
 msgid "Where else to look"
 msgstr ""
 
-#: ../../index.rst:69 4b3a11577cf64572b450d16185337085
+#: ../../index.rst:73 970139c7fb6a44219fac1e642cbb8e8d
 msgid "**API Reference** — the Python services, from their docstrings."
 msgstr ""
 
@@ -75,5 +75,8 @@ msgstr ""
 #~ "**Guides** — the original documentation: "
 #~ "installation, packaging, architecture, the "
 #~ "tutorials, and the known issues."
+#~ msgstr ""
+
+#~ msgid "MHVTL GUI — User Guide"
 #~ msgstr ""
 

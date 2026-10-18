@@ -2,11 +2,11 @@ Watching a drive while it works
 ===============================
 
 A tape drive is least willing to talk exactly when it is most interesting.
-The kernel gives the SCSI reservation to whoever is writing, so for the whole
-of a backup ``mt`` and ``mtx`` answer *device busy*, and every tool built on
-them goes quiet.
+For the whole of a backup ``mt`` answers *device busy*, and every tool built
+on it goes quiet - the program doing the writing has the drive's tape device
+open, and the kernel gives that to one writer at a time.
 
-This console shows the drive working anyway.
+Only that one door is shut. This console shows the drive working anyway.
 
 .. contents::
    :local:
@@ -68,15 +68,18 @@ What the states mean
    No cartridge in the drive.
 
 ``silent``
-   The drive daemon did not answer - usually one that is stopped. Check with
-   ``systemctl status vtltape@31``.
+   Nothing answered - usually a drive that is stopped. Check with
+   ``systemctl status vtltape@31``. It also appears when this console is
+   older than the MHVTL underneath it; upgrading the console settles that.
 
 Where the numbers come from
 ---------------------------
 
-MHVTL's drive daemon keeps its own counters and reports them over the message
-queue it already listens on, which the SCSI reservation does not touch. The
-command that asks is our own addition to MHVTL.
+The drive keeps its own counters, and the console reads them through a
+different device file from the one the backup is holding - so the backup
+never has to be interrupted to see how it is getting on. The robot is asked
+separately which cartridge is in which drive, because it is the authority on
+that.
 
 ``written``
    Bytes the backup handed the drive.

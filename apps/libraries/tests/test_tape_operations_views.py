@@ -760,8 +760,15 @@ class AddDriveChoiceTests(FixtureConfigMixin, TestCase):
 class LibraryActivityEndpointTests(FixtureConfigMixin, TestCase):
     """The fragment the library page swaps in for live drive state.
 
-    It reads `vtlcmd <drive> stats` - our MHVTL patch - so it keeps answering
-    during a backup, which mt and mtx cannot. vtlcmd is faked here.
+    It reads the volume statistics log page through the drive's generic node,
+    and falls back to `vtlcmd <drive> stats` on a host carrying patches/0004.
+    Either way it keeps answering during a backup, which mt and mtx cannot.
+
+    Every route out of activity() is faked here, and all three have to be -
+    each shells out to real hardware, so one left alone reaches whatever
+    drives are attached to the machine running the suite and answers wrongly
+    rather than failing. The list is in test_drive_service, beside the same
+    patches.
 
     The page is given finished sentences, not counters: what a drive is doing
     is decided by the service, so `mhvtl status activity` says the same.
@@ -770,16 +777,22 @@ class LibraryActivityEndpointTests(FixtureConfigMixin, TestCase):
     def _patched(self, answers):
         from apps.libraries.services.drives import service as drive_service
         drive_service.samples.forget()
-        return mock.patch.object(drive_service.vtlcmd, 'stats',
-                                 side_effect=lambda drive_id: answers.get(drive_id))
+        return (mock.patch.object(drive_service.logsense, 'read',
+                                  return_value=None),
+                mock.patch.object(drive_service.elements, 'loaded_by_drive',
+                                  return_value={}),
+                mock.patch.object(drive_service.vtlcmd, 'stats',
+                                  side_effect=lambda drive_id: answers.get(drive_id)))
 
     def _html(self, answers, library_id=10):
-        with self._patched(answers):
+        no_logsense, no_elements, with_vtlcmd = self._patched(answers)
+        with no_logsense, no_elements, with_vtlcmd:
             response = views.library_activity(_request('get'), library_id)
         return response.content.decode()
 
     def _json(self, answers, library_id=10):
-        with self._patched(answers):
+        no_logsense, no_elements, with_vtlcmd = self._patched(answers)
+        with no_logsense, no_elements, with_vtlcmd:
             response = views.library_activity(
                 _request('get', {'format': 'json'}), library_id)
         return json.loads(response.content)
@@ -829,8 +842,9 @@ class LibraryActivityEndpointTests(FixtureConfigMixin, TestCase):
         """A poll every few seconds brings its own comparison; blocking a
         second on every request would not."""
         from apps.libraries.services.drives import service as drive_service
+        no_logsense, no_elements, with_vtlcmd = self._patched({11: self._stats()})
         with mock.patch.object(drive_service.time, 'sleep') as slept, \
-                self._patched({11: self._stats()}):
+                no_logsense, no_elements, with_vtlcmd:
             views.library_activity(_request('get'), 10)
         slept.assert_not_called()
 

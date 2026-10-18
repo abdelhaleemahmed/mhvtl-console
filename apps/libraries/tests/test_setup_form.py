@@ -239,13 +239,22 @@ class LimitsTests(SetupFormTestCase):
                              limits['free_drive_ids']))
 
     def test_the_targets_are_usually_what_binds_it(self):
-        """An IBM 3584 can address 511 drives and this host has nowhere near
-        that many SCSI targets left, so offering 511 would be offering a
-        library that cannot be created."""
+        """An IBM 3584 addresses hundreds of drives and this host has nowhere
+        near that many SCSI targets left, so offering the model's figure would
+        be offering a library that cannot be created.
+
+        The figure itself is taken from the layout rather than written here:
+        it is 512 on current MHVTL and was 511 on 1.8, because upstream
+        27d4a80 moved the first MAP element up by one and the drives gained
+        the element it vacated. Which budget binds is the point of this test;
+        the number is not.
+        """
         answer = self.state()
-        self.assertEqual(answer['limits']['layout_max_drives'], 511)
+        addressable = personalities.LAYOUTS['init_ibm3584'].max_drives
+        self.assertGreater(addressable, 500)
+        self.assertEqual(answer['limits']['layout_max_drives'], addressable)
         self.assertEqual(answer['limits']['bound_by'], 'SCSI targets')
-        self.assertLess(answer['limits']['max_drives'], 511)
+        self.assertLess(answer['limits']['max_drives'], addressable)
 
     def test_the_model_binds_it_when_the_model_is_small(self):
         """A Spectra GATOR addresses 32 drives, which is fewer than the

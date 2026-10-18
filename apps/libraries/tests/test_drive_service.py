@@ -479,12 +479,13 @@ class DaemonTests(TestCase):
 
 
 class ActivityTests(DriveServiceTestCase):
-    """What each drive is doing, from `vtlcmd <drive> stats`.
+    """What each drive is doing: the volume statistics log page, then the
+    robot for the barcode, with `vtlcmd <drive> stats` as a fallback.
 
-    That command is our own addition to MHVTL (patches/0004). It answers over
-    the daemon's message queue, so it keeps reporting during a backup, when
-    the kernel holds the SCSI reservation for the initiator and mt and mtx
-    only say "device busy". Nothing here talks to a daemon: vtlcmd is faked.
+    All three keep reporting during a backup, because the only thing a writer
+    takes is /dev/nst*, which it holds open exclusively - the st driver gives
+    that node to one writer. `mt` is turned away on open(); `mtx` and the log
+    page are not. Nothing here reaches any of them: all three are faked.
 
     The service decides what a drive is doing and says it in words, because
     the library page and `mhvtl status activity` must not work it out
@@ -516,7 +517,27 @@ class ActivityTests(DriveServiceTestCase):
                 return None
             return queue.pop(0) if len(queue) > 1 else queue[0]
 
-        with mock.patch.object(self.module.vtlcmd, 'stats', side_effect=reply), \
+        # EVERY ROUTE OUT OF activity() IS FAKED HERE, and all three have to
+        # be. Each one shells out to real hardware, so any that is left alone
+        # reaches whatever drives are attached to the machine running the
+        # suite - device.conf resolves a live /dev/sg node and the command
+        # succeeds against somebody else's library. The answers come back
+        # wrong rather than failing, which is the hard kind to spot: when
+        # logsense was added these tests reported every drive "empty", and
+        # when elements was added they lost their barcodes.
+        #
+        #   logsense.read              the volume statistics log page
+        #   vtlcmd.stats               the message queue, our patches/0004
+        #   elements.loaded_by_drive   READ ELEMENT STATUS, the barcode
+        #
+        # logsense answers None so the decision logic is exercised through
+        # the vtlcmd fallback, as it always has been. elements answers {},
+        # which the service reads as "could not ask" and leaves the counters'
+        # own idea of what is loaded alone.
+        with mock.patch.object(self.module.logsense, 'read', return_value=None), \
+                mock.patch.object(self.module.elements, 'loaded_by_drive',
+                                  return_value={}), \
+                mock.patch.object(self.module.vtlcmd, 'stats', side_effect=reply), \
                 mock.patch.object(self.module.time, 'sleep'):
             return self.module.DriveService(self.config).activity(
                 library_id, settle=settle)
@@ -571,6 +592,48 @@ class ActivityTests(DriveServiceTestCase):
             min_age=0)
         result = self._activity({11: self._stats(written=169082880)})
         self.assertEqual(result.data['drives'][0]['state'], 'holding')
+
+    def test_a_finished_backup_is_not_writing_because_of_a_minute_old_sample(self):
+        """The one a real backup hit: it finished and kept saying "writing".
+
+        The sample was a minute old - well inside LIFE, so it was used - and
+        the counter had grown between it and now, because the drive had been
+        writing for most of that minute. The subtraction was right and the
+        conclusion was wrong: it answered "did this drive write at some point
+        recently", not "is it writing now".
+
+        A reading is worth keeping for two minutes and worth subtracting from
+        for ten seconds, and those are different numbers.
+        """
+        self._activity({11: self._stats(written=28405760)})
+        minute_old = time.time() - 60
+        # min_age=0: planting a reading deliberately, rather than the
+        # ordinary path that refuses to replace one only seconds old.
+        self.module.samples.remember(
+            {11: self._stats(written=28405760).to_dict()}, now=minute_old,
+            min_age=0)
+
+        # Still inside LIFE, so the old test would have compared against it.
+        self.assertLess(60, self.module._SAMPLE_LIFE)
+
+        result = self._activity({11: self._stats(written=169082880)})
+        self.assertEqual(result.data['drives'][0]['state'], 'holding')
+        self.assertEqual(result.data['busy'], 0)
+
+    def test_a_seconds_old_sample_is_still_a_comparison(self):
+        """And the web page keeps its free comparison: polling every few
+        seconds leaves a reading well inside COMPARE_LIFE, so a drive that is
+        really writing is still called writing without a second read."""
+        self._activity({11: self._stats(written=28405760)})
+        recent = time.time() - 4
+        self.module.samples.remember(
+            {11: self._stats(written=28405760).to_dict()}, now=recent,
+            min_age=0)
+
+        self.assertLess(4, self.module.samples.COMPARE_LIFE)
+
+        result = self._activity({11: self._stats(written=169082880)})
+        self.assertEqual(result.data['drives'][0]['state'], 'writing')
 
     def test_the_sizes_are_words_the_caller_prints_as_they_are(self):
         result = self._activity({11: self._stats(written=41943040, read=2048,
@@ -644,7 +707,13 @@ class ActivityTests(DriveServiceTestCase):
 
     def test_settle_zero_never_waits(self):
         """What the web page asks for: the next poll brings the comparison."""
+        # Builds its own patches rather than using _activity, so it needs the
+        # same three routes - see the list there.
         with mock.patch.object(self.module.time, 'sleep') as slept, \
+                mock.patch.object(self.module.logsense, 'read',
+                                  return_value=None), \
+                mock.patch.object(self.module.elements, 'loaded_by_drive',
+                                  return_value={}), \
                 mock.patch.object(self.module.vtlcmd, 'stats',
                                   return_value=self._stats()):
             self.module.DriveService(self.config).activity(10, settle=0)

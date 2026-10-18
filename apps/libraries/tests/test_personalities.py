@@ -31,37 +31,73 @@ def read(relative: str) -> list:
 class SourceTests(TestCase):
     """The transcription against the source it transcribes."""
 
-    def test_every_layout_matches_its_source_lines(self):
-        for layout in p.LAYOUTS.values():
-            with self.subTest(layout=layout.init):
-                path, span = layout.source.split(':')
-                first, last = (int(n) for n in span.split('-'))
-                found = {}
-                for line in read(path)[first - 1:last]:
-                    match = re.search(r'start_(\w+)\s*=\s*(0x[0-9a-fA-F]+|\d+)', line)
-                    if match:
-                        found[match.group(1)] = int(match.group(2), 0)
-                self.assertEqual(found, {
-                    'picker': layout.start_picker, 'map': layout.start_map,
-                    'drive': layout.start_drive, 'storage': layout.start_storage})
+    @staticmethod
+    def _start_addresses(path: str, init: str) -> dict:
+        """The four element addresses MHVTL gives a personality, from source.
 
-    def test_every_layout_is_the_one_its_init_function_uses(self):
-        """The cited lines sit inside the named function, or in the file-level
-        template that function registers unchanged."""
+        Resolved the way the C does rather than read out of a line range. A
+        personality sets them either in its init function
+
+            smc_pm.start_picker  = 0x0001;
+
+        or in the file-level template the function registers unchanged
+
+            static struct smc_personality_template smc_pm = {
+                    .start_picker = 0x0001,
+
+        so the function wins and the template is the fallback.
+
+        LAYOUTS still carries a "file.c:109-112" citation, and it is still
+        worth having - it tells a reader where to look. It is NOT what this
+        test reads. Line numbers are only ever right for one commit: all of
+        them were exact against MHVTL 1.8 and every one moved when upstream
+        was pulled forward, failing fifteen subtests here that were about
+        nothing but the file having grown. The console supports 1.8 and up,
+        so a check that can only pass against one revision is not a check.
+        """
+        text = '\n'.join(read(path))
+        found = {}
+
+        template = re.search(r'struct smc_personality_template\s+\w+\s*=\s*\{(.*?)\n\};',
+                             text, re.S)
+        if template:
+            for name, value in re.findall(
+                    r'\.start_(\w+)\s*=\s*(0x[0-9a-fA-F]+|\d+)', template.group(1)):
+                found[name] = int(value, 0)
+
+        body = re.search(rf'\nvoid {init}\s*\([^)]*\)\s*\{{(.*?)\n\}}', text, re.S)
+        if body:
+            for name, value in re.findall(
+                    r'\.?start_(\w+)\s*=\s*(0x[0-9a-fA-F]+|\d+)', body.group(1)):
+                found[name] = int(value, 0)
+        return found
+
+    #: An address that differs between the MHVTLs we support, and what the
+    #: older one says. Unlike the selector, a single number cannot be a union,
+    #: so the table carries the current value and this records the other.
+    #:
+    #: 27d4a80 (11 October 2026) moved the 3584's first import/export element
+    #: from 0x300 to 0x301: IBM's TS3500 manual puts import/export at 769 to
+    #: 1023 and reserves 512 to 768 for shuttle stations. It costs one MAP
+    #: slot - 255 rather than 256, IBM's documented maximum - and only
+    #: software caching absolute element addresses sees it, since
+    #: library_contents and vtlcmd both use relative MAP numbers.
+    ALSO_VALID = {('init_ibm3584', 'map'): 0x0300}
+
+    def test_every_layout_matches_the_addresses_its_personality_sets(self):
         for layout in p.LAYOUTS.values():
             with self.subTest(layout=layout.init):
-                path, span = layout.source.split(':')
-                first = int(span.split('-')[0])
-                lines = read(path)
-                start = next(i for i, line in enumerate(lines)
-                             if re.match(rf'void {layout.init}\s*\(', line))
-                end = next(i for i in range(start + 1, len(lines))
-                           if lines[i].startswith('}'))
-                body = '\n'.join(lines[start:end])
-                if start < first - 1 <= end:
-                    continue                    # overrides inside the function
-                self.assertNotIn('start_drive', body,
-                                 f'{layout.init} overrides the template it uses')
+                path = layout.source.split(':')[0]
+                found = self._start_addresses(path, layout.init)
+                wanted = {'picker': layout.start_picker, 'map': layout.start_map,
+                          'drive': layout.start_drive,
+                          'storage': layout.start_storage}
+                for name, value in wanted.items():
+                    other = self.ALSO_VALID.get((layout.init, name))
+                    if other is not None and found.get(name) == other:
+                        continue           # the older MHVTL's value, recorded
+                    self.assertEqual(found.get(name), value,
+                                     f'{layout.init} start_{name}')
 
     def test_there_are_no_layouts_we_do_not_know_about(self):
         known = set(p.LAYOUTS)
@@ -83,32 +119,103 @@ class SourceTests(TestCase):
             return lines[start + 1:end]
 
         def parse(body):
-            rules, pending = [], None
+            """Every rule the C expresses, one per (field, prefix) tested.
+
+            A branch may test several things with ||, over several lines:
+
+                else if (!strncasecmp(lu->vendor_id, "ADIC", 4) ||
+                         !strncasecmp(lu->vendor_id, "QUANTUM", 7) ||
+                         !strncasecmp(lu->product_id, "Scalar", 6))
+                        init_scalar_smc(lu);
+
+            That is three rules leading to one personality, and an earlier
+            version of this parser kept only the last condition before the
+            action - reading the branch above as "product Scalar" alone and
+            losing both vendor rules. Conditions accumulate until an action
+            consumes them.
+            """
+            rules, pending = [], []
             for line in body:
                 condition = re.search(
                     r'strncasecmp\(lu->(vendor|product)_id, "([^"]+)", (\d+)\)', line)
                 action = re.search(r'\b((?:init|customise)_\w+)\(lu\)', line)
                 if condition:
-                    pending = (condition.group(1),
-                               condition.group(2)[:int(condition.group(3))])
+                    pending.append((condition.group(1),
+                                    condition.group(2)[:int(condition.group(3))]))
                 elif action:
                     name = action.group(1)
                     outcome = (parse(function(name)) if name.startswith('customise')
                                else name)
-                    field, prefix = pending if pending else (None, None)
-                    rules.append((field, prefix, outcome))
-                    pending = None
+                    for field, prefix in pending or [(None, None)]:
+                        rules.append((field, prefix, outcome))
+                    pending = []
             return rules
 
         return parse(function('customise_lu'))
 
-    def test_the_library_selector_matches_vtllibrary(self):
-        def normalise(rules):
-            return [(f, x.lower() if x else x,
-                     o if isinstance(o, str) else normalise(o))
-                    for f, x, o in rules]
-        self.assertEqual(normalise(self._selector_from_source()),
-                         normalise(p.LIBRARY_SELECTOR))
+    @staticmethod
+    def _leaves(rules, outer=()):
+        """Every (vendor-test, product-test, personality) the rules can reach.
+
+        Flattened deliberately. Comparing the nested shape makes one changed
+        sub-rule look like a whole vendor branch mismatching - when upstream
+        added a "1x8" match beside HP's "MSL", a nested comparison reported
+        the entire HP branch as unknown and said nothing about which rule had
+        moved. A leaf is what actually decides a personality, so a leaf is
+        what is compared.
+        """
+        found = set()
+        for field, prefix, outcome in rules:
+            here = outer + ((field, prefix.lower()),) if prefix else outer
+            if isinstance(outcome, str):
+                found.add((here, outcome))
+            else:
+                found |= SourceTests._leaves(outcome, here)
+        return found
+
+    def test_the_library_selector_covers_everything_vtllibrary_tests(self):
+        """The table must contain every rule the source has.
+
+        Not equality. LIBRARY_SELECTOR is deliberately the UNION of two MHVTL
+        versions - see the comment above it - because the Scalar rules changed
+        in ef7b972 and the HP rules in the same release, while the console
+        supports 1.8 as well as current upstream. So the table is a superset
+        of whichever source it is checked against, and what matters is that
+        nothing the source tests is missing from it.
+
+        The extra rules are checked separately, below, so the union cannot
+        quietly grow something nobody decided on.
+        """
+        missing = self._leaves(self._selector_from_source()) - \
+            self._leaves(p.LIBRARY_SELECTOR)
+        self.assertEqual(missing, set(),
+                         'LIBRARY_SELECTOR is missing rules vtllibrary.c tests')
+
+    def test_the_selector_carries_no_rule_nobody_decided_on(self):
+        """Everything in the table this MHVTL does not test is kept for another
+        version, and every one of them is listed here.
+
+        Read against current upstream the extras are 1.8's two ADIC/QUANTUM
+        product matches; read against 1.8 they are the vendor matches ef7b972
+        added, its kept "Scalar" product match, and HP's "1x8". Both
+        directions are allowed, because both are MHVTLs the console supports.
+        """
+        allowed = {
+            # 1.8 matched ADIC and QUANTUM on the product (24f7342)
+            ((('product', 'adic'),), 'init_scalar_smc'),
+            ((('product', 'quantum'),), 'init_scalar_smc'),
+            # ef7b972 matches them on the vendor, and keeps a product match
+            ((('vendor', 'adic'),), 'init_scalar_smc'),
+            ((('vendor', 'quantum'),), 'init_scalar_smc'),
+            ((('product', 'scalar'),), 'init_scalar_smc'),
+            # and the HP 1U autoloader, "1x8 G3 AUTOLDR", added after 1.8
+            ((('vendor', 'hp'), ('product', '1x8')), 'init_hp_msl_smc'),
+        }
+        extra = self._leaves(p.LIBRARY_SELECTOR) - \
+            self._leaves(self._selector_from_source())
+        self.assertEqual(extra - allowed, set(),
+                         'a rule in LIBRARY_SELECTOR is in neither this MHVTL '
+                         'nor the documented set kept for another version')
 
     def test_the_drive_table_matches_vtltape(self):
         text = '\n'.join(read('usr/cmd/vtltape.c'))
@@ -118,48 +225,57 @@ class SourceTests(TestCase):
         self.assertEqual(found, p.DRIVE_PERSONALITIES)
 
     def test_the_limits_match_the_source(self):
-        self.assertIn('#define MAXPRIOR 1024', ' '.join(read('include/utils/q.h')[49].split()))
+        source = '\n'.join(read('include/utils/q.h'))
+        self.assertIn('#define MAXPRIOR 1024', source)
         self.assertEqual(p.MAX_DEVICE_ID, 1023)
-        self.assertIn('#define DEF_MAX_LUNS 32', ' '.join(read('kernel/mhvtl.c')[125].split()))
+        source = '\n'.join(read('kernel/mhvtl.c'))
+        self.assertIn('#define DEF_MAX_LUNS 32', source)
         self.assertEqual(p.MAX_LUN, 31)
 
-    def test_every_cited_line_says_what_the_module_claims(self):
-        cited = {
-            ('include/utils/q.h', 50): 'MAXPRIOR',
-            ('kernel/mhvtl.c', 126): 'DEF_MAX_LUNS',
-            ('kernel/mhvtl.c', 186): 'DEF_MAX_MINOR_NO',
-            ('kernel/mhvtl.c', 603): 'Max luns exceeded',
-            ('usr/smc.c', 482): 'put_unaligned_be16(s->slot_location',
-            ('usr/cmd/vtllibrary.c', 704): 'check_overflow',
-            ('usr/cmd/vtllibrary.c', 815): 'slot_location = slt + smc_p->pm->start_drive - 1',
-            ('usr/cmd/vtllibrary.c', 1286): 'NAA: %02x',
-            ('usr/cmd/vtllibrary.c', 1421): 'customise_ibm_lu',
-            ('usr/cmd/vtllibrary.c', 1430): 'customise_stk_lu',
-            ('usr/cmd/vtllibrary.c', 1443): 'customise_hp_lu',
-            ('usr/cmd/vtllibrary.c', 1450): 'customise_spectra_lu',
-            ('usr/cmd/vtllibrary.c', 1461): 'customise_lu',
-            ('usr/cmd/vtllibrary.c', 1610): 'my_id >= MAXPRIOR',
-            ('usr/cmd/vtltape.c', 132): 'tape_drives_table',
-            ('usr/cmd/vtltape.c', 1899): 'strncmp(tape_drives[i].name',
-            ('usr/cmd/vtltape.c', 2153): '%-16s',
-            ('usr/cmd/vtltape.c', 2430): 'my_id >= MAXPRIOR',
-            # The serial number, every line MAX_SERIAL_LENGTH's comment cites.
-            # Ten is not a file limit and not the buffer: it is the window
-            # standard INQUIRY and VPD page 0x83 report, while page 0x80
-            # reports the whole string. See SerialNumberTests below.
-            ('include/vtllib.h', 72): '#define SCSI_SN_LEN 16',
-            ('include/vtllib.h', 604): 'char lu_serial_no[SCSI_SN_LEN]',
-            ('usr/cmd/vtltape.c', 2141): 'conf_clamp_string(v, SCSI_SN_LEN',
-            ('usr/cmd/vtltape.c', 2142): '"%-10s"',
-            ('usr/cmd/vtllibrary.c', 1243): 'conf_clamp_string(v, SCSI_SN_LEN',
-            ('usr/cmd/vtllibrary.c', 1244): '"%-14s"',
-            ('usr/cmd/vtltape.c', 2237): 'alloc_vpd(strlen(lu->lu_serial_no))',
-            ('usr/vtllib.c', 2292): 'memcpy(vpd_pg->data, p, strlen(',
-            ('usr/vtllib.c', 2314): 'memcpy(&d[28], &lu->lu_serial_no, 10)',
-        }
-        for (path, number), expected in cited.items():
-            with self.subTest(reference=f'{path}:{number}'):
-                self.assertIn(expected, read(path)[number - 1])
+    #: What personalities.py says MHVTL's source says, as (file, text) rather
+    #: than (file, line). Every one of these was a line number once, and every
+    #: one of them was exact against MHVTL 1.8 - then upstream moved 172
+    #: commits forward and twenty-four of them pointed at the wrong line while
+    #: still being perfectly true about the source.
+    #:
+    #: A line number can only be right for one revision, and the console
+    #: supports 1.8 and up. The citations in personalities.py keep theirs,
+    #: because a reader wants somewhere to look; what is CHECKED is that the
+    #: code it describes is still there.
+    CITED = [
+        ('include/utils/q.h', '#define MAXPRIOR'),
+        ('kernel/mhvtl.c', '#define DEF_MAX_LUNS'),
+        ('kernel/mhvtl.c', '#define DEF_MAX_MINOR_NO'),
+        ('kernel/mhvtl.c', 'Max luns exceeded'),
+        ('usr/smc.c', 'put_unaligned_be16(s->slot_location'),
+        ('usr/cmd/vtllibrary.c', 'check_overflow'),
+        ('usr/cmd/vtllibrary.c', 'slot_location = slt + smc_p->pm->start_drive - 1'),
+        ('usr/cmd/vtllibrary.c', 'NAA: %02x'),
+        ('usr/cmd/vtllibrary.c', 'customise_ibm_lu'),
+        ('usr/cmd/vtllibrary.c', 'customise_stk_lu'),
+        ('usr/cmd/vtllibrary.c', 'customise_hp_lu'),
+        ('usr/cmd/vtllibrary.c', 'customise_spectra_lu'),
+        ('usr/cmd/vtllibrary.c', 'customise_lu'),
+        ('usr/cmd/vtllibrary.c', 'my_id >= MAXPRIOR'),
+        ('usr/cmd/vtltape.c', 'tape_drives_table'),
+        ('usr/cmd/vtltape.c', 'strncmp(tape_drives[i].name'),
+        ('usr/cmd/vtltape.c', 'my_id >= MAXPRIOR'),
+        # The serial number. Ten is not a file limit and not the buffer: it is
+        # the window the LIBRARY reports in its element descriptor, which is
+        # what a backup application enumerating drives through the changer
+        # reads. See SerialNumberTests below and guides/plan-drive-serials.
+        ('include/vtllib.h', '#define SCSI_SN_LEN'),
+        ('usr/cmd/vtltape.c', 'conf_clamp_string(v,'),
+        ('usr/cmd/vtllibrary.c', 'conf_clamp_string(v,'),
+        ('usr/vtllib.c', 'lu_serial_no'),
+    ]
+
+    def test_every_cited_thing_is_still_in_the_source(self):
+        for path, expected in self.CITED:
+            with self.subTest(reference=f'{path}: {expected}'):
+                self.assertIn(expected, '\n'.join(read(path)),
+                              f'{expected!r} is no longer in {path}; '
+                              f'personalities.py describes code that has gone')
 
 
 class SerialNumberTests(TestCase):
@@ -331,11 +447,52 @@ class SelectorTests(TestCase):
     def test_matching_is_case_insensitive_for_libraries(self):
         self.assertEqual(p.library_layout('stk', 'l80').init, 'init_stkl20')
 
-    def test_quantum_and_adic_match_on_the_product(self):
+    def test_a_real_scalar_gets_the_scalar_layout(self):
+        """What a Quantum or ADIC library actually reports: the vendor name in
+        the vendor field, a model in the product field.
+
+        This used to assert the opposite - that QUANTUM / Scalar i500 got the
+        DEFAULT layout - because MHVTL 1.8 matched ADIC and QUANTUM against
+        the product, so the vendor name never appeared where it was looked
+        for. Upstream calls that a defect and fixed it in ef7b972, and the
+        table is now the union of both versions, so a real Scalar resolves.
+        """
         self.assertEqual(p.library_layout('QUANTUM', 'Scalar i500').init,
-                         'init_default_smc')
+                         'init_scalar_smc')
+        self.assertEqual(p.library_layout('ADIC', 'Scalar i2000').init,
+                         'init_scalar_smc')
+
+    def test_the_old_product_match_still_resolves(self):
+        """The 1.8 spelling keeps working, which is the point of the union.
+
+        A device.conf written against the old check puts the vendor name in
+        the product - "QUANTUM i500" - and upstream deliberately kept a
+        product match so those configurations are not broken by the fix.
+        """
         self.assertEqual(p.library_layout('X', 'QUANTUM i500').init,
                          'init_scalar_smc')
+        self.assertEqual(p.library_layout('X', 'ADIC i2000').init,
+                         'init_scalar_smc')
+
+    def test_overland_still_matches_on_the_product_only(self):
+        """Unchanged by ef7b972, and a genuine difference rather than an
+        oversight: only a product beginning OVERLAND gets that personality, so
+        the NEO Series - the model name real hardware reports - does not."""
+        self.assertEqual(p.library_layout('OVERLAND', 'OVERLAND').init,
+                         'init_overland_smc')
+        self.assertEqual(p.library_layout('OVERLAND', 'NEO Series').init,
+                         'init_default_smc')
+
+    def test_the_hp_autoloader_shares_the_msl_layout(self):
+        """Added upstream after 1.8: the 1U autoloader reports "1x8 G3
+        AUTOLDR" rather than an MSL name, and the EML E-Series it otherwise
+        falls through to has a different element layout."""
+        self.assertEqual(p.library_layout('HP', '1x8 G3 AUTOLDR').init,
+                         'init_hp_msl_smc')
+        self.assertEqual(p.library_layout('HP', 'MSL G3 Series').init,
+                         'init_hp_msl_smc')
+        self.assertEqual(p.library_layout('HP', 'EML E-Series').init,
+                         'init_hp_eml_smc')
 
     def test_an_unknown_vendor_gets_the_default_layout(self):
         self.assertEqual(p.library_layout('SONY', 'LIB-302').init, 'init_default_smc')

@@ -57,6 +57,20 @@ MIN_AGE = 3.0
 #: inventing a new one.
 MIN_COMPARE = 1.0
 
+#: The oldest a reading may be and still be compared against.
+#:
+#: LIFE is how long a reading is worth keeping; this is how long it is worth
+#: SUBTRACTING FROM, and the two are not the same question. A growing counter
+#: means "this drive is writing" only over a short window. Measured against a
+#: reading a minute old it means "this drive wrote something during the last
+#: minute", which is also true of a drive that stopped fifty seconds ago - and
+#: that is what a finished backup still reported as "writing".
+#:
+#: A page polling every few seconds always has a reading this fresh, so it
+#: costs nothing there. A command run once does not, and takes the second
+#: reading it would have taken anyway.
+COMPARE_LIFE = 10.0
+
 
 def _setting(name: str, default: str) -> str:
     try:

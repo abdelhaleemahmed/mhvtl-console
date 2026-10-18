@@ -1,0 +1,390 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL Console User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL Console User Guide 3.5.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../running/settings.rst:2 ef907cbba06b41cfa96fafe403451d2c
+msgid "How big a new cartridge is"
+msgstr ""
+
+#: ../../running/settings.rst:4 69f87a12b6ad4a81a38116351906de4d
+msgid ""
+"A new cartridge is **1,000 MB**, whatever generation it is. A real LTO-8 "
+"holds 12 TB, and the console will make you one that does — but not by "
+"default, and this page is why, and how to change it."
+msgstr ""
+
+#: ../../running/settings.rst:13 e650d2d8658b4c8985766e95d21743e4
+msgid "Why not the real capacity"
+msgstr ""
+
+#: ../../running/settings.rst:15 36016c0f8c4941b0892614f72f846e7d
+msgid ""
+"It costs nothing in disk. MHVTL's media files are sparse: a cartridge "
+"occupies only what has been written to it, so a 12 TB tape and a 1 GB "
+"tape both start at a few kilobytes."
+msgstr ""
+
+#: ../../running/settings.rst:19 162039eb6b52435e86624a1a285678e6
+msgid "It costs time, and that is the problem."
+msgstr ""
+
+#: ../../running/settings.rst:21 f090a9643e8a4223aff03a3eca594c10
+msgid "How long it takes to fill one, at about 55 MB/s"
+msgstr ""
+
+#: ../../running/settings.rst:25 c6ea3b1ca2ff43c9b00d021588fd60e8
+msgid "Cartridge"
+msgstr ""
+
+#: ../../running/settings.rst:26 bc8687c47d8b4b02a9ed7d3619a61d5a
+msgid "Time to fill"
+msgstr ""
+
+#: ../../running/settings.rst:27 c5b93651be7e42feba08e49b22e35fb1
+msgid "1,000 MB — the default"
+msgstr ""
+
+#: ../../running/settings.rst:28 dcd692e2dc8144d4b44462320fad2c56
+msgid "18 seconds"
+msgstr ""
+
+#: ../../running/settings.rst:29 671d1255eea04fedbe17c80d1eb7e76c
+msgid "LTO-6 at its real 2.5 TB"
+msgstr ""
+
+#: ../../running/settings.rst:30 01d2d2f16598484c8dc03be745757d0d
+msgid "13 hours"
+msgstr ""
+
+#: ../../running/settings.rst:31 89fee03866874dafaf56a0503f741894
+msgid "LTO-8 at its real 12 TB"
+msgstr ""
+
+#: ../../running/settings.rst:32 4eca5888dc5e40e3bc4c2f0a3178f602
+msgid "**63 hours**"
+msgstr ""
+
+#: ../../running/settings.rst:34 c28ba88611814e8fbaf64eb083a50ed5
+msgid ""
+"The things a virtual tape library is usually *for* are what happens at "
+"the end of a tape: does the backup span to the next cartridge, does it "
+"ask for one, does the drive report end of medium. On a cartridge nobody "
+"can fill, none of that can be reached. The fullness bar never moves "
+"either."
+msgstr ""
+
+#: ../../running/settings.rst:39 8bbb0571bc7348889e2ebbd7a288c04b
+msgid ""
+"So the console makes a small cartridge and lets you say when you want a "
+"real one."
+msgstr ""
+
+#: ../../running/settings.rst:44 4eec80482983482b9ca64bdc01119df1
+msgid ""
+"This decides how big the console *makes* a cartridge. It does not change "
+"what the hardware holds. An LTO-8 holds 12 TB whatever is set here, and "
+"that figure is shown beside every setting — the **THE CARTRIDGE HOLDS** "
+"column below, and a column on the Settings page."
+msgstr ""
+
+#: ../../running/settings.rst:50 722f427a1a45471fad86709792ba4f77
+msgid "Changing it"
+msgstr ""
+
+#: ../../running/settings.rst:53 3112e27518284d15898d0e475926aacd
+msgid "In the console"
+msgstr ""
+
+#: ../../running/settings.rst:55 75269543706445e1acc9f9852f32051e
+msgid ""
+"**System Console → Settings**. A row per cartridge type, with what it "
+"will be made at, where that value came from, and what the cartridge "
+"really holds — click that capacity to put it in the field."
+msgstr ""
+
+#: ../../running/settings.rst:59 2eb2833f91ac47b0b09c1ee9330ace87
+msgid ""
+"A row left empty takes the default. The field accepts ``2000GB`` and "
+"``12TB`` as well as a number of megabytes."
+msgstr ""
+
+#: ../../running/settings.rst:63 f5f94f36f6634f819889b993d5d512c9
+msgid "From the terminal"
+msgstr ""
+
+#: ../../running/settings.rst:65 bc9d3cb202854e7f940d5e4e06a49f24
+msgid ""
+"There are thirty-three cartridge types, so ``list`` takes a section, a "
+"family or one key — and the case never matters:"
+msgstr ""
+
+#: ../../running/settings.rst:83 4121a02d8cdd4b938b1a0a7bb5c9fd8f
+msgid "``mhvtl settings list``"
+msgstr ""
+
+#: ../../running/settings.rst:83 b796e993021848069cf59f2007acd332
+msgid "all thirty-three"
+msgstr ""
+
+#: ../../running/settings.rst:84 fba9c2b10b74455bb95b4019eb2bf627
+msgid "``mhvtl settings list tape.size``"
+msgstr ""
+
+#: ../../running/settings.rst:84 31c71901791f4f3abebbea1f5f273de9
+msgid "the section"
+msgstr ""
+
+#: ../../running/settings.rst:85 843a35c67fe44d6d883be2e4cc6547b6
+msgid "``mhvtl settings list tape.size.lto``"
+msgstr ""
+
+#: ../../running/settings.rst:85 a8d7db92f9d74914ade18933b5dd7b0c
+msgid "every LTO generation"
+msgstr ""
+
+#: ../../running/settings.rst:86 92cedbedce9a4acebfd93c58352e231b
+msgid "``mhvtl settings list tape.size.3592``"
+msgstr ""
+
+#: ../../running/settings.rst:86 aeaa1304505d494288db4b410cab457a
+msgid "J1A, E05, E06, E07"
+msgstr ""
+
+#: ../../running/settings.rst:87 c405d7eb4ac1465a8ee859f0cfb646ab
+msgid "``mhvtl settings list tape.size.LTO8``"
+msgstr ""
+
+#: ../../running/settings.rst:87 80abe2bd13874049b4f1e0ce6296a423
+msgid "one"
+msgstr ""
+
+#: ../../running/settings.rst:90 e559dcc38b844eebbf69fd38b98a6e40
+msgid ""
+"A family is not always the start of the name: the 3592 cartridges are "
+"called after the drive generation that writes them, so ``tape.size.3592``"
+" finds four cartridges that share no spelling with each other."
+msgstr ""
+
+#: ../../running/settings.rst:94 c966be4da7b84c91a741ee9c489a3128
+msgid "One of them on its own:"
+msgstr ""
+
+#: ../../running/settings.rst:103 124ef50001a84101bf6eff481dd3d270
+msgid "Changing one, and putting it back:"
+msgstr ""
+
+#: ../../running/settings.rst:114 dda010e21874483f948c7275f07f6b35
+msgid "``tape.size.default`` changes every generation at once:"
+msgstr ""
+
+#: ../../running/settings.rst:120 f232baa43a494ddbb8ef341e18374ef5
+msgid ""
+"``reset`` means *back to the shipped default*, not back to the real "
+"capacity. The real capacity is a value you choose, like any other."
+msgstr ""
+
+#: ../../running/settings.rst:123 f9df228bfbf14cc692454a6d129b00b2
+msgid ""
+"The **FROM** column names which of them answered — ``the shipped "
+"default``, ``the file default``, or ``set for this density``."
+msgstr ""
+
+#: ../../running/settings.rst:127 d1782af487dc4b768edc74e7022ed00c
+msgid "Just this one cartridge"
+msgstr ""
+
+#: ../../running/settings.rst:129 3fe36432db984373a7986c68dc12af85
+msgid ""
+"Nothing above is needed to make a single full-size tape. Every creation "
+"takes a size, and it beats whatever the settings say:"
+msgstr ""
+
+#: ../../running/settings.rst:138 3f225bac0d514010ba2a841ecfbc5c11
+msgid ""
+"A library can hold two kinds of cartridge, and then one size for all of "
+"them is the wrong answer. ``--media-size`` gives each kind its own, and a"
+" kind not named takes its setting:"
+msgstr ""
+
+#: ../../running/settings.rst:148 bfcc7e6333494ccfa9ef088e9bb8645b
+msgid ""
+"The creation wizard has the same field on each cartridge row, and the "
+"tape form has one for the single tape."
+msgstr ""
+
+#: ../../running/settings.rst:152 4e17034154e04cc19f23478fd22cddc2
+msgid "Which setting wins"
+msgstr ""
+
+#: ../../running/settings.rst:154 a754e980a7484c80a89c7d677602a33f
+msgid ""
+"Four answers, each narrower than the last. The last one that applies is "
+"the one used:"
+msgstr ""
+
+#: ../../running/settings.rst:162 239f792824e343cfb0812c2251369508
+msgid "Where"
+msgstr ""
+
+#: ../../running/settings.rst:163 0c77922784374f93a627e01c32684c34
+msgid "What it covers"
+msgstr ""
+
+#: ../../running/settings.rst:164 138bdb450d43453d921e24dda5328966
+msgid "1"
+msgstr ""
+
+#: ../../running/settings.rst:165 f4337d40e06b4b1f8dfa7e4f6786d0d6
+msgid "the console itself"
+msgstr ""
+
+#: ../../running/settings.rst:166 e9d4c3e2c5eb424b8f230557f77c5036
+msgid "1,000 MB, every generation"
+msgstr ""
+
+#: ../../running/settings.rst:167 e3dd65efb3fe4d62b0479472c5025744
+msgid "2"
+msgstr ""
+
+#: ../../running/settings.rst:168 0701e7eb502d40178483d802e7280aee
+msgid "``tape.size.default``"
+msgstr ""
+
+#: ../../running/settings.rst:169 9adf3f306527461880a177acce7ccd7d
+msgid "every generation, on this host"
+msgstr ""
+
+#: ../../running/settings.rst:170 75b2ca5c50c042af955f1149139fb248
+msgid "3"
+msgstr ""
+
+#: ../../running/settings.rst:171 75934f2e290345cc812343357300f970
+msgid "``tape.size.LTO8``"
+msgstr ""
+
+#: ../../running/settings.rst:172 1e1c1ad272a240de90937b9f160e9bba
+msgid "one generation, on this host"
+msgstr ""
+
+#: ../../running/settings.rst:173 aa58d280c59e41afae76045957a268c5
+msgid "4"
+msgstr ""
+
+#: ../../running/settings.rst:174 aabc8e7655524bd1b94b78c2617b723c
+msgid "``--size-mb``, or the form"
+msgstr ""
+
+#: ../../running/settings.rst:175 81a3f9d01c964340b8af4d372042fd78
+msgid "one cartridge, once"
+msgstr ""
+
+#: ../../running/settings.rst:177 e2166195a9f54be48f8f334f5cb01b6a
+msgid ""
+"``mhvtl settings list`` prints which of them answered, in the **FROM** "
+"column, because \"why is this cartridge 1 GB\" is the question worth "
+"being able to answer."
+msgstr ""
+
+#: ../../running/settings.rst:182 2dc9426c0f414acc8b9ba32d082b7c87
+msgid "Units"
+msgstr ""
+
+#: ../../running/settings.rst:184 a9817e5befec4aab82b9d355e5fdd031
+msgid ""
+"Everywhere a size is given — the setting, the two flags, and both forms —"
+" takes the same three spellings, and ``MB`` is assumed when there is no "
+"unit:"
+msgstr ""
+
+#: ../../running/settings.rst:191 2f7f6ca6a6bc48ea9439269747187f66
+msgid ""
+"They are **decimal**: 1 GB is 1,000 MB. That is how tape capacity is "
+"quoted — an LTO-8 is sold as 12 TB and that is 12,000,000 MB."
+msgstr ""
+
+#: ../../running/settings.rst:194 c5f52c5021124131b7fecde5b47bfd55
+msgid "``MiB``, ``GiB`` and ``TiB`` are refused rather than converted:"
+msgstr ""
+
+#: ../../running/settings.rst:201 fb3868a3745148e9954952a38895f4cc
+msgid ""
+"12 TB and 12 TiB are ten per cent apart, and a cartridge ten per cent off"
+" the one you meant is a difference you would only find later."
+msgstr ""
+
+#: ../../running/settings.rst:204 cf567057518341f995fb18d506955544
+msgid "Sizes are stored in MB, whatever you type."
+msgstr ""
+
+#: ../../running/settings.rst:207 56c11abca56d4938a18e9b602fddabb6
+msgid "The file"
+msgstr ""
+
+#: ../../running/settings.rst:209 bb0f0fcce52141938073d5ab0c0cedd6
+msgid ""
+"``/etc/mhvtl-gui/settings.toml``. There is no such file until you save "
+"something; without one, every cartridge is 1,000 MB."
+msgstr ""
+
+#: ../../running/settings.rst:219 aafe29eedc2a4520b2427942c50ea772
+msgid ""
+"It is safe to edit by hand, and each generation's real capacity is "
+"written beside it as a comment, so a value can be put back without "
+"looking it up. The comments are rewritten every time the console saves, "
+"so they cannot go stale."
+msgstr ""
+
+#: ../../running/settings.rst:223 115372b96ed047d0882936f7ee2d2fe5
+msgid ""
+"``/etc/mhvtl-gui/settings.toml.example`` beside it lists every generation"
+" with its real capacity. **An upgrade replaces the example**, so do not "
+"keep settings there — copy a line into ``settings.toml`` instead."
+msgstr ""
+
+#: ../../running/settings.rst:227 5bf141c14bbb488e8c5eda27b2bef127
+msgid "Deleting ``settings.toml`` puts every cartridge back to 1,000 MB."
+msgstr ""
+
+#: ../../running/settings.rst:230 01be5f19e6094c27a8d831e543ab1f5f
+msgid "What it does not touch"
+msgstr ""
+
+#: ../../running/settings.rst:232 48348dcbea424a1c97552a3513372e35
+msgid ""
+"**Cartridges you already have.** They keep the size they were made with; "
+"``mhvtl tape list <library>`` shows it. A setting applies to tapes "
+"created afterwards."
+msgstr ""
+
+#: ../../running/settings.rst:236 dc762c5fca1d42c797d77346b8639e54
+msgid ""
+"**What the hardware holds.** The capacities come from MHVTL's own tables "
+"and are not editable anywhere in the console. The *the cartridge holds* "
+"column reads those."
+msgstr ""
+
+#: ../../running/settings.rst:242 098e81bedabb43e0a83790fb1f6840a7
+msgid ""
+":doc:`../tapes/create` for making cartridges, and "
+":doc:`../libraries/create` for a library's own."
+msgstr ""
+

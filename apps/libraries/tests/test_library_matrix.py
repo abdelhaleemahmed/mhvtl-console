@@ -39,11 +39,24 @@ FIXTURES = Path(__file__).parent / 'fixtures'
 NEW_LIBRARY_ID = 40
 
 #: (profile, library model) -> the SMC layout vtllibrary picks. See the module
-#: docstring; ADIC, QUANTUM and OVERLAND are matched on the product string.
+#: docstring. OVERLAND is matched on the product string, which is why NEO
+#: Series gets the default layout and only OVERLAND gets the Overland one.
+#:
+#: ADIC and QUANTUM were matched on the product too, until upstream ef7b972
+#: ("fix(vtllibrary): pick the Scalar personality by vendor") on 10 October
+#: 2026. A real Scalar reports ADIC or QUANTUM as its VENDOR with a product
+#: like "Scalar i6000", so every realistic Scalar fell through to the default
+#: personality; upstream judged that a defect.
+#:
+#: The eight rows marked below are the ones that changed. They say what
+#: current MHVTL does. **On 1.8 each of them is init_default_smc**, and
+#: personalities.LIBRARY_SELECTOR carries the union of both rule sets, so the
+#: console resolves them as Scalar whichever MHVTL is installed - correct
+#: upstream, and ahead of 1.8 on exactly the configurations 1.8 gets wrong.
 EXPECTED_LAYOUT = {
-    ('ADIC', 'Scalar i2000'): 'init_default_smc',
-    ('ADIC', 'Scalar 1000'): 'init_default_smc',
-    ('ADIC', 'scalar'): 'init_default_smc',
+    ('ADIC', 'Scalar i2000'): 'init_scalar_smc',        # 1.8: default
+    ('ADIC', 'Scalar 1000'): 'init_scalar_smc',         # 1.8: default
+    ('ADIC', 'scalar'): 'init_scalar_smc',              # 1.8: default
     # Scalar-layout variants (profiles/data.with_scalar_layout)
     ('ADIC', 'ADIC i2000'): 'init_scalar_smc',
     ('ADIC', 'ADIC Scalar 1000'): 'init_scalar_smc',
@@ -60,11 +73,11 @@ EXPECTED_LAYOUT = {
     ('IBM', 'ULT3582-TL'): 'init_default_smc',
     ('OVERLAND', 'NEO Series'): 'init_default_smc',
     ('OVERLAND', 'OVERLAND'): 'init_overland_smc',
-    ('QUANTUM', 'Scalar i500'): 'init_default_smc',
-    ('QUANTUM', 'Scalar i6000'): 'init_default_smc',
-    ('QUANTUM', 'DXi6700'): 'init_default_smc',
-    ('QUANTUM', 'PX720'): 'init_default_smc',
-    ('QUANTUM', 'DX5000'): 'init_default_smc',
+    ('QUANTUM', 'Scalar i500'): 'init_scalar_smc',      # 1.8: default
+    ('QUANTUM', 'Scalar i6000'): 'init_scalar_smc',     # 1.8: default
+    ('QUANTUM', 'DXi6700'): 'init_scalar_smc',          # 1.8: default
+    ('QUANTUM', 'PX720'): 'init_scalar_smc',            # 1.8: default
+    ('QUANTUM', 'DX5000'): 'init_scalar_smc',           # 1.8: default
     ('QUANTUM', 'QUANTUM i500'): 'init_scalar_smc',
     ('QUANTUM', 'QUANTUM i6000'): 'init_scalar_smc',
     ('SONY', 'LIB-302'): 'init_default_smc',

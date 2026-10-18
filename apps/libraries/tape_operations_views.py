@@ -1590,9 +1590,12 @@ def library_activity(request, library_id):
     ?format=json answers with the same data for anything that would rather
     read numbers than HTML.
 
-    The counters come through MHVTL's message queue (`vtlcmd <drive> stats`,
-    our patch 0004), so they keep answering while a backup holds the SCSI
-    reservation and mt and mtx cannot.
+    The counters come from the volume statistics log page, read through the
+    drive's generic node, and the barcode from the robot. Both keep answering
+    during a backup because the only thing a writer takes is /dev/nst*, which
+    it holds open exclusively - `mt` is turned away on open(), and nothing
+    else on the target is. `vtlcmd <drive> stats`, our patch 0004, is tried
+    second for a host that still carries it; upstream closed that one.
     """
     if not check_login(request):
         if request.GET.get('format') == 'json':

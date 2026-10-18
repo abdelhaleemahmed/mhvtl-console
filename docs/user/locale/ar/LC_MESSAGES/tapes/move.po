@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ar\n"
@@ -21,105 +21,209 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../tapes/move.rst:2 8239650224314ef3b966de13356b3a30
+#: ../../tapes/move.rst:2 f9c335a7159d4d76bc256c0cc0a15909
 msgid "Moving a tape: mount, unmount, move"
 msgstr ""
 
-#: ../../tapes/move.rst:4 ad9e065624fb4bc2b5099501cfec2470
+#: ../../tapes/move.rst:4 c37e300e78864ea19a9154896cb505a4
 msgid ""
 "The robot does three things: put a cartridge in a drive, take it out "
 "again, and move it between slots. Everything else is the drive's job."
 msgstr ""
 
-#: ../../tapes/move.rst:12 d67c72a7aa6d493c845c20b6f4ad2057
+#: ../../tapes/move.rst:12 301240d108734b0da0de141ebfdb6078
+msgid "One page does the first two"
+msgstr ""
+
+#: ../../tapes/move.rst:14 b411e207c6ca4dec83ca7d822ce702db
+msgid ""
+"**Operator → Mount / Unmount Tape**, or **The robot → Mount or unmount a "
+"tape** on the library page. There used to be two pages; the drives were "
+"drawn on both and clickable on neither."
+msgstr ""
+
+#: ../../tapes/move.rst:18 eae9cb7924784a0bb71446fa0759195d
+msgid "Which direction you are going depends on which drive you click:"
+msgstr ""
+
+#: ../../tapes/move.rst:24 9e17a1b484d0441484419e628d5bb6ac
+msgid "Click"
+msgstr ""
+
+#: ../../tapes/move.rst:25 77ce745e8d964109bd9a0f3046bae007
+msgid "What happens"
+msgstr ""
+
+#: ../../tapes/move.rst:26 26483af26b2747efa091bccc42fa6671
+msgid "a tape, then an **empty** drive"
+msgstr ""
+
+#: ../../tapes/move.rst:27 f7ec76de8aaf4aefb2b08964b85ef4f6
+msgid "mount - the tape goes into the drive"
+msgstr ""
+
+#: ../../tapes/move.rst:28 70f47e498dbf425b8d1b37bb1d352452
+msgid "a **loaded** drive"
+msgstr ""
+
+#: ../../tapes/move.rst:29 27845e21edb04a32aeeab8484081f54a
+msgid "unmount - its cartridge goes back to a slot"
+msgstr ""
+
+#: ../../tapes/move.rst:31 ca932bda07b445228c777bfda1987815
+msgid ""
+"A click only ever *selects*. The preview says what will happen and the "
+"button does it, both ways round."
+msgstr ""
+
+#: ../../tapes/move.rst:35 a68a5c3d5a694b3e831e24d12d4bca4d
 msgid "Mount: slot into drive"
 msgstr ""
 
-#: ../../tapes/move.rst:14 3135ab50f5354fdcab258b3ab50c4d02
-msgid ""
-"**Operator → Mount Tape**, or **The robot → Mount a tape** on the library"
-" page."
-msgstr ""
-
-#: ../../tapes/move.rst:17 0cac23fdff964844ba650da922acef2f
+#: ../../tapes/move.rst:37 62c01ef9b9884168a6b868d2cc81747b
 msgid ""
 "Pick the library, the slot and the drive. The page shows what is in each "
 "slot, coloured by generation, so an LTO-7 cartridge is not mounted into a"
 " drive that cannot write it by accident."
 msgstr ""
 
-#: ../../tapes/move.rst:21 69fbfc0a635e4216aa3c5cad3328fe65
+#: ../../tapes/move.rst:41 e8b62be719b34c26b3223975c1062240
 msgid "Mount Tape: the slots, coloured by generation"
 msgstr ""
 
-#: ../../tapes/move.rst:30 ffcdd6a0145c4d6995b529fe4cda91e1
+#: ../../tapes/move.rst:50 adec5349d0064e7e818a745f47ddb8c9
 msgid ""
 "The drive number is the robot's, counting from 0 - the first drive in the"
 " library is 0, not its drive id. ``mhvtl status library 50`` shows both."
 msgstr ""
 
-#: ../../tapes/move.rst:33 72a68045a4674837af7c8d4edee4503a
+#: ../../tapes/move.rst:53 8d2e97231bb04d7c849703a820a4e186
 msgid ""
 "A drive that does not load that generation refuses, which is the point. "
 "``--force`` overrides it if you are testing what the refusal looks like."
 msgstr ""
 
-#: ../../tapes/move.rst:37 b2ebe42563304622aaee4702864ff70d
+#: ../../tapes/move.rst:57 3c656fc1ecb94b09b04f379f2a09ae9d
 msgid "Unmount: drive back to a slot"
 msgstr ""
 
-#: ../../tapes/move.rst:44 a20a6a480f574c228e18c83880baae86
+#: ../../tapes/move.rst:59 113ebaeafd73496ab4b263218a294a99
 msgid ""
-"A tape goes back to the slot it came from unless you say otherwise. If "
-"that slot has since been filled, name a free one."
+"Click a loaded drive. The slot it came from is chosen for you and "
+"outlined on the map; click any empty slot, or use the dropdown, to send "
+"it somewhere else."
 msgstr ""
 
-#: ../../tapes/move.rst:47 55410603ac244b08a732b260948e6b18
-msgid "Unmount: which drive, and where the tape goes"
+#: ../../tapes/move.rst:62 353404e9d88e46bc84da1fb48f40ce83
+msgid ""
+"If that original slot has since been filled there is no default, the page"
+" says so, and the button waits until you choose a free one. Being told "
+"\"slot 7\" and finding slot 7 occupied is worse than being told nothing."
 msgstr ""
 
-#: ../../tapes/move.rst:52 b82f338282c4494aad358512c6448be5
+#: ../../tapes/move.rst:73 d3334390056346308555278360a5d391
+msgid ""
+"**A drive whose cartridge is mounted as an LTFS filesystem cannot be "
+"unloaded**, from the page or the command line. It is not a warning: "
+"pulling the cartridge out from under a live mount leaves ``ltfs`` holding"
+" a device with no medium, and whatever was reading it gets I/O errors "
+"rather than a clean end."
+msgstr ""
+
+#: ../../tapes/move.rst:79 e227a99f566c46ca8007f8605c5c2f1f
+msgid ""
+"Unmount the filesystem first - the LTFS page, or ``mhvtl ltfs unmount "
+"<library> <drive>`` - and then unload the tape. Such a drive is marked on"
+" the map and is not offered in the list."
+msgstr ""
+
+#: ../../tapes/move.rst:83 2963aaf3146e42bb9d7f594d62d2eeff
+msgid ""
+"The two senses of \"mount\" are the thing to keep straight: this page "
+"moves a cartridge **into** a drive, and the LTFS page opens what is "
+"**in** a drive as a filesystem."
+msgstr ""
+
+#: ../../tapes/move.rst:87 80200e6340d74f1996023a1b03e5b60d
+msgid ""
+"The old ``/libraries/operator/unmount/`` address still works and sends "
+"you here, carrying the library with it."
+msgstr ""
+
+#: ../../tapes/move.rst:91 ee01da5b3b2141cbb86b1b84a857cf05
 msgid "Move: slot to slot"
 msgstr ""
 
-#: ../../tapes/move.rst:58 145d30ad321a4ce9bff03f15b0e49ba2
+#: ../../tapes/move.rst:97 edd5e9bb3e19470fa662aa21355efa5d
 msgid ""
 "Tidying, mostly: putting a run of tapes in order, or clearing a slot for "
 "a cartridge that has to live somewhere particular."
 msgstr ""
 
-#: ../../tapes/move.rst:62 d6bad46bfb6c4994b34a2b88b70e89b3
+#: ../../tapes/move.rst:101 098f744d85fb4cc09a94b09e37bfe628
 msgid "Online and offline"
 msgstr ""
 
-#: ../../tapes/move.rst:64 29723300ba35484d90d5247687db7b7f
+#: ../../tapes/move.rst:103 a93680d3d6c9480db55eaa7d960fefdb
 msgid ""
 "A library can be told to stop answering the robot without stopping its "
 "daemons:"
 msgstr ""
 
-#: ../../tapes/move.rst:72 fc93a61736dc422f9713889542190a72
+#: ../../tapes/move.rst:111 82f15c61e845477593c00d9e0654ee5d
 msgid ""
 "Offline is refused while a drive holds a tape, which is MHVTL's own rule,"
 " not this console's."
 msgstr ""
 
-#: ../../tapes/move.rst:76 bbfa0fee87c14ecab9f20bfd4d358bfb
+#: ../../tapes/move.rst:115 b4814cabf8214d738d4329cc2b5e2751
 msgid "The MAP"
 msgstr ""
 
-#: ../../tapes/move.rst:78 f466d3ce5d7849f48ab9553873b86df7
+#: ../../tapes/move.rst:117 47be88e6aed8421582437f2817093f2e
 msgid ""
 "The mail slot, where an operator at a real library puts a cartridge in "
 "from outside. MHVTL emulates it, and the console can open it, close it, "
 "and have the robot re-read it:"
 msgstr ""
 
-#: ../../tapes/move.rst:87 11e90e4bc64f4dd0ada67520d26e04dc
+#: ../../tapes/move.rst:126 7a8c0bd908334bc38a3ed99667278b6e
+msgid "Seeing the whole library at once"
+msgstr ""
+
+#: ../../tapes/move.rst:128 57f46f4e58204f0ba1b5ba5c0680f439
+msgid ""
+"``op layout`` draws it: every drive with what it holds, the storage slots"
+" as a grid, the import/export port, and a legend of the generations this "
+"library actually has."
+msgstr ""
+
+#: ../../tapes/move.rst:145 a4fea43d62f8439587dbb4b9b78037c2
+msgid ""
+"Each cartridge is coloured by its generation, in the same colours the web"
+" pages use - the real LTO cartridge shell colours, adjusted so that "
+"generations sharing one in real life can still be told apart. ``mhvtl op "
+"palette`` prints them all with their meanings."
+msgstr ""
+
+#: ../../tapes/move.rst:150 84c456ec6ff3429b8715af6ba71d4dbf
+msgid ""
+"Colour is never the only thing saying what a tape is: the generation is "
+"always written out beside it, so a pipe, ``--no-colour``, or a terminal "
+"without 256 colours loses nothing but the fill."
+msgstr ""
+
+#: ../../tapes/move.rst:154 b1796adc59e946a9a9a935c66f27c661
+msgid ""
+"``--ltfs`` marks which cartridges are LTFS volumes - see "
+":doc:`../using/ltfs`."
+msgstr ""
+
+#: ../../tapes/move.rst:157 c61266999d48410fa1c83ab3543d00cd
 msgid "What the robot says is where"
 msgstr ""
 
-#: ../../tapes/move.rst:106 2e671a8933f14d79bde0d0170ef1bf96
+#: ../../tapes/move.rst:176 ce165b79ce854da39d0b869297916435
 msgid ""
 "This is the robot's own answer, through ``mtx``. When it disagrees with "
 "``mhvtl tape list``, the library was changed without being restarted - "
@@ -131,5 +235,21 @@ msgstr ""
 #~ " of the User Guide and is being"
 #~ " filled in; until then, see the "
 #~ "original guides under ``docs/sphinx/``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Operator → Mount Tape**, or **The "
+#~ "robot → Mount a tape** on the "
+#~ "library page."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A tape goes back to the slot "
+#~ "it came from unless you say "
+#~ "otherwise. If that slot has since "
+#~ "been filled, name a free one."
+#~ msgstr ""
+
+#~ msgid "Unmount: which drive, and where the tape goes"
 #~ msgstr ""
 

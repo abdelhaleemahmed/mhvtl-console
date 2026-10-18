@@ -28,10 +28,11 @@ before it happens:
 That was a real drive with a real cartridge in it, which wrote and read back
 perfectly. ``mt`` was simply stale.
 
-**Believe the robot and the daemon.** The robot moved the cartridge, the
-daemon is holding it, and the daemon's counters are the only ones that keep
-working during a backup - the kernel gives the SCSI reservation to whoever is
-writing, and ``mt`` and ``mtx`` answer *device busy* until it finishes.
+**Believe the robot.** The robot moved the cartridge and knows where it is,
+and it keeps answering during a backup. So does the drive's own counter page.
+``mt`` is the one that stops: the program writing has the tape device open,
+and the kernel gives that to one writer at a time, so ``mt`` says *device
+busy* until the backup finishes.
 
 "Restart the library for its robot to see this"
 -----------------------------------------------

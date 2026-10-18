@@ -1,0 +1,376 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL Console User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL Console User Guide 3.5.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../libraries/profiles-and-presets.rst:2 1a3913d7e8a945199f0fe8cf7224c18b
+msgid "Profiles and presets"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:4 d9798a50af664043996bdc1b4a342445
+msgid ""
+"Two words for two different things, and the difference matters because "
+"one of them you can change and the other you cannot."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:7 372bb682c1dc49e3a939679285e18698
+msgid ""
+"A **profile** is a vendor's catalogue: which libraries IBM makes, which "
+"drives each of those models takes, which cartridges each drive writes. It"
+" describes hardware that exists, it ships with the console, and nothing "
+"can edit it."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:11 2bfe303c6de64ba4b5c27f4361c610ce
+msgid ""
+"A **preset** is a configuration *you* built from a profile and gave a "
+"name to, so you can build that library again without retyping it."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:14 53c73ef5e3c144fa8837e996bd9ba598
+msgid ""
+"Both are templates. Neither is ever a library until you create one from "
+"it."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:21 e179dc45ce0d4bd9bba17d09ee63f5d4
+msgid "The nine profiles"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:29 9321f74b81d644ed88fc7872222d49fd
+msgid ""
+"``mhvtl profile show IBM`` prints the whole catalogue: every library "
+"model with its drive and slot limits, and every drive model with the "
+"densities it writes and the ones it can only read. It is long, because "
+"the real catalogue is long - thirteen library models and twenty drives "
+"for IBM alone."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:34 345e31e1905e4c99a19382839dacd78f
+msgid "The useful column is **WRITES**:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:45 de576548ced644618fd10efe7fa7a896
+msgid ""
+"A profile has no write verbs at all - no ``profile set``, no ``profile "
+"delete``. There is nothing to edit: if a drive is not in the list, the "
+"vendor does not make it, and making one up would produce a library that "
+"identifies itself as hardware that does not exist."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:52 5d0ed498b89e404eb6406e4522f0e3d5
+msgid ""
+"**A vendor's default is not its newest.** IBM's default drive is the "
+"ULT3580-TD8, which writes LTO8, while its catalogue reaches the "
+"ULT3580-TDA and LTO10. Quantum's default is an SDLT600, which is not LTO "
+"at all. So ``mhvtl library create --profile QUANTUM`` on its own builds "
+"an SDLT library - correct, and probably not what you wanted. Naming the "
+"drive and the density is what pins a library to the newest generation."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:60 7d0ca9b9958743e2ae85e470e5152b13
+msgid "What a preset is for"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:62 89d17695350e4e74a8dff9e6c111730c
+msgid "This is a complete, working command:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:70 acad2653ae804b0c98a0365041d3a08d
+msgid ""
+"Typing it twice is how the second library ends up subtly different from "
+"the first. Name it once and it becomes:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:78 aa18503d88fc47799ba4661f6361cda1
+msgid "Eleven are installed with the console"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:80 4f73b6025ad243738156bbb63987a192
+msgid ""
+"``/etc/mhvtl-gui/presets.toml.example`` ships one library for every "
+"vendor, at the newest cartridge that vendor's drives can write. Copy a "
+"table out of it into ``presets.toml`` beside it, or just read it to see "
+"what the keys look like."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:103
+#: 1ae61d1c9dd94cd6bbf9fb6b4af9cd39
+msgid ""
+"Three of those are worth a glance, because they are the ones that are not"
+" the obvious row. **hp-latest** is LTO8, because HP's own catalogue stops"
+" at the Ultrium 8-SCSI. **sony-latest** is AIT4, not LTO at all. And "
+"StorageTek has two, because an SL500 takes both its own T10000C and an "
+"IBM LTO drive, so \"the latest cartridge\" has two answers and the file "
+"gives both."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:110
+#: 1b42ca40bb2740c8b3aa4213f325aef6
+msgid "In the console"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:112
+#: cca7289b035647b0b7c89d189e510bfd
+msgid ""
+"**Libraries → Create Library**, then a vendor. If any presets are defined"
+" for it, they are listed above the form under **Saved configurations**."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:115
+#: de45c987905944a5ab2505d54371254b
+msgid "Saved configurations, above the library form"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:119
+#: 5124bfd0c8fe427a96a9c3b4971fa9ca
+msgid ""
+"Each card is one line folded - the name, and the same sentence ``mhvtl "
+"preset list`` prints beside it. Open one and it shows the breakdown and "
+"the two commands: the one that uses it, and the one that would rebuild "
+"it."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:123
+#: 3e780afb94a84e878ba0312c1fd56143
+msgid ""
+"Clicking a name fills the form in below, and **every value can still be "
+"changed before you press Create**. The one in use is marked on the card, "
+"and there is a control below the list to leave it again. Choosing a "
+"preset is a plain link, so nothing is written by looking."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:129
+#: 78ebc20d6c3c444c88dd20b5b02bfab1
+msgid "Reading one"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:145
+#: 20d6a013ac784c5585399f2d5887b706
+msgid ""
+"Two lines carry the point. **fixed here** is what the preset decides. "
+"**left to IBM** is what it does not, and what the profile will therefore "
+"choose - here the drive's firmware revision."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:149
+#: 5117965a37dc414a8ff1ada649acc0bb
+msgid ""
+"**usable** is a separate question from **valid**. A preset that names no "
+"vendor is perfectly legal and still cannot create anything, because there"
+" is no catalogue to fill the gaps from."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:154
+#: e73c702c6d054a86ba4c17928a91de4d
+msgid "Building one up"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:156
+#: a9660695758c42e382e60a155520ca05
+msgid ""
+"A preset does not have to be written in one go. ``preset set`` adds to or"
+" changes one key at a time, and the keys are spelled exactly as the "
+"command line's options:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:169
+#: 1a3959b0f71e440a90e7682245ecf135
+msgid ""
+"It says so rather than refusing. Half-built is a legal state, and "
+"``preset list`` keeps saying which ones are in it, so a name is never a "
+"trap:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:177
+#: 81d7a20192a948499f0b136467851658
+msgid "The other verbs"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:180
+#: 255d61945a1348ae8dfe96b198b6849f
+msgid "Command"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:180
+#: 125cb2be5865414592585bac0e3cd25a
+msgid "What it does"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:182
+#: bb1c29363b284a6b8fcdf5562fd43aba
+msgid "``mhvtl preset list``"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:182
+#: 865c1f703bc24ef597548927b286e853
+msgid "Every one defined, and what each builds"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:183
+#: 23bf3a8b4d754acd97a9f9cdc625fb2e
+msgid "``mhvtl preset show NAME``"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:183
+#: 63ebdf2da32c493b84ef921ffd020dc6
+msgid "What one fixes, and what it leaves open"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:184
+#: 246f88b6316c426383d5442095750a0a
+msgid "``mhvtl preset set NAME ...``"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:184
+#: 0cd1997af91f4061a90dc403f88bfc13
+msgid "Add or change keys"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:185
+#: f2755dfa4ae248309d34b1d3fe5f8bbf
+msgid "``mhvtl preset unset NAME KEY``"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:185
+#: c223b868a21941a18e45da636db29819
+msgid "Remove one key, keeping the preset"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:186
+#: c00dc64ef9db44a0aaf904446589a485
+msgid "``mhvtl preset rename OLD NEW``"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:186
+#: 641d64352deb4c2e8a4f66c693b21d84
+msgid "Give one another name"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:187
+#: 9c10655d87674788bd6066f6474f9859
+msgid "``mhvtl preset delete NAME``"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:187
+#: c14e6ead40ca46e7ba284426490923ec
+msgid "Remove the whole preset"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:199
+#: faea2f82b5b4463a8550172c24b8a32a
+msgid "Keeping one from a create that worked"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:201
+#: 53c25c05160646dc9b73ec55a2487697
+msgid ""
+"The other way round, and usually the better one: build the library, see "
+"that it works, *then* name the configuration."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:210
+#: 951880629a304866abd1740c175db640
+msgid ""
+"The preset is written from the specification that was just proved, so it "
+"cannot disagree with the library you have."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:214
+#: 786b1066ae5a4f16bde3509d3310b97a
+msgid "An argument still beats the file"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:216
+#: 3bfbd20b139a437587f040e3a8545b05
+msgid "A preset sets the defaults; the command line overrides them."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:222
+#: 58a9de0859a9436d91d42b4a272c8772
+msgid ""
+"That builds the preset's library with five cartridges instead of twenty, "
+"and changes nothing in ``presets.toml``."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:226
+#: e357f232727242cc8538856599844ff8
+msgid "What a preset will not let you do"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:228
+#: 67bf9f18af1f4a0aa04ddc7812c729e5
+msgid ""
+"It cannot hold a combination the vendor does not make. The check happens "
+"when you save it, not when you finally try to use it:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:238
+#: 2670548071df47d3ba8a21ef5997dd93
+msgid ""
+"And it cannot take a profile's name, because that would make the two "
+"words mean the same thing:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:249
+#: 140b6510955248ea9cac35680297ce6e
+msgid "Where they live"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:251
+#: 5819c3badd4f4a81ba273edbfe7fdd57
+msgid ""
+"``/etc/mhvtl-gui/presets.toml``, written by the commands above and "
+"readable by hand. The file is yours; the console only ever adds to it "
+"what you asked for."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:255
+#: 79c06609e3804f9ea75fd80ed2c802ba
+msgid ""
+"``/etc/mhvtl-gui/presets.toml.example`` beside it is the shipped set, and"
+" **an upgrade replaces it** - so a preset written into the example file "
+"would be lost. Copy what you want into ``presets.toml`` instead."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:259
+#: 50c1b2577aa14cceb89f933ced825c78
+msgid ""
+"Editing ``presets.toml`` by hand is supported and the keys are the "
+"command line's, so a table reads as the command it replaces:"
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:273
+#: 708e855f83bc4a6b89a2781bcca0af28
+msgid ""
+"Writing it needs the ``mhvtl`` group, like every other change the console"
+" makes to the host - so the read verbs work as any user and the write "
+"verbs want ``sudo``."
+msgstr ""
+
+#: ../../libraries/profiles-and-presets.rst:279
+#: 64ee4670bae94d769d03c86c382798a7
+msgid ""
+":doc:`create` for the form and the one-shot command, :doc:`create-"
+"interactively` for the guided version, and :doc:`drives` for a library "
+"that holds two generations of drive at once."
+msgstr ""
+

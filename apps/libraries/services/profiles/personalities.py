@@ -272,8 +272,14 @@ LAYOUTS: Dict[str, LibraryLayout] = {layout.init: layout for layout in (
                   'usr/pm/stklxx_pm.c:110-113', 0x0001, 0x000a, 0x01f4, 0x03e8),
     LibraryLayout('init_ibmts3100', 'IBM TS3100 / TS3200 (3573-TL)',
                   'usr/pm/ibm_smc_pm.c:319-322', 0x0001, 0x0010, 0x0100, 0x1000),
+    # The MAP moved up by one in upstream 27d4a80 (11 October 2026): IBM's
+    # TS3500 manual puts import/export elements at 769 (0x301) to 1023, and
+    # reserves 512 to 768 for shuttle stations. On MHVTL 1.8 this is 0x0300.
+    # Only absolute element addresses see the difference - library_contents
+    # and vtlcmd both use relative MAP numbers - and it costs one MAP slot,
+    # 255 rather than 256, which is IBM's documented maximum.
     LibraryLayout('init_ibm3584', 'IBM 3584',
-                  'usr/pm/ibm_smc_pm.c:410-413', 0x0001, 0x0300, 0x0101, 0x0400),
+                  'usr/pm/ibm_smc_pm.c:410-413', 0x0001, 0x0301, 0x0101, 0x0400),
     LibraryLayout('init_hp_eml_smc', 'HP EML / ESL (any HP not MSL)',
                   'usr/pm/hp_smc_pm.c:101-104', 0x0001, 0x000a, 0x01f4, 0x03e8),
     LibraryLayout('init_hp_msl_smc', 'HP MSL',
@@ -297,12 +303,46 @@ LAYOUTS: Dict[str, LibraryLayout] = {layout.init: layout for layout in (
 #: usr/cmd/vtllibrary.c:1461 customise_lu and the customise_*_lu functions at
 #: 1421 (IBM), 1430 (STK), 1443 (HP) and 1450 (Spectra).
 #:
-#: Worth knowing: ADIC, QUANTUM and OVERLAND are matched on the *product*, not
-#: the vendor. Upstream changed this in 24f7342 ("library: Fix vendor 'QUANTUM'
-#: not 'SCALAR'", for issue #152, where a product of "Scalar i2000" misbehaved
-#: under the Scalar personality). So vendor QUANTUM with product "Scalar i500" -
-#: what a real Quantum library reports - gets the default layout, and the Scalar
-#: layout is reached only by a product beginning "ADIC" or "QUANTUM".
+#: OVERLAND is matched on the *product*, not the vendor, which is why
+#: "OVERLAND / NEO Series" gets the default personality and only
+#: "OVERLAND / OVERLAND" gets the Overland one. That is still true upstream.
+#:
+#: THE SCALAR RULES CHANGED UNDER US, AND BOTH ANSWERS HAVE A VERSION
+#: ------------------------------------------------------------------
+#: Up to and including 1.8, ADIC and QUANTUM were matched on the product, from
+#: 24f7342 "library: Fix vendor 'QUANTUM' not 'SCALAR'":
+#:
+#:     else if (!strncasecmp(lu->product_id, "ADIC", 4))     init_scalar_smc
+#:     else if (!strncasecmp(lu->product_id, "QUANTUM", 7))  init_scalar_smc
+#:
+#: A real Scalar reports ADIC or QUANTUM as its VENDOR with a product like
+#: "Scalar i6000" - the product does not repeat the vendor - so every realistic
+#: Scalar fell through to the default personality. Upstream judged that a
+#: defect and fixed it on 10 October 2026 in ef7b972, "fix(vtllibrary): pick
+#: the Scalar personality by vendor, fix DTE length", one of three faults
+#: behind issue #152:
+#:
+#:     else if (!strncasecmp(lu->vendor_id, "ADIC", 4) ||
+#:              !strncasecmp(lu->vendor_id, "QUANTUM", 7) ||
+#:              !strncasecmp(lu->product_id, "Scalar", 6))   init_scalar_smc
+#:
+#: It ADDED the vendor rules and KEPT a product one, in its own words "for
+#: configs written against the original check". So the new selector is nearly a
+#: superset of the old, and the table below is the union of both.
+#:
+#: WHAT THE UNION COSTS ON 1.8. Three rows differ, and on 1.8 each gets the
+#: default personality where this table promises Scalar:
+#:
+#:     ADIC / Scalar i2000      1.8: default    upstream: Scalar
+#:     QUANTUM / Scalar i500    1.8: default    upstream: Scalar
+#:     QUANTUM / PX720          1.8: default    upstream: Scalar
+#:
+#: The union is wrong on 1.8 for exactly the configurations upstream calls
+#: broken, and right everywhere else, which is why it is the union rather than
+#: either version alone. A library that is actually running can be asked
+#: instead of predicted: READ ELEMENT STATUS reports the real element address
+#: in its reply header, whatever personality the daemon chose. See
+#: docs/sphinx/guides/library-personalities.rst.
 LIBRARY_SELECTOR: List[Tuple[str, str, object]] = [
     ('vendor', 'stk', [
         ('product', 'SL500', 'init_stkslxx'),
@@ -318,9 +358,21 @@ LIBRARY_SELECTOR: List[Tuple[str, str, object]] = [
     ]),
     ('vendor', 'HP', [
         ('product', 'MSL', 'init_hp_msl_smc'),
+        # Also part of the union, and for the same reason. Upstream added the
+        # "1x8" match after 1.8: the 1U autoloader reports "1x8 G3 AUTOLDR"
+        # rather than an MSL name, and without it falls through to the EML
+        # E-Series, "a different product with a different element address
+        # layout" in its own comment. On 1.8 a 1x8 gets the EML layout.
+        ('product', '1x8', 'init_hp_msl_smc'),
         (None, None, 'init_hp_eml_smc'),
     ]),
     ('product', 'OVERLAND', 'init_overland_smc'),
+    # The union: the two vendor rules ef7b972 added, the "Scalar" product rule
+    # it kept, and the two product rules 1.8 had. Order does not matter here -
+    # every one of the five leads to the same personality.
+    ('vendor', 'ADIC', 'init_scalar_smc'),
+    ('vendor', 'QUANTUM', 'init_scalar_smc'),
+    ('product', 'Scalar', 'init_scalar_smc'),
     ('product', 'ADIC', 'init_scalar_smc'),
     ('product', 'QUANTUM', 'init_scalar_smc'),
     ('vendor', 'SPECTRA', [

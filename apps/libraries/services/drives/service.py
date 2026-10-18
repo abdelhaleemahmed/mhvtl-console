@@ -41,7 +41,8 @@ from ..core import (FileLock, ServiceResult, atomic_write_text, config_dir,
                     lock_path, shell, success_result)
 from ..console import units
 from ..iscsi import bindings as iscsi_bindings
-from ..operations import vtlcmd
+from ..operations import elements, logsense, vtlcmd
+from ..operations.vtlcmd import TapeStats
 from ..profiles import data as profiles_data
 from ..core import samples
 from ..core.units import fullness as fullness_of
@@ -255,13 +256,37 @@ class DriveService:
             notes.append(exports)
         return '; ' + ', '.join(notes), True
 
+    def _counters(self, drive_id: int) -> Optional[TapeStats]:
+        """Live counters for one drive, from whichever route this host has.
+
+        The log page first, because it is what upstream MHVTL answers. Then
+        `vtlcmd stats`, which only exists on a host carrying patches/0004 -
+        pull request 210, closed without being merged. Neither is preferred
+        for accuracy; the order is simply which is more likely to be there.
+        """
+        reading = logsense.read(drive_id, config_dir=self.config_dir)
+        if reading is not None:
+            return reading
+        return vtlcmd.stats(drive_id)
+
     def activity(self, library_id: int, *, settle: float = 1.0) -> ServiceResult:
         """What each of a library's drives is doing, live and already worded.
 
-        The counters come from `vtlcmd <drive> stats`, which asks the daemon
-        over its message queue and so answers while a backup is running - mt
-        and mtx cannot, because the kernel holds the SCSI reservation for the
-        initiator. That command is our own addition to MHVTL (patches/0004).
+        The counters come from the volume statistics log page, 17h, read
+        through the drive's generic node - see operations/logsense.py. That
+        page answers while a backup is running, where mt does not, because mt
+        fails on opening /dev/nst*, which the writer holds exclusively. It is
+        not a SCSI reservation and /dev/sg* is not affected.
+
+        `vtlcmd <drive> stats` is tried second, and only answers on a host
+        carrying our patches/0004: that command was pull request 210 upstream
+        and was closed without being merged. The log page is the route that
+        works against stock MHVTL, by way of our pull request 211.
+
+        The log page does not know what cartridge is loaded - its barcode
+        fields are empty on MHVTL and nothing on it says a tape is present -
+        so both come from the robot listing above, which is the authority on
+        what is where in any case.
 
         MHVTL reports totals, not a rate, so "writing" is two readings with a
         larger number in the second. Which is why the deciding happens here
@@ -282,24 +307,48 @@ class DriveService:
             return listed
 
         ids = [drive['drive_id'] for drive in listed.data['drives']]
+
+        # Which cartridge is in which drive, from the library rather than from
+        # the counters. The log page does not carry a barcode - its volume
+        # serial fields are empty on MHVTL - and the robot is the authority on
+        # what is where in any case, as the note at the top of vtlcmd.py says.
+        #
+        # Matched by the drive's own serial number, which the library reports
+        # in each element's device identifier, and never by position: turning
+        # "data transfer element 2" into a device.conf id by counting is the
+        # thing that reaches the wrong drive when a daemon holds stale state.
+        loaded = elements.loaded_by_drive(
+            int(library_id),
+            {drive['drive_id']: drive.get('serial')
+             for drive in listed.data['drives'] if drive.get('serial')},
+            config_dir=self.config_dir)
+
         now = time.time()
-        first = {drive_id: vtlcmd.stats(drive_id) for drive_id in ids}
+        first = {drive_id: self._counters(drive_id) for drive_id in ids}
 
         # Whatever we have no fresh previous reading for is read again, once,
         # after a single wait - not one wait per drive.
+        #
+        # Fresh here is COMPARE_LIFE, not LIFE. A reading is kept for two
+        # minutes, but subtracting from one that old answers a different
+        # question: "did this drive write at any point in the last two
+        # minutes" rather than "is it writing now". That is how a backup that
+        # had already finished kept reporting itself as writing.
         unknown = [drive_id for drive_id in ids
-                   if samples.recent(drive_id, now=now, life=_SAMPLE_LIFE) is None
+                   if samples.recent(drive_id, now=now,
+                                     life=samples.COMPARE_LIFE) is None
                    and first[drive_id]]
         second = {}
         if unknown and settle:
             time.sleep(settle)
-            second = {drive_id: vtlcmd.stats(drive_id) for drive_id in unknown}
+            second = {drive_id: self._counters(drive_id) for drive_id in unknown}
 
         drives = []
         latest = {}
         for drive in listed.data['drives']:
             drive_id = drive['drive_id']
-            stored = samples.entry_for(drive_id, now=now, life=_SAMPLE_LIFE)
+            stored = samples.entry_for(drive_id, now=now,
+                                       life=samples.COMPARE_LIFE)
             if drive_id in second:
                 before = first[drive_id]
                 current = second[drive_id]
@@ -310,6 +359,13 @@ class DriveService:
                 current = first[drive_id]
                 comparable = bool(stored and stored['age'] >= samples.MIN_COMPARE)
                 last_state = (stored or {}).get('state')
+
+            # The library's answer wins over the counters' for what is loaded.
+            # A drive it did not describe is left as the counters had it, so
+            # "we could not ask" does not read as "empty".
+            if current is not None and drive_id in loaded:
+                current.barcode = loaded[drive_id]
+                current.loaded = loaded[drive_id] is not None
 
             described = _describe(current, before, last_state=last_state,
                                   comparable=comparable)

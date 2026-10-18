@@ -6,18 +6,34 @@ because they disagree in a way that is informative rather than a bug:
 
     status library   the robot, through mtx - what is physically where
     status drive     the drive daemon, through mt - what it thinks it holds
-    status activity  what each drive is doing, through MHVTL's message queue
+    status activity  what each drive is doing, from its log page and the robot
     status system    systemd and the kernel modules
     status dashboard everything the web overview shows, in one answer
 
-`status activity` is the only one that answers during a backup: the kernel
-holds the SCSI reservation for the initiator, so mt and mtx say "device busy",
-while the drive daemon's own counters come over its message queue and are not
-affected by it.
+`status activity` is the only one that answers during a backup, and the reason
+written here until 18 October 2026 was wrong twice over. It said the kernel
+held a SCSI reservation for the initiator, so mt and mtx were both refused,
+while the counters came over a message queue that did not speak SCSI.
 
-mtx is the authority on what is loaded where. A drive daemon's idea of its own
-state can be stale after a restart, which is an MHVTL bug upstream, so when the
-two disagree `status library` is the one to believe.
+What is actually measured on a host running a backup:
+
+- **`mt` fails on open().** The writer holds /dev/nst* and the kernel's st
+  driver gives that node to one writer at a time. It is not a reservation,
+  and nothing else on the target is affected.
+- **`mtx` is not refused.** It reports the slots and names the loaded
+  cartridge throughout.
+- **The counters are read with SCSI**, not around it: LOG SENSE on the volume
+  statistics page, through the generic node the writer never took. The route
+  that avoided SCSI was `vtlcmd stats`, our own addition, which upstream
+  closed without merging - it is tried second, for a host that carries it.
+
+mtx is still the authority on what is loaded where, and `status activity` asks
+the robot for the barcode rather than guessing: the log page carries none. A
+drive daemon's idea of its own state can be stale after a restart, which is an
+MHVTL bug upstream, so when the two disagree `status library` is the one to
+believe.
+
+See docs/sphinx/guides/library-personalities.rst for how this came to light.
 """
 from .. import output
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MHVTL GUI User Guide 2.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 15:11+0000\n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ar\n"
@@ -21,104 +21,142 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../tapes/adopt.rst:2 87b791f7b4ea4b419d0a230e5f95d2ae
+#: ../../tapes/adopt.rst:2 93d33af544a547d0baaf84e5e8c2dd2a
 msgid "Adopting a tape that is already on disk"
 msgstr ""
 
-#: ../../tapes/adopt.rst:4 1d78ffa1f3004c43aa1e0cf9a3a2d227
+#: ../../tapes/adopt.rst:4 872815ed7a9e4557b88b723e5ad73fd4
 msgid ""
 "A tape's data outlives the library that held it. Removing a library "
 "leaves its cartridges under ``/opt/mhvtl``, and *adopting* one puts it "
 "into a library again, with everything that was written to it."
 msgstr ""
 
-#: ../../tapes/adopt.rst:13 b274ef76a1cf43fa8e58aa84623daef8
+#: ../../tapes/adopt.rst:13 f917e6069722415092e8c0999409629c
 msgid "When this comes up"
 msgstr ""
 
-#: ../../tapes/adopt.rst:15 a76da1fdd9cd4906a5c997ec69d418cd
+#: ../../tapes/adopt.rst:15 1b359b03c6fb4067a1b078ca6bfec3ae
 msgid "A library was removed without ``--remove-media`` - the usual case."
 msgstr ""
 
-#: ../../tapes/adopt.rst:16 248cb8e669f5479d935f1c7598d12e1f
+#: ../../tapes/adopt.rst:16 75353411624346de9c253b956e7670c6
 msgid ""
 "A library was rebuilt, because MHVTL reads its vendor and model once and "
 "changing them means recreating it."
 msgstr ""
 
-#: ../../tapes/adopt.rst:18 9066a587400d4355af139bd212f64204
+#: ../../tapes/adopt.rst:18 fd61e044b5fd497e8221fabb652ff893
 msgid "Tape files were copied from another host."
 msgstr ""
 
-#: ../../tapes/adopt.rst:21 b2f53d7ba9c34f66a9c298d11579f4e1
+#: ../../tapes/adopt.rst:21 b6a1e6fc7dd846ed9f2adc678bbee83f
 msgid "Finding them"
 msgstr ""
 
-#: ../../tapes/adopt.rst:34 f7f6ce779d6f4cfdbaeee6043dbf8256
+#: ../../tapes/adopt.rst:34 0beec9ff576142808c90f2bf0a586238
 msgid ""
 "Orphaned tapes are listed apart from everything else the console "
 "considers orphaned, and are never cleaned up automatically. They are "
 "data."
 msgstr ""
 
-#: ../../tapes/adopt.rst:38 44a0dd33d7934ace84c051b5a471399d
+#: ../../tapes/adopt.rst:38 781863d927ac49c49b968c0df2d8d1f1
 msgid "Adopting one"
 msgstr ""
 
-#: ../../tapes/adopt.rst:40 57d0c4cab3d64c1da82571ef790b118d
+#: ../../tapes/adopt.rst:40 28d4f441232e4bf1af089002e23cafc1
 msgid ""
 "**Tapes → Inventory**, then **Adopt**, or on the operator's tape pages. "
 "The list offers the tapes on disk that no library lists, and the "
 "libraries whose drives can read that generation."
 msgstr ""
 
-#: ../../tapes/adopt.rst:44 f241f9c25a5746359139fcffe43d4060
+#: ../../tapes/adopt.rst:44 dccdaa4f1c1b4401a87bf1901cba3e99
 msgid "Tapes on disk with no library, each with an Adopt button"
 msgstr ""
 
-#: ../../tapes/adopt.rst:57 58fd5a30a6d0470681f37c48d3c80172
+#: ../../tapes/adopt.rst:57 edfbcfea58ab480daee7770aa1e83946
+msgid "Only the libraries that could load it"
+msgstr ""
+
+#: ../../tapes/adopt.rst:59 78016024d208408bad73a5c78006cc08
+msgid ""
+"The dropdown beside each tape lists **only the libraries whose drives can"
+" load that cartridge**, not every library on the host. A Sony library "
+"with AIT drives is not offered for an LTO-7 tape, because it could never "
+"read it."
+msgstr ""
+
+#: ../../tapes/adopt.rst:63 8ce21dfe0b1947b1b968660bcadccec0
+msgid ""
+"The command line draws the same line, and when it refuses it says where "
+"the tape *could* go rather than leaving you to try the libraries one at a"
+" time:"
+msgstr ""
+
+#: ../../tapes/adopt.rst:73 2431a9cce5b246f696b2ee130e68cb92
+msgid ""
+"**Loads, not writes.** The test is whether a drive can *read* the "
+"cartridge, which is looser than whether it can write one. An LTO-7 drive "
+"reads LTO-5, so a library whose newest drive is an LTO-7 is offered for "
+"an LTO-5 tape - and it should be, because adopting recovers what is "
+"already on a tape rather than writing to it. A library offered here may "
+"still refuse to *create* a new cartridge of that generation; see :ref"
+":`mixed-libraries`."
+msgstr ""
+
+#: ../../tapes/adopt.rst:80 ba90c004d7474c0eae7ecb1fdf2b3a8d
+msgid ""
+"If a tape is offered nowhere, the row says so instead of showing an empty"
+" dropdown, and the reason is the same one the command prints. Adding a "
+"drive that can read it changes the answer immediately - no library has to"
+" be rebuilt."
+msgstr ""
+
+#: ../../tapes/adopt.rst:86 afef2e647e224dd1ac4c520a4441470e
 msgid "What it does, and what it does not"
 msgstr ""
 
-#: ../../tapes/adopt.rst:59 faeab5d10ba94a3f8f216078126b108c
+#: ../../tapes/adopt.rst:88 7c4142f5f550457dbcdda5710244f5f5
 msgid ""
 "It adds the cartridge to ``library_contents.50`` and leaves its files "
 "exactly where they are. Nothing is copied, nothing is rewritten, and the "
 "data is not read."
 msgstr ""
 
-#: ../../tapes/adopt.rst:63 2ef5ff35a474467a8773f387ebc5b8d1
+#: ../../tapes/adopt.rst:92 1646df68f98c4e54a6792d8225d5734d
 msgid ""
 "The library must have a free slot, and its drives must take that "
 "generation - an LTO-8 cartridge cannot be adopted into a library of AIT "
 "drives, because nothing there could ever load it."
 msgstr ""
 
-#: ../../tapes/adopt.rst:68 42f43c51a21144f39d9b1fb3703212d7
+#: ../../tapes/adopt.rst:97 a3fe18fa7e874f74960e8d8cc5aab809
 msgid "Restart the library afterwards"
 msgstr ""
 
-#: ../../tapes/adopt.rst:70 7a0dc003daa647cdab37f0e44b4e13aa
+#: ../../tapes/adopt.rst:99 75c6ea7164c24d87aba1d3780edaf3f3
 msgid ""
 "MHVTL reads ``library_contents`` once, when the library starts, so its "
 "robot does not see the adopted tape until it restarts:"
 msgstr ""
 
-#: ../../tapes/adopt.rst:77 e760c21dcc744e06b6772abebfa7daee
+#: ../../tapes/adopt.rst:106 03fde1ba5c5b4a408584f0d29e69c139
 msgid ""
 "Both the console and the command line say this after an adopt, and the "
 "library page flags a library whose configuration and robot disagree."
 msgstr ""
 
-#: ../../tapes/adopt.rst:81 8d04080f6eb647e29bc479af1af31afd
+#: ../../tapes/adopt.rst:110 387c05739be24bb6941e153626b810ba
 msgid "Checking the data survived"
 msgstr ""
 
-#: ../../tapes/adopt.rst:83 70a35515e4e04a829372906857882d51
+#: ../../tapes/adopt.rst:112 9d79963f7e05424995128b191c3855cf
 msgid "Mount it and ask the drive:"
 msgstr ""
 
-#: ../../tapes/adopt.rst:94 489d1b1b69714da7870e9d2a0bef18f0
+#: ../../tapes/adopt.rst:123 d213ebe254364276bc83f85d4d40deee
 msgid ""
 "A tape that kept its data reports what was written to it. One that lost "
 "its files reports an empty cartridge - and ``mhvtl tape list`` would have"

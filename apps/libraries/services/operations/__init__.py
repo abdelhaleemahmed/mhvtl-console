@@ -4,6 +4,8 @@ Modules:
     mtx.py       the robot: status, load, unload, transfer, inventory
     mt.py        the drive: density, position, medium present
     vtlcmd.py    the message queue: online, offline, MAP, stats
+    logsense.py  the volume statistics log page: the same counters, upstream
+    elements.py  READ ELEMENT STATUS: which tape is in which drive
     service.py   OperationsService: mount, unmount, move, online, offline
 
 Two rules this package exists to enforce: the device is resolved by SCSI address

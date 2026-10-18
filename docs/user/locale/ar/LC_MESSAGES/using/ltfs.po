@@ -1,0 +1,316 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ahmed Abdelhaleem Ahmed
+# This file is distributed under the same license as the MHVTL Console User
+# Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MHVTL Console User Guide 3.5.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-18 04:23+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../using/ltfs.rst:2 7479995e5f244ce297ab4ea516abb4b8
+msgid "A tape as a filesystem: LTFS"
+msgstr ""
+
+#: ../../using/ltfs.rst:4 00214b2d4c1946968336b88390847afb
+msgid ""
+"LTFS puts a filesystem on a cartridge, so you can copy files on and off "
+"it with ``cp`` and ``ls`` instead of a backup program. It is a separate "
+"project from MHVTL, used mostly for archives — a tape you will read again"
+" in ten years, by someone who no longer has the software that wrote it."
+msgstr ""
+
+#: ../../using/ltfs.rst:9 97cff61e7b174fb3886ac8ffe9b87760
+msgid ""
+"The console does not make every tape an LTFS volume. It is an extra, and "
+"it has to be asked for."
+msgstr ""
+
+#: ../../using/ltfs.rst:12 9f103602fb994ed6b3b140216a044be4
+msgid ""
+"Everything below was run against library 80, a StorageTek SL500 created "
+"for the purpose and deleted at the end. The same sequence is the "
+"recording in ``recordings/ltfs-on-a-cartridge``."
+msgstr ""
+
+#: ../../using/ltfs.rst:21 0f07dd00e7af4392b25b6ea949a9e235
+msgid "Two different things are called \"mount\""
+msgstr ""
+
+#: ../../using/ltfs.rst:23 764013b5b3a04d969e66e396f2363d8c
+msgid "This is the thing to keep straight before anything else."
+msgstr ""
+
+#: ../../using/ltfs.rst:30 e3fa590742b74e098f70751cf315e6e6
+msgid "**Mount a tape**"
+msgstr ""
+
+#: ../../using/ltfs.rst:31 dd869dc8dff44fd7b186cb78d733fef2
+msgid "**Mount LTFS**"
+msgstr ""
+
+#: ../../using/ltfs.rst:32 4a644d6bed6d448f94e6874f79e803dd
+msgid "What happens"
+msgstr ""
+
+#: ../../using/ltfs.rst:33 6e361efb40704d9cbd89d61262471095
+msgid "the robot moves a cartridge from a slot into a drive"
+msgstr ""
+
+#: ../../using/ltfs.rst:34 65dab2c5b3ee41c99a5000b7acd8efc2
+msgid "``ltfs`` opens the cartridge *already in a drive* as a filesystem"
+msgstr ""
+
+#: ../../using/ltfs.rst:35 b03d755a06bf43c0ab607f6da6af0e43
+msgid "Where"
+msgstr ""
+
+#: ../../using/ltfs.rst:36 60b45d5bceb24b68bc658ec19b283ee7
+msgid "Operator → Mount and Unmount, ``mhvtl op mount``"
+msgstr ""
+
+#: ../../using/ltfs.rst:37 70a6e99e08564b6a9fdb0dcc9acb13ca
+msgid "the LTFS page, ``mhvtl ltfs mount``"
+msgstr ""
+
+#: ../../using/ltfs.rst:38 1dff0708f8b74f1cbe337734b467dab2
+msgid "Needs"
+msgstr ""
+
+#: ../../using/ltfs.rst:39 b4185e2eadf34581809b7ea50ab39da6
+msgid "a free drive"
+msgstr ""
+
+#: ../../using/ltfs.rst:40 71aad95f31e84153a88d8f940e202679
+msgid "a cartridge in a drive, a drive LTFS will open, and an LTFS volume"
+msgstr ""
+
+#: ../../using/ltfs.rst:42 ba7baf25a12a4a0fb8d44f958ef433b5
+msgid "You always do the first before the second."
+msgstr ""
+
+#: ../../using/ltfs.rst:45 c5d95bcb378e41babadb7708f70090d8
+msgid "1. Can this library do LTFS at all?"
+msgstr ""
+
+#: ../../using/ltfs.rst:47 488779f7040844938a001da3f8f0c075
+msgid ""
+"Ask before anything else. Most libraries cannot, and the answer costs "
+"nothing:"
+msgstr ""
+
+#: ../../using/ltfs.rst:71 30e5febcb10e4e95ac50622a0ee7b433
+msgid ""
+"Read the last line of the table: **not read**, not \"none\". No cartridge"
+" in this library was looked at, because no drive here could have opened "
+"one. A cartridge nobody read may still be an LTFS volume written "
+"somewhere else, and the console will not say otherwise."
+msgstr ""
+
+#: ../../using/ltfs.rst:76 ab964ea403354279ac68f7e7e14bba47
+msgid ""
+"LTFS refuses these drives for their **vendor id**, not their model. It "
+"knows IBM and HP and does not know ``STK``."
+msgstr ""
+
+#: ../../using/ltfs.rst:80 b85fd205cc4b4a0082f32cc527c6d79d
+msgid "2. Give it a drive LTFS will open"
+msgstr ""
+
+#: ../../using/ltfs.rst:82 bbf8d58b30b548e28c198a6f12bbb409
+msgid ""
+"The drives are emulated, so the vendor id a drive reports is yours to "
+"choose. The library's own profile decides which models it will take; LTFS"
+" decides which vendor ids it will open. Picking one that satisfies both "
+"is all this does:"
+msgstr ""
+
+#: ../../using/ltfs.rst:98 5784f4d7203d4a35910f47a91be02f4e
+msgid ""
+"Nothing existing is changed. **A drive is only ever added** — no drive is"
+" overwritten, no personality is altered, and the drives that were there "
+"keep reporting exactly what they reported before. Removing a drive is a "
+"separate job on the drives pages."
+msgstr ""
+
+#: ../../using/ltfs.rst:113 aafc9ba7e1a24ac389fe596c3114fc5c
+msgid ""
+"The **NODE** column is the one to check. A drive with no device node is "
+"not usable, whatever the other columns say."
+msgstr ""
+
+#: ../../using/ltfs.rst:116 90438997b278448ea7bf39b412baee9d
+msgid ""
+"Some drives also need a minimum firmware: IBM LTO-5 wants B170, LTO-8 "
+"wants HB81. ``--drive-revision`` sets it, and the refusal tells you when "
+"you need it."
+msgstr ""
+
+#: ../../using/ltfs.rst:120 7d270053008243b99fb0ca1574ebf087
+msgid "3. A cartridge it can write"
+msgstr ""
+
+#: ../../using/ltfs.rst:122 1043ac5dd83a49d3b7aaaee2017ed269
+msgid ""
+"Being partitionable is not enough. ``mkltfs`` **writes**, so the "
+"cartridge has to be a density the drive can write, not merely load — an "
+"LTO-7 drive loads LTO-5 read-only, so an LTO-5 cartridge in it can never "
+"become a volume:"
+msgstr ""
+
+#: ../../using/ltfs.rst:144 4a3cbe08fc7d43dda404e77154d4d4ab
+msgid ""
+"The three T10000 cartridges came with the library and the new drive "
+"cannot write any of them. ``K80004L7`` is the one that can become a "
+"volume."
+msgstr ""
+
+#: ../../using/ltfs.rst:148 3273e86a682340258e0f80149005dcaf
+msgid "4. Put it in the drive"
+msgstr ""
+
+#: ../../using/ltfs.rst:150 fe2e712e8d274327a1376e030e960b7d
+msgid "The robot, not the filesystem — the first sense of \"mount\":"
+msgstr ""
+
+#: ../../using/ltfs.rst:164 d33684c315824dea992332b23b9dd4bf
+msgid ""
+"``op layout`` draws the whole library — drives, slots, the import/export "
+"port and a legend — coloured by tape generation. On the web it is "
+"**Operator → Mount and Unmount**."
+msgstr ""
+
+#: ../../using/ltfs.rst:169 c5117bd2a8904caebf8eec2c1ca3b979
+msgid "5. Format it — which the console will not do for you"
+msgstr ""
+
+#: ../../using/ltfs.rst:173 f53849564ae44efa8b75707173e9f5b1
+msgid ""
+"``mkltfs`` partitions and erases the cartridge. Everything on it is gone,"
+" and there is no undo."
+msgstr ""
+
+#: ../../using/ltfs.rst:176 d1d50b0c7e1f407d924ddffebc6e21ea
+msgid ""
+"The console refuses, twice over — a setting it checks, and a ``sudoers`` "
+"rule the service account was never granted:"
+msgstr ""
+
+#: ../../using/ltfs.rst:188 0ce5d3a5869841ac924d42ca8fc3c7df
+msgid ""
+"That is deliberate, and it is not an obstacle to work around. Formatting "
+"a cartridge stays an act a person takes at a terminal, with root, having "
+"decided to:"
+msgstr ""
+
+#: ../../using/ltfs.rst:198 9d717d2b79eb43339078f28c4fdaa5a9
+msgid "The device is the **NODE** from ``ltfs drives``."
+msgstr ""
+
+#: ../../using/ltfs.rst:201 c4588c8f34e643ec8a82defd436c171a
+msgid "6. Mount it, write to it, read it back"
+msgstr ""
+
+#: ../../using/ltfs.rst:203 1efcc798eba6415fbf598b44db698a6e
+msgid "Now the second sense of \"mount\":"
+msgstr ""
+
+#: ../../using/ltfs.rst:210 5b0f4d4c5a95410a9bc0bc9367a64ae7
+msgid "It is a directory. Write to it with anything:"
+msgstr ""
+
+#: ../../using/ltfs.rst:220 2b85d05585d44a33840856d366082a7b
+msgid ""
+"And the proof that it is on the tape rather than in a cache — unmount, "
+"mount again, and check:"
+msgstr ""
+
+#: ../../using/ltfs.rst:236 b0d211193d7d43ac972cc6f33d9b6026
+msgid "7. Taking it out again, in the right order"
+msgstr ""
+
+#: ../../using/ltfs.rst:238 c4b35be471b54c9cb8a2b8abf0046aa1
+msgid ""
+"The filesystem first, then the robot. If you try it the other way the "
+"console stops you:"
+msgstr ""
+
+#: ../../using/ltfs.rst:252 972892929c9b4c40baa0988be665c362
+msgid ""
+"This is a refusal and not a warning. Taking the cartridge out leaves "
+"``ltfs`` holding a device with no medium; whatever was reading the mount "
+"gets errors instead of an ending. On the mount page such a drive is "
+"marked and cannot be clicked, and ``op layout`` marks it **MOUNTED**."
+msgstr ""
+
+#: ../../using/ltfs.rst:257 c006d97bdc6b4b6bb4b02d42f9250770
+msgid "So:"
+msgstr ""
+
+#: ../../using/ltfs.rst:268 8157146a917a4f80bf977642267ea8bd
+msgid "Which cartridges are volumes"
+msgstr ""
+
+#: ../../using/ltfs.rst:281 066747c8aae841b99c703c2e5eca7647
+msgid "Four states, and the difference between the last two matters:"
+msgstr ""
+
+#: ../../using/ltfs.rst:287 211093211754409486913bb2a93a0280
+msgid "State"
+msgstr ""
+
+#: ../../using/ltfs.rst:288 0043adab0e0145aba7d3ce1aba646341
+msgid "Means"
+msgstr ""
+
+#: ../../using/ltfs.rst:289 24e2c8f275724969befb95159472f40f
+msgid "``ltfs``"
+msgstr ""
+
+#: ../../using/ltfs.rst:290 a7e23e2f094b428499500d48c76da3c2
+msgid "read, and it is an LTFS volume"
+msgstr ""
+
+#: ../../using/ltfs.rst:291 f43c7ef366e5470888f87c2cee84b9e5
+msgid "``plain``"
+msgstr ""
+
+#: ../../using/ltfs.rst:292 62d9949de4654db8baf0e2dfcff09866
+msgid "read, and it is not"
+msgstr ""
+
+#: ../../using/ltfs.rst:293 ab0f8e38f890439b8587cb6cb0783650
+msgid "``unknown``"
+msgstr ""
+
+#: ../../using/ltfs.rst:294 004f91b5a7d7452aa4147259cb119145
+msgid "read, and the cartridge could not say"
+msgstr ""
+
+#: ../../using/ltfs.rst:295 3a1079186e1243ef90496fab95bf19df
+msgid "*(blank)*"
+msgstr ""
+
+#: ../../using/ltfs.rst:296 2414397c2f954388a64cd0c4531777c7
+msgid "**not read at all** — no drive here could open it"
+msgstr ""
+
+#: ../../using/ltfs.rst:298 f4599faeb4a246bf81d26f89aa224096
+msgid ""
+"A blank is never reported as ``plain``. \"We did not look\" is not "
+"\"there is nothing there\"."
+msgstr ""
+

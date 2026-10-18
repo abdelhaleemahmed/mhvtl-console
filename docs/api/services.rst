@@ -479,6 +479,29 @@ The vtlcmd wrapper - MHVTL's message-queue control channel.
    :undoc-members:
    :show-inheritance:
 
+``elements``
+~~~~~~~~~~~~
+
+What the library says about its drives: which cartridge is in each, and
+which drive it is, matched by the drive's own serial rather than by
+position.
+
+.. automodule:: apps.libraries.services.operations.elements
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+``logsense``
+~~~~~~~~~~~~
+
+Drive counters read from the volume statistics log page, which answers
+during a backup and needs no patch to MHVTL.
+
+.. automodule:: apps.libraries.services.operations.logsense
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ``services.scsi``
 -----------------
 
